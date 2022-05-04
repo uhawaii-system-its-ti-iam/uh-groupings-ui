@@ -104,6 +104,8 @@
         $scope.resStatus = 0;
         $scope.inGrouper = false;
         $scope.showAdminTab = true;
+        $scope.groupLoaded = "";
+        $scope.groupNotLoaded = "";
 
         // used with ng-view on selected-grouping.html to toggle description editing.
         $scope.descriptionForm = false;
@@ -116,9 +118,9 @@
         $scope.membersInCheckboxList = {};
 
         //Variable for holding description
-        let groupingDescription = "";
+        $scope.groupingDescription = "";
 
-        let displayTracker = 1;
+        $scope.displayTracker = 1;
         $scope.descriptionLoaded = false;
 
         //Flag used for getGroupingInformation function to end async call
@@ -126,7 +128,7 @@
         //Keeps track of async calls made throughout this js controller
         let asyncThreadCount = 0;
 
-        let noDescriptionMessage = "No description given for this Grouping.";
+        $scope.noDescriptionMessage = "No description given for this Grouping.";
 
         angular.extend(this, $controller("TableJsController", { $scope: $scope }));
 
@@ -266,10 +268,10 @@
 
                     // Gets the description go the group
                     if (res.description === null) {
-                        groupingDescription = "";
+                        $scope.groupingDescription = "";
                     } else {
-                        groupingDescription = res.description;
-                        displayTracker = 1;
+                        $scope.groupingDescription = res.description;
+                        $scope.displayTracker = 1;
                     }
                     $scope.descriptionLoaded = true;
                     $scope.paginatingProgress = true;
@@ -480,7 +482,7 @@
          */
         $scope.cancelDescriptionEdit = function () {
             // refer to last saved description when user cancels the edit
-            $scope.modelDescription = groupingDescription;
+            $scope.modelDescription = $scope.groupingDescription;
 
             if ($scope.descriptionForm) {
                 $scope.descriptionForm = !($scope.descriptionForm);
@@ -492,11 +494,11 @@
          * Set a new description for a Grouping.
          */
         $scope.saveDescription = function () {
-            if (groupingDescription.localeCompare($scope.modelDescription) === 0) {
+            if ($scope.groupingDescription.localeCompare($scope.modelDescription) === 0) {
                 return $scope.cancelDescriptionEdit();
             }
-            groupingDescription = $scope.modelDescription;
-            groupingsService.updateDescription(groupingDescription, $scope.selectedGrouping.path,
+            $scope.groupingDescription = $scope.modelDescription;
+            groupingsService.updateDescription($scope.groupingDescription, $scope.selectedGrouping.path,
                 () => {
                     $scope.descriptionForm = !($scope.descriptionForm);
                 }, // close description form when done.
@@ -510,6 +512,8 @@
          * If the grouping hasn't been fetched, return csv group loaded message, otherwise return csv group not loaded message.
          */
         $scope.getCSVToolTipMessage = () => {
+            $scope.groupLoaded = Message.Csv.GROUP_LOADED;
+            $scope.groupNotLoaded = Message.Csv.GROUP_NOT_LOADED;
             return ($scope.paginatingComplete) ? Message.Csv.GROUP_LOADED : Message.Csv.GROUP_NOT_LOADED;
         };
 
@@ -521,11 +525,11 @@
             if (!$scope.descriptionLoaded) {
                 return "";
             }
-            if ($scope.showGrouping === true && displayTracker === 1) {
-                $scope.modelDescription = groupingDescription;
-                displayTracker = 0;
+            if ($scope.showGrouping === true && $scope.displayTracker === 1) {
+                $scope.modelDescription = $scope.groupingDescription;
+                $scope.displayTracker = 0;
             }
-            return (groupingDescription.length > 0) ? groupingDescription : noDescriptionMessage;
+            return ($scope.groupingDescription.length > 0) ? $scope.groupingDescription : $scope.noDescriptionMessage;
         };
 
         /**
@@ -682,37 +686,23 @@
             $scope.personProps.push(attributes.splice(attributes.indexOf("name"), 1));
         };
 
-        /**
-         * Send the list of users to be added to the server as an HTTP POST request.
-         * @param list - comma separated string of user names to be added
-         * @param listName - current list being added to
-         * @returns {Promise<void>}
-         */
-        $scope.addMultipleMembers = async function (list, listName) {
+        $scope.successfulAddHandler = function (res, list, listName) {
             let membersNotInList = [];
             let arrayOfMembers = list.split(",");
-            let groupingPath = $scope.selectedGrouping.path;
+            $scope.waitingForImportResponse = false; /* Small spinner off. */
 
-            let timeoutModal = function () {
-                return $scope.launchDynamicModal(
-                    Message.Title.SLOW_IMPORT,
-                    Message.Body.SLOW_IMPORT,
-                    8000);
-            };
-            let handleSuccessfulAdd = function (res) {
-                $scope.waitingForImportResponse = false; /* Small spinner off. */
-                let data = res;
-                for (let i = 0; i < res.length; i++) {
-                    data[parseInt(i, 10)] = res[parseInt(i, 10)];
-                }
-                for (let i = 0; i < data.length; i++) {
-                    let result = data[parseInt(i, 10)].result;
-                    let userWasAdded = data[parseInt(i, 10)].userWasAdded;
+            let data = res;
+            for (let i = 0; i < res.length; i++) {
+                data[parseInt(i, 10)] = res[parseInt(i, 10)];
+            }
+            for (let i = 0; i < data.length; i++) {
+                let result = data[parseInt(i, 10)].result;
+                let userWasAdded = data[parseInt(i, 10)].userWasAdded;
 
-                    if ("FAILURE" === result || !userWasAdded) {
-                        membersNotInList.push(arrayOfMembers[i]);
-                        $scope.membersNotInList = membersNotInList.join(", ");
-                    }
+                if ("FAILURE" === result || !userWasAdded) {
+                    membersNotInList.push(arrayOfMembers[i]);
+                    $scope.membersNotInList = membersNotInList.join(", ");
+                } else {
                     let person = {
                         "uid": data[parseInt(i, 10)].uid,
                         "uhUuid": data[parseInt(i, 10)].uhUuid,
@@ -721,14 +711,33 @@
                     $scope.multiAddResults.push(person);
                     $scope.multiAddResultsGeneric.push(person);
                 }
-                if ($scope.multiAddResults.length > 0) {
-                    $scope.personProps = Object.keys($scope.multiAddResults[0]);
-                    $scope.launchMultiAddResultModal(listName);
-                } else {
-                    $scope.launchDynamicModal(Message.Title.NO_MEMBERS_ADDED, Message.Body.NO_MEMBERS_ADDED);
-                }
-            };
+            }
+            if ($scope.multiAddResults.length > 0) {
+                $scope.personProps = Object.keys($scope.multiAddResults[0]);
+                $scope.launchMultiAddResultModal(listName);
+            } else {
+                $scope.launchDynamicModal(Message.Title.NO_MEMBERS_ADDED, Message.Body.NO_MEMBERS_ADDED);
+            }
+        };
 
+        /**
+         * Send the list of users to be added to the server as an HTTP POST request.
+         * @param list - comma separated string of user names to be added
+         * @param listName - current list being added to
+         * @returns {Promise<void>}
+         */
+        $scope.addMultipleMembers = async function (list, listName) {
+            let groupingPath = $scope.selectedGrouping.path;
+
+            let timeoutModal = function () {
+                return $scope.launchDynamicModal(
+                    Message.Title.SLOW_IMPORT,
+                    Message.Body.SLOW_IMPORT,
+                    8000);
+            };
+            let handleSuccessfulAdd = (res) => {
+                $scope.successfulAddHandler(res, list, listName);
+            }
             $scope.waitingForImportResponse = true; /* Small spinner on. */
             if (listName === "Include") {
                 await groupingsService.addMembersToIncludeAsync(list, groupingPath, handleSuccessfulAdd, handleUnsuccessfulRequest, timeoutModal);
@@ -740,7 +749,7 @@
         };
 
         /**
-         * Launch a modal containing a table of the results(user info) received from the the server's response message.
+         * Launch a modal containing a table of the results(user info) received from the server's response message.
          * @param listName - current list being added to
          */
         $scope.launchMultiAddResultModal = function (listName) {
@@ -879,7 +888,7 @@
          * @param {string} list - the list the user is being added to
          */
         $scope.updateAddMember = function (userToAdd, list) {
-            // only initialize groupingPath is listName is not "admins"
+            // only initialize groupingPath if listName is not "admins"
             let groupingPath;
 
             if ($scope.listName !== "admins") {
@@ -958,7 +967,6 @@
                 backdrop: "static",
                 keyboard: false
             });
-
             $scope.checkModalInstance.result.then(function () {
                 $scope.waitingForImportResponse = true;
                 $scope.updateAddMember(user, listName);
@@ -1104,7 +1112,7 @@
                     if (numOwners > $scope.multiAddThreshold) {
                         $scope.launchDynamicModal(
                             Message.Title.LARGE_IMPORT,
-                            `You are attempting to import ${numMembers} new users to the ${listName} list.
+                            `You are attempting to import ${numOwners} new users to the ${list} list.
                              Imports larger than ${$scope.multiAddThreshold} can take a few minutes.  An email with
                              the import results will be sent.`,
                             8000);
@@ -1304,11 +1312,7 @@
                     membersToRemove = $scope.parseAddRemoveInputStr(membersToRemove);
                     removeMembers(membersToRemove, listName);
                 } else {
-                    if (membersToRemove === "") {
-                        $scope.memberToRemove = $scope.membersToAddOrRemove;
-                    } else {
-                        $scope.memberToRemove = membersToRemove;
-                    }
+                    $scope.memberToRemove = membersToRemove;
                     $scope.memberToRemove = returnMemberObjectFromUserIdentifier($scope.memberToRemove, currentPage);
                     if (listName === "owners" && $scope.groupingOwners.length === 1) {
                         const userType = "owner";
@@ -1772,7 +1776,7 @@
 
             $scope.modelDescription = "";
             groupingDescription = "";
-            displayTracker = 1;
+            $scope.displayTracker = 1;
         };
 
         /**
@@ -1970,7 +1974,6 @@
         $scope.updateSingleSyncDest = function (syncDestName) {
             const groupingPath = $scope.selectedGrouping.path;
             const syncDestOn = $scope.getSyncDestValueInArray(syncDestName);
-
             groupingsService.setSyncDest(groupingPath, syncDestName, syncDestOn, handleSuccessfulPreferenceToggle, handleUnsuccessfulRequest);
         };
 
@@ -2014,7 +2017,6 @@
          * @param {String} syncDestName Name of the Sync Dest to create modal for
          */
         $scope.createSyncDestModal = function (syncDestName) {
-
             const isSyncDestOn = $scope.getSyncDestValueInArray(syncDestName);
             $scope.setSyncDestInArray(syncDestName, !isSyncDestOn);
             $scope.selectedSyncDest = $scope.getEntireSyncDestInArray(syncDestName);

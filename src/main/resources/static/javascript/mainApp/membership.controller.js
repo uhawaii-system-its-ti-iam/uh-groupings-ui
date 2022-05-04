@@ -47,8 +47,8 @@
             groupingsService.getOptInGroups((res) => {
                     _.forEach(res, (path) => {
                         $scope.optInList.push({
-                            "name": path.split(":").pop(),
-                            "path": path
+                            "name": path.name,
+                            "path": path.path
                         });
                     });
                     $scope.optInList = _.sortBy($scope.optInList, "name");
@@ -59,7 +59,6 @@
                 }
             );
         };
-
 
         /**
          * Filter member list with respect to membersQuery.
