@@ -6,7 +6,6 @@ describe("AdminController", function () {
   let scope;
   let controller;
   let gs;
-  let mainCtrl;
   let uibModal;
 
   let fakeModal = {
@@ -76,7 +75,7 @@ describe("AdminController", function () {
         });
 
         it("should call objToPageArray", () => {
-            spyOn(scope, "objToPageArray");
+            spyOn(scope, "objToPageArray").and.callThrough();
             scope.getAdminListsCallbackOnSuccess(res);
             expect(scope.objToPageArray).toHaveBeenCalled();
         });
@@ -99,7 +98,7 @@ describe("AdminController", function () {
 
     describe("init", () => {
         it("should call groupingsService.getAdminLists", () => {
-            spyOn(gs, "getAdminLists");
+            spyOn(gs, "getAdminLists").and.callThrough();
             scope.init();
             expect(gs.getAdminLists).toHaveBeenCalled();
         });
@@ -128,7 +127,7 @@ describe("AdminController", function () {
         });
 
         it("should call scope.filter", () => {
-            spyOn(scope, "filter");
+            spyOn(scope, "filter").and.callThrough();
             scope.searchForUserGroupingInformationOnSuccessCallback(res);
             expect(scope.filter).toHaveBeenCalled();
         });
@@ -176,16 +175,24 @@ describe("AdminController", function () {
         let res = { username: "testUsername", name: "testName", uhUuid: "testId" };
         it("should empty soleOwnerGroupingNames", () => {
             scope.soleOwnerGroupingNames = ["test1", "test2"];
+            scope.selectedOwnedGroupings = ["test"];
             scope.checkSoleOwner(res);
             expect(scope.soleOwnerGroupingNames).toEqual([]);
         });
 
-        it("should call iterate through selectedOwnedGroupings through forEach", () => {
-            spyOn(_, "forEach");
+        it("should call the removeFromGroupsCallbackOnSuccess when selectedOwnedGroupings.length is 0", () => {
+            scope.selectedOwnedGroupings = [];
+            spyOn(scope, "removeFromGroupsCallbackOnSuccess");
             scope.checkSoleOwner(res);
-
-            expect(_.forEach).toHaveBeenCalled();
+            expect(scope.removeFromGroupsCallbackOnSuccess).toHaveBeenCalled();
         });
+        
+        it("should not call removeFromGroupsCallbackOnSuccess if selectedOwnedGroupings.length === 0"), () => {
+            scope.selectedOwnedGroupings = ['test'];
+            spyOn(scope, "removeFromGroupsCallbackOnSuccess").and.callThrough();
+            
+            expect(scope.removeFromGroupsCallbackOnSuccess).not.toHaveBeenCalled();
+        }
     });
 
     describe("removeFromGroupsCallbackOnSuccess", () => {
@@ -214,11 +221,12 @@ describe("AdminController", function () {
         });
       
     it("should call groupingsService.getMemberAttributes", () => {
-      spyOn(gs, "getMemberAttributes");
+      spyOn(gs, "getMemberAttributes").and.callThrough();
       scope.removeFromGroups();
       expect(gs.getMemberAttributes).toHaveBeenCalled();
     });
    });
+
     describe("createGroupPathsAndNames", () => {
         let selectedGroupingsNames, selectedGroupingsPaths, selectedOwnedGroupings, selectedOwnedGroupingsNames,
             currentPage;
@@ -307,12 +315,12 @@ describe("AdminController", function () {
         });
         it("should call scope.createRemoveModal", () => {
             scope.adminsList = ["iamtst01", "iamtst02", "iamtst03"];
-            spyOn(scope, "createRemoveModal");
+            spyOn(scope, "createRemoveModal").and.callThrough();
             scope.removeAdmin(0, 0);
             expect(scope.createRemoveModal).toHaveBeenCalled();
         });
         it("should call scope.createRemoveErrorModal", function () {
-            spyOn(scope, "createRemoveErrorModal");
+            spyOn(scope, "createRemoveErrorModal").and.callThrough();
             scope.removeAdmin(0, 0);
             expect(scope.createRemoveErrorModal).toHaveBeenCalled();
         });
@@ -350,7 +358,7 @@ describe("AdminController", function () {
             expect(scope.createRemoveModal).toHaveBeenCalled();
         });
         it("should call scope.createRemoveErrorModal", () => {
-            spyOn(scope, "createRemoveErrorModal");
+            spyOn(scope, "createRemoveErrorModal").and.callThrough();
             scope.removeAdmin(0, 0);
             expect(scope.createRemoveErrorModal).toHaveBeenCalled();
         });
