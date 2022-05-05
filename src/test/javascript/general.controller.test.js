@@ -536,8 +536,7 @@ describe("GeneralController", () => {
     describe("sanitizer", () => {
         let goodFile, badFile, parseFile;
         beforeEach(() => {
-            let bad1, bad2, bad3, bad4, bad5, bad6, bad7, bad8, bad9, bad10, bad11, bad12, bad13, bad14, bad15, bad16,
-                bad17;
+            let bad1, bad2, bad3, bad4, bad5, bad6, bad7, bad8, bad9, bad10, bad11;
             bad1 = "<img src onerror=alert(\"Gavin is testing\")/>\n";
             bad2 = "javascript:/*--></title></style></textarea></script></xmp><svg/onload='+/\"/+/onmouseover=1/+/[*/[]/+alert(1)//'>\n";
             bad3 = "<IMG SRC=\"javascript:alert('XSS');\">\n";
@@ -547,20 +546,13 @@ describe("GeneralController", () => {
             bad7 = "<IMG SRC=`javascript:alert(\"RSnake says, 'XSS'\")`>\n";
             bad8 = "\<a onmouseover=\"alert(document.cookie)\"\>xxs link\</a\>\n";
             bad9 = "\<a onmouseover=alert(document.cookie)\>xxs link\</a\>\n";
-            bad10 = "<IMG """><SCRIPT>alert("XSS")</SCRIPT>"\>";
-            bad11 = "<img src=x onerror=\"&#0000106&#0000097&#0000118&#0000097&#0000115&#0000099&#0000114&#0000105&#0000112&#0000116&#0000058&#0000097&#0000108&#0000101&#0000114&#0000116&#0000040&#0000039&#0000088&#0000083&#0000083&#0000039&#0000041\">";
-            bad12 = "<div id=\"init_data\" style=\"display: none\">\n" +
+            bad10 = "<img src=x onerror=\"&#0000106&#0000097&#0000118&#0000097&#0000115&#0000099&#0000114&#0000105&#0000112&#0000116&#0000058&#0000097&#0000108&#0000101&#0000114&#0000116&#0000040&#0000039&#0000088&#0000083&#0000083&#0000039&#0000041\">";
+            bad11 = "<div id=\"init_data\" style=\"display: none\">\n" +
                 " <%= html_encode(data.to_json) %>\n" +
                 "</div>\n";
-            bad13 = "perl -e 'print "<IMG SRC=java\0script:alert(\"XSS\")>";' > out\n";
-            bad14 = "<SCRIPT/XSS SRC="http://xss.rocks/xss.js"></SCRIPT>\n";
-            bad15 = "<BODY BACKGROUND="javascript:alert('XSS')">\n";
-            bad16 = "<STYLE>li {list-style-image: url("javascript:alert('XSS')");}\n";
-            bad17 = "Set.constructor\`alert\x28document.domain\x29</STYLE><UL><LI>XSS</br>\n";
-
 
             goodFile = "iamtst01\niamtst02\niamtst03\niamtst04\niamtst05\niamtst06\n22222222\n12345678\nbogusname\nfakename\n_1234455\n_iamtst01\n_test_123-abc";
-            badFile = `${bad1}${bad2}${bad3}${bad4}${bad5}${bad6}${bad7}${bad8}${bad9}${bad10}${bad11}${bad12}${bad13}${bad14}${bad15}${bad16}${bad17}`;
+            badFile = `${bad1}${bad2}${bad3}${bad4}${bad5}${bad6}${bad7}${bad8}${bad9}${bad10}${bad11}`;
             parseFile = (file) => {
                 scope.manageMembers = file.split(/[\r\n]+/);
                 let sanitizedFile = [];
