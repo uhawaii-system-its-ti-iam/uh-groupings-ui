@@ -309,7 +309,16 @@
                         parsedObject[keys[i]] = response.data[response.map[keys[i]]];
                 }
                 return parsedObject;
+            },
+
+            /**
+             * Checks if the owner of a grouping is a sole owner.
+             */
+            isSoleOwner(path, uidToCheck, onSuccess, onError) {
+                let endpoint = BASE_URL + path + "/owners/" + uidToCheck;
+                dataProvider.loadData(endpoint, onSuccess, onError);
             }
+
         };
     });
 }());
