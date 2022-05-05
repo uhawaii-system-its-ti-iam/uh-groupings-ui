@@ -538,21 +538,20 @@ describe("GeneralController", () => {
         beforeEach(() => {
             let bad1, bad2, bad3, bad4, bad5, bad6, bad7, bad8, bad9, bad10, bad11;
             bad1 = "<img src onerror=alert(\"Gavin is testing\")/>\n";
-            bad2 = "javascript:/*--></title></style></textarea></script></xmp><svg/onload='+/\"/+/onmouseover=1/+/[*/[]/+alert(1)//'>\n";
-            bad3 = "<IMG SRC=\"javascript:alert('XSS');\">\n";
-            bad4 = "<IMG SRC=javascript:alert('XSS')>\n";
-            bad5 = "<IMG SRC=JaVaScRiPt:alert('XSS')>\n";
-            bad6 = "<IMG SRC=javascript:alert(&quot;XSS&quot;)>\n";
-            bad7 = "<IMG SRC=`javascript:alert(\"RSnake says, 'XSS'\")`>\n";
-            bad8 = "\<a onmouseover=\"alert(document.cookie)\"\>xxs link\</a\>\n";
-            bad9 = "\<a onmouseover=alert(document.cookie)\>xxs link\</a\>\n";
-            bad10 = "<img src=x onerror=\"&#0000106&#0000097&#0000118&#0000097&#0000115&#0000099&#0000114&#0000105&#0000112&#0000116&#0000058&#0000097&#0000108&#0000101&#0000114&#0000116&#0000040&#0000039&#0000088&#0000083&#0000083&#0000039&#0000041\">";
-            bad11 = "<div id=\"init_data\" style=\"display: none\">\n" +
+            bad2 = "<IMG SRC=\"javascript:alert('XSS');\">\n";
+            bad3 = "<IMG SRC=javascript:alert('XSS')>\n";
+            bad4 = "<IMG SRC=JaVaScRiPt:alert('XSS')>\n";
+            bad5 = "<IMG SRC=javascript:alert(&quot;XSS&quot;)>\n";
+            bad6 = "<IMG SRC=`javascript:alert(\"RSnake says, 'XSS'\")`>\n";
+            bad7 = "\<a onmouseover=\"alert(document.cookie)\"\>xxs link\</a\>\n";
+            bad8 = "\<a onmouseover=alert(document.cookie)\>xxs link\</a\>\n";
+            bad9 = "<img src=x onerror=\"&#0000106&#0000097&#0000118&#0000097&#0000115&#0000099&#0000114&#0000105&#0000112&#0000116&#0000058&#0000097&#0000108&#0000101&#0000114&#0000116&#0000040&#0000039&#0000088&#0000083&#0000083&#0000039&#0000041\">";
+            bad10 = "<div id=\"init_data\" style=\"display: none\">\n" +
                 " <%= html_encode(data.to_json) %>\n" +
                 "</div>\n";
 
             goodFile = "iamtst01\niamtst02\niamtst03\niamtst04\niamtst05\niamtst06\n22222222\n12345678\nbogusname\nfakename\n_1234455\n_iamtst01\n_test_123-abc";
-            badFile = `${bad1}${bad2}${bad3}${bad4}${bad5}${bad6}${bad7}${bad8}${bad9}${bad10}${bad11}`;
+            badFile = `${bad1}${bad2}${bad3}${bad4}${bad5}${bad6}${bad7}${bad8}${bad9}${bad10}`;
             parseFile = (file) => {
                 scope.manageMembers = file.split(/[\r\n]+/);
                 let sanitizedFile = [];
@@ -1508,7 +1507,7 @@ describe("GeneralController", () => {
                         username: "monir",
                     }
                 ],
-            ]
+            ];
             scope.membersInCheckboxList = scope.pagedItemsInclude;
         });
 
@@ -2494,8 +2493,8 @@ describe("GeneralController", () => {
         beforeEach(() => { 
             scope.userToRemove = { 
                 username: "iamtst01"
-            }
-        })
+            };
+        });
         it("should return true if currentUser is the same as the userToRemove username", () => { 
             scope.currentUser = "iamtst01";
             expect(scope.showWarningRemovingSelfFromList()).toBeTrue();
