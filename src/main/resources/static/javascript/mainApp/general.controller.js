@@ -737,7 +737,7 @@
             };
             let handleSuccessfulAdd = (res) => {
                 $scope.successfulAddHandler(res, list, listName);
-            }
+            };
             $scope.waitingForImportResponse = true; /* Small spinner on. */
             if (listName === "Include") {
                 await groupingsService.addMembersToIncludeAsync(list, groupingPath, handleSuccessfulAdd, handleUnsuccessfulRequest, timeoutModal);
@@ -1775,7 +1775,7 @@
             loadMembersList = false;
 
             $scope.modelDescription = "";
-            groupingDescription = "";
+            $scope.groupingDescription = "";
             $scope.displayTracker = 1;
         };
 

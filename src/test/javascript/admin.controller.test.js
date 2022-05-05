@@ -188,11 +188,11 @@ describe("AdminController", function () {
         });
         
         it("should not call removeFromGroupsCallbackOnSuccess if selectedOwnedGroupings.length === 0"), () => {
-            scope.selectedOwnedGroupings = ['test'];
+            scope.selectedOwnedGroupings = ["test"];
             spyOn(scope, "removeFromGroupsCallbackOnSuccess").and.callThrough();
             
             expect(scope.removeFromGroupsCallbackOnSuccess).not.toHaveBeenCalled();
-        }
+        };
     });
 
     describe("removeFromGroupsCallbackOnSuccess", () => {

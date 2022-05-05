@@ -282,7 +282,7 @@ describe("GeneralController", () => {
         });
 
         it("should return a promise", () => {
-            spyOn(gs, 'getGrouping').and.returnValue(Promise.resolve(true));
+            spyOn(gs, "getGrouping").and.returnValue(Promise.resolve(true));
             scope.getPages(pagesOfGrouping.groupingPath, pagesOfGrouping.currentPage, pagesOfGrouping.PAGE_SIZE, pagesOfGrouping.sortString, pagesOfGrouping.isAscending);
             expect(gs.getGrouping).toHaveBeenCalled();
         });
@@ -547,16 +547,16 @@ describe("GeneralController", () => {
             bad7 = "<IMG SRC=`javascript:alert(\"RSnake says, 'XSS'\")`>\n";
             bad8 = "\<a onmouseover=\"alert(document.cookie)\"\>xxs link\</a\>\n";
             bad9 = "\<a onmouseover=alert(document.cookie)\>xxs link\</a\>\n";
-            bad10 = `<IMG """><SCRIPT>alert("XSS")</SCRIPT>"\>`;
+            bad10 = "<IMG """><SCRIPT>alert("XSS")</SCRIPT>"\>";
             bad11 = "<img src=x onerror=\"&#0000106&#0000097&#0000118&#0000097&#0000115&#0000099&#0000114&#0000105&#0000112&#0000116&#0000058&#0000097&#0000108&#0000101&#0000114&#0000116&#0000040&#0000039&#0000088&#0000083&#0000083&#0000039&#0000041\">";
             bad12 = "<div id=\"init_data\" style=\"display: none\">\n" +
                 " <%= html_encode(data.to_json) %>\n" +
                 "</div>\n";
-            bad13 = `perl -e 'print "<IMG SRC=java\0script:alert(\"XSS\")>";' > out\n`;
-            bad14 = `<SCRIPT/XSS SRC="http://xss.rocks/xss.js"></SCRIPT>\n`;
-            bad15 = `<BODY BACKGROUND="javascript:alert('XSS')">\n`;
-            bad16 = `<STYLE>li {list-style-image: url("javascript:alert('XSS')");}\n`;
-            bad17 = `Set.constructor\`alert\x28document.domain\x29</STYLE><UL><LI>XSS</br>\n`;
+            bad13 = "perl -e 'print "<IMG SRC=java\0script:alert(\"XSS\")>";' > out\n";
+            bad14 = "<SCRIPT/XSS SRC="http://xss.rocks/xss.js"></SCRIPT>\n";
+            bad15 = "<BODY BACKGROUND="javascript:alert('XSS')">\n";
+            bad16 = "<STYLE>li {list-style-image: url("javascript:alert('XSS')");}\n";
+            bad17 = "Set.constructor\`alert\x28document.domain\x29</STYLE><UL><LI>XSS</br>\n";
 
 
             goodFile = "iamtst01\niamtst02\niamtst03\niamtst04\niamtst05\niamtst06\n22222222\n12345678\nbogusname\nfakename\n_1234455\n_iamtst01\n_test_123-abc";
@@ -1477,7 +1477,7 @@ describe("GeneralController", () => {
                     inBasis: "No",
                     lastName: "Hodges",
                     name: "Monir F Hodges",
-                    uhUuid: "11111111",
+                    uhUuid: "1111",
                     username: "monir"
                 },
                 {
@@ -1485,20 +1485,20 @@ describe("GeneralController", () => {
                     inBasis: "No",
                     lastName: "Hodges",
                     name: "Monir F Hodges",
-                    uhUuid: "11111112",
+                    uhUuid: "1112",
                     username: "monir"
                 }
-            ]
+            ]; 
             scope.membersInCheckboxList = {
-                11111112: true,
-                11111111: true,
-            }
-        })
+                1112: true,
+                1111: true,
+            };
+        });
         it("should make the members in the checkbox list false", () => {
             scope.transferMembersFromPageToCheckboxObject(currentPage);
             expect(scope.membersInCheckboxList).toEqual({
-                11111112: false,
-                11111111: false,
+                1112: false,
+                1111: false,
             });
         });
     });
@@ -1859,7 +1859,7 @@ describe("GeneralController", () => {
 
     describe("createRemoveErrorModal", () => {
         it("should set userType to userType that is passed in", () => {
-            expect(scope.userType).toBe(undefined);
+            expect(scope.userType).toBeUndefined();
             scope.createRemoveErrorModal("admin");
             expect(scope.userType).toBe("admin");
         });
@@ -1969,7 +1969,7 @@ describe("GeneralController", () => {
     
     describe("createPreferenceInfoModal", () => {
         it("should set preferenceInfo to preferenceInfo that is passed in", () => {
-            expect(scope.preferenceInfo).toBe(undefined);
+            expect(scope.preferenceInfo).toBeUndefined();
             scope.createPreferenceInfoModal("test");
             expect(scope.preferenceInfo).toBe("test");
         });
