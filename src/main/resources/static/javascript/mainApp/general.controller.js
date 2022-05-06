@@ -12,6 +12,7 @@
     function GeneralJsController($scope, $window, $uibModal, $controller, groupingsService, dataProvider, PAGE_SIZE, Message) {
         $scope.userToAdd = "";
         $scope.usersToAdd = "";
+        $scope.manageMembers = "";
         $scope.multiAddThreshold = 100;
         $scope.maxImport = 100000;
         $scope.multiAddResults = [];
@@ -22,6 +23,8 @@
         $scope.resetUser = [];
         $scope.resetID = [];
         $scope.resetName = [];
+        // This is a regex Pattern that contains all valid UH Identifiers which consists of uid (Username) and uhUuid (UH Numbers) chars.
+        $scope.uhIdentifierPattern = new RegExp("^[_?a-z-?@?0-9]{3,64}$");
 
         // Batch delete
         $scope.memberToRemove = "";
@@ -589,19 +592,18 @@
         };
 
         /**
-         * Take $scope.usersToAdd count the number of words it contains and split it into a comma separated string, then
+         * Take $scope.manageMembers count the number of words it contains and split it into a comma separated string, then
          * decide whether to a multi add or a single add is necessary.
          * @param listName
          */
         $scope.addMembers = function (listName) {
-            $scope.listName = listName;
-            if (_.isEmpty($scope.usersToAdd)) {
+            if (_.isEmpty($scope.manageMembers)) {
                 $scope.emptyInput = true;
             } else {
-                let numMembers = ($scope.usersToAdd.split(" ").length - 1);
+                let numMembers = ($scope.manageMembers.split(" ").length - 1);
                 if (numMembers > 0) {
-                    let users = $scope.usersToAdd.split(/[ ,]+/).join(",");
-                    $scope.usersToAdd = [];
+                    let users = $scope.manageMembers.split(/[ ,]+/).join(",");
+                    $scope.manageMembers = [];
                     if (numMembers > $scope.maxImport) {
                         $scope.launchDynamicModal(
                             Message.Title.IMPORT_OUT_OF_BOUNDS,
@@ -612,14 +614,14 @@
                             $scope.launchDynamicModal(
                                 Message.Title.LARGE_IMPORT,
                                 `You are attempting to import ${numMembers} new users to the ${listName} list.
-                             Imports larger than ${$scope.multiAddThreshold} can take a few minutes.  An email with 
+                             Imports larger than ${$scope.multiAddThreshold} can take a few minutes.  An email with
                              the import results will be sent.`,
                                 8000);
                         }
                         $scope.addMultipleMembers(users, listName);
                     }
                 } else {
-                    $scope.userToAdd = $scope.usersToAdd;
+                    $scope.userToAdd = $scope.manageMembers;
                     $scope.validateAndAddUser($scope.userToAdd, listName);
                 }
             }
@@ -627,9 +629,9 @@
 
         // Checks that a users name matches the pattern of either a valid uid or a uhUuid
         $scope.sanitizer = (name) => {
-            const regexPattern = new RegExp("^[_?a-z-?@?0-9]{3,64}$");
-            if (name != null && regexPattern.test(name)) {
-                const validInput = name.match(regexPattern);
+            const trimmedLowercaseName = name.toLowerCase().trim();
+            if (trimmedLowercaseName != null && $scope.uhIdentifierPattern.test(trimmedLowercaseName)) {
+                const validInput = trimmedLowercaseName.match($scope.uhIdentifierPattern);
                 return validInput.toString();
             }
         };
@@ -641,25 +643,22 @@
          * $event.currentTarget.parentNode.childNodes should be passed into a console.log and inspected to determine
          * which index of childNodes is housing the input.
          */
-        $scope.readTextFile = function ($event) {
-            let input = $event.currentTarget.parentNode.childNodes[3];
-            let file = input.files[0];
+        $scope.readTextFile = function (inputFile) {
             let reader = new FileReader();
             reader.onload = function (e) {
                 let str = e.target.result;
-                $scope.usersToAdd = str.split(/[\r\n]+/);
+                $scope.manageMembers = str.split(/[\r\n,]+/);
                 let sanitizedFile = [];
-                for (const users of $scope.usersToAdd) {
-                    let sanitizedName = $scope.sanitizer(users);
+                for (const members of $scope.manageMembers) {
+                    let sanitizedName = $scope.sanitizer(members);
                     if (sanitizedName != null) {
                         sanitizedFile.push(sanitizedName);
                     }
                 }
-                // Change the array to a string
-                $scope.usersToAdd = sanitizedFile.join(" ");
+                $scope.manageMembers = sanitizedFile.join(" ");
                 $scope.addMembers($scope.listName);
             };
-            reader.readAsText(file);
+            reader.readAsText(inputFile);
         };
 
         /**
@@ -707,7 +706,7 @@
                 $scope.launchDynamicModal(Message.Title.NO_MEMBERS_ADDED, Message.Body.NO_MEMBERS_ADDED);
             }
         };
-        
+
         /**
          * Send the list of users to be added to the server as an HTTP POST request.
          * @param list - comma separated string of user names to be added
@@ -723,7 +722,7 @@
                     Message.Body.SLOW_IMPORT,
                     8000);
             };
-            let handleSuccessfulAdd = (res) => { 
+            let handleSuccessfulAdd = (res) => {
                 $scope.successfulAddHandler(res, list, listName);
             }
             $scope.waitingForImportResponse = true; /* Small spinner on. */

@@ -7,15 +7,12 @@
     </button>
 </div>
 <div class="modal-body" id="modal-body">
-    <div>
-        <p> Upload a text file (.txt). The file should consist of a list of UH user names or ids separated by newline characters. </p>
-        <input type="file" accept="text/plain">
-        <button class="btn btn-primary" ng-click="readTextFile($event); cancelImportModalInstance()">
-            Import
-        </button>
-    </div>
+    <p th:utext="#{screen.message.admin.modal.importFile}"></p>
+    <input type="file" ng-model="inputFile" file-model="inputFile" accept="text/plain">
+    <button class="btn btn-primary" ng-click="readTextFile(inputFile); cancelImportModalInstance()">
+        Import
+    </button>
 </div>
 <div class="modal-footer">
 </div>
 </html>
-
