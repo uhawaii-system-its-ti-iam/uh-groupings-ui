@@ -314,14 +314,14 @@
                                 <echo>here are some common goals for this project:</echo>
                                 <echo/>
                                 <echo>To run the unit tests with your Grouper server:</echo>
-                                <echo>$ mvn clean test</echo>
+                                <echo>$ ./mvnw clean test</echo>
                                 <echo>To run the javascript tests with jasmine:</echo>
-                                <echo>$ mvn clean jasmine:test</echo>
+                                <echo>$ ./mvnw clean jasmine:test</echo>
                                 <echo>To create a jacoco test report:</echo>
-                                <echo>$ mvn clean test jacoco:report</echo>
+                                <echo>$ ./mvnw clean test jacoco:report</echo>
                                 <echo/>
                                 <echo>To run UH Groupings locally:</echo>
-                                <echo>$ mvn clean spring-boot:run</echo>
+                                <echo>$ ./mvnw clean spring-boot:run</echo>
                                 <echo/>
                                 <echo>To access a list of possible commands:</echo>
                                 <echo>
