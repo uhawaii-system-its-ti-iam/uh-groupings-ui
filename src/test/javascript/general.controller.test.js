@@ -288,9 +288,9 @@ describe("GeneralController", function () {
             goodFile = "iamtst01\niamtst02\niamtst03\niamtst04\niamtst05\niamtst06\n22222222\n12345678\nbogusname\nfakename\n_1234455\n_iamtst01\n_test_123-abc";
             badFile = `${bad1}${bad2}${bad3}${bad4}${bad5}${bad6}${bad7}${bad8}${bad9}${bad10}${bad11}${bad12}${bad13}${bad14}${bad15}${bad16}${bad17}`;
             parseFile = (file) => {
-                scope.usersToAdd = file.split(/[\r\n]+/);
+                scope.manageMembers = file.split(/[\r\n]+/);
                 let sanitizedFile = [];
-                for (const users of scope.usersToAdd) {
+                for (const users of scope.manageMembers) {
                     let sanitizedName = scope.sanitizer(users);
                     if (sanitizedName != null) {
                         sanitizedFile.push(sanitizedName);
@@ -481,27 +481,27 @@ describe("GeneralController", function () {
             expect((scope.listName)).toBe("admin");
         });
 
-        it("should make scope.emptyInput true if scope.usersToAdd is empty", () => {
+        it("should make scope.emptyInput true if scope.manageMembers is empty", () => {
             scope.emptyInput = false;
-            scope.usersToAdd = null;
+            scope.manageMembers = null;
             scope.addMembers(scope.listName);
             expect(scope.emptyInput).toBeTrue();
         });
 
-        it("should call addMultipleMembers when the usersToAdd is below our maxImport", () => {
+        it("should call addMultipleMembers when the manageMembers is below our maxImport", () => {
             spyOn(scope, "addMultipleMembers");
-            scope.usersToAdd = "iamtst01 iamtst02";
+            scope.manageMembers = "iamtst01 iamtst02";
             scope.addMembers(scope.listName);
             expect(scope.addMultipleMembers).toHaveBeenCalled();
         });
 
-        it("should call launchDynamicModal when the usersToAdd is above the multiAddThreshold", () => {
+        it("should call launchDynamicModal when the manageMembers is above the multiAddThreshold", () => {
             spyOn(scope, "launchDynamicModal");
             let arr = [];
             for (let i = 0; i < 102; i++) {
                 arr.push("iamtst01");
             }
-            scope.usersToAdd = arr.toString().split(",").join(" ");
+            scope.manageMembers = arr.toString().split(",").join(" ");
             scope.addMembers(scope.listName);
             expect(scope.launchDynamicModal).toHaveBeenCalled();
         });
@@ -512,16 +512,16 @@ describe("GeneralController", function () {
             for (let i = 0; i < 100002; i++) {
                 arr.push("iamtst01");
             }
-            scope.usersToAdd = arr.toString().split(",").join(" ");
+            scope.manageMembers = arr.toString().split(",").join(" ");
             scope.addMembers(scope.listName);
             expect(scope.launchDynamicModal).toHaveBeenCalled();
         });
 
         it("should call validateAndAddUser when numMembers is less than 0", () => {
             spyOn(scope, "validateAndAddUser");
-            scope.usersToAdd = "iamtst01";
+            scope.manageMembers = "iamtst01";
             scope.addMembers(scope.listName);
-            expect(scope.usersToAdd).toBe("iamtst01");
+            expect(scope.manageMembers).toBe("iamtst01");
             expect(scope.validateAndAddUser).toHaveBeenCalled();
         });
     });
@@ -534,8 +534,8 @@ describe("GeneralController", function () {
                 `iamtst01\niamtst02\niamtst03\niamtst04\niamtst05\niamtst06`;
 
             reader.onload = {
-                usersToAdd: (file) => {
-                    scope.usersToAdd = (file.split(/[\r\n]+/).join(" ")).slice();
+                manageMembers: (file) => {
+                    scope.manageMembers = (file.split(/[\r\n]+/).join(" ")).slice();
                 },
                 addMembers: (listName) => {
                     scope.addMembers(listName);
@@ -543,9 +543,9 @@ describe("GeneralController", function () {
             };
         });
 
-        it("should check that scope.usersToAdd has been returned as a space seperated string", () => {
-            reader.onload.usersToAdd(goodFile);
-            expect(scope.usersToAdd).toBe("iamtst01 iamtst02 iamtst03 iamtst04 iamtst05 iamtst06");
+        it("should check that scope.manageMembers has been returned as a space seperated string", () => {
+            reader.onload.manageMembers(goodFile);
+            expect(scope.manageMembers).toBe("iamtst01 iamtst02 iamtst03 iamtst04 iamtst05 iamtst06");
         });
     });
 
@@ -918,14 +918,14 @@ describe("GeneralController", function () {
             expect(scope.multiAddResults).toEqual(duplicatePeople);
             expect(scope.multiAddResultsGeneric).toEqual(duplicatePeople);
         });
-        
+
         it("should call the launchMultiAddResultModal if the multiAddResults length is > 0", () => {
             spyOn(scope, "launchMultiAddResultModal");
             // Add people to the multiAddResults array
             scope.successfulAddHandler(res, membersToAdd, "Include");
             expect(scope.multiAddResults.length).toBe(4);
             expect(scope.launchMultiAddResultModal).toHaveBeenCalled();
-            
+
         });
 
         it("should call the launchDynamicModal if the multiAddResults length is < 0", () => {
@@ -937,7 +937,7 @@ describe("GeneralController", function () {
             expect(scope.launchDynamicModal).toHaveBeenCalled();
         });
     });
-    
+
     describe("addMultipleMembers", () => {
         let membersToAdd;
         beforeEach(() => {
