@@ -76,7 +76,7 @@
 // Basis and Exclude tab.
 
 // Members to remove section.
-.input-group {
+.input-group.long {
     width: 35em;
 }
 
@@ -113,5 +113,12 @@
 
     #returnToGroup {
         display: table-header-group; /* Makes the button the header of table */
+    }
+}
+
+ //Exports to CSV button
+@media (min-width: 377px) {
+    #csvButton {
+        float: right;
     }
 }
