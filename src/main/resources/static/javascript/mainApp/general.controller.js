@@ -258,10 +258,6 @@
 
                 groupingsService.getGrouping(groupingPath, currentPage, PAGE_SIZE, "name", true, async function (res) {
 
-                    // if (res.composite.members[0].whereListed == null) { 
-                    //     document.querySelector(".fa.fa-users").click();
-                    // }
-                    // Gets the description go the group
                     if (res.description === null) {
                         groupingDescription = "";
                     } else {
@@ -275,7 +271,7 @@
                         case "All": {
                             //Gets members in grouping
                             $scope.groupingMembers = setGroupMembers(res.composite.members);
-                            await $scope.addWhereListed($scope.groupingMembers);
+                            $scope.addWhereListed($scope.groupingMembers);
                             $scope.filter($scope.groupingMembers, "pagedItemsMembers", "currentPageMembers", $scope.membersQuery, true);
                             break;
                         }
