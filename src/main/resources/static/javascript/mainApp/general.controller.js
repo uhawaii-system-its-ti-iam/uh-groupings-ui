@@ -1627,7 +1627,7 @@
             switch (listName) {
                 case "Include":
                 case "Exclude":
-                    $scope.userToAdd = "";
+                    $scope.manageMembers = "";
                     $scope.usersToAdd = "";
                     $scope.userNameList = [];
                     $scope.multiAddResults = [];
@@ -1654,7 +1654,7 @@
                     $scope.adminToAdd = "";
                     break;
                 default:
-                    $scope.userToAdd = "";
+                    $scope.manageMembers = "";
                     $scope.ownerToAdd = "";
                     $scope.adminToAdd = "";
             }
