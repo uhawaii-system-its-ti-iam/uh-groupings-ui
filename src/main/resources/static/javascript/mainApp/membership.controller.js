@@ -98,7 +98,6 @@
 
         $scope.closeOptErrorModal = function () {
             $scope.optErrorModalInstance.close();
-            $scope.optErrorModalInstance.close();
         };
 
         /**

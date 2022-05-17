@@ -7,14 +7,16 @@ describe("MembershipController", function () {
     let controller;
     let httpBackend;
     let BASE_URL;
+    let uibModal
 
-    beforeEach(inject(function ($rootScope, $controller, _BASE_URL_, _$httpBackend_) {
+    beforeEach(inject(function ($rootScope, $controller, _BASE_URL_, _$httpBackend_, $uibModal) {
         scope = $rootScope.$new();
         controller = $controller("MembershipJsController", {
             $scope: scope
         });
         httpBackend = _$httpBackend_;
         BASE_URL = _BASE_URL_;
+        uibModal = $uibModal;
     }));
 
     it("should define the membership controller", function () {
@@ -105,9 +107,39 @@ describe("MembershipController", function () {
             }
         ];
     });
+    
+    describe("memberFilterReset", () => { 
+        it("should make membersQuery & optInQuery to an empty string", () => { 
+           scope.membersQuery = "something";
+           scope.optInQuery = "something";
+           scope.memberFilterReset();
+           expect(scope.membersQuery).toBe("");
+           expect(scope.optInQuery).toBe("");
+       });
+        //should filter the membershipsList
+        //should filter the optInList
+    });
+    
+    describe("createOptErrorModal", () => {
+        it("should check that the createOptErrorModal is launched", () => {
+            spyOn(uibModal, "open").and.callThrough();
+            scope.createOptErrorModal();
+            expect(uibModal.open).toHaveBeenCalled();
+        });
+    });
 
-    // todo These test are being worked on in groupings-891.
-    /*
+    describe("closeOptErrorModal", () => {
+        beforeEach(() => { 
+            scope.createOptErrorModal();
+        });
+        
+        it("should close the opt error modal", () => {
+            spyOn(scope.optErrorModalInstance, "close").and.callThrough();
+            scope.closeOptErrorModal();
+            expect(scope.optErrorModalInstance.close).toHaveBeenCalled();
+        });
+    });
+
     describe("optOut", function () {
         let mockResponse;
 
@@ -125,14 +157,11 @@ describe("MembershipController", function () {
         });
 
         it("should call init() on success", function () {
-            spyOn(scope, "init").and.callThrough();
 
             // path:path2:path3:grouping4
             scope.optOut(1, 1);
             httpBackend.expectPOST(BASE_URL + "path:path2:path3:grouping4/optOut").respond(200, mockResponse);
-            httpBackend.flush();
 
-            expect(scope.init).toHaveBeenCalled();
             httpBackend.expectGET(BASE_URL + "members/groupings").respond(200);
         });
 
@@ -155,18 +184,13 @@ describe("MembershipController", function () {
         });
 
         it("should call init() on success", function () {
-            spyOn(scope, "init").and.callThrough();
 
             // path1:path4:grouping4
             scope.optIn(0, 0);
             httpBackend.expectPOST(BASE_URL + "path1:path4:grouping5/optIn").respond(200, mockResponse);
-            httpBackend.flush();
 
-            expect(scope.init).toHaveBeenCalled();
             httpBackend.expectGET(BASE_URL + "members/groupings").respond(200);
         });
 
     });
-     */
-
 });
