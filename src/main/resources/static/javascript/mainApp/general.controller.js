@@ -1863,7 +1863,6 @@
         };
 
         $scope.resetGroup = function () {
-            let i;
             let listNames = "";
             let exBool = false;
             let inBool = false;
@@ -1872,8 +1871,17 @@
             } else {
                 inBool = true;
                 $scope.resetInclude = [];
-                for (i = 0; i < $scope.groupingInclude.length; i++) {
+                for (let i = 0; i < $scope.groupingInclude.length; i++) {
                     $scope.resetInclude.push($scope.groupingInclude[i].uhUuid);
+                }
+            }
+            if (Object.entries($scope.groupingExclude).length === 0 || $scope.excludeCheck === false) {
+                $scope.resetExclude = "empty";
+            } else {
+                exBool = true;
+                $scope.resetExclude = [];
+                for (let excludedGrouping of $scope.groupingExclude) {
+                    $scope.resetExclude.push(excludedGrouping.uhUuid);
                 }
             }
 
@@ -1885,7 +1893,7 @@
                 listNames = "Exclude list";
             }
 
-            let resetAll;
+            let resetAll = null;
             if ($scope.excludeCheck === true && $scope.includeCheck === true) {
                 resetAll = $scope.groupingInclude.concat($scope.groupingExclude);
             } else if ($scope.excludeCheck === true && $scope.includeCheck === false) {
