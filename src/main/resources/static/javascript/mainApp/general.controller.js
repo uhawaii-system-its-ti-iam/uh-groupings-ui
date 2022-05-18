@@ -1876,8 +1876,8 @@
             } else {
                 exBool = true;
                 $scope.resetExclude = [];
-                for (let i = 0; i < $scope.groupingExclude.length; i++) {
-                    $scope.resetExclude.push($scope.groupingExclude[i].uhUuid);
+                for (let excludedGrouping of $scope.groupingExclude) {
+                    $scope.resetExclude.push(excludedGrouping.uhUuid);
                 }
             }
 
