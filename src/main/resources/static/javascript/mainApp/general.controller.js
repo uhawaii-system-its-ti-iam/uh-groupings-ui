@@ -258,7 +258,6 @@
 
                 groupingsService.getGrouping(groupingPath, currentPage, PAGE_SIZE, "name", true, async function (res) {
 
-                    // Gets the description go the group
                     if (res.description === null) {
                         groupingDescription = "";
                     } else {
@@ -268,7 +267,6 @@
                     $scope.descriptionLoaded = true;
                     $scope.paginatingProgress = true;
                     $scope.paginatingComplete = false;
-
                     switch (type) {
                         case "All": {
                             //Gets members in grouping
@@ -305,11 +303,6 @@
                             break;
                         }
                         default: {
-                            //Gets members in grouping
-                            $scope.groupingMembers = setGroupMembers(res.composite.members);
-                            $scope.addWhereListed($scope.groupingMembers);
-                            $scope.filter($scope.groupingMembers, "pagedItemsMembers", "currentPageMembers", $scope.membersQuery, true);
-
                             // Gets members in the basis group
                             $scope.groupingBasis = setGroupMembers(res.basis.members);
                             $scope.filter($scope.groupingBasis, "pagedItemsBasis", "currentPageBasis", $scope.basisQuery, true);
@@ -324,6 +317,12 @@
                             $scope.addInBasis($scope.groupingExclude);
                             $scope.filter($scope.groupingExclude, "pagedItemsExclude", "currentPageExclude", $scope.excludeQuery, true);
 
+                            //Gets members in grouping
+                            $scope.groupingMembers = setGroupMembers(res.composite.members);
+                            $scope.addWhereListed($scope.groupingMembers);
+                            console.log($scope.groupingMembers);
+                            $scope.filter($scope.groupingMembers, "pagedItemsMembers", "currentPageMembers", $scope.membersQuery, true);
+                            
                             //Gets owners of the grouping
                             $scope.groupingOwners = setGroupMembers(res.owners.members);
                             $scope.pagedItemsOwners = $scope.groupToPages($scope.groupingOwners);
