@@ -313,11 +313,6 @@
                             break;
                         }
                         default: {
-                            //Gets members in grouping
-                            $scope.groupingMembers = setGroupMembers(res.composite.members);
-                            $scope.addWhereListed($scope.groupingMembers);
-                            $scope.filter($scope.groupingMembers, "pagedItemsMembers", "currentPageMembers", $scope.membersQuery, true);
-
                             // Gets members in the basis group
                             $scope.groupingBasis = setGroupMembers(res.basis.members);
                             $scope.filter($scope.groupingBasis, "pagedItemsBasis", "currentPageBasis", $scope.basisQuery, true);
@@ -331,6 +326,11 @@
                             $scope.groupingExclude = setGroupMembers(res.exclude.members);
                             $scope.addInBasis($scope.groupingExclude);
                             $scope.filter($scope.groupingExclude, "pagedItemsExclude", "currentPageExclude", $scope.excludeQuery, true);
+
+                            //Gets members in grouping
+                            $scope.groupingMembers = setGroupMembers(res.composite.members);
+                            $scope.addWhereListed($scope.groupingMembers);
+                            $scope.filter($scope.groupingMembers, "pagedItemsMembers", "currentPageMembers", $scope.membersQuery, true);
 
                             //Gets owners of the grouping
                             $scope.groupingOwners = setGroupMembers(res.owners.members);
