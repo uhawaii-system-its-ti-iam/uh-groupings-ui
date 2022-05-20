@@ -7,7 +7,7 @@ describe("MembershipController", function () {
     let controller;
     let httpBackend;
     let BASE_URL;
-    let uibModal
+    let uibModal;
 
     beforeEach(inject(function ($rootScope, $controller, _BASE_URL_, _$httpBackend_, $uibModal) {
         scope = $rootScope.$new();
