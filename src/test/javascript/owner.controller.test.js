@@ -34,4 +34,15 @@ describe("OwnerController", function () {
             expect(gs.getGroupingsOwned).toHaveBeenCalled();
         });
     })
+
+    describe("hoverCopy", () => {
+        // let test = $("[data-content='copy']");
+        it("should copy popover when clipboard is being hovered", () => {
+            spyOn($.fn, "popover").and.callThrough();
+            // $("[data-content='copy']");
+
+            scope.hoverCopy();
+            expect($.fn.popover).toHaveBeenCalled()
+        });
+    });
 })
