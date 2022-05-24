@@ -1,3 +1,4 @@
+/*global inject, a*/
 describe("MembershipController", function () {
 
     beforeEach(module("UHGroupingsApp"));
@@ -116,8 +117,6 @@ describe("MembershipController", function () {
            expect(scope.membersQuery).toBe("");
            expect(scope.optInQuery).toBe("");
        });
-        //should filter the membershipsList
-        //should filter the optInList
     });
     
     describe("createOptErrorModal", () => {
@@ -191,6 +190,14 @@ describe("MembershipController", function () {
 
             httpBackend.expectGET(BASE_URL + "members/groupings").respond(200);
         });
+    });
 
+    describe("hoverCopy", () => {
+        it("should copy popover when clipboard is being hovered", () => {
+            spyOn($.fn, "popover").and.callThrough();
+
+            scope.hoverCopy();
+            expect($.fn.popover).toHaveBeenCalled();
+        });
     });
 });
