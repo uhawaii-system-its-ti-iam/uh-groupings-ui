@@ -10,9 +10,6 @@ describe("OwnerController", function () {
     let BASE_URL;
     let gs;
 
-    /*global inject, a*/
-    /*eslint no-undef: "error"*/
-
     beforeEach(inject(function ($rootScope, $controller, _BASE_URL_, _$httpBackend_, groupingsService) {
         scope = $rootScope.$new();
         controller = $controller("OwnerJsController", {
