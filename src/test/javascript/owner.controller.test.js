@@ -19,7 +19,7 @@ describe("OwnerController", function () {
         gs = groupingsService;
     }));
 
-    it("should define the owner controller", function () {
+    it("should define the owner controller", () => {
         expect(controller).toBeDefined();
     });
 
@@ -33,13 +33,11 @@ describe("OwnerController", function () {
             expect(scope.loading).toBeTrue();
             expect(gs.getGroupingsOwned).toHaveBeenCalled();
         });
-    })
+    });
 
     describe("hoverCopy", () => {
-        // let test = $("[data-content='copy']");
         it("should copy popover when clipboard is being hovered", () => {
             spyOn($.fn, "popover").and.callThrough();
-            // $("[data-content='copy']");
 
             scope.hoverCopy();
             expect($.fn.popover).toHaveBeenCalled()
