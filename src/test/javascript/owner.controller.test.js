@@ -1,3 +1,4 @@
+/*global inject, a*/
 describe("OwnerController", function () {
 
     beforeEach(module("UHGroupingsApp"));
@@ -40,7 +41,7 @@ describe("OwnerController", function () {
             spyOn($.fn, "popover").and.callThrough();
 
             scope.hoverCopy();
-            expect($.fn.popover).toHaveBeenCalled()
+            expect($.fn.popover).toHaveBeenCalled();
         });
     });
-})
+});
