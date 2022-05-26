@@ -624,7 +624,7 @@ public class GroupingsRestControllerTest {
     @Test
     @WithMockUhUser
     public void allSyncDestinationsTest() throws Exception {
-        String uri = REST_CONTROLLER_BASE + "/groupings/" + GROUPING + "/syncDestinations";
+        String uri = REST_CONTROLLER_BASE + "/groupings/" + GROUPING + "/sync-destinations";
 
         given(httpRequestService.makeApiRequest(eq(USERNAME), anyString(), eq(HttpMethod.GET)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));

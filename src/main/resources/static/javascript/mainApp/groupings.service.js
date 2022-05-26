@@ -268,7 +268,7 @@
              * Get the list of sync destinations
              */
             getSyncDestList(path, onSuccess, onError) {
-                let endpoint = BASE_URL + "groupings/" + path + "/syncDestinations";
+                let endpoint = BASE_URL + "groupings/" + path + "/sync-destinations";
                 dataProvider.loadData(endpoint, onSuccess, onError);
             },
 
