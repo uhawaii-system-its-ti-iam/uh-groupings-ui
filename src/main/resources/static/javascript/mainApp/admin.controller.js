@@ -20,8 +20,6 @@
         $scope.emptySelect = false;
         $scope.selectedOwnedGroupingsNames = [];
 
-        let totalCheckBoxCount = 0;
-        let currentCheckBoxCount = 0;
         let PAGE_SIZE = 20;
 
         angular.extend(this, $controller("GeneralJsController", { $scope: $scope }));
