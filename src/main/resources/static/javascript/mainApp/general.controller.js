@@ -816,13 +816,8 @@
 
         /**
          * Launch a modal with a title, and body message. The modal will dismiss in the case of pressing the ok button
-         * and/or if the timeTillClose is set and time runs out. The modal will timeout unless the timeTillClose is
-         * set. Unless the title and/or body string being passed contains arbitrary values determined at runtime then
-         * the string should be stored and accessed through Messages in app.constants.js.
-         *
-         * @param title - message title to be displayed in modal header
-         * @param body - message body to be displayed in modal body
-         * @param timeTillClose - Millisecond till modal is modal is automatically closed.
+         * and/or if the timeTillClose is set and time runs out. The modal will not timeout unless the timeTillClose is
+         * set.
          */
         $scope.launchDynamicModal = function (title, body, timeTillClose) {
             $scope.currentModalTitle = title;
@@ -832,16 +827,14 @@
                 templateUrl: "modal/dynamicModal",
                 scope: $scope
             });
-
-            $scope.dismissDynamicModal = function () {
-                if (undefined !== timeTillClose) {
-                    let closeOnTimeout = function () {
-                        $scope.createDynamicModal.dismiss();
-                    };
-                    setTimeout(closeOnTimeout, timeTillClose);
-                } else {
+            if (undefined !== timeTillClose) {
+                let closeOnTimeout = function () {
                     $scope.createDynamicModal.dismiss();
-                }
+                };
+                setTimeout(closeOnTimeout, timeTillClose);
+            }
+            $scope.dismissDynamicModal = function () {
+                $scope.createDynamicModal.dismiss();
             };
         };
 
