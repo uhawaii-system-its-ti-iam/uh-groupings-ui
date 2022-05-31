@@ -1,4 +1,4 @@
-/*global inject, a*/
+/*global inject*/
 describe("MembershipController", function () {
 
     beforeEach(module("UHGroupingsApp"));
