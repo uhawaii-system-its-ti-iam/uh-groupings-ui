@@ -322,7 +322,7 @@
                             $scope.addWhereListed($scope.groupingMembers);
                             console.log($scope.groupingMembers);
                             $scope.filter($scope.groupingMembers, "pagedItemsMembers", "currentPageMembers", $scope.membersQuery, true);
-                            
+
                             //Gets owners of the grouping
                             $scope.groupingOwners = setGroupMembers(res.owners.members);
                             $scope.pagedItemsOwners = $scope.groupToPages($scope.groupingOwners);
@@ -613,9 +613,8 @@
                             $scope.launchDynamicModal(
                                 Message.Title.LARGE_IMPORT,
                                 `You are attempting to import ${numMembers} new users to the ${listName} list.
-                             Imports larger than ${$scope.multiAddThreshold} can take a few minutes.  An email with
-                             the import results will be sent.`,
-                                8000);
+                             Imports larger than ${$scope.multiAddThreshold} can take a few minutes. Please feel free 
+                             to exit your browser while the add is taking place.`, 8000);
                         }
                         $scope.addMultipleMembers(users, listName);
                     }
@@ -714,21 +713,14 @@
          */
         $scope.addMultipleMembers = async function (list, listName) {
             let groupingPath = $scope.selectedGrouping.path;
-
-            let timeoutModal = function () {
-                return $scope.launchDynamicModal(
-                    Message.Title.SLOW_IMPORT,
-                    Message.Body.SLOW_IMPORT,
-                    8000);
-            };
             let handleSuccessfulAdd = (res) => {
                 $scope.successfulAddHandler(res, list, listName);
-            }
+            };
             $scope.waitingForImportResponse = true; /* Small spinner on. */
             if (listName === "Include") {
-                await groupingsService.addMembersToIncludeAsync(list, groupingPath, handleSuccessfulAdd, handleUnsuccessfulRequest, timeoutModal);
+                await groupingsService.addMembersToInclude(list, groupingPath, handleSuccessfulAdd, handleUnsuccessfulRequest);
             } else if (listName === "Exclude") {
-                await groupingsService.addMembersToExcludeAsync(list, groupingPath, handleSuccessfulAdd, handleUnsuccessfulRequest, timeoutModal);
+                await groupingsService.addMembersToExclude(list, groupingPath, handleSuccessfulAdd, handleUnsuccessfulRequest);
             }
         };
 
@@ -800,13 +792,8 @@
 
         /**
          * Launch a modal with a title, and body message. The modal will dismiss in the case of pressing the ok button
-         * and/or if the timeTillClose is set and time runs out. The modal will timeout unless the timeTillClose is
-         * set. Unless the title and/or body string being passed contains arbitrary values determined at runtime then
-         * the string should be stored and accessed through Messages in app.constants.js.
-         *
-         * @param title - message title to be displayed in modal header
-         * @param body - message body to be displayed in modal body
-         * @param timeTillClose - Millisecond till modal is modal is automatically closed.
+         * and/or if the timeTillClose is set and time runs out. The modal will not timeout unless the timeTillClose is
+         * set.
          */
         $scope.launchDynamicModal = function (title, body, timeTillClose) {
             $scope.currentModalTitle = title;
@@ -816,16 +803,14 @@
                 templateUrl: "modal/dynamicModal",
                 scope: $scope
             });
-
-            $scope.dismissDynamicModal = function () {
-                if (undefined !== timeTillClose) {
-                    let closeOnTimeout = function () {
-                        $scope.createDynamicModal.dismiss();
-                    };
-                    setTimeout(closeOnTimeout, timeTillClose);
-                } else {
+            if (undefined !== timeTillClose) {
+                let closeOnTimeout = function () {
                     $scope.createDynamicModal.dismiss();
-                }
+                };
+                setTimeout(closeOnTimeout, timeTillClose);
+            }
+            $scope.dismissDynamicModal = function () {
+                $scope.createDynamicModal.dismiss();
             };
         };
 
