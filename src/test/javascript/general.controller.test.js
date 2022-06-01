@@ -943,10 +943,10 @@ describe("GeneralController", function () {
         beforeEach(() => {
             membersToAdd = "iamtst01,iamtst02,iamtst03,iamtst04";
         });
-        it("should return a call to addMembersToIncludeAsync", () => {
-            spyOn(gs, "addMembersToIncludeAsync");
+        it("should return a call to addMembersToInclude", () => {
+            spyOn(gs, "addMembersToInclude");
             scope.addMultipleMembers(membersToAdd, "Include");
-            expect(gs.addMembersToIncludeAsync).toHaveBeenCalled();
+            expect(gs.addMembersToInclude).toHaveBeenCalled();
         });
 
         it("should turn the small spinner off", () => {
@@ -955,16 +955,16 @@ describe("GeneralController", function () {
         });
 
         describe("add user to Include and Exclude list", () => {
-            it("should return a call to addMembersToExcludeAsync", () => {
-                spyOn(gs, "addMembersToExcludeAsync");
+            it("should return a call to addMembersToExclude", () => {
+                spyOn(gs, "addMembersToExclude");
                 scope.addMultipleMembers(membersToAdd, "Exclude");
-                expect(gs.addMembersToExcludeAsync).toHaveBeenCalled();
+                expect(gs.addMembersToExclude).toHaveBeenCalled();
             });
 
-            it("should return a call to addMembersToIncludeAsync", () => {
-                spyOn(gs, "addMembersToIncludeAsync");
+            it("should return a call to addMembersToInclude", () => {
+                spyOn(gs, "addMembersToInclude");
                 scope.addMultipleMembers(membersToAdd, "Include");
-                expect(gs.addMembersToIncludeAsync).toHaveBeenCalled();
+                expect(gs.addMembersToInclude).toHaveBeenCalled();
             });
         });
     });
