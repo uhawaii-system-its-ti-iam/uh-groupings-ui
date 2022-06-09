@@ -23,7 +23,6 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 
-@ActiveProfiles("localTest")
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = { SpringBootWebApplication.class })
 public class ErrorControllerAdviceTest {
