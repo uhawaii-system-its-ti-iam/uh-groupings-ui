@@ -320,7 +320,6 @@
                             //Gets members in grouping
                             $scope.groupingMembers = setGroupMembers(res.composite.members);
                             $scope.addWhereListed($scope.groupingMembers);
-                            console.log($scope.groupingMembers);
                             $scope.filter($scope.groupingMembers, "pagedItemsMembers", "currentPageMembers", $scope.membersQuery, true);
 
                             //Gets owners of the grouping
@@ -1194,13 +1193,15 @@
         };
 
         /**
-         * Helper function - Batch remove
-         * Extracts all keys in the checkbox object that have
-         * the value of true (members that are selected with the checkbox)
-         * @param objectName - The name of the object that is extracted from.
+         * Take in a list of booleans and return a comma separated string containing the identifiers of all true booleans.
          */
-        $scope.extractSelectedUsersFromCheckboxes = function (objectName) {
-            $scope.membersToModify = _.keys(_.pickBy(objectName));
+        $scope.extractSelectedUsersFromCheckboxes = function (obj) {
+            for (const [key, value] of Object.entries(obj)) {
+                if (value !== true && value !== false) {
+                    return "";
+                }
+            }
+            return _.keys(_.pickBy(obj)).join(",");
         };
 
         /**
@@ -1222,7 +1223,10 @@
          *  Replace commas and spaces in str with commas.
          */
         $scope.parseAddRemoveInputStr = function (str) {
-            return str.toString().split(/[ ,]+/).join(",");
+            if (!_.isString(str)) {
+                return "";
+            }
+            return str.split(/[ ,]+/).join(",");
         };
 
         /**
@@ -1235,32 +1239,25 @@
          * @param currentPage - The page that you are currently on.
          */
         $scope.prepBatchRemove = function (listName, currentPage) {
-            $scope.extractSelectedUsersFromCheckboxes($scope.membersInCheckboxList);
-            if (!_.isEmpty($scope.usersToAdd)) {
-                $scope.membersToModify = $scope.usersToAdd;
+            if (!_.isEmpty($scope.membersInCheckboxList)) {
+                $scope.membersToModify = $scope.extractSelectedUsersFromCheckboxes($scope.membersInCheckboxList);
+            }
+            if (!_.isEmpty($scope.manageMembers)) {
+                $scope.membersToModify = $scope.manageMembers;
             }
             if (_.isEmpty($scope.membersToModify)) {
                 $scope.emptyInput = true;
             } else {
                 $scope.listName = listName;
                 $scope.currentPage = currentPage;
-                let membersToRemove = $scope.membersToModify;
-                let numMembersToRemove = (($scope.membersToModify.length) + ($scope.membersToAddOrRemove.split(/[[a-z0-9]+/).length - 1));
+                let membersToRemove = $scope.parseAddRemoveInputStr($scope.membersToModify);
+                let numMembersToRemove = membersToRemove.split(",").length;
+                $scope.membersToModify = [];
                 if (numMembersToRemove > 1) {
-                    if ($scope.membersToModify.length !== 0) {
-                        membersToRemove = membersToRemove.concat(",");
-                        if ($scope.membersToAddOrRemove === "") {
-                            membersToRemove = membersToRemove.slice(0, -1);
-                        }
-                    }
                     membersToRemove = $scope.parseAddRemoveInputStr(membersToRemove);
-                    removeMembers(membersToRemove, listName, currentPage);
+                    removeMembers(membersToRemove, listName);
                 } else {
-                    if (membersToRemove === "") {
-                        $scope.memberToRemove = $scope.membersToAddOrRemove;
-                    } else {
-                        $scope.memberToRemove = membersToRemove.toString();
-                    }
+                    $scope.memberToRemove = membersToRemove;
                     $scope.memberToRemove = returnMemberObjectFromUserIdentifier($scope.memberToRemove, currentPage);
                     $scope.createRemoveModal({
                         user: $scope.memberToRemove,
