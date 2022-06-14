@@ -399,7 +399,7 @@ describe("GroupingsService", function () {
 
         it("should use the correct path", function () {
             gs.getSyncDestList(groupingPath, onSuccess, onError);
-            httpBackend.expectGET(BASE_URL + "groupings/" + groupingPath + "/syncDestinations").respond(200);
+            httpBackend.expectGET(BASE_URL + "groupings/" + groupingPath + "/sync-destinations").respond(200);
             expect(httpBackend.flush).not.toThrow();
         });
     });
