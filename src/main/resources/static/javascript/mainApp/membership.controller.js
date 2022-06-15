@@ -33,9 +33,11 @@
             // Request a list of membership objects from the API.
             groupingsService.getMembershipResults((res) => {
                     // Codacy throws an error regarding the '_' in the uniqBy function. This error will be ignored until a solution is found.
-                  $scope.membershipsList = _.filter(_.sortBy(_.uniqBy(res, "name"), "name"), (membership) => {return membership.inInclude || membership.inOwner;});
-                  $scope.pagedItemsMemberships = $scope.objToPageArray($scope.membershipsList, 20);
-                  $scope.loading = false;
+                    $scope.membershipsList = _.filter(_.sortBy(_.uniqBy(res, "name"), "name"), (membership) => {
+                        return membership.inInclude || membership.inOwner;
+                    });
+                    $scope.pagedItemsMemberships = $scope.objToPageArray($scope.membershipsList, 20);
+                    $scope.loading = false;
                 },
                 (res) => {
                     $scope.createApiErrorModal();
@@ -60,12 +62,16 @@
             );
         };
 
+        $scope.clearFilterQueryStrings = function () {
+            $scope.membersQuery = "";
+            $scope.optInQuery = "";
+        };
+
         /**
          * Filter member list with respect to membersQuery.
          */
         $scope.memberFilterReset = function () {
-            $scope.membersQuery = "";
-            $scope.optInQuery = "";
+            $scope.clearFilterQueryStrings();
             $scope.filter($scope.membershipsList, "pagedItemsMemberships", "currentPageMemberships", $scope.membersQuery, true);
             $scope.filter($scope.optInList, "pagedItemsOptInList", "currentPageOptIn", $scope.optInQuery, true);
         };
@@ -74,15 +80,16 @@
          * Handle responses for opting into or out of a grouping.
          */
         function handleSuccessfulOpt(res) {
-            console.log(res);   
             if (res[0].result === "SUCCESS") {
                 $scope.init();
             } else {
                 $scope.createOptErrorModal(res.status);
             }
+            $scope.clearFilterQueryStrings();
         }
 
         function handleUnsuccessfulOpt(res) {
+            $scope.clearFilterQueryStrings();
             $scope.createOptErrorModal(res);
         }
 

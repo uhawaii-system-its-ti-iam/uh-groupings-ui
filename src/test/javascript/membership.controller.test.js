@@ -108,17 +108,29 @@ describe("MembershipController", function () {
             }
         ];
     });
-    
-    describe("memberFilterReset", () => { 
-        it("should make membersQuery & optInQuery to an empty string", () => { 
-           scope.membersQuery = "something";
-           scope.optInQuery = "something";
-           scope.memberFilterReset();
-           expect(scope.membersQuery).toBe("");
-           expect(scope.optInQuery).toBe("");
-       });
+
+    describe("clearFilterQueryStrings", () => {
+        it("should set membersQuery & optInQuery to an empty string", () => {
+            scope.membersQuery = "something";
+            scope.optInQuery = "something";
+            scope.memberFilterReset();
+            expect(scope.membersQuery).toBe("");
+            expect(scope.optInQuery).toBe("");
+        });
     });
-    
+    describe("memberFilterReset", () => {
+        it("should call $scope.clearFilterQueryStrings", function () {
+            spyOn(scope, "clearFilterQueryStrings").and.callThrough();
+            scope.memberFilterReset();
+            expect(scope.clearFilterQueryStrings).toHaveBeenCalled();
+        });
+        it("should call $scope.filter", function () {
+            spyOn(scope, "filter").and.callThrough();
+            scope.memberFilterReset();
+            expect(scope.filter).toHaveBeenCalled();
+        });
+    });
+
     describe("createOptErrorModal", () => {
         it("should check that the createOptErrorModal is launched", () => {
             spyOn(uibModal, "open").and.callThrough();
@@ -128,10 +140,10 @@ describe("MembershipController", function () {
     });
 
     describe("closeOptErrorModal", () => {
-        beforeEach(() => { 
+        beforeEach(() => {
             scope.createOptErrorModal();
         });
-        
+
         it("should close the opt error modal", () => {
             spyOn(scope.optErrorModalInstance, "close").and.callThrough();
             scope.closeOptErrorModal();
