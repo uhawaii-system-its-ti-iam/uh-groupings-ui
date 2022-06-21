@@ -28,34 +28,23 @@
              * @param onError - Function to be called if HTTP request returns an error.
              */
             getGrouping(path, page, size, sortString, isAscending, onSuccess, onError) {
-
+                let euc = encodeURIComponent;
                 let endpoint = BASE_URL + "groupings/" + path + "?";
+                /*
+                let endpoint = BASE_URL + "groupings/" + path + "?"
+                    + "page=" + euc(page) + "&"
+                    + "size=" + euc(size) + "&"
+                    + "sortString=" + euc(sortString)
+                    + "&" + "isAscending=" + euc(isAscending);
+                /*
 
-
-                let params = "";
-
-                if (page !== null) {
-                    params = params + "page=" + page;
-                }
-                if (size !== null) {
-                    if (params !== "") {
-                        params = params + "&";
-                    }
-                    params = params + "size=" + size;
-                }
-                if (sortString !== null) {
-                    if (params !== "") {
-                        params = params + "&";
-                    }
-                    params = params + "sortString=" + sortString;
-                }
-                if (isAscending !== null) {
-                    if (params !== "") {
-                        params = params + "&";
-                    }
-                    params = params + "isAscending=" + isAscending;
-                }
-                endpoint = endpoint + params;
+                 */
+                let params = { page, size, sortString, isAscending };
+                let query = Object.keys(params)
+                    .map((k) => euc(k) + "=" + euc(params[k]))
+                    .join("&");
+                endpoint = endpoint + query;
+                console.log(endpoint);
                 dataProvider.loadData(endpoint, onSuccess, onError);
             },
 

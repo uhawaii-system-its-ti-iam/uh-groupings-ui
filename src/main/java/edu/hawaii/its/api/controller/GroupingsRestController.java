@@ -6,6 +6,7 @@ import javax.annotation.PostConstruct;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jasig.cas.client.util.URIBuilder;
 import org.owasp.html.PolicyFactory;
 import org.owasp.html.Sanitizers;
 
@@ -405,40 +406,20 @@ public class GroupingsRestController {
      * Fetch a page of the specified Grouping.
      */
     @GetMapping(value = "/groupings/{path:.+}")
-    // todo getGrouping
     public ResponseEntity<String> grouping(Principal principal,
             @PathVariable String path,
             @RequestParam(required = false) Integer page,
             @RequestParam(required = false) Integer size,
             @RequestParam(required = false) String sortString,
             @RequestParam(required = false) Boolean isAscending) {
-        logger.info("Entered REST getGrouping...");
+        logger.info("Entered REST grouping...");
         String baseUri = String.format(API_2_1_BASE + "/groupings/%s?", path);
-
-        // todo There might be a better way to do this, this approach is kinda gross
-        String params = "";
-        if (page != null)
-            params = params + "page=" + page;
-        if (size != null) {
-            if (!"".equals(params))
-                params = params + "&";
-            params = params + "size=" + size;
-        }
-        if (sortString != null) {
-            if (!"".equals(params))
-                params = params + "&";
-            params = params + "sortString=" + sortString;
-        }
-        if (isAscending != null) {
-            if (!"".equals(params))
-                params = params + "&";
-
-            params = params + "isAscending=" + isAscending;
-        }
-
-        logger.info(baseUri + params);
-
-        return httpRequestService.makeApiRequest(principal.getName(), baseUri + params, HttpMethod.GET);
+        URIBuilder uri = new URIBuilder(baseUri);
+        uri.addParameter("page", String.valueOf(page))
+                .addParameter("size", String.valueOf(size))
+                .addParameter("sortString", sortString)
+                .addParameter("isAscending", String.valueOf(isAscending));
+        return httpRequestService.makeApiRequest(principal.getName(), uri.toString(), HttpMethod.GET);
     }
 
     /**

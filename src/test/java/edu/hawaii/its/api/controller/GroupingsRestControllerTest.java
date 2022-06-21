@@ -5,6 +5,7 @@ import java.lang.reflect.Field;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -276,7 +277,7 @@ public class GroupingsRestControllerTest {
                 .willReturn(new ResponseEntity(HttpStatus.OK));
 
         assertNotNull(mockMvc.perform(get(uri)
-                .with(csrf()))
+                        .with(csrf()))
                 .andExpect(status().isOk())
                 .andReturn());
 
@@ -480,7 +481,8 @@ public class GroupingsRestControllerTest {
     @Test
     @WithMockUhUser
     public void groupingTest() throws Exception {
-        String uri = REST_CONTROLLER_BASE + "groupings/" + GROUPING;
+
+        String uri = REST_CONTROLLER_BASE + "groupings/" + GROUPING + "?page=2&size=700&sortString=name&isAscending=true";
 
         given(httpRequestService.makeApiRequest(eq(USERNAME), anyString(), eq(HttpMethod.GET)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
