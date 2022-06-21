@@ -4,9 +4,10 @@
 <nav class="navbar fixed-top navbar-expand-lg navbar-light border-bottom pt-2 pb-2" th:fragment="copy">
     <div class="container">
         <a class="navbar-brand align-items-center" th:href="@{/}">
-            <img class="img-fluid" th:src="@{images/uh-groupings-logo.png}"
-                 th:srcset="@{images/uh-groupings-logo.png 1x, images/seal/uh-groupings-logo-2x.png 2x}"
-                 alt="UH Groupings Logo">
+            <img class="img-fluid"
+                 alt="UH Groupings Logo"
+                 th:srcset="@{images/uh-groupings-logo.png 1x, images/seal/uh-groupings-logo-2x.png 2x}" 
+                 th:src="@{images/uh-groupings-logo.png}" src="">
             <span class="sr-only">UH Groupings</span>
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
