@@ -1,12 +1,14 @@
 package edu.hawaii.its.api.controller;
 
 import java.lang.reflect.Field;
+import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.ApplicationContext;
@@ -29,8 +31,10 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
@@ -60,6 +64,9 @@ public class GroupingsRestControllerTest {
     private static final String REST_CONTROLLER_BASE = "/api/groupings/";
     private static final String ADMIN_USERNAME = "admin";
 
+    @Value("${url.api.2.1.base}")
+    private String API_2_1_BASE;
+
     @MockBean
     private HttpRequestService httpRequestService;
 
@@ -68,6 +75,9 @@ public class GroupingsRestControllerTest {
 
     @Autowired
     private WebApplicationContext context;
+
+    @Autowired
+    GroupingsRestController groupingsRestController;
 
     private MockMvc mockMvc;
 
@@ -481,10 +491,10 @@ public class GroupingsRestControllerTest {
     @Test
     @WithMockUhUser
     public void groupingTest() throws Exception {
+        String uri =
+                REST_CONTROLLER_BASE + "groupings/" + GROUPING + "?page=2&size=700&sortString=name&isAscending=true";
 
-        String uri = REST_CONTROLLER_BASE + "groupings/" + GROUPING + "?page=2&size=700&sortString=name&isAscending=true";
-
-        given(httpRequestService.makeApiRequest(eq(USERNAME), anyString(), eq(HttpMethod.GET)))
+        given(httpRequestService.makeApiRequestWithParameters(eq(USERNAME), anyString(), anyMap(), eq(HttpMethod.GET)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
 
         assertNotNull(mockMvc.perform(get(uri).with(csrf()))
@@ -492,7 +502,7 @@ public class GroupingsRestControllerTest {
                 .andReturn());
 
         verify(httpRequestService, times(1))
-                .makeApiRequest(eq(USERNAME), anyString(), eq(HttpMethod.GET));
+                .makeApiRequestWithParameters(eq(USERNAME), anyString(), anyMap(), eq(HttpMethod.GET));
     }
 
     @Test
@@ -719,6 +729,30 @@ public class GroupingsRestControllerTest {
         controller.setHttpRequestService(httpRequestServiceOriginal);
         controller.setRealm(realm);
         assertFalse(mockingDetails(controller.getRealm()).isMock());
+    }
+
+    @Test
+    public void mapGroupingParametersTest() {
+        Map<String, String> params = groupingsRestController.mapGroupingParameters(1, 2, "name", true);
+        assertEquals(4, params.size());
+        assertTrue(params.containsKey("page"));
+        assertEquals("1", params.get("page"));
+        assertTrue(params.containsKey("size"));
+        assertEquals("2", params.get("size"));
+        assertTrue(params.containsKey("sortString"));
+        assertEquals("name", params.get("sortString"));
+        assertTrue(params.containsKey("isAscending"));
+        assertEquals("true", params.get("isAscending"));
+    }
+
+    @Test
+    public void buildUriTemplateWithParamsTest() {
+        Map<String, String> params = groupingsRestController.mapGroupingParameters(1, 2, "name", true);
+        String uriTemplate = groupingsRestController.buildUriTemplateWithParams(API_2_1_BASE, params);
+        assertNotNull(uriTemplate);
+        String expectedResult =
+                API_2_1_BASE + "?sortString={sortString}&size={size}&page={page}&isAscending={isAscending}";
+        assertEquals(expectedResult, uriTemplate);
     }
 
 }

@@ -53,6 +53,11 @@ describe("GroupingsService", function () {
             gs.getGrouping(groupingPath, page, size, sortString, isAscending, onSuccess, onError);
             expect(dp.loadData).toHaveBeenCalled();
         });
+        it("should call encodeParameterizedQueryString()", function () {
+            spyOn(gs, "encodeParameterizedQueryString");
+            gs.getGrouping(groupingPath, page, size, sortString, isAscending, onSuccess, onError);
+            expect(gs.encodeParameterizedQueryString).toHaveBeenCalled();
+        });
     });
 
     describe("updateDescription", function () {
@@ -451,4 +456,16 @@ describe("GroupingsService", function () {
             expect(httpBackend.flush).not.toThrow();
         });
     });
+    describe("encodeParameterizedQueryString", function () {
+        it("should encode a parameterized query string", function () {
+            let params = {
+                "page": 1,
+                "size": 2,
+                "sortString": "name",
+                "isAscending": true
+            };
+            let result = gs.encodeParameterizedQueryString(params);
+            expect(result).toEqual("page=1&size=2&sortString=name&isAscending=true");
+        });
+    })
 })

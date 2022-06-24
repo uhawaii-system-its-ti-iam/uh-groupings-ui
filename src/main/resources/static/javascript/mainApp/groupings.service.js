@@ -28,23 +28,10 @@
              * @param onError - Function to be called if HTTP request returns an error.
              */
             getGrouping(path, page, size, sortString, isAscending, onSuccess, onError) {
-                let euc = encodeURIComponent;
                 let endpoint = BASE_URL + "groupings/" + path + "?";
-                /*
-                let endpoint = BASE_URL + "groupings/" + path + "?"
-                    + "page=" + euc(page) + "&"
-                    + "size=" + euc(size) + "&"
-                    + "sortString=" + euc(sortString)
-                    + "&" + "isAscending=" + euc(isAscending);
-                /*
-
-                 */
                 let params = { page, size, sortString, isAscending };
-                let query = Object.keys(params)
-                    .map((k) => euc(k) + "=" + euc(params[k]))
-                    .join("&");
+                let query = this.encodeParameterizedQueryString(params);
                 endpoint = endpoint + query;
-                console.log(endpoint);
                 dataProvider.loadData(endpoint, onSuccess, onError);
             },
 
@@ -292,6 +279,16 @@
             isSoleOwner(path, uidToCheck, onSuccess, onError) {
                 let endpoint = BASE_URL + path + "/owners/" + uidToCheck;
                 dataProvider.loadData(endpoint, onSuccess, onError);
+            },
+
+            /**
+             * Create a parameterized query string. Helper method for getGrouping.
+             */
+            encodeParameterizedQueryString(params) {
+                let euc = encodeURIComponent;
+                return Object.keys(params)
+                    .map((k) => euc(k) + "=" + euc(params[k]))
+                    .join("&");
             }
         };
     });

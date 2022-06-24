@@ -1,6 +1,8 @@
 package edu.hawaii.its.api.controller;
 
 import java.security.Principal;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
@@ -25,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import edu.hawaii.its.api.service.HttpRequestService;
 import edu.hawaii.its.groupings.access.User;
@@ -406,20 +409,18 @@ public class GroupingsRestController {
      * Fetch a page of the specified Grouping.
      */
     @GetMapping(value = "/groupings/{path:.+}")
-    public ResponseEntity<String> grouping(Principal principal,
-            @PathVariable String path,
-            @RequestParam(required = false) Integer page,
-            @RequestParam(required = false) Integer size,
-            @RequestParam(required = false) String sortString,
-            @RequestParam(required = false) Boolean isAscending) {
+    public ResponseEntity<String> grouping(Principal principal, @PathVariable String path,
+            @RequestParam(required = true) Integer page,
+            @RequestParam(required = true) Integer size,
+            @RequestParam(required = true) String sortString,
+            @RequestParam(required = true) Boolean isAscending) {
         logger.info("Entered REST grouping...");
-        String baseUri = String.format(API_2_1_BASE + "/groupings/%s?", path);
-        URIBuilder uri = new URIBuilder(baseUri);
-        uri.addParameter("page", String.valueOf(page))
-                .addParameter("size", String.valueOf(size))
-                .addParameter("sortString", sortString)
-                .addParameter("isAscending", String.valueOf(isAscending));
-        return httpRequestService.makeApiRequest(principal.getName(), uri.toString(), HttpMethod.GET);
+        Map<String, String> params = mapGroupingParameters(page, size, sortString, isAscending);
+        String baseUri = String.format(API_2_1_BASE + "/groupings/%s", path);
+        String uriTemplate = buildUriTemplateWithParams(baseUri, params);
+
+        return httpRequestService.makeApiRequestWithParameters(principal.getName(), uriTemplate, params,
+                HttpMethod.GET);
     }
 
     /**
@@ -512,6 +513,24 @@ public class GroupingsRestController {
     ///////////////////////////////////////////////////////////////////////
     // Helper Methods
     //////////////////////////////////////////////////////////////////////
+
+    public Map<String, String> mapGroupingParameters(Integer page, Integer size, String sortString,
+            Boolean isAscending) {
+        Map<String, String> params = new HashMap<>();
+        params.put("page", Integer.toString(page));
+        params.put("size", Integer.toString(size));
+        params.put("sortString", sortString);
+        params.put("isAscending", Boolean.toString(isAscending));
+        return params;
+    }
+
+    public String buildUriTemplateWithParams(String baseUri, Map<String, String> params) {
+        UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromHttpUrl(baseUri);
+        for (String key : params.keySet()) {
+            uriComponentsBuilder.queryParam(key, String.format("{%s}", key));
+        }
+        return uriComponentsBuilder.encode().toUriString();
+    }
 
     private ResponseEntity<String> changePreference(String grouping, String uid, String preference, Boolean isOn) {
         String ending = "disable";

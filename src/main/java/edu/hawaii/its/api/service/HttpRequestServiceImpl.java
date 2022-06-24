@@ -11,16 +11,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Map;
+
 @Service("httpRequestService")
 public class HttpRequestServiceImpl implements HttpRequestService {
-
 
     @Value("${groupings.api.current_user}")
     private String CURRENT_USER;
 
-
     /*
-     * Make an http request to the API with path variables.
+     * Make a http request to the API with path variables.
      *
      * LGTM reporting a possible false positive: Groupings-1001
      */
@@ -37,7 +37,7 @@ public class HttpRequestServiceImpl implements HttpRequestService {
     }
 
     /*
-     * Make an http request to the API with path variables and description in the body.
+     * Make a http request to the API with path variables and description in the body.
      */
     @Override
     public ResponseEntity<String> makeApiRequestWithBody(String currentUser, String uri, String data,
@@ -50,5 +50,17 @@ public class HttpRequestServiceImpl implements HttpRequestService {
         RestTemplate restTemplate =
                 new RestTemplateBuilder().errorHandler(new RestTemplateResponseErrorHandler()).build();
         return restTemplate.exchange(uri, method, httpEntity, String.class);
+    }
+
+    @Override
+    public ResponseEntity<String> makeApiRequestWithParameters(String currentUser, String urlTemplate, Map<String, String> params,
+            HttpMethod method) {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.set(CURRENT_USER, currentUser);
+        HttpEntity<String> httpEntity = new HttpEntity<>(httpHeaders);
+
+        RestTemplate restTemplate =
+                new RestTemplateBuilder().errorHandler(new RestTemplateResponseErrorHandler()).build();
+        return restTemplate.exchange(urlTemplate, method, httpEntity, String.class, params);
     }
 }
