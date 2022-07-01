@@ -2607,4 +2607,59 @@ describe("GeneralController", () => {
             expect(testWindowLocationHref).toBe("/uhgroupings/");
         });
     });
+
+    describe("hideColumn", () => {
+        let columnToHide;
+
+        afterEach(() => {
+            localStorage.clear();
+        });
+
+        it("should use the default values", () => {
+            localStorage.clear();
+            expect(localStorage.getItem("columnDisplaySetting")).toBe(null);
+            expect(localStorage.getItem("showDescriptionColumn")).toBe(null);
+            expect(localStorage.getItem("showPathColumn")).toBe(null);
+
+            expect(scope.columnDisplaySetting).toBe("first");
+            expect(scope.showDescriptionColumn).toBe(true);
+            expect(scope.showPathColumn).toBe(false);
+        });
+
+        it("should hide the grouping path column", () => {
+            columnToHide = "path";
+            scope.hideColumn(columnToHide);
+            expect(scope.columnDisplaySetting).toBe("first");
+            expect(scope.showDescriptionColumn).toBe(true);
+            expect(scope.showPathColumn).toBe(false);
+
+            expect(localStorage.getItem("columnDisplaySetting")).toBe("first");
+            expect(localStorage.getItem("showDescriptionColumn")).toBe("true");
+            expect(localStorage.getItem("showPathColumn")).toBe("false");
+        });
+
+        it("should hide the description column", () => {
+            columnToHide = "description";
+            scope.hideColumn(columnToHide);
+            expect(scope.columnDisplaySetting).toBe("second");
+            expect(scope.showDescriptionColumn).toBe(false);
+            expect(scope.showPathColumn).toBe(true);
+
+            expect(localStorage.getItem("columnDisplaySetting")).toBe("second");
+            expect(localStorage.getItem("showDescriptionColumn")).toBe("false");
+            expect(localStorage.getItem("showPathColumn")).toBe("true");
+        });
+
+        it("should show both grouping path and description columns", () => {
+            columnToHide = "none";
+            scope.hideColumn(columnToHide);
+            expect(scope.columnDisplaySetting).toBe("third");
+            expect(scope.showDescriptionColumn).toBe(true);
+            expect(scope.showPathColumn).toBe(true);
+
+            expect(localStorage.getItem("columnDisplaySetting")).toBe("third");
+            expect(localStorage.getItem("showDescriptionColumn")).toBe("true");
+            expect(localStorage.getItem("showPathColumn")).toBe("true");
+        });
+    });
 });

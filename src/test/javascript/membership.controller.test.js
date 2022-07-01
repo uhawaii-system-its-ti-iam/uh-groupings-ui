@@ -33,21 +33,25 @@ describe("MembershipController", function () {
                 groupingsIn: [
                     {
                         path: "path1:path2:grouping1",
-                        name: "grouping1"
+                        name: "grouping1",
+                        description: "description1"
                     },
                     {
                         path: "path1:path3:grouping2",
-                        name: "grouping2"
+                        name: "grouping2",
+                        description: "description2"
                     },
                     {
                         path: "path1:path2:grouping3",
-                        name: "grouping3"
+                        name: "grouping3",
+                        description: "description3"
                     }
                 ],
                 groupingsToOptInTo: [
                     {
                         path: "path1:path4:grouping4",
-                        name: "grouping4"
+                        name: "grouping4",
+                        description: "description4"
                     }
                 ]
             };
@@ -72,19 +76,23 @@ describe("MembershipController", function () {
         scope.membershipsList = [
             {
                 path: "path:path2:path3:grouping1",
-                name: "grouping1"
+                name: "grouping1",
+                description: "description1"
             },
             {
                 path: "path:path2:path4:grouping2",
-                name: "grouping2"
+                name: "grouping2",
+                description: "description2"
             },
             {
                 path: "path:path2:path5:grouping3",
-                name: "grouping3"
+                name: "grouping3",
+                description: "description3"
             },
             {
                 path: "path:path2:path3:grouping4",
-                name: "grouping4"
+                name: "grouping4",
+                description: "description4"
             }
         ];
         scope.pagedItemsMemberships = scope.groupToPages(scope.membershipsList);
@@ -92,7 +100,8 @@ describe("MembershipController", function () {
         scope.optInList = [
             {
                 path: "path1:path4:grouping5",
-                name: "grouping5"
+                name: "grouping5",
+                description: "description5"
             }
         ];
         scope.pagedItemsOptInList = scope.groupToPages(scope.optInList);
@@ -100,11 +109,13 @@ describe("MembershipController", function () {
         scope.optOutList = [
             {
                 path: "path:path2:path3:grouping1",
-                name: "grouping1"
+                name: "grouping1",
+                description: "description1"
             },
             {
                 path: "path:path2:path3:grouping4",
-                name: "grouping4"
+                name: "grouping4",
+                description: "description4"
             }
         ];
     });
