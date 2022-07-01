@@ -193,6 +193,12 @@
             <artifactId>commons-lang3</artifactId>
             <version>3.9</version>
         </dependency>
+        <dependency>
+            <groupId>com.jarslab.maven</groupId>
+            <artifactId>babel-maven-plugin</artifactId>
+            <version>1.6</version>
+            <type>maven-plugin</type>
+        </dependency>
     </dependencies>
 
     <build>
@@ -302,6 +308,27 @@
                 <groupId>org.eluder.coveralls</groupId>
                 <artifactId>coveralls-maven-plugin</artifactId>
                 <version>4.3.0</version>
+            </plugin>
+            <plugin>
+                <groupId>com.jarslab.maven</groupId>
+                <artifactId>babel-maven-plugin</artifactId>
+                <version>1.6</version>
+                <executions>
+                    <execution>
+                        <id>js-transpile</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>babel</goal>
+                        </goals>
+                        <configuration>
+                            <verbose>true</verbose>
+                            <babelSrc>./js/babel/babel.min.js</babelSrc>
+                            <sourceDir>./js</sourceDir>
+                            <targetDir>./js</targetDir>
+                            <presets>env</presets>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.jacoco</groupId>
