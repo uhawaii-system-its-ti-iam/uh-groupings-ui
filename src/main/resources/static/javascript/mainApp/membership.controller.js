@@ -50,7 +50,8 @@
                     _.forEach(res, (path) => {
                         $scope.optInList.push({
                             "name": path.name,
-                            "path": path.path
+                            "path": path.path,
+                            "description": path.description
                         });
                     });
                     $scope.optInList = _.sortBy($scope.optInList, "name");

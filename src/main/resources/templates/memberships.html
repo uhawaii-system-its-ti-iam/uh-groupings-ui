@@ -69,8 +69,13 @@
                             </tr>
                             </thead>
                             <tbody class="table table-borderless">
-                            <tr ng-repeat="l in pagedItemsMemberships[currentPageMemberships] ">
-                                <td class="p-10 w-30">{{ l.name }}</td> <!-- w-30 -->
+                            <tr ng-repeat="l in pagedItemsMemberships[currentPageMemberships]">
+                                <td class="p-10 w-30">
+                                    <span class="mr-2 fa fa-info-circle"
+                                          uib-tooltip="{{l.description}}"
+                                          tabindex="0"></span>
+                                    {{ l.name }}
+                                </td> <!-- w-30 -->
                                 <td class="p-10  d-none d-lg-table-cell">
                                     <form class="seamless border border-secondary rounded">
                                         <input aria-label="Grouping Path" type="text" class="form-control form-control-sm border-0 input-sm"
@@ -153,7 +158,12 @@
                             </thead>
                             <tbody class="table table-borderless">
                             <tr ng-repeat="o in pagedItemsOptInList[currentPageOptIn]">
-                                <td class="p-10 w-30">{{ o.name }}</td>
+                                <td class="p-10 w-30">
+                                    <span class="mr-2 fa fa-info-circle"
+                                          uib-tooltip="{{o.description}}"
+                                          tabindex="0"></span>
+                                    {{ o.name }}
+                                </td>
                                 <td class="p-10" id="groupingOptInPath-{{o.name}}">
                                     <form class="seamless border border-secondary rounded">
                                         <input aria-label="Grouping Path" type="text" class="form-control form-control-sm border-0"
