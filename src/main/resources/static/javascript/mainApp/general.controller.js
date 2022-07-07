@@ -1941,7 +1941,7 @@
             const indexOfSyncDest = $scope.syncDestArray.map((e) => {
                 return e.name;
             }).indexOf(syncDestName);
-            return $scope.syncDestArray[indexOfSyncDest].isSynced;
+            return $scope.syncDestArray[indexOfSyncDest].synced;
         };
 
         /**
@@ -1965,7 +1965,7 @@
             const indexOfSyncDest = $scope.syncDestArray.map((e) => {
                 return e.name;
             }).indexOf(syncDestName);
-            $scope.syncDestArray[indexOfSyncDest].isSynced = syncDestvalue;
+            $scope.syncDestArray[indexOfSyncDest].synced = syncDestvalue;
         };
 
         /**
