@@ -292,6 +292,9 @@
                             <babelSrc>${basedir}/.idea/libraries/</babelSrc>
                             <sourceDir>${basedir}/src/main/resources/static/javascript/mainApp/</sourceDir>
                             <targetDir>${basedir}/src/main/resources/static/javascript/mainApp/</targetDir>
+                            <jsSourceIncludes>
+                                <jsSourceInclude>*.js</jsSourceInclude>
+                            </jsSourceIncludes>
                         </configuration>
                     </execution>
                 </executions>
