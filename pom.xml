@@ -193,6 +193,16 @@
             <artifactId>commons-lang3</artifactId>
             <version>3.9</version>
         </dependency>
+        <dependency>
+            <groupId>org.webjars.npm</groupId>
+            <artifactId>babel</artifactId>
+            <version>6.5.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.jarslab.maven</groupId>
+            <artifactId>babel-maven-plugin</artifactId>
+            <version>1.6</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -265,6 +275,26 @@
                         <include>**/**.test.js</include>
                     </specIncludes>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.jarslab.maven</groupId>
+                <artifactId>babel-maven-plugin</artifactId>
+                <version>1.6</version>
+                <executions>
+                    <execution>
+                        <id>js-transpile</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>babel</goal>
+                        </goals>
+                        <configuration>
+                            <verbose>true</verbose>
+                            <babelSrc>${basedir}/.idea/libraries/</babelSrc>
+                            <sourceDir>${basedir}/src/main/resources/static/javascript/mainApp/</sourceDir>
+                            <targetDir>${basedir}/src/main/resources/static/javascript/mainApp/</targetDir>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
