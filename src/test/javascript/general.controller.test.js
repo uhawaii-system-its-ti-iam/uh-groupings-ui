@@ -2120,18 +2120,12 @@ describe("GeneralController", () => {
                 hidden: false,
                 name: "testSyncDest",
                 synced: false,
-                isSynced: true,
                 tooltip: "Synchronize the grouping's membership with a corresponding GOOGLE-GROUP list, which will be created as needed."
             };
             scope.syncDestArray.push(testSync);
         });
 
-        it("should return the value of sync to be true", () => {
-            let result = scope.getSyncDestValueInArray(testSync.name);
-            expect(result).toBeTrue();
-        });
-        it("should expect the value of sync to be false", () => {
-            testSync.isSynced = false;
+        it("should not alter the value of syncDest", () => {
             let result = scope.getSyncDestValueInArray(testSync.name);
             expect(result).toBeFalse();
         });
@@ -2145,7 +2139,6 @@ describe("GeneralController", () => {
                 hidden: true,
                 name: "testSyncDest",
                 synced: false,
-                isSynced: true,
                 tooltip: "Synchronize the grouping's membership with a corresponding GOOGLE-GROUP list, which will be created as needed."
             };
             testSyncDest1 = {
@@ -2153,7 +2146,6 @@ describe("GeneralController", () => {
                 hidden: true,
                 name: "testSyncDest1",
                 synced: true,
-                isSynced: true,
                 tooltip: "Synchronize the grouping's membership with a corresponding GOOGLE-GROUP list, which will be created as needed."
             };
             testSyncDest2 = {
@@ -2161,7 +2153,6 @@ describe("GeneralController", () => {
                 hidden: false,
                 name: "testSyncDest2",
                 synced: false,
-                isSynced: false,
                 tooltip: "Synchronize the grouping's membership with a corresponding GOOGLE-GROUP list, which will be created as needed."
             };
             scope.syncDestArray.push(testSyncDest);
@@ -2193,7 +2184,6 @@ describe("GeneralController", () => {
                 hidden: true,
                 name: "testSyncDest",
                 synced: false,
-                isSynced: true,
                 tooltip: "Synchronize the grouping's membership with a corresponding GOOGLE-GROUP list, which will be created as needed."
             };
         });
@@ -2201,12 +2191,12 @@ describe("GeneralController", () => {
         it("should set the given sync dest from true to false", () => {
             scope.syncDestArray.push(testSyncDest);
             scope.setSyncDestInArray(testSyncDest.name, true);
-            expect(scope.syncDestArray[0].isSynced).toBeTrue();
+            expect(scope.syncDestArray[0].synced).toBeTrue();
         });
         it("should set the given sync dest from false to true", () => {
             scope.syncDestArray.push(testSyncDest);
             scope.setSyncDestInArray(testSyncDest.name, false);
-            expect(scope.syncDestArray[0].isSynced).toBeFalse();
+            expect(scope.syncDestArray[0].synced).toBeFalse();
         });
     });
 
@@ -2330,7 +2320,6 @@ describe("GeneralController", () => {
                 hidden: true,
                 name: "testSyncDest",
                 synced: false,
-                isSynced: true,
                 tooltip: "Synchronize the grouping's membership with a corresponding GOOGLE-GROUP list, which will be created as needed."
             };
         });
