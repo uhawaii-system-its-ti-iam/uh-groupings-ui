@@ -31,7 +31,7 @@ import org.springframework.util.Assert;
 
 import javax.annotation.PostConstruct;
 
-@ComponentScan(basePackages = "edu.hawaii.its")
+@ComponentScan("edu.hawaii.its")
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final Log logger = LogFactory.getLog(SecurityConfig.class);
