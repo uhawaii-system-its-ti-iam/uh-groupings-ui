@@ -8,6 +8,21 @@
 </div>
 <div class="modal-body" id="modal-body">
     <p th:utext="#{screen.message.admin.modal.importFile}"></p>
+    <div>Example of imported text file:</div>
+    <div class="container">
+        <div class="row">
+            <div class="col-2 border-right">
+                <ul class="list-stying">
+                    <li>name1</li>
+                    <li>name2</li>
+                    <li>name3</li>
+                </ul>
+            </div>
+            <div class="col">
+                <p>name1, name2, name3</p>
+            </div>
+        </div>
+    </div>
     <input type="file" ng-model="inputFile" file-model="inputFile" accept="text/plain">
     <button class="btn btn-primary" ng-click="readTextFile(inputFile); cancelImportModalInstance()">
         Import

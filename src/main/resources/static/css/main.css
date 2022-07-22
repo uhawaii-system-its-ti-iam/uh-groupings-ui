@@ -691,6 +691,10 @@ label input {
     margin: 5px;
 }
 
+.list-stying { 
+    list-style-type: none;
+}
+
 .description-input {
     float: left;
     border: white;
