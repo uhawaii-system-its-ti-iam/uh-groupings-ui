@@ -80,7 +80,7 @@
          * Handle responses for opting into or out of a grouping.
          */
         function handleSuccessfulOpt(res) {
-            if (res[0].result === "SUCCESS") {
+            if (res.result === "SUCCESS") {
                 $scope.init();
             } else {
                 $scope.createOptErrorModal(res.status);
