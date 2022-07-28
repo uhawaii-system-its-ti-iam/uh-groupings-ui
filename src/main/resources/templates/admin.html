@@ -152,9 +152,10 @@
                 </div>
                 <!-- Manage Person -->
                 <div class="tab-pane fade" id="manage-person" role="tabpanel">
-                    <div class="row m-auto pt-3 pb-3">
-                        <div class="col-lg-9 col-md-8 col-12 p-0">
-                            <h2 class="card-title mt-md-1 mt-0 mb-1">Manage Person</h2>
+                    <div class="row m-auto pt-3 pb-3 d-flex">
+                        <div class="col-lg-9 col-md-8 col-12 p-0 text-center text-md-left">
+                            <h2 class="mt-md-1 mt-0 d-inline-block">Manage Person</h2>
+                            <br class="d-md-none"><h3 class="d-inline-block ml-0 ml-lg-1 mt-n1 mt-lg-0 align-middle">{{currentManagePerson}}</h3>
                         </div>
                         <div class="col-lg-3 col-md-4 col-12 p-0">
                             <input class="form-control" placeholder="Filter Groupings..." type="search"
@@ -162,7 +163,7 @@
                                    ng-model="personQuery"
                                    ng-change="filter(personList, 'pagedItemsPerson', 'currentPagePerson', personQuery, true)"/>
                         </div>
-                        <div class="col-auto mr-auto col-lg-3 col-md-4 col-12 p-0">
+                        <div class="mr-auto col-lg-3 col-md-4 col-12 p-0">
                             <form ng-submit="searchForUserGroupingInformation(); errorDismissed = false;">
                                 <div class="input-group">
                                     <input name="Search Person" class="form-control" type="text" aria-required="true"
@@ -180,10 +181,10 @@
                                     </div>
                                 </div>
                             </form>
+
                         </div>
                         <div>
                             <form ng-submit="removeFromGroups()">
-                                <div th:replace="fragments/admin-error-messages :: admin-error-messages"></div>
                                 <div class="input-group">
                                     <div class="input-group-append check-remove">
                                         <label class="my-auto">Check All<input class="check-space" type="checkbox"
@@ -198,16 +199,15 @@
                                     </div>
                                 </div>
                             </form>
-                            <!--message for no groupings selected-->
-
-                            <div ng-show="!errorDismissed2 && !loading && emptySelect"
-                                 class="alert alert-danger form-alert fade show"
-                                 role="alert">
-                                <p th:text="#{screen.message.modal.search.noChecks}"></p>
-                            </div>
-
                         </div>
-
+                        <div class="line-break"></div>
+                        <div th:replace="fragments/admin-error-messages :: admin-error-messages"></div>
+                        <!--message for no groupings selected-->
+                        <div ng-show="!errorDismissed2 && !loading && emptySelect"
+                             class="ml-sm-auto mb-n1 mt-2 alert alert-danger form-alert fade show"
+                             role="alert">
+                            <p th:text="#{screen.message.modal.search.noChecks}"></p>
+                        </div>
                     </div>
                     <div class="table-responsive-sm">
                         <table class="table manage-admins table-striped table-hover table-md" aria-live="assertive">

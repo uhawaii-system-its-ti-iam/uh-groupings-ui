@@ -16,6 +16,7 @@
         $scope.personList = [];
         $scope.pagedItemsPerson = [];
         $scope.currentPagePerson = 0;
+        $scope.currentManagePerson = "";
         $scope.selectedGroupingsPaths = [];
         $scope.emptySelect = false;
         $scope.selectedOwnedGroupingsNames = [];
@@ -67,6 +68,12 @@
                     $scope.searchForUserGroupingInformationOnSuccessCallback,
                     $scope.searchForUserGroupingInformationOnErrorCallback,
                     $scope.personToLookup);
+                groupingsService.getMemberAttributes($scope.personToLookup, function (person) {
+                    $scope.initMemberDisplayName(person);
+                    $scope.currentManagePerson = "(" + $scope.fullName + ", " + $scope.uid + ", " + $scope.uhUuid + ")";
+                }, function () {
+                    $scope.currentManagePerson = "";
+                });
             }
         };
 
