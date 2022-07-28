@@ -80,6 +80,7 @@
                     $scope.searchForUserGroupingInformationOnErrorCallback,
                     $scope.personToLookup);
             }
+            $scope.checkAll = false;
         };
 
         $scope.checkSoleOwner = function (res) {
