@@ -169,6 +169,11 @@ describe("AdminController", function () {
             scope.searchForUserGroupingInformation();
             expect(gs.getMembershipAssignmentForUser).toHaveBeenCalled();
         });
+        it("should call groupingsService.getMemberAttributes", () => {
+            spyOn(gs, "getMemberAttributes").and.callThrough();
+            scope.searchForUserGroupingInformation();
+            expect(gs.getMemberAttributes).toHaveBeenCalled();
+        });
     });
 
     describe("checkSoleOwner", () => {
