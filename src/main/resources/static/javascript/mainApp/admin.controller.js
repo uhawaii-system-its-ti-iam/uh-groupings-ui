@@ -62,6 +62,8 @@
         $scope.searchForUserGroupingInformation = function () {
             if ($scope.personToLookup.length === 0) {
                 $scope.emptyInput = true;
+                $scope.personList = [];
+                $scope.filter($scope.personList, "pagedItemsPerson", "currentPagePerson", $scope.personQuery, true);
             } else {
                 $scope.loading = true;
                 groupingsService.getMembershipAssignmentForUser(
