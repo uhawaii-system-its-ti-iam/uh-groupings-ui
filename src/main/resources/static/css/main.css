@@ -691,6 +691,12 @@ label input {
     margin: 5px;
 }
 
+.list-stying { 
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
 .description-input {
     float: left;
     border: white;
