@@ -693,6 +693,8 @@ label input {
 
 .list-stying { 
     list-style-type: none;
+    margin: 0;
+    padding: 0;
 }
 
 .description-input {

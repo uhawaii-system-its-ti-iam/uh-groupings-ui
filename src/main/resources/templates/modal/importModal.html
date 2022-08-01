@@ -10,21 +10,23 @@
     <p th:utext="#{screen.message.admin.modal.importFile}"></p>
     <div>Example of imported text file:</div>
     <div class="container">
-        <div class="row align-items-center">
-            <div class="col-2">
-                <ul class="list-stying">
-                    <li>username1</li>
-                    <li>username2</li>
-                    <li>username3</li>
-                </ul>
+            <div class="row justify-content-start">
+                <div class="col-md-6">
+                    <ul class="list-stying">
+                        <li>iamtst01</li>
+                        <li>iamtst02</li>
+                        <li>iamtst03</li>
+                    </ul>
+                </div>
             </div>
-            <div class="col-md-auto">
-                or
+            <div class="row mt-2 mb-2 justify-content-start">
+                <div class="col-md-6">or</div>
             </div>
-            <div class="col-md-auto">
-                <p>username1, username2, username3</p>
+            <div class="row mt-2 mb-2 justify-content-start">
+                <div class="col-md-6">
+                    iamtst01, iamtst02, iamtst03
+                </div>
             </div>
-        </div>
     </div>
     <input type="file" ng-model="inputFile" file-model="inputFile" accept="text/plain">
     <button class="btn btn-primary" ng-click="readTextFile(inputFile); cancelImportModalInstance()">
