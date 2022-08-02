@@ -3,20 +3,20 @@
     <div ng-show="!errorDismissed && !loading">
         <!--message for empty input-->
         <div ng-if="emptyInput"
-             class="alert alert-danger form-alert fade show"
+             class="mt-2 mb-n1 alert alert-danger form-alert fade show"
              role="alert">
             <p th:utext="#{screen.message.modal.search.empty}"></p>
         </div>
         <!--message for invalid input-->
         <div ng-if="!emptyInput && (resStatus === 404 || resStatus === 500)"
-             class="alert alert-danger fade show">
+             class="mt-2 mb-n1 alert alert-danger fade show">
             <p th:text="#{screen.message.modal.search.fail}"></p>
             <p th:text="#{screen.message.modal.search.ensureValid}"></p>
         </div>
         <!--message for no groupings result-->
         <div ng-if="!emptyInput && !(resStatus === 404 || resStatus === 500)
          && personList.length <= 0"
-             class="alert alert-danger form-alert fade show">
+             class="mt-2 mb-n1 alert alert-danger form-alert fade show">
             <p th:text="#{screen.message.modal.search.noResults}"></p>
         </div>
 
