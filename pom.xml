@@ -291,7 +291,7 @@
                                 <echo/>
                                 <echo>To access a list of possible commands:</echo>
                                 <echo>
-                                    https://www.hawaii.edu/bwiki/display/SITARd/Unit+Testing#UnitTesting-RunningYourTest
+                                    https://uhawaii.atlassian.net/wiki/spaces/SITARd/pages/12944701/Unit+Testing#UnitTesting-RunningYourTest
                                 </echo>
                             </target>
                         </configuration>
