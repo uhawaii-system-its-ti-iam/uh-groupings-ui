@@ -5,6 +5,9 @@ import edu.hawaii.its.groupings.type.Feedback;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import edu.internet2.middleware.grouperClientExt.util.JsonUtils;
+
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mail.MailException;
 import org.springframework.mail.MailSendException;
@@ -83,6 +86,21 @@ public class EmailServiceTest {
         assertThat(messageSent.getText(), containsString("Some problem happened."));
         assertThat(messageSent.getText(), containsString("Stack Trace:"));
         assertThat(messageSent.getText(), containsString("ArrayIndexOutOfBoundsException"));
+    }
+
+    @Test
+    public void sendFeedbackWithOutExceptionMessage() {
+        Feedback feedback = createBaseFeedback();
+
+        emailService.send(feedback);
+        assertThat(wasSent, is(true));
+
+        assertThat(messageSent.getSubject(), containsString("problem"));
+        assertThat(messageSent.getText(), containsString("John Doe"));
+        assertThat(messageSent.getText(), containsString("jdoe@hawaii.edu"));
+        assertThat(messageSent.getText(), containsString("Some problem happened."));
+        assertThat(messageSent.getText(), containsString(""));
+        assertThat(messageSent.getText(), containsString(""));
     }
 
     @Test
