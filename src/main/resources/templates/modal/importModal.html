@@ -8,6 +8,26 @@
 </div>
 <div class="modal-body" id="modal-body">
     <p th:utext="#{screen.message.admin.modal.importFile}"></p>
+    <div th:utext="#{screen.message.admin.modal.importFileGuide}"></div>
+    <div class="container">
+        <div class="row justify-content-start">
+            <div class="col-md-6">
+                <ul class="list-styling">
+                    <li>iamtst01</li>
+                    <li>iamtst02</li>
+                    <li>iamtst03</li>
+                </ul>
+            </div>
+        </div>
+        <div class="row mt-2 mb-2 justify-content-start">
+            <div class="col-md-6">or</div>
+        </div>
+        <div class="row mt-2 mb-2 justify-content-start">
+            <div class="col-md-6">
+                iamtst01, iamtst02, iamtst03
+            </div>
+        </div>
+    </div>
     <input type="file" ng-model="inputFile" file-model="inputFile" accept="text/plain">
     <button class="btn btn-primary" ng-click="readTextFile(inputFile); cancelImportModalInstance()">
         Import
