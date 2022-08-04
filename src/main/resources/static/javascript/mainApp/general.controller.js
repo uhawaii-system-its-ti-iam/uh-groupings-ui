@@ -1457,7 +1457,7 @@
             } else if ($scope.currentUser === $scope.userToRemove.username) {
                 // Removing self from last grouping owned -> redirect to home page and then logout
                 if ($scope.groupingsList.length === 1) {
-                    $window.location.href = "/uhgroupings/login";
+                    $scope.returnHome();
                 } else {
                     $window.location.href = "groupings";
                 }
