@@ -60,7 +60,7 @@
          * Fetch a list of memberships pertaining to $scope.personToLookUp.
          */
         $scope.searchForUserGroupingInformation = function () {
-            if ($scope.personToLookup.length === 0) {
+            if (!$scope.personToLookup) {
                 $scope.emptyInput = true;
                 $scope.personList = [];
                 $scope.filter($scope.personList, "pagedItemsPerson", "currentPagePerson", $scope.personQuery, true);

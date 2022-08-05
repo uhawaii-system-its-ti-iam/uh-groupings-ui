@@ -161,15 +161,25 @@ describe("AdminController", function () {
     });
 
     describe("searchForUserGroupingInformation", () => {
-        beforeEach(() => {
-            scope.personToLookup = "iamtst01";
+        it("should set emptyInput to true", () => {
+            scope.searchForUserGroupingInformation();
+            expect(scope.emptyInput).toBeTrue();
+            expect(scope.personList).toEqual([]);
+        });
+        it("should set emptyInput to be true and personList to empty array", () => {
+            scope.personToLookup = "";
+            scope.searchForUserGroupingInformation();
+            expect(scope.emptyInput).toBeTrue();
+            expect(scope.personList).toEqual([]);
         });
         it("should call groupingsService.getMembershipAssignmentForUser", () => {
+            scope.personToLookup = "iamtst01";
             spyOn(gs, "getMembershipAssignmentForUser").and.callThrough();
             scope.searchForUserGroupingInformation();
             expect(gs.getMembershipAssignmentForUser).toHaveBeenCalled();
         });
         it("should call groupingsService.getMemberAttributes", () => {
+            scope.personToLookup = "iamtst01";
             spyOn(gs, "getMemberAttributes").and.callThrough();
             scope.searchForUserGroupingInformation();
             expect(gs.getMemberAttributes).toHaveBeenCalled();
