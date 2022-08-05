@@ -77,6 +77,7 @@
                     $scope.currentManagePerson = "";
                 });
             }
+            $scope.checkAll = false;
         };
 
         /**
