@@ -84,6 +84,21 @@ public class EmailServiceTest {
     }
 
     @Test
+    public void sendFeedbackWithOutExceptionMessage() {
+        Feedback feedback = createBaseFeedback();
+
+        emailService.send(feedback);
+        assertThat(wasSent, is(true));
+
+        assertThat(messageSent.getSubject(), containsString("problem"));
+        assertThat(messageSent.getText(), containsString("John Doe"));
+        assertThat(messageSent.getText(), containsString("jdoe@hawaii.edu"));
+        assertThat(messageSent.getText(), containsString("Some problem happened."));
+        assertThat(messageSent.getText(), containsString(""));
+        assertThat(messageSent.getText(), containsString(""));
+    }
+
+    @Test
     public void sendFeedbackWithMailExceptionThrown() {
         JavaMailSender senderWithException = new MockJavaMailSender() {
             @Override
