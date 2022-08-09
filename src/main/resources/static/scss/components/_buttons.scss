@@ -7,13 +7,11 @@ form.seamless button {
 }
 
 .btn {
-
-    // Logout button.
     &:hover,
     &:focus,
     &:active {
-        #name {
-            color:$seafoam;
+        #name { /* Logout button. */
+            color: $seafoam;
         }
     }
 
@@ -26,11 +24,12 @@ form.seamless button {
         }
     }
 
-    // Remove button.
-    &.btn-remove {
+    &.btn-remove { /* Remove button. */
         margin-left: 2px;
         margin-right: 2px;
+
         @include btn-rmv;
+
         &:hover,
         &:focus,
         &:active {
@@ -38,8 +37,10 @@ form.seamless button {
         }
     }
 
-    &.btn-primary, &.btn-lg {
+    &.btn-primary,
+    &.btn-lg {
         @include gradient;
+
         &:hover,
         &:focus,
         &:active {
@@ -47,8 +48,7 @@ form.seamless button {
         }
     }
 
-    // Buttons for membership, admin, owner in home page
-    &.btn-bottom {
+    &.btn-bottom { /* Buttons for membership, admin, owner in home page */
         @include gradient;
     }
 
@@ -58,24 +58,21 @@ form.seamless button {
         margin: -39px auto;
     }
 
-    // Default button
-    &-default {
+    &-default { /* Default button */
         @include gradient;
     }
 
-    // Changes the logout color when you hover.
     &-outline-secondary {
         &:hover,
         &:focus,
-        &:active {
+        &:active { /* Changes the logout color when you hover. */
             background-color: $green-blue;
             border-color: $green-blue;
         }
     }
 
-    // Button for copying path, clipboard, and CSV
-    &-sm {
-        padding: 0px 5px;
+    &-sm { /* Button for copying path, clipboard, and CSV */
+        padding: 0 5px;
 
         &:hover {
             background: $green-blue;
@@ -92,7 +89,7 @@ form.seamless button {
     }
 }
 
-// Change description for cards.
+/* Change description for cards. */
 .description-form-button {
     color: $dark-teal;
     border: none;
@@ -105,10 +102,11 @@ form.seamless button {
 
 .description-input {
     border: white;
+    float: left;
 }
 
 .far.fa-trash-alt {
-    margin-right: .75rem;
+    margin-right: 0.75rem;
     color: $uh-red;
 }
 
@@ -117,6 +115,6 @@ form.seamless button {
 
     &.white-style {
         border: none;
-        color:white;
+        color: white;
     }
 }

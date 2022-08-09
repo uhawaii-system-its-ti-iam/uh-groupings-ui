@@ -1,6 +1,6 @@
 @import 'customs';
 
-//import the componenets
+//import the components
 @import 'components/buttons';
 @import 'components/mixins';
 @import 'components/backgrounds';
@@ -12,9 +12,9 @@
 @import 'components/error';
 
 //import the sections
+@import 'sections/groupings';
 @import 'sections/admins';
 @import 'sections/footer';
 @import 'sections/feedback';
-@import 'sections/groupings';
 @import 'sections/home';
 

@@ -1,3 +1,43 @@
+.nav-pills {
+    .nav-link { /* Set icon styling for nav-bar icons. */
+        color: $dark-teal;
+        height: 44px;
+
+        &.active {
+            position: relative;
+            background-color: white;
+            color: $dark-teal;
+
+            &::after {
+                @include media-breakpoint(min-tablet) {
+                    border-width: 10px 10px 10px 0;
+                    border-color: transparent #fff transparent transparent;
+                    top: 25%;
+                }
+            }
+        }
+    }
+}
+
+.nav-pills .show > .nav-link {
+    background: white;
+    color: $dark-teal;
+}
+
+.nav-link {
+    white-space: nowrap;
+}
+
+.nav-tabs {
+    .nav-item {
+        margin-top: 1rem;
+    }
+
+    .nav-link {
+        border: none;
+    }
+}
+
 .navbar {
     background-color: white;
     padding-top: 0;
@@ -10,13 +50,13 @@
             &:hover,
             &:focus,
             &:active {
-                color: $uh-teal
+                color: $uh-teal;
             }
         }
 
         .nav-item {
-            padding-left: .3125rem;
-            padding-right: .3125rem;
+            padding-left: 0.3125rem;
+            padding-right: 0.3125rem;
         }
     }
 
@@ -25,6 +65,7 @@
             padding: 2.5rem 1.25rem 0 0;
             background-color: white;
         }
+
         .navbar-brand {
             padding: 0;
 
@@ -37,19 +78,6 @@
 
 .fixed-top .navbar-brand {
     padding: 0;
-}
-
-.nav-tabs {
-    .nav-link {
-        border: none;
-    }
-    .nav-item {
-        margin-top: 1rem;
-    }
-}
-
-.nav-link {
-    white-space: nowrap;
 }
 
 .nav.nav-tabs {
@@ -66,14 +94,13 @@
     }
 }
 
-// Centers side navbar
+/* Centers side navbar */
 #group-pills > .nav-item {
     width: 2.75rem;
     height: 2.75rem;
 
-    // Centers elements in side navbar
-    > .nav-link {
-        padding-left: .75rem;
+    > .nav-link { /* Centers elements in side navbar */
+        padding-left: 0.75rem;
     }
 }
 
@@ -81,36 +108,8 @@
     align-items: center;
 
     @include media-breakpoint(max-portrait-phone) {
-            border: none;
-            background-color: #e3f2ef;
-            padding: 0 0 2px 0;
-    }
-}
-
-.nav-pills .show > .nav-link {
-    background: white;
-    color: $dark-teal;
-}
-
-.nav-pills {
-    // Set icon styling for nav-bar icons.
-    .nav-link {
-        color: $dark-teal;
-        height: 44px;
-
-        &.active {
-            position: relative;
-            background-color: white;
-            background: white;
-            color: $dark-teal;
-
-            &:after {
-                @include media-breakpoint(min-tablet) {
-                    border-width: 10px 10px 10px 0;
-                    border-color: transparent #fff transparent transparent;
-                    top: 25%;
-                }
-            }
-        }
+        border: none;
+        background-color: #e3f2ef;
+        padding: 0 0 2px 0;
     }
 }

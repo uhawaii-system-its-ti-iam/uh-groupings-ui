@@ -5,21 +5,22 @@ html {
 }
 
 body {
+    /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
+    padding-top: 3.5rem;
     font-family: 'Source Sans Pro', 'Helvetica', Arial, sans-serif;
-    padding-top: 3.5rem; /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
-    display: flex; /* Creates flexboxes. */
-    flex-direction: column; /* Makes the body display vertical. */
+    display: flex;
+    flex-direction: column;
     min-height: 100vh;
 
-    // For the Role: and Welcome *name*
-    h1 {
+    h1 { /* For the Role: and Welcome *name* */
         color: $uh-black;
         font-weight: 700;
     }
 }
 
-// Holds name and description.
-main, .container {
+/* Holds name and description. */
+main,
+.container {
     flex: 1;
 }
 
@@ -31,7 +32,7 @@ main, .container {
     .user-role {
         bottom: 0;
         position: absolute;
-        right: -.25rem;
+        right: -0.25rem;
     }
 }
 
@@ -43,6 +44,7 @@ td.uh-pre {
     @include prefix((
         white-space: pre-wrap
     ), webkit moz o hp);
+
     white-space: pre;
     white-space: pre-line;
     display: inline-block;
@@ -50,7 +52,7 @@ td.uh-pre {
     word-break: break-all;
 }
 
-// The loading circle
+/* The loading circle */
 .loader {
     border: 16px solid white;
     border-top: 16px solid black;
@@ -79,6 +81,7 @@ td.uh-pre {
     0% {
         transform: rotate(0deg);
     }
+
     100% {
         transform: rotate(360deg);
     }

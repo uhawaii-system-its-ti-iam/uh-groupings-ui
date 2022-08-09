@@ -1,3 +1,5 @@
+/* global _, angular, UHGroupingsApp */
+
 (function () {
 
     /**
@@ -21,7 +23,7 @@
 
         $scope.loading = false;
 
-        angular.extend(this, $controller("GeneralJsController", { $scope: $scope }));
+        angular.extend(this, $controller("GeneralJsController", { $scope }));
 
         /**
          *  Load the groups a user is a member in, the groups the user is able to opt in to, and the groups the user

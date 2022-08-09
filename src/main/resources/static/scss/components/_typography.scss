@@ -1,4 +1,9 @@
-h1, h2, h3, h5, .text-left, span {
+h1,
+h2,
+h3,
+h5,
+span,
+.text-left, {
     color: $text-color;
 }
 
@@ -8,7 +13,7 @@ h1 {
 
 h2 {
     font-size: 2rem;
-    padding: 0px;
+    padding: 0;
 }
 
 h3 {
@@ -43,20 +48,20 @@ h4 {
     font-weight: bold;
 }
 
-// Normal font weight for th and td
-.font-weight-normal  {
+/* Normal font weight for th and td */
+.font-weight-normal {
     font-weight: normal;
 }
 
 .hover-text {
-    font-size: 0px;
+    font-size: 0;
 }
 
 .no-memberships-text {
     text-align: center;
 }
 
-// Makes the "here" text in info.html blue.
+/* Makes the "here" text in info.html blue. */
 .link {
     color: $uh-blue2;
 }
