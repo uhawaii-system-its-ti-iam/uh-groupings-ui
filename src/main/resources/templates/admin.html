@@ -129,13 +129,13 @@
                             <form ng-submit="addAdmin()">
                                 <div class="input-group">
                                     <input name="Add Admin" class="form-control" type="text"
-                                           ng-init="errorDismissed = true; resetErrors()"
-                                           ng-blur="errorDismissed = true; resetErrors()"
+                                           ng-init="dismissErrors()"
+                                           ng-blur="dismissErrors()"
                                            title="Enter UH Username" aria-label="Enter a UH Username to add as admin."
                                            placeholder="UH Username" ng-model="adminToAdd"/>
                                     <div class="input-group-append">
                                         <button class="btn btn-primary" type="submit"
-                                                ng-blur="errorDismissed = true; resetErrors()"
+                                                ng-blur="dismissErrors()"
                                                 ng-click="resetErrors(); errorDismissed = false">Add
                                         </button>
                                         <div class="spinner-border spinner-border-sm" ng-if="waitingForImportResponse">
@@ -169,13 +169,13 @@
                                     <input name="Search Person" class="form-control" type="text" aria-required="true"
                                            title="Enter UH Username" aria-label="Enter UH Username to manage the person"
                                            placeholder="UH Username" ng-model="personToLookup"
-                                           ng-init="errorDismissed = true; resetErrors()"
-                                           ng-blur="errorDismissed = true; resetErrors()"
+                                           ng-init="dismissErrors()"
+                                           ng-blur="dismissErrors()"
                                     />
                                     <div class="input-group-append">
                                         <button class="btn btn-primary"
                                                 ng-click="errorDismissed = false; resetErrors()"
-                                                ng-blur="errorDismissed = true; resetErrors()"
+                                                ng-blur="dismissErrors()"
                                                 type="submit">Search
                                         </button>
                                     </div>

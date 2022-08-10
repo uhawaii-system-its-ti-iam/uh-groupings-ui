@@ -6,7 +6,13 @@
              class="float-md-left mt-3 form-alert alert alert-danger fade show">
             <p th:utext="#{screen.message.modal.add.empty}"></p>
         </div>
-        <!--message for invalid input-->
+        <!--message for invalid input when removing-->
+        <div ng-if="removeInputError"
+             class="float-md-left mt-3 alert alert-danger fade show">
+            <p th:text="#{screen.message.modal.remove.fail}"></p>
+            <p th:text="#{screen.message.modal.add.ensureValid}"></p>
+        </div>
+        <!--message for invalid input when adding-->
         <div ng-if="user.length > 0 && (resStatus === 404 || resStatus === 500)"
              class="float-md-left mt-3 alert alert-danger fade show">
             <p th:text="#{screen.message.modal.add.fail}"></p>

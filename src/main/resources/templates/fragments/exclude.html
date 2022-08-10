@@ -103,18 +103,21 @@
                 <form>
                     <div class="input-group long">
                         <input class="form-control" placeholder="Members to add or remove" type="search"
-                               ng-init="errorDismissed = true; resetErrors()"
-                               ng-blur="errorDismissed = true; resetErrors()"
+                               ng-init="dismissErrors()"
+                               ng-blur="dismissErrors()"
                                title="Enter one or more UH members" ng-model="manageMembers"
                         />
                         <div>
                             <button class="btn btn-primary add-margin"
-                                    ng-blur="errorDismissed = true; resetErrors()"
-                                    ng-click="resetErrors(); addMembers('Exclude', manageMembers); errorDismissed = false">
+                                    ng-blur="dismissErrors()"
+                                    ng-click="addOnClick('Exclude')">
                                 Add
                             </button>
                             <button class="btn btn-remove"
-                                    ng-click="resetErrors(); prepBatchRemove('Exclude', pagedItemsExclude[currentPageExclude]); errorDismissed = false">Remove</button>
+                                    ng-blur="dismissErrors()"
+                                    ng-click="removeOnClick('Exclude')">
+                                Remove
+                            </button>
                             <button class="btn btn-primary"
                                     ng-click="launchImportModal('Exclude')">Import File
                             </button>
