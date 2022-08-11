@@ -193,19 +193,19 @@
          */
         $scope.addAdmin = function () {
             $scope.waitingForImportResponse = true;
-            const adminToAdd = $scope.adminToAdd;
-            if (_.isEmpty(adminToAdd)) {
+            const sanitizedAdmin = $scope.sanitizer([$scope.adminToAdd]);
+            if (_.isEmpty(sanitizedAdmin)) {
                 // Todo : Error message pop up needs implementation.
                 $scope.emptyInput = true;
             } else {
-                if (inAdminList(adminToAdd)) {
+                if (inAdminList(sanitizedAdmin)) {
                     // Todo : Error message pop up needs implementation.
-                    $scope.user = adminToAdd;
+                    $scope.user = sanitizedAdmin;
                     $scope.listName = "admins";
                     $scope.swap = false;
                 } else {
                     $scope.createConfirmAddModal({
-                        userToAdd: adminToAdd,
+                        userToAdd: sanitizedAdmin,
                         listName: "admins"
                     });
                 }
@@ -243,6 +243,7 @@
          */
         $scope.createRemoveFromGroupsModal = function (options) {
             const userToRemove = options.user.uhUuid;
+            const sanitizedUser = $scope.sanitizer([userToRemove]);
             $scope.userToRemove = options.user;
             $scope.groupPaths = options.groupPaths;
             $scope.listName = options.listName;
@@ -250,7 +251,7 @@
 
             const windowClass = $scope.showWarningRemovingSelfFromList() ? "modal-danger" : "";
 
-            groupingsService.getMemberAttributes(userToRemove, function (person) {
+            groupingsService.getMemberAttributes(sanitizedUser, function (person) {
                 if (person === "") {
                     return;
                 } else {

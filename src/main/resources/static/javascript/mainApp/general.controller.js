@@ -643,13 +643,24 @@
             }
         };
 
-        // Checks that a users name matches the pattern of either a valid uid or a uhUuid
-        $scope.sanitizer = (name) => {
-            const trimmedLowercaseName = name.toLowerCase().trim();
-            if (trimmedLowercaseName != null && $scope.uhIdentifierPattern.test(trimmedLowercaseName)) {
-                const validInput = trimmedLowercaseName.match($scope.uhIdentifierPattern);
-                return validInput.toString();
+        /**
+         * Checks that a users name matches the pattern of either a valid uid or a uhUuid
+         * @param {Object[]} names  a string of names to be validated
+         * @param {string=} joiner the optional string to join the list, by default it will create a space seperated string
+         * @returns {string|null} the list of valid names
+         */
+        $scope.sanitizer = (names, joiner) => {
+            const validNames = [];
+            for (const name of names) {
+                if (name) {
+                    const trimmedLowercaseName = name.toLowerCase().trim();
+                    if (trimmedLowercaseName != null && $scope.uhIdentifierPattern.test(trimmedLowercaseName)) {
+                        const validInput = trimmedLowercaseName.match($scope.uhIdentifierPattern);
+                        validNames.push(validInput.toString());
+                    }
+                }
             }
+            return joiner ? validNames.join(joiner) : validNames.join(" ");
         };
 
         /**
@@ -661,16 +672,9 @@
         $scope.readTextFile = function (inputFile) {
             let reader = new FileReader();
             reader.onload = function (e) {
-                let str = e.target.result;
-                $scope.manageMembers = str.split(/[\r\n,]+/);
-                let sanitizedFile = [];
-                for (const members of $scope.manageMembers) {
-                    let sanitizedName = $scope.sanitizer(members);
-                    if (sanitizedName != null) {
-                        sanitizedFile.push(sanitizedName);
-                    }
-                }
-                $scope.manageMembers = sanitizedFile.join(" ");
+                const str = e.target.result;
+                const namesInFile = str.split(/[\r\n,]+/);
+                $scope.manageMembers = $scope.sanitizer(namesInFile);
                 $scope.addMembers($scope.listName);
             };
             reader.readAsText(inputFile);
@@ -889,27 +893,27 @@
         $scope.updateAddMember = function (userToAdd, list) {
             // only initialize groupingPath if listName is not "admins"
             let groupingPath;
-
+            const sanitizedUser = $scope.sanitizer([userToAdd]);
             if ($scope.listName !== "admins") {
                 groupingPath = $scope.selectedGrouping.path;
             }
 
             const handleSuccessfulAdd = function (res) {
                 $scope.createSuccessfulAddModal({
-                    user: userToAdd,
+                    user: sanitizedUser,
                     listName: list,
                     response: res
                 });
             };
 
             if (list === "Include") {
-                groupingsService.addMembersToInclude(userToAdd, groupingPath, handleSuccessfulAdd, handleUnsuccessfulRequest);
+                groupingsService.addMembersToInclude(sanitizedUser, groupingPath, handleSuccessfulAdd, handleUnsuccessfulRequest);
             } else if (list === "Exclude") {
-                groupingsService.addMembersToExclude(userToAdd, groupingPath, handleSuccessfulAdd, handleUnsuccessfulRequest);
+                groupingsService.addMembersToExclude(sanitizedUser, groupingPath, handleSuccessfulAdd, handleUnsuccessfulRequest);
             } else if (list === "owners") {
-                groupingsService.addOwnerships(groupingPath, userToAdd, handleSuccessfulAdd, handleUnsuccessfulRequest);
+                groupingsService.addOwnerships(groupingPath, sanitizedUser, handleSuccessfulAdd, handleUnsuccessfulRequest);
             } else if (list === "admins") {
-                groupingsService.addAdmin(userToAdd, handleSuccessfulAdd, handleUnsuccessfulRequest);
+                groupingsService.addAdmin(sanitizedUser, handleSuccessfulAdd, handleUnsuccessfulRequest);
             }
         };
 
@@ -1011,11 +1015,14 @@
 
         /**
          * Checks if the user is in the Grouper database
-         * @param {object} user - the user you are checking to see if they are in Grouper
+         * @param {string} user - the user you are checking to see if they are in Grouper
          * @param {object} list - the the list the user is being added to
          */
         $scope.validateAndAddUser = function (user, list) {
+            const validUser = $scope.sanitizer([user]);
+            console.log(user === validUser);
             groupingsService.getMemberAttributes(user, function (person) {
+                $scope.user = person;
                 if (person.uhUuid !== null) {
                     $scope.initMemberDisplayName(person);
                     $scope.addMember(list);
@@ -1381,6 +1388,7 @@
          * @param listName - Name of list to remove the members from.
          */
         function removeMembers(membersToRemove, listName) {
+            const sanitizedMembersToRemove = $scope.sanitizer(membersToRemove);
             if (!fetchMemberProperties(membersToRemove)) {
                 return $scope.launchDynamicModal(Message.Title.REMOVE_INPUT_ERROR, Message.Body.REMOVE_INPUT_ERROR);
             }
@@ -1400,11 +1408,11 @@
                 $scope.multiRemovePromptModalInstance.result.then(async function () {
                     $scope.loading = true;
                     if (listName === "Include") {
-                        await groupingsService.removeMembersFromInclude($scope.selectedGrouping.path, membersToRemove, $scope.batchRemoveResponseHandler, handleUnsuccessfulRequest);
+                        await groupingsService.removeMembersFromInclude($scope.selectedGrouping.path, sanitizedMembersToRemove, $scope.batchRemoveResponseHandler, handleUnsuccessfulRequest);
                     } else if (listName === "Exclude") {
-                        await groupingsService.removeMembersFromExclude($scope.selectedGrouping.path, membersToRemove, $scope.batchRemoveResponseHandler, handleUnsuccessfulRequest);
+                        await groupingsService.removeMembersFromExclude($scope.selectedGrouping.path, sanitizedMembersToRemove, $scope.batchRemoveResponseHandler, handleUnsuccessfulRequest);
                     } else if (listName === "owners") {
-                        await groupingsService.removeOwners($scope.selectedGrouping.path, membersToRemove, $scope.batchRemoveResponseHandler, handleUnsuccessfulRequest);
+                        await groupingsService.removeOwners($scope.selectedGrouping.path, memberRemoving, $scope.batchRemoveResponseHandler, handleUnsuccessfulRequest);
                     }
                 }, function (reason) {
                     if (reason === "cancel") {
@@ -1575,12 +1583,13 @@
                 $scope.removeInputError = true;
             } else {
                 const userToRemove = options.user.uhUuid;
+                const sanitizedUserToRemove = $scope.sanitizer([userToRemove]);
                 $scope.userToRemove = options.user;
                 $scope.listName = options.listName;
 
                 const windowClass = $scope.showWarningRemovingSelf() ? "modal-danger" : "";
 
-                groupingsService.getMemberAttributes(userToRemove, function (person) {
+                groupingsService.getMemberAttributes(sanitizedUserToRemove, function (person) {
                     if (person === "") {
                         return;
                     } else {
@@ -1599,13 +1608,13 @@
                         let groupingPath = $scope.selectedGrouping.path;
 
                         if ($scope.listName === "Include") {
-                            groupingsService.removeMembersFromInclude(groupingPath, userToRemove, handleMemberRemove, handleUnsuccessfulRequest);
+                            groupingsService.removeMembersFromInclude(groupingPath, sanitizedUserToRemove, handleMemberRemove, handleUnsuccessfulRequest);
                         } else if ($scope.listName === "Exclude") {
-                            groupingsService.removeMembersFromExclude(groupingPath, userToRemove, handleMemberRemove, handleUnsuccessfulRequest);
+                            groupingsService.removeMembersFromExclude(groupingPath, sanitizedUserToRemove, handleMemberRemove, handleUnsuccessfulRequest);
                         } else if ($scope.listName === "owners") {
-                            groupingsService.removeOwners(groupingPath, userToRemove, handleOwnerRemove, handleUnsuccessfulRequest);
+                            groupingsService.removeOwners(groupingPath, sanitizedUserToRemove, handleOwnerRemove, handleUnsuccessfulRequest);
                         } else if ($scope.listName === "admins") {
-                            groupingsService.removeAdmin(userToRemove, handleAdminRemove, handleUnsuccessfulRequest);
+                            groupingsService.removeAdmin(sanitizedUserToRemove, handleAdminRemove, handleUnsuccessfulRequest);
                         }
                     });
                 }, function (res) {
@@ -1681,8 +1690,8 @@
         };
 
         $scope.removeMultipleUsers = (list) => {
-
-            groupingsService.removeMembersFromInclude($scope.selectedGrouping.path, list, function () {
+            const sanitizedUsers = $scope.sanitizer(list);
+            groupingsService.removeMembersFromInclude($scope.selectedGrouping.path, sanitizedUsers, function () {
             }, function () {
             });
         };
@@ -2310,7 +2319,7 @@
                 $scope.columnDisplaySetting = "second";
                 $scope.showDescriptionColumn = false;
                 $scope.showPathColumn = true;
-            }  else if (columnToHide === "none") {
+            } else if (columnToHide === "none") {
                 $scope.columnDisplaySetting = "third";
                 $scope.showDescriptionColumn = true;
                 $scope.showPathColumn = true;

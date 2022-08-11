@@ -551,28 +551,21 @@ describe("GeneralController", () => {
 
             goodFile = "iamtst01\niamtst02\niamtst03\niamtst04\niamtst05\niamtst06\n22222222\n12345678\nbogusname\nfakename\n_1234455\n_iamtst01\n_test_123-abc";
             badFile = `${bad1}${bad2}${bad3}${bad4}${bad5}${bad6}${bad7}${bad8}${bad9}${bad10}`;
-            parseFile = (file) => {
+            parseFile = (file, joiner) => {
                 scope.manageMembers = file.split(/[\r\n]+/);
-                let sanitizedFile = [];
-                for (const users of scope.manageMembers) {
-                    let sanitizedName = scope.sanitizer(users);
-                    if (sanitizedName != null) {
-                        sanitizedFile.push(sanitizedName);
-                    }
-                }
-                return sanitizedFile;
+                return scope.sanitizer(scope.manageMembers, joiner);
             };
         });
 
         it("should return an empty array when given harmful input", () => {
-            const arrayOfValidNames = parseFile(badFile);
-            expect(arrayOfValidNames.length).toEqual(0);
+            const arrayOfValidNames = parseFile(badFile).split();
+            expect(arrayOfValidNames.length).toEqual(1);
             expect(arrayOfValidNames.toString()).toEqual("");
         });
 
         it("should return an array of usernames that match the definition of a uhuuid or a uid", () => {
-            const arrayOfValidNames = parseFile(goodFile);
-            expect(arrayOfValidNames.length).toEqual(13);
+            const arrayOfValidNames = parseFile(goodFile, ",");
+            expect(arrayOfValidNames.split(",").length).toEqual(13);
             expect(arrayOfValidNames.toString()).toEqual("iamtst01,iamtst02,iamtst03,iamtst04,iamtst05,iamtst06,22222222,12345678,bogusname,fakename,_1234455,_iamtst01,_test_123-abc");
         });
     });

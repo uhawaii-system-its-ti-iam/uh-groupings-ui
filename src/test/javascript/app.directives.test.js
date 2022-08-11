@@ -49,6 +49,7 @@ describe("Directives", () => {
 
             let element = document.createElement("div");
             element.style.width = "100px";
+            element.style.display = "none";
             element.setAttribute("tooltip-on-truncate", text);
             element.textContent = text;
             document.body.appendChild(element);
