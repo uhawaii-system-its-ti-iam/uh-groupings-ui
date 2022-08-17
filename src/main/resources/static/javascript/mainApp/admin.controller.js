@@ -62,6 +62,7 @@
         $scope.searchForUserGroupingInformation = function () {
             if (!$scope.personToLookup) {
                 $scope.emptyInput = true;
+                $scope.currentManagePerson = "";
                 $scope.personList = [];
                 $scope.filter($scope.personList, "pagedItemsPerson", "currentPagePerson", $scope.personQuery, true);
             } else {
@@ -73,8 +74,9 @@
                 groupingsService.getMemberAttributes($scope.personToLookup, function (person) {
                     $scope.initMemberDisplayName(person);
                     $scope.currentManagePerson = "(" + $scope.fullName + ", " + $scope.uid + ", " + $scope.uhUuid + ")";
-                }, function () {
+                }, function (res) {
                     $scope.currentManagePerson = "";
+                    $scope.resStatus = res.status;
                 });
             }
             $scope.checkAll = false;
