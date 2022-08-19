@@ -1765,16 +1765,21 @@ describe("GeneralController", () => {
 
     describe("createRemoveModal", () => {
         let options = { user: { uhUuid: "testId" }, listName: "testList" };
+        let undefOptions = { listName: "testList" };
 
-        beforeEach(() => {
-            scope.createRemoveModal(options);
+        it("should set scope.removeInputError to true", () => {
+            scope.removeInputError = false;
+            scope.createRemoveModal(undefOptions);
+            expect(scope.removeInputError).toBeTrue();
         });
 
         it("should set scope.userToRemove to passed in option.user", () => {
+            scope.createRemoveModal(options);
             expect(scope.userToRemove).toEqual({ uhUuid: "testId" });
         });
 
         it("should set scope.listName to passed in option.listName", () => {
+            scope.createRemoveModal(options);
             expect(scope.listName).toEqual(options.listName);
         });
     });
@@ -2309,6 +2314,85 @@ describe("GeneralController", () => {
             scope.inGrouper = true;
             scope.resetErrors();
             expect(scope.inGrouper).toBeFalse();
+        });
+
+        it("should set removeInputError to false", () => {
+            scope.removeInputError = true;
+            scope.resetErrors();
+            expect(scope.removeInputError).toBeFalse();
+        });
+    });
+
+    describe("addOnClick", () => {
+        it("should call addOwners", () => {
+            spyOn(scope, "addOwners");
+            scope.addOnClick("owners");
+            expect(scope.addOwners).toHaveBeenCalled();
+        });
+
+        it("should call addMembers with Include", () => {
+            spyOn(scope, "addMembers");
+            scope.addOnClick("Include");
+            expect(scope.addMembers).toHaveBeenCalledWith("Include", scope.manageMembers);
+        });
+
+        it("should call addMembers with Exclude", () => {
+            spyOn(scope, "addMembers");
+            scope.addOnClick("Exclude");
+            expect(scope.addMembers).toHaveBeenCalledWith("Exclude", scope.manageMembers);
+        });
+
+        it("should set errorDismissed to false", () => {
+            scope.errorDismissed = true;
+            scope.addOnClick("owners");
+            expect(scope.errorDismissed).toBeFalse();
+        });
+    });
+
+    describe("removeOnClick", () => {
+
+        it("should call resetErrors", () => {
+            spyOn(scope, "resetErrors");
+            scope.removeOnClick("Include");
+            expect(scope.resetErrors).toHaveBeenCalled();
+        });
+
+        it("should set errorDismissed to false", () => {
+            scope.errorDismissed = true;
+            scope.removeOnClick("Include");
+            expect(scope.errorDismissed).toBeFalse();
+        });
+
+        it("should call prepBatchRemove with owners", () => {
+            spyOn(scope, "prepBatchRemove");
+            scope.removeOnClick("owners");
+            expect(scope.prepBatchRemove).toHaveBeenCalledWith("owners", scope.pagedItemsOwners[scope.currentPageOwners]);
+        });
+
+        it("should call prepBatchRemove with Include", () => {
+            spyOn(scope, "prepBatchRemove");
+            scope.removeOnClick("Include");
+            expect(scope.prepBatchRemove).toHaveBeenCalledWith("Include", scope.pagedItemsInclude[scope.currentPageInclude]);
+        });
+
+        it("should call prepBatchRemove with Exclude", () => {
+            spyOn(scope, "prepBatchRemove");
+            scope.removeOnClick("Exclude");
+            expect(scope.prepBatchRemove).toHaveBeenCalledWith("Exclude", scope.pagedItemsExclude[scope.currentPageExclude]);
+        });
+    });
+
+    describe("dismissErrors", () => {
+        it("should set errorDismissed to true", () => {
+            scope.errorDismissed = false;
+            scope.dismissErrors();
+            expect(scope.errorDismissed).toBeTrue();
+        });
+
+        it("should call resetErrors", () => {
+            spyOn(scope, "resetErrors");
+            scope.dismissErrors();
+            expect(scope.resetErrors).toHaveBeenCalled();
         });
     });
 

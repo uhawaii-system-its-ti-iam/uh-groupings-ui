@@ -1305,8 +1305,8 @@
                     membersToRemove = $scope.parseAddRemoveInputStr(membersToRemove);
                     removeMembers(membersToRemove, listName);
                 } else {
-                    $scope.memberToRemove = membersToRemove;
-                    $scope.memberToRemove = returnMemberObjectFromUserIdentifier($scope.memberToRemove, currentPage);
+                    $scope.userInput = membersToRemove;
+                    $scope.memberToRemove = returnMemberObjectFromUserIdentifier(membersToRemove, currentPage);
                     if (listName === "owners" && $scope.groupingOwners.length === 1) {
                         const userType = "owner";
                         $scope.createRemoveErrorModal(userType);
@@ -1565,44 +1565,48 @@
          * @param {string} options.listName - where the user is being removed from
          */
         $scope.createRemoveModal = function (options) {
-            const userToRemove = options.user.uhUuid;
-            $scope.userToRemove = options.user;
-            $scope.listName = options.listName;
+            if (!options.user) {
+                $scope.removeInputError = true;
+            } else {
+                const userToRemove = options.user.uhUuid;
+                $scope.userToRemove = options.user;
+                $scope.listName = options.listName;
 
-            const windowClass = $scope.showWarningRemovingSelf() ? "modal-danger" : "";
+                const windowClass = $scope.showWarningRemovingSelf() ? "modal-danger" : "";
 
-            groupingsService.getMemberAttributes(userToRemove, function (person) {
-                if (person === "") {
-                    return;
-                } else {
-                    $scope.initMemberDisplayName(person);
-                }
-                //Ask for confirmation from the user to remove the member
-                $scope.removeModalInstance = $uibModal.open({
-                    templateUrl: "modal/removeModal",
-                    windowClass: windowClass,
-                    scope: $scope,
-                    backdrop: "static"
-                });
-
-                $scope.removeModalInstance.result.then(function () {
-                    $scope.loading = true;
-                    let groupingPath = $scope.selectedGrouping.path;
-
-                    if ($scope.listName === "Include") {
-                        groupingsService.removeMembersFromInclude(groupingPath, userToRemove, handleMemberRemove, handleUnsuccessfulRequest);
-                    } else if ($scope.listName === "Exclude") {
-                        groupingsService.removeMembersFromExclude(groupingPath, userToRemove, handleMemberRemove, handleUnsuccessfulRequest);
-                    } else if ($scope.listName === "owners") {
-                        groupingsService.removeOwners(groupingPath, userToRemove, handleOwnerRemove, handleUnsuccessfulRequest);
-                    } else if ($scope.listName === "admins") {
-                        groupingsService.removeAdmin(userToRemove, handleAdminRemove, handleUnsuccessfulRequest);
+                groupingsService.getMemberAttributes(userToRemove, function (person) {
+                    if (person === "") {
+                        return;
+                    } else {
+                        $scope.initMemberDisplayName(person);
                     }
+                    //Ask for confirmation from the user to remove the member
+                    $scope.removeModalInstance = $uibModal.open({
+                        templateUrl: "modal/removeModal",
+                        windowClass: windowClass,
+                        scope: $scope,
+                        backdrop: "static"
+                    });
+
+                    $scope.removeModalInstance.result.then(function () {
+                        $scope.loading = true;
+                        let groupingPath = $scope.selectedGrouping.path;
+
+                        if ($scope.listName === "Include") {
+                            groupingsService.removeMembersFromInclude(groupingPath, userToRemove, handleMemberRemove, handleUnsuccessfulRequest);
+                        } else if ($scope.listName === "Exclude") {
+                            groupingsService.removeMembersFromExclude(groupingPath, userToRemove, handleMemberRemove, handleUnsuccessfulRequest);
+                        } else if ($scope.listName === "owners") {
+                            groupingsService.removeOwners(groupingPath, userToRemove, handleOwnerRemove, handleUnsuccessfulRequest);
+                        } else if ($scope.listName === "admins") {
+                            groupingsService.removeAdmin(userToRemove, handleAdminRemove, handleUnsuccessfulRequest);
+                        }
+                    });
+                }, function (res) {
+                    $scope.user = userToRemove;
+                    $scope.resStatus = res.status;
                 });
-            }, function (res) {
-                $scope.user = userToRemove;
-                $scope.resStatus = res.status;
-            });
+            }
         };
 
         /**
@@ -2011,6 +2015,45 @@
             $scope.emptySelect = false;
             $scope.swap = true;
             $scope.inGrouper = false;
+            $scope.removeInputError = false;
+        };
+
+        /**
+         * Adds people to listName (to be used in on-click)
+         * @param {String} listName grouping list (i.e. include, exclude, or owners)
+         */
+        $scope.addOnClick = function (listName) {
+            $scope.resetErrors();
+            if (listName === "owners") {
+                $scope.addOwners();
+            } else if (listName === "Include" || listName === "Exclude") {
+                $scope.addMembers(listName, $scope.manageMembers);
+            }
+            $scope.errorDismissed = false;
+        };
+
+        /**
+         * Removes people from listName (to be used in on-click)
+         * @param {String} listName grouping list (i.e. Include, Exclude, or owners)
+         */
+        $scope.removeOnClick = function (listName) {
+            $scope.resetErrors();
+            if (listName === "owners") {
+                $scope.prepBatchRemove("owners", $scope.pagedItemsOwners[$scope.currentPageOwners]);
+            } else if (listName === "Include") {
+                $scope.prepBatchRemove("Include", $scope.pagedItemsInclude[$scope.currentPageInclude]);
+            } else if (listName === "Exclude") {
+                $scope.prepBatchRemove("Exclude", $scope.pagedItemsExclude[$scope.currentPageExclude]);
+            }
+            $scope.errorDismissed = false;
+        };
+
+        /**
+         * Removes error message and resets errors
+         */
+        $scope.dismissErrors = function () {
+            $scope.errorDismissed = true;
+            $scope.resetErrors();
         };
 
         /**
