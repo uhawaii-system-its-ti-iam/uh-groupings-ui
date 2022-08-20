@@ -11,7 +11,7 @@
     color: #00a6b2 !important;
 }
 
-.fade:not(.show) {
+.fade.in {
     opacity: 1;
 }
 
@@ -414,9 +414,38 @@ table .p-12 {
     white-space: nowrap;
     padding: 5px 30px !important;
 }
+
+table .w-8 {
+    width: 8%;
+}
+
+table .w-15 {
+    width: 15%;
+}
+
 table .w-20 {
     width: 20%;
     padding: 8px;
+}
+
+table .w-27 {
+    width: 27%;
+}
+
+table .w-30 {
+    width: 30%;
+}
+
+table .w-35 {
+    width: 35%;
+}
+
+table .w-40 {
+    width: 40%;
+}
+
+table .mw-0 {
+    max-width: 0;
 }
 
 .sort-icon::after {
@@ -484,6 +513,18 @@ form.seamless input {
 
 .page-link {
     color: #1c6070;
+}
+
+.row-height {
+    height: 2.44em;
+}
+
+.dropdown-toggle::after {
+    display: none;
+}
+
+.dropdown .form-control {
+    color: #1c6070 !important;
 }
 
 .modal-open .modal {

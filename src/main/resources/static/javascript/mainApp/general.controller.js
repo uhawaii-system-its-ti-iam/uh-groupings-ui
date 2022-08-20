@@ -128,7 +128,13 @@
         //Keeps track of async calls made throughout this js controller
         let asyncThreadCount = 0;
 
+        //Default description message when none is provided
         $scope.noDescriptionMessage = "No description given for this Grouping.";
+
+        //Retrieve table column settings from local storage or default value if local storage is empty
+        $scope.columnDisplaySetting = localStorage.getItem("columnDisplaySetting") || "first";
+        $scope.showDescriptionColumn = JSON.parse(localStorage.getItem("showDescriptionColumn") || true);
+        $scope.showPathColumn = JSON.parse(localStorage.getItem("showPathColumn") || false);
 
         angular.extend(this, $controller("TableJsController", { $scope: $scope }));
 
@@ -2290,7 +2296,31 @@
             $window.location.href = "/uhgroupings/";
         };
 
+        /**
+         * Hides column when radio button is selected in table column settings dropdown,
+         * saves to local storage.
+         * @param columnToHide - the column to hide
+         */
+        $scope.hideColumn = function (columnToHide) {
+            if (columnToHide === "path") {
+                $scope.columnDisplaySetting = "first";
+                $scope.showDescriptionColumn = true;
+                $scope.showPathColumn = false;
+            } else if (columnToHide === "description") {
+                $scope.columnDisplaySetting = "second";
+                $scope.showDescriptionColumn = false;
+                $scope.showPathColumn = true;
+            }  else if (columnToHide === "none") {
+                $scope.columnDisplaySetting = "third";
+                $scope.showDescriptionColumn = true;
+                $scope.showPathColumn = true;
+            }
+            localStorage.setItem("columnDisplaySetting", $scope.columnDisplaySetting);
+            localStorage.setItem("showDescriptionColumn", JSON.stringify($scope.showDescriptionColumn));
+            localStorage.setItem("showPathColumn", JSON.stringify($scope.showPathColumn));
+        };
     }
+
 
     UHGroupingsApp.controller("GeneralJsController", GeneralJsController);
 }());

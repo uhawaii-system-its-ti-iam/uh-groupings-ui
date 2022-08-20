@@ -50,6 +50,6 @@ $media_queries: (
 }
 
 // Create fade background when opening modals
-.fade:not(.show) {
+.fade.in {
   opacity: 1;
 }

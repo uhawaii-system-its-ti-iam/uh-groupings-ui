@@ -26,6 +26,7 @@
         <angular-ui-bootstrap-version>2.2.0</angular-ui-bootstrap-version>
 
         <angularjs-version>1.7.8</angularjs-version>
+        <popper.js-version>1.16.0</popper.js-version>
         <bootstrap-version>4.5.0</bootstrap-version>
 
         <lodash-version>4.17.20</lodash-version>
@@ -134,6 +135,11 @@
         <!-- Webjars -->
         <dependency>
             <groupId>org.webjars</groupId>
+            <artifactId>popper.js</artifactId>
+            <version>${popper.js-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars</groupId>
             <artifactId>bootstrap</artifactId>
             <version>${bootstrap-version}</version>
         </dependency>
@@ -236,6 +242,7 @@
                         <source>classpath/META-INF/resources/webjars/angularjs/${angularjs-version}/angular.min.js">
                         </source>
                         <source>classpath/META-INF/resources/webjars/jquery/${jquery-version}/jquery.min.js</source>
+                        <source>classpath/META-INF/resources/webjars/popper.js/${popper.js-version}/umd/popper.min.js</source>
                         <source>
                             classpath/META-INF/resources/webjars/bootstrap/${bootstrap-version}/js/bootstrap.min.js
                         </source>
@@ -250,6 +257,7 @@
                         </source>
                         <source>classpath/META-INF/resources/webjars/lodash/${lodash-version}/lodash.min.js</source>
                         <source>${basedir}/src/main/resources/static/javascript/mainApp/app.js</source>
+                        <source>${basedir}/src/main/resources/static/javascript/mainApp/app.directives.js</source>
                         <source>${basedir}/src/main/resources/static/javascript/mainApp/admin.controller.js</source>
                         <source>${basedir}/src/main/resources/static/javascript/mainApp/app.service.js</source>
                         <source>${basedir}/src/main/resources/static/javascript/mainApp/groupings.service.js</source>

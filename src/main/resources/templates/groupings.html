@@ -26,12 +26,33 @@
                             <h2 class="card-title mt-md-1 mt-0 mb-1">Manage
                                 Groupings</h2>
                         </div>
-                        <div class="col-lg-3 col-md-4 col-12 p-0">
+                        <div class="col-lg-3 col-md-4 col-12 p-0 d-sm-flex">
                             <input class="form-control" placeholder="Filter Groupings..." type="search"
                                    title="Filter Groupings" aria-label="Filter Groupings..."
                                    ng-model="groupingsQuery"
                                    ng-change="filter(groupingsList, 'pagedItemsGroupings', 'currentPageGroupings', groupingsQuery, true)"/>
+                            <div class="ml-2 dropdown d-none d-sm-table-cell">
+                                <button class="form-control dropdown-toggle" data-toggle="dropdown"
+                                        title="Table Settings" aria-label="Table Settings">
+                                    <i class="fa fa-sliders-h"></i>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-right dropdown-menu-form form-group">
+                                    <li><label class="dropdown-item">
+                                        <input class="ml-n2" type="radio"
+                                               ng-model="columnDisplaySetting" value="first"
+                                               ng-click="hideColumn('path')"> Hide Grouping Path</label></li>
+                                    <li><label class="dropdown-item">
+                                        <input class="ml-n2" type="radio"
+                                               ng-model="columnDisplaySetting" value="second"
+                                               ng-click="hideColumn('description')"> Hide Description</label></li>
+                                    <li><label class="dropdown-item">
+                                        <input class="ml-n2" type="radio"
+                                               ng-model="columnDisplaySetting" value="third"
+                                               ng-click="hideColumn('none')"> Show All</label></li>
+                                </ul>
+                            </div>
                         </div>
+
                     </div>
                     <div th:replace="fragments/groupings-list :: groupings-list"></div>
                 </div>
