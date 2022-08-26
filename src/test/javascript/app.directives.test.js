@@ -42,6 +42,7 @@ describe("Directives", () => {
             spyOn($.fn, "tooltip");
             $(element).triggerSVGEvent("mouseover");
             expect($.fn.tooltip).toHaveBeenCalledWith("toggle");
+            $(element).remove();
         }));
 
         it("should not open a tooltip", inject(() => {
@@ -49,7 +50,6 @@ describe("Directives", () => {
 
             let element = document.createElement("div");
             element.style.width = "100px";
-            element.style.display = "none";
             element.setAttribute("tooltip-on-truncate", text);
             element.textContent = text;
             document.body.appendChild(element);
@@ -65,6 +65,7 @@ describe("Directives", () => {
             spyOn($.fn, "tooltip");
             $(element).triggerSVGEvent("mouseover");
             expect($.fn.tooltip).not.toHaveBeenCalledWith("toggle");
+            $(element).remove();
         }));
     });
 });
