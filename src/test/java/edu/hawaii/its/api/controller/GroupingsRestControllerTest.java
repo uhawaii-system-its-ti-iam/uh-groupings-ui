@@ -651,7 +651,7 @@ public class GroupingsRestControllerTest {
 
     @Test
     @WithMockUhUser
-    public void shouldDoGrouperHandshake() throws Exception {
+    public void shouldDoGroupingsHandshake() throws Exception {
         GroupingsRestController controller = applicationContext.getBean(GroupingsRestController.class);
 
         Realm realm = controller.getRealm();
@@ -691,7 +691,7 @@ public class GroupingsRestControllerTest {
 
     @Test
     @WithMockUhUser
-    public void doGrouperHandshake() {
+    public void groupingsHandshake() {
         GroupingsRestController controller = applicationContext.getBean(GroupingsRestController.class);
         assertFalse(controller.shouldDoApiHandshake());
         try {
