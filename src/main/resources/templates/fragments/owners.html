@@ -37,7 +37,7 @@
                     <td class="p-10" aria-label="{{owner.name}}">
                         {{owner.name}}
                         <span class="far fa-trash-alt fa-pull-right clickable pt-1" role="button"
-                              data-toggle="tooltip" data-placement="top"
+                              data-toggle="tooltip" data-placement="top" data-boundary="window"
                               onmouseover="$(this).tooltip('show')" onmouseout="$(this).tooltip('dispose')"
                               tabindex="0" aria-label="Remove {{owner.name}} from the Owner members list"
                               th:title="#{screen.message.common.tooltip.remove.owner}"
