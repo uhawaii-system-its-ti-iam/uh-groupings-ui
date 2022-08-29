@@ -1,14 +1,14 @@
 th {
-    font-size: .8rem;
-    letter-spacing: .5px;
+    font-size: 0.8rem;
+    letter-spacing: 0.5px;
     text-transform: uppercase;
 }
 
+/* Styling for table information in modals, groupings, admins, and memberships */
 table {
     width: 80%;
     margin-bottom: 30px;
 
-    // Styling for table information in modals, groupings, admins, and memberships
     .p-10 {
         white-space: nowrap;
         padding: 5px 20px !important;
@@ -58,20 +58,18 @@ table {
     }
 }
 
-// Arrows for sorting info on table
+/* Arrows for sorting info on table */
 .sort-icon {
-    // Angle down
-    &::after {
+    &::after { /* Angle down */
         content: '\f107';
     }
 
-    // Angle up
-    &.reverse::after {
+    &.reverse::after { /* Angle up */
         content: '\f106';
     }
 }
 
-// Styling for the grouping path.
+/* Styling for the grouping path. */
 form.seamless {
     display: flex;
     min-width: 12rem;
@@ -84,14 +82,12 @@ form.seamless {
     }
 }
 
-// Modal tables
-
-// Sets margin for "are you sure".
-.modal-tables {
+/* Modal tables */
+.modal-tables { /* Sets margin for "are you sure". */
     margin-bottom: 30px;
 }
 
-// Styling for multi-add modal tables
+/* Styling for multi-add modal tables */
 .import-table {
     &-tbody {
         display: block;
@@ -116,7 +112,7 @@ form.seamless {
     }
 }
 
-#blankCheckbox{
+#blankCheckbox {
     margin-left: 1rem;
 }
 
@@ -125,24 +121,24 @@ form.seamless {
     margin-left: 0;
 }
 
-// Pagination
+/* Pagination */
 .pagination {
     float: right;
 
-    .page-item.disabled{
+    .page-item.disabled {
         cursor: not-allowed;
     }
 }
 
-// Pagination color.
+/* Styles first, last, next and prev in pagination */
+.page-link {
+    color: $text-color;
+}
+
+/* Pagination color. */
 .page-item.active > .page-link {
     background-color: $teal-tint;
     border-color: $teal-tint;
-}
-
-// Styles first, last, next and prev in pagination
-.page-link {
-    color: $text-color;
 }
 
 .row-height {

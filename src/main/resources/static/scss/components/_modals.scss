@@ -3,25 +3,6 @@
     overflow-x: hidden;
 }
 
-.modal.in .modal-dialog {
-    -webkit-transform: none;
-    transform: none;
-}
-
-.modal-attributes {
-    text-transform: initial;
-}
-
-.modal-backdrop.in {
-    filter: alpha(opacity=50);
-    opacity: 0.5;
-}
-
-.modal-names {
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
 .modal-dialog {
     display: flex;
     -ms-flex-align: center;
@@ -43,6 +24,25 @@
             height: calc(100vh - (1.75rem * 2));
         }
     }
+}
+
+.modal.in .modal-dialog {
+    -webkit-transform: none;
+    transform: none;
+}
+
+.modal-attributes {
+    text-transform: initial;
+}
+
+.modal-backdrop.in {
+    filter: alpha(opacity=50);
+    opacity: 0.5;
+}
+
+.modal-names {
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 // Set's the modal text color.

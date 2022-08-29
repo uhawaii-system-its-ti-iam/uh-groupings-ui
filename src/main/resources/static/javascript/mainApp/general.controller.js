@@ -1,3 +1,5 @@
+/* global _, angular, UHGroupingsApp */
+
 (function () {
 
     /**
@@ -136,7 +138,7 @@
         $scope.showDescriptionColumn = JSON.parse(localStorage.getItem("showDescriptionColumn") || true);
         $scope.showPathColumn = JSON.parse(localStorage.getItem("showPathColumn") || false);
 
-        angular.extend(this, $controller("TableJsController", { $scope: $scope }));
+        angular.extend(this, $controller("TableJsController", { $scope }));
 
         /**
          * Get the username of the current user
@@ -376,9 +378,8 @@
                          */
                         try {
                             await $scope.getPages(groupingPath, currentPage, PAGE_SIZE, "name", true);
-
-                            //Catches in both fetch and response
                         } catch (error) {
+                            //Catches in both fetch and response
                         }
                         currentPage++;
                     }
@@ -758,6 +759,57 @@
             }
         };
 
+        // Small function that resets the checkboxes on the page
+        function resetCheckboxes() {
+            for (let member of Object.values($scope.membersInCheckboxList)) {
+                member = false;
+            }
+        }
+
+        /**
+         * Clears the user input for adding/deleting a member to/from a list.
+         * @param {string?} listName - Name of the list that the user is being added to or removed from.
+         */
+        function clearMemberInput(listName) {
+            switch (listName) {
+                case "Include":
+                case "Exclude":
+                    $scope.userToAdd = "";
+                    $scope.manageMembers = "";
+                    $scope.userNameList = [];
+                    $scope.multiAddResults = [];
+                    $scope.waitingForImportResponse = false;
+                    $scope.personProps = [];
+                    $scope.memberToRemove = "";
+                    $scope.membersToRemove = [];
+                    $scope.multiRemoveThreshold = 100;
+                    $scope.multiRemoveResults = [];
+                    $scope.multiRemoveResultsGeneric = [];
+                    $scope.membersToModify = [];
+                    $scope.membersToAddOrRemove = "";
+                    $scope.membersNotInList = [];
+                    $scope.memberName = "";
+                    $scope.memberUhUuid = "";
+                    $scope.membersNotInList = [];
+                    $scope.membersInCheckboxList = {};
+                    resetCheckboxes();
+                    break;
+                case "owners":
+                    $scope.manageOwners = "";
+                    $scope.multiRemoveResults = [];
+                    $scope.multiAddResults = [];
+                    $scope.membersNotInList = [];
+                    break;
+                case "admins":
+                    $scope.adminToAdd = "";
+                    break;
+                default:
+                    $scope.userToAdd = "";
+                    $scope.manageOwners = "";
+                    $scope.adminToAdd = "";
+            }
+        }
+
         /**
          * Launch a modal containing a table of the results(user info) received from the server's response message.
          * @param listName - current list being added to
@@ -837,7 +889,7 @@
                 templateUrl: "modal/dynamicModal",
                 scope: $scope
             });
-            if (undefined !== timeTillClose) {
+            if (!_.isUndefined(timeTillClose)) {
                 let closeOnTimeout = function () {
                     $scope.createDynamicModal.dismiss();
                 };
@@ -855,8 +907,9 @@
          * @return {[]}
          */
         $scope.removeItemsFromArray = function (pendingList, itemsToRemove) {
-            for (let item of itemsToRemove)
+            for (let item of itemsToRemove) {
                 pendingList = _.without(pendingList, _.forEach(item));
+            }
             return pendingList;
         };
 
@@ -1020,7 +1073,6 @@
          */
         $scope.validateAndAddUser = function (user, list) {
             const validUser = $scope.sanitizer([user]);
-            console.log(user === validUser);
             groupingsService.getMemberAttributes(user, function (person) {
                 $scope.user = person;
                 if (person.uhUuid !== null) {
@@ -1208,7 +1260,7 @@
 
             $scope.createRemoveModal({
                 user: userToRemove,
-                listName: listName,
+                listName,
                 scope: $scope
             });
         };
@@ -1262,6 +1314,16 @@
         };
 
         /**
+         *  Replace commas and spaces in str with commas.
+         */
+        $scope.parseAddRemoveInputStr = function (str) {
+            if (!_.isString(str)) {
+                return "";
+            }
+            return str.split(/[ ,]+/).join(",");
+        };
+
+        /**
          * Returns the member object that contains either the provided username or UH number.
          * @param memberIdentifier - The username or UH ID number of the member object to return.
          * @param currentPage - An array that contains member objects on the current page.
@@ -1277,14 +1339,91 @@
         }
 
         /**
-         *  Replace commas and spaces in str with commas.
+         * Utility function that searches an array of member objects, and
+         * creates an new array of member objects from a string of member identifiers.
+         *
+         * If a member does not exist, it creates a string of their identifiers.
+         *
+         * @param members - A comma separated string of members.
          */
-        $scope.parseAddRemoveInputStr = function (str) {
-            if (!_.isString(str)) {
-                return "";
+        function fetchMemberProperties(members) {
+            let listToSearch;
+            switch ($scope.listName) {
+                case "Exclude":
+                    listToSearch = $scope.groupingExclude;
+                    break;
+                case "Include":
+                    listToSearch = $scope.groupingInclude;
+                    break;
+                case "owners":
+                    listToSearch = $scope.groupingOwners;
+                    break;
+                default:
+                    break;
             }
-            return str.split(/[ ,]+/).join(",");
-        };
+            let arrayOfMembers = members.split(",");
+            let membersNotInList = [];
+            for (let member of arrayOfMembers) {
+                let currentMember = returnMemberObjectFromUserIdentifier(member, listToSearch);
+                if (_.isUndefined(currentMember)) {
+                    membersNotInList.push(member);
+                    continue;
+                }
+                let person = {
+                    "uid": currentMember.username,
+                    "uhUuid": currentMember.uhUuid,
+                    "name": currentMember.name
+                };
+                $scope.multiRemoveResults.push(person);
+            }
+            if ($scope.multiRemoveResults.length > 0) {
+                $scope.personProps = Object.keys($scope.multiRemoveResults[0]);
+            }
+            if (!_.isEmpty(membersNotInList)) {
+                $scope.membersNotInList = membersNotInList.join(", ");
+            }
+            return !_.isEmpty($scope.multiRemoveResults);
+        }
+
+        /**
+         * Takes the string of member UH numbers created from 'prepMultiRemove' and provides it
+         * to the endpoint to perform the batch removal.
+         * @param membersToRemove - Comma separated string of members to remove from the list.
+         * @param listName - Name of list to remove the members from.
+         */
+        function removeMembers(membersToRemove, listName) {
+            if (!fetchMemberProperties(membersToRemove)) {
+                return $scope.launchDynamicModal(Message.Title.REMOVE_INPUT_ERROR, Message.Body.REMOVE_INPUT_ERROR);
+            }
+
+            if ($scope.multiRemoveResults.length === $scope.groupingOwners.length && listName === "owners") {
+                const userType = "owner";
+                $scope.createRemoveErrorModal(userType);
+                clearMemberInput(listName);
+            } else {
+                $scope.multiRemovePromptModalInstance = $uibModal.open({
+                    templateUrl: "modal/multiRemovePromptModal",
+                    backdrop: "static",
+                    scope: $scope,
+                    keyboard: false
+                });
+                $scope.loading = false;
+                $scope.multiRemovePromptModalInstance.result.then(async function () {
+                    $scope.loading = true;
+                    if (listName === "Include") {
+                        await groupingsService.removeMembersFromInclude($scope.selectedGrouping.path, membersToRemove, $scope.batchRemoveResponseHandler, handleUnsuccessfulRequest);
+                    } else if (listName === "Exclude") {
+                        await groupingsService.removeMembersFromExclude($scope.selectedGrouping.path, membersToRemove, $scope.batchRemoveResponseHandler, handleUnsuccessfulRequest);
+                    } else if (listName === "owners") {
+                        await groupingsService.removeOwners($scope.selectedGrouping.path, membersToRemove, $scope.batchRemoveResponseHandler, handleUnsuccessfulRequest);
+                    }
+                }, function (reason) {
+                    if (reason === "cancel") {
+                        clearMemberInput(listName);
+                    }
+                });
+            }
+        }
 
         /**
          * Prepares the data gathered from helper functions for the batch delete.
@@ -1326,101 +1465,13 @@
                     } else {
                         $scope.createRemoveModal({
                             user: $scope.memberToRemove,
-                            listName: listName,
+                            listName,
                             scope: $scope
                         });
                     }
                 }
             }
         };
-
-        /**
-         * Utility function that searches an array of member objects, and
-         * creates an new array of member objects from a string of member identifiers.
-         *
-         * If a member does not exist, it creates a string of their identifiers.
-         *
-         * @param members - A comma separated string of members.
-         */
-        function fetchMemberProperties(members) {
-            let listToSearch;
-            switch ($scope.listName) {
-                case "Exclude":
-                    listToSearch = $scope.groupingExclude;
-                    break;
-                case "Include":
-                    listToSearch = $scope.groupingInclude;
-                    break;
-                case "owners":
-                    listToSearch = $scope.groupingOwners;
-                    break;
-                default:
-                    break;
-            }
-            let arrayOfMembers = members.split(",");
-            let membersNotInList = [];
-            for (let member of arrayOfMembers) {
-                let currentMember = returnMemberObjectFromUserIdentifier(member, listToSearch);
-                if (currentMember === undefined) {
-                    membersNotInList.push(member);
-                    continue;
-                }
-                let person = {
-                    "uid": currentMember.username,
-                    "uhUuid": currentMember.uhUuid,
-                    "name": currentMember.name
-                };
-                $scope.multiRemoveResults.push(person);
-            }
-            if ($scope.multiRemoveResults.length > 0) {
-                $scope.personProps = Object.keys($scope.multiRemoveResults[0]);
-            }
-            if (!_.isEmpty(membersNotInList)) {
-                $scope.membersNotInList = membersNotInList.join(", ");
-            }
-            return !_.isEmpty($scope.multiRemoveResults);
-        }
-
-        /**
-         * Takes the string of member UH numbers created from 'prepMultiRemove' and provides it
-         * to the endpoint to perform the batch removal.
-         * @param membersToRemove - Comma separated string of members to remove from the list.
-         * @param listName - Name of list to remove the members from.
-         */
-        function removeMembers(membersToRemove, listName) {
-            const sanitizedMembersToRemove = $scope.sanitizer(membersToRemove);
-            if (!fetchMemberProperties(membersToRemove)) {
-                return $scope.launchDynamicModal(Message.Title.REMOVE_INPUT_ERROR, Message.Body.REMOVE_INPUT_ERROR);
-            }
-
-            if ($scope.multiRemoveResults.length === $scope.groupingOwners.length && listName === "owners") {
-                const userType = "owner";
-                $scope.createRemoveErrorModal(userType);
-                clearMemberInput(listName);
-            } else {
-                $scope.multiRemovePromptModalInstance = $uibModal.open({
-                    templateUrl: "modal/multiRemovePromptModal",
-                    backdrop: "static",
-                    scope: $scope,
-                    keyboard: false
-                });
-                $scope.loading = false;
-                $scope.multiRemovePromptModalInstance.result.then(async function () {
-                    $scope.loading = true;
-                    if (listName === "Include") {
-                        await groupingsService.removeMembersFromInclude($scope.selectedGrouping.path, sanitizedMembersToRemove, $scope.batchRemoveResponseHandler, handleUnsuccessfulRequest);
-                    } else if (listName === "Exclude") {
-                        await groupingsService.removeMembersFromExclude($scope.selectedGrouping.path, sanitizedMembersToRemove, $scope.batchRemoveResponseHandler, handleUnsuccessfulRequest);
-                    } else if (listName === "owners") {
-                        await groupingsService.removeOwners($scope.selectedGrouping.path, memberRemoving, $scope.batchRemoveResponseHandler, handleUnsuccessfulRequest);
-                    }
-                }, function (reason) {
-                    if (reason === "cancel") {
-                        clearMemberInput(listName);
-                    }
-                });
-            }
-        }
 
         /**
          * Handles the response from calling the multi-remove function from the API.
@@ -1477,14 +1528,6 @@
         $scope.closeBatchRemoveConfirmationModalInstance = function () {
             $scope.multiRemoveConfirmationModalInstance.close();
         };
-
-        // Small function that resets the checkboxes on the page
-        function resetCheckboxes() {
-            for (let member in $scope.membersInCheckboxList) {
-                member = false;
-            }
-        }
-
 
         /**
          * Remove a grouping owner. There must be at least one grouping owner remaining.
@@ -1598,7 +1641,7 @@
                     //Ask for confirmation from the user to remove the member
                     $scope.removeModalInstance = $uibModal.open({
                         templateUrl: "modal/removeModal",
-                        windowClass: windowClass,
+                        windowClass,
                         scope: $scope,
                         backdrop: "static"
                     });
@@ -1731,50 +1774,6 @@
             $scope.optInQuery = "";
             $scope.ownersQuery = "";
             $scope.personQuery = "";
-        }
-
-        /**
-         * Clears the user input for adding/deleting a member to/from a list.
-         * @param {string?} listName - Name of the list that the user is being added to or removed from.
-         */
-        function clearMemberInput(listName) {
-            switch (listName) {
-                case "Include":
-                case "Exclude":
-                    $scope.userToAdd = "";
-                    $scope.manageMembers = "";
-                    $scope.userNameList = [];
-                    $scope.multiAddResults = [];
-                    $scope.waitingForImportResponse = false;
-                    $scope.personProps = [];
-                    $scope.memberToRemove = "";
-                    $scope.membersToRemove = [];
-                    $scope.multiRemoveThreshold = 100;
-                    $scope.multiRemoveResults = [];
-                    $scope.multiRemoveResultsGeneric = [];
-                    $scope.membersToModify = [];
-                    $scope.membersToAddOrRemove = "";
-                    $scope.membersNotInList = [];
-                    $scope.memberName = "";
-                    $scope.memberUhUuid = "";
-                    $scope.membersNotInList = [];
-                    $scope.membersInCheckboxList = {};
-                    resetCheckboxes();
-                    break;
-                case "owners":
-                    $scope.manageOwners = "";
-                    $scope.multiRemoveResults = [];
-                    $scope.multiAddResults = [];
-                    $scope.membersNotInList = [];
-                    break;
-                case "admins":
-                    $scope.adminToAdd = "";
-                    break;
-                default:
-                    $scope.userToAdd = "";
-                    $scope.manageOwners = "";
-                    $scope.adminToAdd = "";
-            }
         }
 
         /**
@@ -1918,13 +1917,13 @@
 
             $scope.resetResults = resetAll;
 
-            if (undefined !== $scope.resetResults[0]) {
+            if (!_.isUndefined($scope.resetResults[0])) {
                 $scope.getPersonProps(Object.keys($scope.resetResults[0]));
             }
 
             $scope.createResetGroupModal({
                 group: $scope.selectedGrouping.name,
-                listNames: listNames
+                listNames
             });
         };
 
@@ -2271,8 +2270,9 @@
                 while (c.charAt(0) === " ") {
                     c = c.substring(1);
                 }
-                if (c.indexOf(name) === 0)
+                if (c.indexOf(name) === 0) {
                     return c.substring(name.length, c.length);
+                }
             }
             return "";
         };

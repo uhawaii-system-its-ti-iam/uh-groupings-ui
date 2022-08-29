@@ -1,5 +1,11 @@
-// In admin, memberships, and groupings.
+/* In admin, memberships, and groupings. */
 .manage-groupings {
+    tr {
+        td { /* Manage Memberships */
+            padding: 0;
+        }
+    }
+
     td {
         span {
             &.path {
@@ -20,21 +26,15 @@
                 flex-basis: 20px;
                 margin-right: 8px;
             }
+
             span {
                 flex: 1;
             }
         }
     }
-
-    // Manage Memberships
-    tr {
-        td {
-            padding: 0px;
-        }
-    }
 }
 
-// Style for the grouping path.
+/* Style for the grouping path. */
 .form-control-sm {
     height: 25px !important;
 }
@@ -43,29 +43,26 @@
     margin-left: 0;
 }
 
-.description-input {
-    float: left;
-}
-
 #groupingsContainer {
     display: none;
 }
 
-// Groupings card
+/* Groupings card */
 .card {
     overflow: hidden;
     margin-top: 1rem;
 
     &.card-tab-content {
         .card-header {
-            border-top-left-radius: 0px;
-            margin-top: 0px;
+            border-top-left-radius: 0;
+            margin-top: 0;
         }
     }
 
     @include media-breakpoint(max-landscape-phone) {
         &-title {
             text-align: center;
+
             &-text {
                 text-align: center;
             }
@@ -73,10 +70,8 @@
     }
 }
 
-// Basis and Exclude tab.
-
-// Members to remove section.
-.input-group.long {
+/* Basis and Exclude tab. */
+.input-group.long { /* Members to remove section. */
     width: 35em;
 }
 
@@ -84,7 +79,7 @@
     width: 3%;
 }
 
-// Add margin to "add" button in owners, exclude, and include.
+/* Add margin to "add" button in owners, exclude, and include. */
 .add-margin {
     margin-left: 2px;
 }
@@ -99,24 +94,26 @@
  * button, so on mobile, the button sits on top of the
  * grouping name, eliminating whitespace.
  */
- @include media-breakpoint(max-landscape-phone){
+@include media-breakpoint(max-landscape-phone) {
     #selectedGroupHeader {
-        display: table; /* The row is now a table */
-        margin: auto; /* Centering */
+        display: table;
+        margin: auto;
         width: 100%;
-        padding: 0px;
+        padding: 0;
     }
 
     #groupNameCol {
-        display: table-footer-group; /* Makes the grouping name the footer of table */
+        /* Makes the grouping name the footer of table */
+        display: table-footer-group;
     }
 
     #returnToGroup {
-        display: table-header-group; /* Makes the button the header of table */
+        /* Makes the button the header of table */
+        display: table-header-group;
     }
 }
 
- //Exports to CSV button
+/* Exports to CSV button */
 @media (min-width: 377px) {
     #csvButton {
         float: right;

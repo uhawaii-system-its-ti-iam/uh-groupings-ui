@@ -1,3 +1,5 @@
+/* global inject */
+
 describe("GroupingsService", function () {
 
     beforeEach(module("UHGroupingsApp"));
@@ -467,5 +469,5 @@ describe("GroupingsService", function () {
             let result = gs.encodeParameterizedQueryString(params);
             expect(result).toEqual("page=1&size=2&sortString=name&isAscending=true");
         });
-    })
-})
+    });
+});

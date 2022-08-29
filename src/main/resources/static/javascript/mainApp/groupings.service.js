@@ -1,3 +1,5 @@
+/* global UHGroupingsApp */
+
 (function () {
 
     /**
@@ -78,7 +80,7 @@
              */
             addMembersToIncludeAsync(usersToAdd, path, onSuccess, onError, modal) {
                 let endpoint = BASE_URL + path + "/" + usersToAdd + "/addMembersToIncludeGroup";
-                return new Promise(resolve => {
+                return new Promise((resolve) => {
                     dataProvider.updateDataWithTimeoutModal(endpoint, onSuccess, onError, modal);
                 });
             },
@@ -97,7 +99,7 @@
              */
             addMembersToExcludeAsync(usersToAdd, path, onSuccess, onError, modal) {
                 let endpoint = BASE_URL + path + "/" + usersToAdd + "/addMembersToExcludeGroup";
-                return new Promise(resolve => {
+                return new Promise((resolve) => {
                     dataProvider.updateDataWithTimeoutModal(endpoint, onSuccess, onError, modal);
                 });
             },
@@ -201,7 +203,7 @@
             /**
              * Get a list of memberships that username is associated with.
              */
-            getMembershipAssignmentForUser: function (onSuccess, onError, username) {
+            getMembershipAssignmentForUser(onSuccess, onError, username) {
                 let endpoint = BASE_URL + "members/" + username + "/groupings/";
                 dataProvider.loadData(endpoint, onSuccess, onError);
             },

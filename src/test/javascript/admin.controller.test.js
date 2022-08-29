@@ -1,3 +1,5 @@
+/* global inject */
+
 describe("AdminController", function () {
 
   beforeEach(module("UHGroupingsApp"));
@@ -202,12 +204,12 @@ describe("AdminController", function () {
             expect(scope.removeFromGroupsCallbackOnSuccess).toHaveBeenCalled();
         });
         
-        it("should not call removeFromGroupsCallbackOnSuccess if selectedOwnedGroupings.length === 0"), () => {
+        it("should not call removeFromGroupsCallbackOnSuccess if selectedOwnedGroupings.length === 0", () => {
             scope.selectedOwnedGroupings = ["test"];
             spyOn(scope, "removeFromGroupsCallbackOnSuccess").and.callThrough();
             
             expect(scope.removeFromGroupsCallbackOnSuccess).not.toHaveBeenCalled();
-        };
+        });
     });
 
     describe("removeFromGroupsCallbackOnSuccess", () => {

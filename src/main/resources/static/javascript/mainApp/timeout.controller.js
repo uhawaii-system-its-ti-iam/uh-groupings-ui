@@ -1,3 +1,5 @@
+/* global angular, UHGroupingsApp */
+
 (function () {
 
     /**
@@ -17,7 +19,7 @@
      */
     function TimeoutJsController($scope, $window, $uibModal, $controller, dataProvider, BASE_URL, $timeout, $interval) {
 
-        angular.extend(this, $controller("GeneralJsController", { $scope: $scope }));
+        angular.extend(this, $controller("GeneralJsController", { $scope }));
 
         let createTimeoutModalPromise = {};
         let countdownTimerPromise = {};
@@ -27,6 +29,37 @@
 
         $scope.secondsRemaining = TIME_TO_LOGOUT; // Seconds remaining before log out
         $scope.timeRemaining = ""; // Formatted string of seconds remaining
+
+        /**
+         * Convert seconds to minutes and return as a formatted string.
+         */
+        function secondsToMinutes(seconds) {
+            let minutes = Math.round((seconds - 30) / 60);
+            let remainingSeconds = seconds % 60;
+            if (remainingSeconds < 10) {
+                remainingSeconds = "0" + remainingSeconds;
+            }
+            return `${minutes}:${remainingSeconds}`;
+        }
+
+        /**
+         * Restart createTimeoutModalPromise.
+         */
+        function restartTimeouts() {
+            if (angular.isDefined(createTimeoutModalPromise)) {
+                createTimeoutModalPromise = {};
+                createTimeoutModalPromise = $timeout(() => {
+                    $scope.createTimeoutModal();
+                }, MAX_TIME_IDLE);
+
+                createTimeoutModalPromise.then(() => {
+                    // timeout ends and modal is created
+                }, () => {
+                    // User resets timer or function execution fails
+                    restartTimeouts();
+                });
+            }
+        }
 
         angular.element(function () {
             // Start timeouts
@@ -83,34 +116,13 @@
         }
 
         /**
-         * Convert seconds to minutes and return as a formatted string.
+         * Restart timer countdown.
          */
-        function secondsToMinutes(seconds) {
-            let minutes = Math.round((seconds - 30) / 60);
-            let remainingSeconds = seconds % 60;
-            if (remainingSeconds < 10) {
-                remainingSeconds = "0" + remainingSeconds;
-            }
-            return `${minutes}:${remainingSeconds}`;
-        }
-
-        /**
-         * Restart createTimeoutModalPromise.
-         */
-        function restartTimeouts() {
-            if (angular.isDefined(createTimeoutModalPromise)) {
-                createTimeoutModalPromise = {};
-                createTimeoutModalPromise = $timeout(() => {
-                    $scope.createTimeoutModal();
-                }, MAX_TIME_IDLE);
-
-                createTimeoutModalPromise.then(() => {
-                    // timeout ends and modal is created
-                }, () => {
-                    // User resets timer or function execution fails
-                    restartTimeouts();
-                });
-            }
+        function restartCountdown() {
+            $interval.cancel(countdownTimerPromise);
+            countdownTimerPromise = {};
+            $scope.secondsRemaining = TIME_TO_LOGOUT;
+            $scope.timeRemaining = secondsToMinutes(TIME_TO_LOGOUT);
         }
 
         /**
@@ -160,17 +172,6 @@
             }, function () {
             }, endpoint);
         };
-
-
-        /**
-         * Restart timer countdown.
-         */
-        function restartCountdown() {
-            $interval.cancel(countdownTimerPromise);
-            countdownTimerPromise = {};
-            $scope.secondsRemaining = TIME_TO_LOGOUT;
-            $scope.timeRemaining = secondsToMinutes(TIME_TO_LOGOUT);
-        }
 
         /**
          * Logout method used only when user is idle for too long. The other logout method is implemented in the html.

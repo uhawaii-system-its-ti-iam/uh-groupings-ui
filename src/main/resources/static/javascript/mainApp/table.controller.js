@@ -1,3 +1,5 @@
+/* global _, UHGroupingsApp */
+
 (function () {
 
     /**

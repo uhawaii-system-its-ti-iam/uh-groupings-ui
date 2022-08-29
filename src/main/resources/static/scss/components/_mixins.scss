@@ -1,27 +1,28 @@
-@mixin gradient($text-color: #ffffff, $bg-color: #6fa9be, $top-gradient: #7db1c4, $btm-gradient: #5a9cb4){
-color: $text-color;
-filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
-border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-text-shadow: 0 1px 1px #444;
-background-image: -moz-linear-gradient(top, $top-gradient, $btm-gradient);
-background-image: -webkit-linear-gradient(top, $top-gradient, $btm-gradient);
-background-image: -o-linear-gradient(top, $top-gradient, $btm-gradient);
-background: {
-    image: linear-gradient(to bottom, $top-gradient, $btm-gradient);
+@mixin gradient($text-color: #fff, $bg-color: #6fa9be, $top-gradient: #7db1c4, $btm-gradient: #5a9cb4) {
+  color: $text-color;
+  filter: progid:dximagetransform.microsoft.gradient(enabled=false);
+  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+  text-shadow: 0 1px 1px #444;
+  background: -moz-linear-gradient(top, $top-gradient, $btm-gradient);
+  background: -webkit-gradient(top, $top-gradient, $btm-gradient);
+  background: -webkit-linear-gradient(top, $top-gradient, $btm-gradient);
+  background: -o-linear-gradient(top, $top-gradient, $btm-gradient);
+  background: -ms-linear-gradient(top, $top-gradient, $btm-gradient);
+  background: {
     repeat: repeat-x;
     color: $bg-color;
   }
 }
 
-@mixin btn-rmv ($bg-color: #b05b54, $top-gradient: #b05b54, $btm-gradient: #af534b){
+@mixin btn-rmv($bg-color: #b05b54, $top-gradient: #b05b54, $btm-gradient: #af534b) {
   color: white;
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
-  background-color: #b05b54;
-  background-image: -moz-linear-gradient(top, $top-gradient, $btm-gradient);
-  background-image: -webkit-linear-gradient(top, $top-gradient, $btm-gradient);
-  background-image: -o-linear-gradient(top, $top-gradient, $btm-gradient);
+  background: -moz-linear-gradient(top, $top-gradient, $btm-gradient);
+  background: -webkit-gradient(top, $top-gradient, $btm-gradient);
+  background: -webkit-linear-gradient(top, $top-gradient, $btm-gradient);
+  background: -o-linear-gradient(top, $top-gradient, $btm-gradient);
+  background: -ms-linear-gradient(top, $top-gradient, $btm-gradient);
   background: {
-    image: linear-gradient(to bottom, $top-gradient, $btm-gradient);
     repeat: repeat-x;
     color: $bg-color;
   }
@@ -32,7 +33,7 @@ background: {
   @each $breakpoint in $breakpoints {
     //If key exits in map
     $conditions: (
-      #{inspect(map-get($media-queries, $breakpoint))},
+            #{inspect(map-get($media-queries, $breakpoint))},
     );
   }
 

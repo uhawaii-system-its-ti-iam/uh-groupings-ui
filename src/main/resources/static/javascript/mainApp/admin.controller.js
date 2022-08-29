@@ -1,3 +1,5 @@
+/* global _, angular, UHGroupingsApp */
+
 (function () {
 
     /**
@@ -23,7 +25,7 @@
 
         let PAGE_SIZE = 20;
 
-        angular.extend(this, $controller("GeneralJsController", { $scope: $scope }));
+        angular.extend(this, $controller("GeneralJsController", { $scope }));
 
         /**
          * Callback which takes the admin tab data and moves it into adminList and groupingsList, each of these objects
@@ -186,7 +188,7 @@
         function inAdminList(user) {
             return _.some($scope.adminsList, { username: user }) ||
                 _.some($scope.adminsList, { uhUuid: user });
-        };
+        }
 
         /**
          * Adds a user to the admin list.
@@ -233,6 +235,15 @@
             }
         };
 
+        function handleRemoveFromGroupsOnSuccess() {
+            $scope.loading = false;
+            $scope.searchForUserGroupingInformation();
+        }
+
+        function handleRemoveFromGroupsOnError() {
+            $scope.loading = false;
+        }
+
         /**
          * Create a modal that prompts the user whether they want to delete the user or not. If 'Yes' is pressed, then
          * a request is made to delete the user.
@@ -259,7 +270,7 @@
                 }
                 $scope.removeModalInstance = $uibModal.open({
                     templateUrl: "modal/removeModal",
-                    windowClass: windowClass,
+                    windowClass,
                     scope: $scope,
                     backdrop: "static",
                     keyboard: false
@@ -276,15 +287,6 @@
                 $scope.resStatus = res.status;
             });
         };
-
-        function handleRemoveFromGroupsOnSuccess() {
-            $scope.loading = false;
-            $scope.searchForUserGroupingInformation();
-        }
-
-        function handleRemoveFromGroupsOnError() {
-            $scope.loading = false;
-        }
 
         /**
          * Copy the path of a grouping through the clipboard button
