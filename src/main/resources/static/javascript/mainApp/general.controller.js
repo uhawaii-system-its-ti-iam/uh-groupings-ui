@@ -699,25 +699,20 @@
 
         $scope.successfulAddHandler = function (res, list, listName) {
             let membersNotInList = [];
-            let arrayOfMembers = list.split(",");
             $scope.waitingForImportResponse = false; /* Small spinner off. */
 
-            let data = res;
             for (let i = 0; i < res.length; i++) {
-                data[parseInt(i, 10)] = res[parseInt(i, 10)];
-            }
-            for (let i = 0; i < data.length; i++) {
-                let result = data[parseInt(i, 10)].result;
-                let userWasAdded = data[parseInt(i, 10)].userWasAdded;
+                let result = res[i].result;
+                let userWasAdded = res[i].userWasAdded;
 
-                if ("FAILURE" === result || !userWasAdded) {
-                    membersNotInList.push(arrayOfMembers[i]);
+                if (result === "FAILURE" || !userWasAdded) {
+                    membersNotInList.push(res[i].name);
                     $scope.membersNotInList = membersNotInList.join(", ");
                 } else {
                     let person = {
-                        "uid": data[parseInt(i, 10)].uid,
-                        "uhUuid": data[parseInt(i, 10)].uhUuid,
-                        "name": data[parseInt(i, 10)].name
+                        "uid": res[i].uid,
+                        "uhUuid": res[i].uhUuid,
+                        "name": res[i].name
                     };
                     $scope.multiAddResults.push(person);
                     $scope.multiAddResultsGeneric.push(person);
@@ -1294,6 +1289,7 @@
                 pageItems = $scope.pagedItemsInclude;
                 pageNumber = $scope.currentPageInclude;
             }
+
             for (let i = 0; i < pageItems[pageNumber].length; i++) {
                 $scope.membersInCheckboxList[((pageItems[pageNumber][i]).uhUuid)] = $scope.allSelected;
             }
@@ -1533,9 +1529,8 @@
          * Remove a grouping owner. There must be at least one grouping owner remaining.
          * @param {number} currentPage - the current page in the owners table
          * @param {number} index - the index of the owner clicked by the user
-         * @param {object} options - the object
          */
-        $scope.removeOwner = function (currentPage, index, options) {
+        $scope.removeOwner = function (currentPage, index) {
             const ownerToRemove = $scope.pagedItemsOwners[currentPage][index];
 
             if ($scope.groupingOwners.length > 1) {
@@ -1859,7 +1854,7 @@
 
             $scope.resetModalInstance = $uibModal.open({
                 templateUrl: "modal/resetModal",
-                windowClass: windowClass,
+                windowClass,
                 scope: $scope,
                 backdrop: "static",
                 keyboard: false
@@ -1882,8 +1877,8 @@
             } else {
                 inBool = true;
                 $scope.resetInclude = [];
-                for (let i = 0; i < $scope.groupingInclude.length; i++) {
-                    $scope.resetInclude.push($scope.groupingInclude[i].uhUuid);
+                for (let includedGrouping of $scope.groupingInclude) {
+                    $scope.resetInclude.push(includedGrouping.uhUuid);
                 }
             }
             if (Object.entries($scope.groupingExclude).length === 0 || $scope.excludeCheck === false) {
@@ -1955,11 +1950,7 @@
          * @return {Boolean} Sync Dest value at the given name
          */
         $scope.getSyncDestValueInArray = function (syncDestName) {
-
-            const indexOfSyncDest = $scope.syncDestArray.map((e) => {
-                return e.name;
-            }).indexOf(syncDestName);
-            return $scope.syncDestArray[indexOfSyncDest].synced;
+            return $scope.syncDestArray.find((element) => element.name === syncDestName).synced;
         };
 
         /**
@@ -1968,10 +1959,7 @@
          * @return {Object} The entire syncDest object with the given name
          */
         $scope.getEntireSyncDestInArray = function (syncDestName) {
-            const indexOfSyncDest = $scope.syncDestArray.map((e) => {
-                return e.name;
-            }).indexOf(syncDestName);
-            return $scope.syncDestArray[indexOfSyncDest];
+            return $scope.syncDestArray.find((element) => element.name === syncDestName);
         };
 
         /**
@@ -1980,10 +1968,7 @@
          * @param {Boolean} syncDestvalue The value to set the Sync Dest to
          */
         $scope.setSyncDestInArray = function (syncDestName, syncDestvalue) {
-            const indexOfSyncDest = $scope.syncDestArray.map((e) => {
-                return e.name;
-            }).indexOf(syncDestName);
-            $scope.syncDestArray[indexOfSyncDest].synced = syncDestvalue;
+            $scope.syncDestArray.find((element) => element.name === syncDestName).synced = syncDestvalue;
         };
 
         /**

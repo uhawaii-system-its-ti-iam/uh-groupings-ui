@@ -1,3 +1,4 @@
+/* global inject */
 describe("AppService", function () {
 
         beforeEach(module("UHGroupingsApp"));

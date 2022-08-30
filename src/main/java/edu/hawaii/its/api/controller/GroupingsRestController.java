@@ -44,23 +44,8 @@ public class GroupingsRestController {
     @Value("${app.groupings.controller.uuid}")
     private String uuid;
 
-    @Value("${app.iam.request.form}")
-    private String requestForm;
-
-    @Value("${groupings.api.exclude}")
-    private String EXCLUDE;
-
-    @Value("${groupings.api.include}")
-    private String INCLUDE;
-
     @Value("${url.api.2.1.base}")
     private String API_2_1_BASE;
-
-    @Value("${groupings.api.listserv}")
-    private String LISTSERV;
-
-    @Value("${groupings.api.ldap}")
-    private String UH_RELEASED_GROUPING;
 
     @Value("${groupings.api.opt_in}")
     private String OPT_IN;

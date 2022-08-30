@@ -1,3 +1,5 @@
+/* global _, inject */
+
 describe("TableController", function () {
 
     beforeEach(module("UHGroupingsApp"));

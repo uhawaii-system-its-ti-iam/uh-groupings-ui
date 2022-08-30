@@ -59,7 +59,6 @@ public class GroupingsRestControllerTest {
 
     private static final String GROUPING = "grouping1";
     private static final String GROUPING2 = "grouping2";
-    private static final String GROUPING3 = "grouping3";
     private static final String USERNAME = "user";
     private static final String REST_CONTROLLER_BASE = "/api/groupings/";
     private static final String ADMIN_USERNAME = "admin";
@@ -185,7 +184,7 @@ public class GroupingsRestControllerTest {
     @Test
     @WithMockUhUser(username = "admin")
     public void removeFromGroupsTest() throws Exception {
-        String uri = REST_CONTROLLER_BASE + GROUPING3 + "/user/removeFromGroups";
+        String uri = REST_CONTROLLER_BASE + GROUPING2 + "/user/removeFromGroups";
 
         given(httpRequestService.makeApiRequest(eq(ADMIN_USERNAME), anyString(), eq(HttpMethod.DELETE)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
