@@ -15,7 +15,7 @@
                 <p class=" mb-1" ng-show="largeGrouping" th:text="#{screen.message.common.loading.toolarge}"><i
                         class="fa fa-check" aria-hidden="true"></i></p>
             </div>
-            <div class="col-md-4 pt-2">
+            <div class="col-md-4 py-2">
                 <input placeholder="Filter Members..." type="text" title="Filter Members"
                        ng-model="membersQuery" class="form-control" aria-label="Filter Members..."
                        ng-change="filter(groupingMembers, 'pagedItemsMembers', 'currentPageMembers', membersQuery, true)"/>
