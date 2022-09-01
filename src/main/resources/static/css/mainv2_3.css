@@ -1,4 +1,5 @@
-/* DO NOT TOUCH THIS CSS FILE */
+/* DO NOT TOUCH THIS CSS FILE.
+EDIT SCSS FILES INSTEAD AND RUN ./mvnw clean sass:update-stylesheets TO UPDATE CSS */
 .text-primary {
     color: #004252 !important;
 }
@@ -330,6 +331,12 @@ h4 {
     src: url("../fonts/SourceSansPro-BlackItalic.ttf");
 }
 
+.nav-pills .nav-link.active,
+.nav-pills .show > .nav-link {
+    background: white;
+    color: #004252;
+}
+
 .nav-pills .nav-link {
     /* Set icon styling for nav-bar icons. */
     color: #004252;
@@ -342,11 +349,42 @@ h4 {
     color: #004252;
 }
 
+.nav-pills .nav-link.active::after {
+    content: "";
+    border-color: #004252;
+    border-style: solid;
+    width: 0;
+    height: 0;
+    position: absolute;
+}
+
+@media screen and (max-width: 767.9px) {
+    .nav-pills .nav-link.active::after {
+        border-width: 0 10px 10px 10px;
+        border-color: transparent transparent #fff transparent;
+        bottom: -16px;
+        left: 33%;
+    }
+}
+
 @media (min-width: 768px) {
     .nav-pills .nav-link.active::after {
         border-width: 10px 10px 10px 0;
         border-color: transparent #fff transparent transparent;
         top: 25%;
+        right: -35px;
+    }
+}
+
+@media (min-width: 992px) {
+    .nav-pills .nav-link.active::after {
+        right: -18px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .nav-pills .nav-link.active::after {
+        right: -24px;
     }
 }
 
@@ -553,6 +591,8 @@ form.seamless input {
 .clickable.center-checkbox {
     vertical-align: top;
     margin-left: 5px;
+    padding-left: 20px;
+    width: 8%;
 }
 
 #blankCheckbox {
@@ -749,7 +789,7 @@ form.seamless input {
 }
 
 .basis-column {
-    width: 3%;
+    width: 8%;
 }
 
 /* Add margin to "add" button in owners, exclude, and include. */
