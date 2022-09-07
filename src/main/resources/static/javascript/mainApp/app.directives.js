@@ -30,6 +30,8 @@ UHGroupingsApp.directive("tooltipOnTruncate", function () {
             element.on("mouseover", function () {
                 if (element[0].offsetWidth < element[0].scrollWidth) {
                     $(element).tooltip("toggle");
+                } else {
+                    $(element).tooltip("dispose");
                 }
             });
         }
