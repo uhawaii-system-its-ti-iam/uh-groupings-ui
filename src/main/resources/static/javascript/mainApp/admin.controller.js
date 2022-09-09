@@ -62,24 +62,31 @@
          * Fetch a list of memberships pertaining to $scope.personToLookUp.
          */
         $scope.searchForUserGroupingInformation = function () {
-            if (!$scope.personToLookup) {
-                $scope.emptyInput = true;
-                $scope.currentManagePerson = "";
-                $scope.personList = [];
-                $scope.filter($scope.personList, "pagedItemsPerson", "currentPagePerson", $scope.personQuery, true);
-            } else {
-                $scope.loading = true;
+            $scope.loading = true;
+            const validUser = $scope.sanitizer([$scope.personToLookup]);
+            if (validUser !== "") {
                 groupingsService.getMembershipAssignmentForUser(
                     $scope.searchForUserGroupingInformationOnSuccessCallback,
                     $scope.searchForUserGroupingInformationOnErrorCallback,
                     $scope.personToLookup);
-                groupingsService.getMemberAttributes($scope.personToLookup, function (person) {
+                groupingsService.getMemberAttributes(validUser, function (person) {
                     $scope.initMemberDisplayName(person);
                     $scope.currentManagePerson = "(" + $scope.fullName + ", " + $scope.uid + ", " + $scope.uhUuid + ")";
                 }, function (res) {
                     $scope.currentManagePerson = "";
                     $scope.resStatus = res.status;
                 });
+            } else {
+                if (!$scope.personToLookup) {
+                    $scope.emptyInput = true;
+                } else {
+                    $scope.resStatus = 500;
+                }
+                $scope.loading = false;
+                $scope.user = $scope.personToLookup;
+                $scope.personList = [];
+                $scope.filter($scope.personList, "pagedItemsPerson", "currentPagePerson", $scope.personQuery, true);
+                $scope.currentManagePerson = "";
             }
             $scope.checkAll = false;
         };
