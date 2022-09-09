@@ -89,6 +89,28 @@
 }
 
 /**
+* Allows responsive "add", "remove", and "import" buttons
+* with smaller screens in owners, exclude, and include.
+*/
+#memSearch {
+    padding-right: 4px;
+    width: 50%;
+}
+@media (max-width: 768px) {
+    #memBtns {
+        position: relative;
+        top: 50px;
+    }
+    #memSearch {
+        position: absolute;
+    }
+    #pageBtn {
+        position: relative;
+        top: 5px;
+    }
+}
+
+/**
  * Styling for selected grouping header.
  * Styles the grouping name and 'Return to Groupings'
  * button, so on mobile, the button sits on top of the
