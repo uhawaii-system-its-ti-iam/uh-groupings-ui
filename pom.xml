@@ -340,6 +340,9 @@
                 <artifactId>sass-maven-plugin</artifactId>
                 <version>3.7.2</version>
                 <configuration>
+                    <sassOptions>
+                        <style>:compressed</style>
+                    </sassOptions>
                     <resources>
                         <resource>
                             <source>
