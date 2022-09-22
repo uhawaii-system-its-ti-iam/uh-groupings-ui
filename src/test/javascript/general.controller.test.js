@@ -1552,18 +1552,20 @@ describe("GeneralController", () => {
         let commaSeparated = "Hello,I,love,you";
         let commaAndSpaceSeparated = "Hello, I love,you";
         let single = "Hello";
+        let arrayCreated = ["Hello", "I", "love", "you"];
+        let singleArrayCreated = ["Hello"];
 
-        it("should take a space separated string and replace the spaces with ','", () => {
-            expect(scope.parseAddRemoveInputStr(spaceSeparated)).toEqual(commaSeparated);
+        it("should take a space separated string and create an array", () => {
+            expect(scope.parseAddRemoveInputStr(spaceSeparated)).toEqual(arrayCreated);
         });
-        it("should take a comma separated string and do nothing", () => {
-            expect(scope.parseAddRemoveInputStr(commaSeparated)).toEqual(commaSeparated);
+        it("should take a comma separated string and create an array", () => {
+            expect(scope.parseAddRemoveInputStr(commaSeparated)).toEqual(arrayCreated);
         });
-        it("should take a comma and space separated string and replace the spaces amd commas with ','", () => {
-            expect(scope.parseAddRemoveInputStr(commaAndSpaceSeparated)).toEqual(commaSeparated);
+        it("should take a comma and space separated string and create an array", () => {
+            expect(scope.parseAddRemoveInputStr(commaAndSpaceSeparated)).toEqual(arrayCreated);
         });
-        it("should do nothing with a string that has no commas or spaces", () => {
-            expect(scope.parseAddRemoveInputStr(single)).toEqual(single);
+        it("should take a string that has no commas or spaces and create an array", () => {
+            expect(scope.parseAddRemoveInputStr(single)).toEqual(singleArrayCreated);
         });
         it("should return an empty string if value passed is not a string", () => {
             expect(scope.parseAddRemoveInputStr(true)).toEqual("");

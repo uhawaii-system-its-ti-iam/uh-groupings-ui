@@ -619,7 +619,7 @@
             } else {
                 let numMembers = ($scope.manageMembers.split(" ").length - 1);
                 if (numMembers > 0) {
-                    let users = $scope.manageMembers.split(/[ ,]+/).join(",");
+                    let users = $scope.parseAddRemoveInputStr($scope.manageMembers);
                     $scope.manageMembers = [];
                     if (numMembers > $scope.maxImport) {
                         $scope.launchDynamicModal(
@@ -699,25 +699,20 @@
 
         $scope.successfulAddHandler = function (res, list, listName) {
             let membersNotInList = [];
-            let arrayOfMembers = list.split(",");
             $scope.waitingForImportResponse = false; /* Small spinner off. */
 
-            let data = res;
-            for (let i = 0; i < res.length; i++) {
-                data[parseInt(i, 10)] = res[parseInt(i, 10)];
-            }
-            for (let i = 0; i < data.length; i++) {
-                let result = data[parseInt(i, 10)].result;
-                let userWasAdded = data[parseInt(i, 10)].userWasAdded;
+            for (let data of res) {
+                let result = data.result;
+                let userWasAdded = data.userWasAdded;
 
-                if ("FAILURE" === result || !userWasAdded) {
-                    membersNotInList.push(arrayOfMembers[i]);
+                if (result === "FAILURE" || !userWasAdded) {
+                    membersNotInList.push(data.name);
                     $scope.membersNotInList = membersNotInList.join(", ");
                 } else {
                     let person = {
-                        "uid": data[parseInt(i, 10)].uid,
-                        "uhUuid": data[parseInt(i, 10)].uhUuid,
-                        "name": data[parseInt(i, 10)].name
+                        "uid": data.uid,
+                        "uhUuid": data.uhUuid,
+                        "name": data.name
                     };
                     $scope.multiAddResults.push(person);
                     $scope.multiAddResultsGeneric.push(person);
@@ -945,7 +940,8 @@
         $scope.updateAddMember = function (userToAdd, list) {
             // only initialize groupingPath if listName is not "admins"
             let groupingPath;
-            const sanitizedUser = $scope.sanitizer([userToAdd]);
+            const sanitizedUser = $scope.sanitizer([userToAdd]).split();
+
             if ($scope.listName !== "admins") {
                 groupingPath = $scope.selectedGrouping.path;
             }
@@ -1313,13 +1309,13 @@
         };
 
         /**
-         *  Replace commas and spaces in str with commas.
+         *  Divides a string into an array where commas and spaces are present.
          */
         $scope.parseAddRemoveInputStr = function (str) {
             if (!_.isString(str)) {
                 return "";
             }
-            return str.split(/[ ,]+/).join(",");
+            return str.split(/[ ,]+/);
         };
 
         /**
@@ -1360,9 +1356,8 @@
                 default:
                     break;
             }
-            let arrayOfMembers = members.split(",");
             let membersNotInList = [];
-            for (let member of arrayOfMembers) {
+            for (let member of members) {
                 let currentMember = returnMemberObjectFromUserIdentifier(member, listToSearch);
                 if (_.isUndefined(currentMember)) {
                     membersNotInList.push(member);
@@ -1450,14 +1445,12 @@
                 $scope.listName = listName;
                 $scope.currentPage = currentPage;
                 let membersToRemove = $scope.parseAddRemoveInputStr($scope.membersToModify);
-                let numMembersToRemove = membersToRemove.split(",").length;
                 $scope.membersToModify = [];
-                if (numMembersToRemove > 1) {
-                    membersToRemove = $scope.parseAddRemoveInputStr(membersToRemove);
+                if (membersToRemove.length > 1) {
                     removeMembers(membersToRemove, listName);
                 } else {
-                    $scope.userInput = membersToRemove;
-                    $scope.memberToRemove = returnMemberObjectFromUserIdentifier(membersToRemove, currentPage);
+                    $scope.userInput = membersToRemove[0];
+                    $scope.memberToRemove = returnMemberObjectFromUserIdentifier(membersToRemove[0], currentPage);
                     if (listName === "owners" && $scope.groupingOwners.length === 1) {
                         const userType = "owner";
                         $scope.createRemoveErrorModal(userType);
@@ -1625,7 +1618,7 @@
                 $scope.removeInputError = true;
             } else {
                 const userToRemove = options.user.uhUuid;
-                const sanitizedUserToRemove = $scope.sanitizer([userToRemove]);
+                const sanitizedUserToRemove = $scope.sanitizer([userToRemove]).split();
                 $scope.userToRemove = options.user;
                 $scope.listName = options.listName;
 

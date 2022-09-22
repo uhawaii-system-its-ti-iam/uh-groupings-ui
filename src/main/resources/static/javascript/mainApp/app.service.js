@@ -98,6 +98,27 @@
             },
 
             /**
+             * PUT data to the server, if the response is OK then call the callBack function, if the response is an
+             * error then call the callError function. If the response is not received in n seconds, launch a modal.
+             * @param {string} url - Path to which data is being posted too.
+             * @param {string} data - data to be updated
+             * @param {function} modal - Launch a modal using a call back function.
+             * @param {function} callback - Execute if response returns OK
+             * @param {function} callError - Execute if response returns as an error.
+             */
+            updateDataWithBodyAndTimeoutModal(url, data, callback, callError, modal) {
+                let timeoutID = setTimeout(modal, timeLimit);
+                $http.put(encodeURI(url), data)
+                    .then(function (response) {
+                        clearTimeout(timeoutID);
+                        callback(response.data);
+                    }, function (response) {
+                        clearTimeout(timeoutID);
+                        callError(response);
+                    });
+            },
+
+            /**
              * Handle Java exceptions by performing a POST request.
              * @param {object} exceptionData - an object containing the exception (stored as a string)
              * @param {string} url - the endpoint to perform the POST request

@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.List;
 import java.util.Map;
 
 @Service("httpRequestService")
@@ -46,6 +47,19 @@ public class HttpRequestServiceImpl implements HttpRequestService {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.set(CURRENT_USER, currentUser);
         HttpEntity<String> httpEntity = new HttpEntity<>(data, httpHeaders);
+
+        RestTemplate restTemplate =
+                new RestTemplateBuilder().errorHandler(new RestTemplateResponseErrorHandler()).build();
+        return restTemplate.exchange(uri, method, httpEntity, String.class);
+    }
+
+    @Override
+    public ResponseEntity<String> makeApiRequestWithBody(String currentUser, String uri, List<String> data,
+                                                         HttpMethod method) {
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.set(CURRENT_USER, currentUser);
+        HttpEntity<List<String>> httpEntity = new HttpEntity<>(data, httpHeaders);
 
         RestTemplate restTemplate =
                 new RestTemplateBuilder().errorHandler(new RestTemplateResponseErrorHandler()).build();
