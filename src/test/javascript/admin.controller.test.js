@@ -167,12 +167,14 @@ describe("AdminController", function () {
             scope.searchForUserGroupingInformation();
             expect(scope.emptyInput).toBeTrue();
             expect(scope.personList).toEqual([]);
+            expect(scope.currentManagePerson).toEqual("");
         });
         it("should set emptyInput to be true and personList to empty array", () => {
             scope.personToLookup = "";
             scope.searchForUserGroupingInformation();
             expect(scope.emptyInput).toBeTrue();
             expect(scope.personList).toEqual([]);
+            expect(scope.currentManagePerson).toEqual("");
         });
         it("should call groupingsService.getMembershipAssignmentForUser", () => {
             scope.personToLookup = "iamtst01";
@@ -185,6 +187,19 @@ describe("AdminController", function () {
             spyOn(gs, "getMemberAttributes").and.callThrough();
             scope.searchForUserGroupingInformation();
             expect(gs.getMemberAttributes).toHaveBeenCalled();
+        });
+        it("should set the resStatus to 500 and clear table", () => {
+            scope.personToLookup = "j";
+            scope.searchForUserGroupingInformation();
+            expect(scope.resStatus).toEqual(500);
+            expect(scope.personList).toEqual([]);
+            expect(scope.currentManagePerson).toEqual("");
+
+            scope.personToLookup = "*";
+            scope.searchForUserGroupingInformation();
+            expect(scope.resStatus).toEqual(500);
+            expect(scope.personList).toEqual([]);
+            expect(scope.currentManagePerson).toEqual("");
         });
     });
 
