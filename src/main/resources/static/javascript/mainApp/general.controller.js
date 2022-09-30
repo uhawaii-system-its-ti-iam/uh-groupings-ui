@@ -1040,9 +1040,9 @@
             $scope.uhUuid = attributes.uhUuid;
             $scope.uid = attributes.username;
 
-            if ($scope.fullName.length > 0) {
+            if ($scope.fullName != null && $scope.fullName.length > 0) {
                 $scope.user = $scope.fullName;
-            } else if ($scope.uid.length > 0) {
+            } else if ($scope.fullName != null && $scope.uid.length > 0) {
                 $scope.user = $scope.uid;
             } else {
                 $scope.user = $scope.uhUuid;
@@ -2073,12 +2073,12 @@
                 const selectedMembersToExport = $scope.extractSelectedUsersFromCheckboxes($scope.membersInCheckboxList).split(",");
                 const membersChecked = $scope.groupingInclude.filter((member) => (selectedMembersToExport.includes(member.uhUuid)));
                 // When no members are checked export the list passed in or checked
-                if (_.isEmpty(membersChecked)) { 
+                if (_.isEmpty(membersChecked)) {
                     csv = list === "include" ? $scope.convertListToCsv($scope.groupingInclude) : $scope.convertListToCsv($scope.groupingExclude);
-                } else { 
+                } else {
                     csv = $scope.convertListToCsv(membersChecked);
                 }
-            } else { 
+            } else {
                 csv = $scope.convertListToCsv(table);
             }
             if (csv == null) {
