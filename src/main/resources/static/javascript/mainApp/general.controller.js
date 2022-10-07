@@ -1300,7 +1300,7 @@
          * @returns {string}: "obj1,obj3"
          */
         $scope.extractSelectedUsersFromCheckboxes = function (obj) {
-            for (const [key, value] of Object.entries(obj)) {
+            for (const value of Object.values(obj)) {
                 if (value !== true && value !== false) {
                     return "";
                 }
@@ -2148,14 +2148,24 @@
 
         /**
          * Export data in a table to a CSV file
-         * @param {object[]} table - the table to export
+         * @param {object[]} table - the table to export - passing an empty table allows users to check their specified groups
          * @param grouping - grouping name that you are exporting from
          * @param list - grouping list (i.e. include or exclude)
          */
         $scope.exportGroupToCsv = function (table, grouping, list) {
-            let data, filename, link;
-
-            let csv = $scope.convertListToCsv(table);
+            let data, filename, link, csv;
+            if (_.isEmpty(table)) {
+                const selectedMembersToExport = $scope.extractSelectedUsersFromCheckboxes($scope.membersInCheckboxList).split(",");
+                const membersChecked = $scope.groupingInclude.filter((member) => (selectedMembersToExport.includes(member.uhUuid)));
+                // When no members are checked export the list passed in or checked
+                if (_.isEmpty(membersChecked)) { 
+                    csv = list === "include" ? $scope.convertListToCsv($scope.groupingInclude) : $scope.convertListToCsv($scope.groupingExclude);
+                } else { 
+                    csv = $scope.convertListToCsv(membersChecked);
+                }
+            } else { 
+                csv = $scope.convertListToCsv(table);
+            }
             if (csv == null) {
                 $scope.createApiErrorModal();
                 return;
