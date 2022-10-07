@@ -790,7 +790,6 @@
                     $scope.membersNotInList = [];
                     $scope.memberName = "";
                     $scope.memberUhUuid = "";
-                    $scope.membersNotInList = [];
                     $scope.membersInCheckboxList = {};
                     resetCheckboxes();
                     break;

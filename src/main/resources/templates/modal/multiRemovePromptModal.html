@@ -52,7 +52,7 @@
         </table>
     </div>
 </div>
-<div class="modal-body">
+<div ng-show="membersNotInList.length > 0" class="modal-body">
     <span class="modal-black-text">Invalid Users: </span>
     <span class="modal-black-text">{{membersNotInList}}</span>
 </div>
