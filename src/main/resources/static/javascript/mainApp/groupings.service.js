@@ -70,8 +70,8 @@
              * of time has elapsed.
              */
             addMembersToInclude(usersToAdd, path, onSuccess, onError) {
-                let endpoint = BASE_URL + path + "/" + usersToAdd + "/addMembersToIncludeGroup";
-                dataProvider.updateData(endpoint, onSuccess, onError);
+                let endpoint = BASE_URL + path + "/addMembersToIncludeGroup";
+                dataProvider.updateDataWithBody(endpoint, usersToAdd, onSuccess, onError);
             },
 
             /**
@@ -79,9 +79,9 @@
              * of time has elapsed.
              */
             addMembersToIncludeAsync(usersToAdd, path, onSuccess, onError, modal) {
-                let endpoint = BASE_URL + path + "/" + usersToAdd + "/addMembersToIncludeGroup";
+                let endpoint = BASE_URL + path + "/addMembersToIncludeGroup";
                 return new Promise((resolve) => {
-                    dataProvider.updateDataWithTimeoutModal(endpoint, onSuccess, onError, modal);
+                    dataProvider.updateDataWithBodyAndTimeoutModal(endpoint, usersToAdd, onSuccess, onError, modal);
                 });
             },
 
@@ -90,17 +90,17 @@
              * of time has elapsed.
              */
             addMembersToExclude(usersToAdd, path, onSuccess, onError) {
-                let endpoint = BASE_URL + path + "/" + usersToAdd + "/addMembersToExcludeGroup";
-                dataProvider.updateData(endpoint, onSuccess, onError);
+                let endpoint = BASE_URL + path + "/addMembersToExcludeGroup";
+                dataProvider.updateDataWithBody(endpoint, usersToAdd, onSuccess, onError);
             },
             /**
              * Add a members to the exclude group of a grouping. A modal is passed in an launched after a certain amount
              * of time has elapsed.
              */
             addMembersToExcludeAsync(usersToAdd, path, onSuccess, onError, modal) {
-                let endpoint = BASE_URL + path + "/" + usersToAdd + "/addMembersToExcludeGroup";
+                let endpoint = BASE_URL + path + "/addMembersToExcludeGroup";
                 return new Promise((resolve) => {
-                    dataProvider.updateDataWithTimeoutModal(endpoint, onSuccess, onError, modal);
+                    dataProvider.updateDataWithBodyAndTimeoutModal(endpoint, usersToAdd, onSuccess, onError, modal);
                 });
             },
 
@@ -132,16 +132,16 @@
              * Remove members from include group of grouping.
              */
             removeMembersFromInclude(path, members, onSuccess, onError) {
-                let endpoint = BASE_URL + path + "/" + members + "/removeMembersFromIncludeGroup";
-                dataProvider.updateData(endpoint, onSuccess, onError);
+                let endpoint = BASE_URL + path + "/removeMembersFromIncludeGroup";
+                dataProvider.updateDataWithBody(endpoint, members, onSuccess, onError);
             },
 
             /**
              * Remove members from exclude group of grouping.
              */
             removeMembersFromExclude(path, members, onSuccess, onError) {
-                let endpoint = BASE_URL + path + "/" + members + "/removeMembersFromExcludeGroup";
-                dataProvider.updateData(endpoint, onSuccess, onError);
+                let endpoint = BASE_URL + path + "/removeMembersFromExcludeGroup";
+                dataProvider.updateDataWithBody(endpoint, members, onSuccess, onError);
             },
 
             /**
