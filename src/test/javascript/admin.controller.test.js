@@ -341,23 +341,6 @@ describe("AdminController", function () {
         });
     });
 
-    describe("removeAdmin", function () {
-        beforeEach(function () {
-            scope.pagedItemsAdmins[0] = "zzzz";
-        });
-        it("should call scope.createRemoveModal", () => {
-            scope.adminsList = ["iamtst01", "iamtst02", "iamtst03"];
-            spyOn(scope, "createRemoveModal").and.callThrough();
-            scope.removeAdmin(0, 0);
-            expect(scope.createRemoveModal).toHaveBeenCalled();
-        });
-        it("should call scope.createRemoveErrorModal", function () {
-            spyOn(scope, "createRemoveErrorModal").and.callThrough();
-            scope.removeAdmin(0, 0);
-            expect(scope.createRemoveErrorModal).toHaveBeenCalled();
-        });
-    });
-
     describe("addAdmin", () => {
         it("should check that the admin to add is in the admin list", () => {
             scope.adminToAdd = "iamtst01";
@@ -381,11 +364,27 @@ describe("AdminController", function () {
 
     describe("removeAdmin", () => {
         beforeEach(() => {
-            scope.pagedItemsAdmins[0] = "zzzz";
+            scope.pagedItemsAdmins[0] = {name: "zzz", username: "zzz", uhUuid: "zzz"};
         });
         it("should call scope.createRemoveModal", () => {
-            scope.adminsList = ["iamtst01", "iamtst02", "iamtst03"];
-            spyOn(scope, "createRemoveModal");
+            scope.adminsList = [
+                {
+                    name: "iamtst01",
+                    username: "iamtst01",
+                    uhUuid: "iamtst01"
+                },
+                {
+                    name: "iamtst02",
+                    username: "iamtst02",
+                    uhUuid: "iamtst02"
+                },
+                {
+                    name: "iamtst03",
+                    username: "iamtst03",
+                    uhUuid: "iamtst03"
+                }
+            ];
+            spyOn(scope, "createRemoveModal").and.callThrough();
             scope.removeAdmin(0, 0);
             expect(scope.createRemoveModal).toHaveBeenCalled();
         });
@@ -397,15 +396,15 @@ describe("AdminController", function () {
     });
 
     describe("createRemoveFromGroupsModal", () => {
-        let options = { user: { uhUuid: "testId" }, groupPaths: "testPath", listName: "testList" };
+        let options = { member: { uhUuid: "testId" }, groupPaths: "testPath", listName: "testList" };
 
         it("should set scope variables to passed in option's object", () => {
-            scope.userToRemove = {};
+            scope.memberToRemove = {};
             scope.groupPaths = "badPath";
             scope.listName = "badList";
             scope.createRemoveFromGroupsModal(options);
 
-            expect(scope.userToRemove).toEqual({ uhUuid: "testId" });
+            expect(scope.memberToRemove).toEqual({ uhUuid: "testId" });
             expect(scope.groupPaths).toBe("testPath");
             expect(scope.listName).toBe("testList");
             expect(scope.ownerOfListName).toBe("");
