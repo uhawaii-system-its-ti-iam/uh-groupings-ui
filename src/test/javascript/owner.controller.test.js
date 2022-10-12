@@ -1,4 +1,4 @@
-/*global inject*/
+/* global inject */
 describe("OwnerController", function () {
 
     beforeEach(module("UHGroupingsApp"));

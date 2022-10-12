@@ -1,3 +1,4 @@
+/* global UHGroupingsApp */
 (function () {
     /**
      * Service function that provides GET and POST requests for getting or updating data

@@ -1,4 +1,4 @@
-/*global inject, a*/
+/* global _, inject */
 
 describe("GeneralController", () => {
 
