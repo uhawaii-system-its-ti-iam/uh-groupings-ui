@@ -1,10 +1,10 @@
 <th:block th:fragment="manage-grouping">
-    <div class="card">
-        <div class="card-header">
+    <div class="overflow-hidden mt-1">
+        <div class="mt-0 rounded">
             <div class="flex-row m-auto">
                 <div class="d-sm-flex d-block justify-content-between">
                     <div>
-                        <h2 class="card-title mt-sm-1 mt-0 mb-1">Manage Grouping</h2>
+                        <h2 class="align-middle mt-sm-1 mt-0 mb-1">Manage Groupings</h2>
                     </div>
                     <div class="p-0">
                         <button ng-click="getGroupingInformation()" class="btn btn-primary">
@@ -15,7 +15,7 @@
             </div>
         </div>
         <div class="container">
-            <div class="card mb-5 mt-5">
+            <div class="overflow-hidden mb-5 mt-5">
                 <div th:replace="fragments/side-nav :: side-nav"></div>
                 <div id="all" class="tab-pane fade show active">
                     <div th:replace="fragments/members :: members"></div>

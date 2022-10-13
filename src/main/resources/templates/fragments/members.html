@@ -5,9 +5,9 @@
         <div class="row">
             <div class="col-md-8">
                 <h1 class="font-weight-bold text-dark pt-2 mb-0">All Members ({{groupingMembers.length}})</h1>
-                <p class=" mb-1 inline-block" ng-hide="paginatingComplete"
+                <p class=" mb-1 d-inline-block" ng-hide="paginatingComplete"
                    th:text="#{screen.message.common.loading.gettingmembers}"></p>
-                <div class="spinner-border spinner-border-sm inline-block"
+                <div class="spinner-border spinner-border-sm d-inline-block"
                      ng-hide="paginatingComplete"
                      role="status">
                     <span class="sr-only">Loading...</span>
@@ -27,25 +27,25 @@
             <table class="table table-striped table-hover" aria-live="assertive">
                 <thead>
                 <tr>
-                    <th scope="col" ng-click="sortBy('groupingMembers', 'pagedItemsMembers', 'name')" class="clickable">
+                    <th scope="col" ng-click="sortBy('groupingMembers', 'pagedItemsMembers', 'name')" role="button">
                         Name
                         <i class="fa sort-icon"
                            ng-show="columnSort.groupingMembers.property === 'name' || !columnSort.groupingMembers"
                            ng-class="{ reverse: columnSort.groupingMembers.reverse }"></i>
                     </th>
                     <th scope="col" ng-click="sortBy('groupingMembers', 'pagedItemsMembers', 'uhUuid')"
-                        class="clickable">
+                        role="button">
                         UH Number
                         <i class="fa sort-icon" ng-show="columnSort.groupingMembers.property === 'uhUuid'"
                            ng-class="{ reverse: columnSort.groupingMembers.reverse }"></i>
                     </th>
                     <th scope="col" ng-click="sortBy('groupingMembers', 'pagedItemsMembers', 'username')"
-                        class="clickable">
+                        role="button">
                         UH Username
                         <i class="fa sort-icon" ng-show="columnSort.groupingMembers.property === 'username'"
                            ng-class="{ reverse: columnSort.groupingMembers.reverse }"></i>
                     </th>
-                    <th scope="col" class="basis-column clickable"
+                    <th scope="col" class="basis-column" role="button"
                         ng-click="sortBy('groupingMembers', 'pagedItemsMembers', 'whereListed')">
                         Listing
                         <i class="fa sort-icon" ng-show="columnSort.groupingMembers.property === 'whereListed'"
@@ -55,20 +55,20 @@
                 </thead>
                 <tbody>
                 <tr ng-repeat="g in pagedItemsMembers[currentPageMembers]" class="table table-sm">
-                    <td class="p-10">{{g.name}}</td>
-                    <td class="p-10">{{g.uhUuid}}</td>
-                    <td class="p-10">
+                    <td class="overflow-auto py-1 px-3">{{g.name}}</td>
+                    <td class="overflow-auto py-1 px-3">{{g.uhUuid}}</td>
+                    <td class="overflow-auto py-1 px-3">
                         {{g.username}}
                         <div ng-if="g.username === ''">
                             <span>N/A</span>
-                            <i class="fa fa-question-circle clickable" aria-hidden="true"
+                            <i class="fa fa-question-circle" role="button" aria-hidden="true"
                                data-toggle="tooltip" data-placement="right"
                                onmouseover="$(this).tooltip('show')" onmouseout="$(this).tooltip('dispose')"
                                th:title="#{screen.message.common.tooltip.username.notApplicable}">
                             </i>
                         </div>
                     </td>
-                    <td class="basis-column p-10">{{ g.whereListed }}</td>
+                    <td class="basis-column overflow-auto py-1 px-3">{{ g.whereListed }}</td>
                 </tr>
                 </tbody>
             </table>

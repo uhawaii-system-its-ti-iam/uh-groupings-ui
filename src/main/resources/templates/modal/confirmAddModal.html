@@ -13,28 +13,28 @@
 </div>
 <div class="modal-body" id="modal-body">
     <p>
-        <span class="modal-black-text" th:text="#{screen.message.modal.add.confirmation}"></span>
-        <span class="modal-black-text">{{listName}} list.</span>
+        <span class="text-dark" th:text="#{screen.message.modal.add.confirmation}"></span>
+        <span class="text-dark">{{listName}} list.</span>
     </p>
     <table>
         <tr>
             <th th:utext="#{screen.message.modal.add.name}"></th>
-            <th class="font-weight-normal modal-attributes">{{fullName}}</th>
+            <th class="font-weight-normal text-capitalize">{{fullName}}</th>
         </tr>
         <tr>
             <th th:utext="#{screen.message.modal.add.uid}"></th>
-            <th class="font-weight-normal modal-attributes">{{uid}}</th>
+            <th class="font-weight-normal text-lowercase">{{uid}}</th>
         </tr>
         <tr>
             <th th:utext="#{screen.message.modal.add.uhUserId}"></th>
-            <th class="font-weight-normal modal-attributes">{{uhUuid}}</th>
+            <th class="font-weight-normal">{{uhUuid}}</th>
         </tr>
     </table>
 
     <p>
-        <span class="modal-black-text">Are you sure you want to add</span>
+        <span class="text-dark">Are you sure you want to add</span>
         <span class="font-weight-bold">{{user}}</span>
-        <span class="modal-black-text"> to the {{listName}} list?</span>
+        <span class="text-dark"> to the {{listName}} list?</span>
     </p>
 </div>
 
