@@ -92,6 +92,7 @@
         };
 
         /**
+         * Helper - removeFromGroups
          * Checks if the user being removed is a sole owner of any grouping before proceeding
          */
         $scope.checkSoleOwner = function (res) {
@@ -151,7 +152,8 @@
             }
         };
 
-        /*
+        /**
+         * Helper - removeFromGroups
          * Pluck selectedGroupingsNames and selectedGroupingsPaths from currentPage
          */
         $scope.createGroupPathsAndNames = function (currentPage, selectedGroupingsNames, selectedGroupingsPaths, selectedOwnedGroupingsNames, selectedOwnedGroupings) {
@@ -188,6 +190,7 @@
         };
 
         /**
+         * Helper - addAdmin
          * Checks if the user is already an admin
          * @param {string} user - the user you are checking to see if they are already in the list being added to
          * @returns {boolean} true if the user is already in the list being added to, otherwise returns false

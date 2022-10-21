@@ -18,6 +18,7 @@ public class PatternPropertyChecker {
     private String pattern = "^.*password.*\\=(?!\\s*$).+";
 
     /**
+     * Helper - checkForPasswords
      * getPatternLocation: checks a file(s) and given file naming convention(.properties, .java, .pom)
      * for a pattern.
      *
