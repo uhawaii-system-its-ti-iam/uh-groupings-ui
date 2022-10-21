@@ -754,7 +754,10 @@
             }
         };
 
-        // Small function that resets the checkboxes on the page
+        /**
+         * Helper - clearMemberInput
+         * Small function that resets the checkboxes on the page
+         */
         function resetCheckboxes() {
             for (let member of Object.values($scope.membersInCheckboxList)) {
                 member = false;
@@ -908,6 +911,7 @@
         };
 
         /**
+         * Helper - validateAndAddUser
          * Add a user to a group.
          * @param {Object} list - the list the user is being added to (either Include or Exclude)
          */
@@ -966,6 +970,7 @@
         };
 
         /**
+         * Helper - addMember
          * @param {string} user - the user you are checking to see if they are in another list.
          * @param {Object} list - the list the user is currently being added to
          * @returns {boolean} - true if the person is already in another list, else false.
@@ -982,6 +987,7 @@
         };
 
         /**
+         * Helper - addMember
          * @param {string} user - the user you are checking to see if they are already in the list being added to
          * @param {Object} list - the list the user is currently being added to
          * @returns {boolean} true if the user is already in the list being added to, otherwise returns false
@@ -1296,6 +1302,7 @@
         };
 
         /**
+         * Helper - prepBatchRemove
          * Take in a list of booleans and return a comma separated string containing the identifiers of all true booleans.
          * @param obj: {obj1: true, obj2: false, obj3: true}
          * @returns {string}: "obj1,obj3"
@@ -1381,6 +1388,7 @@
         }
 
         /**
+         * Helper - prepBatchRemove
          * Takes the string of member UH numbers created from 'prepMultiRemove' and provides it
          * to the endpoint to perform the batch removal.
          * @param membersToRemove - Comma separated string of members to remove from the list.
@@ -1732,6 +1740,7 @@
         };
 
         /**
+         * Helper - resetGroupingInformation
          * Reset the grouping members and page numbers.
          */
         function resetGroupingMembers() {
@@ -1757,6 +1766,9 @@
             $scope.currentPagePerson = 0;
         }
 
+        /**
+         * Helper - resetGroupingInformation
+         */
         function resetFilterQueries() {
             $scope.basisQuery = "";
             $scope.excludeQuery = "";
@@ -1969,6 +1981,7 @@
         };
 
         /**
+         * Helper - createSyncDestModal
          * Toggle the grouping sync destinations according to a given syncDest
          * @param {String} syncDestName Name of the Sync Dest to toggle
          */
@@ -2175,6 +2188,7 @@
         };
 
         /**
+         * Helper - exportGroupToCSV
          * Converts the data in the table into comma-separated values.
          * @param {object[]} table - the table to convert
          * @returns string table in CSV format
