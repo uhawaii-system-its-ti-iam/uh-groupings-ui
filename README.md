@@ -10,9 +10,7 @@ UH Groupings utilizes the Internet2 Grouper project.  Grouper is an enterprise a
 [![Build Status](https://travis-ci.org/uhawaii-system-its-ti-iam/uh-groupings-ui.png?branch=master)](https://travis-ci.org/uhawaii-system-its-ti-iam/uh-groupings-ui)
 [![Coverage Status](https://github.com/uhawaii-system-its-ti-iam/uh-groupings-ui/blob/badges/jacoco.svg)](https://github.com/uhawaii-system-its-ti-iam/uh-groupings-ui/actions/workflows/coverage.yml)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/5584742766ed46faa855dafe41a1cdc9)](https://www.codacy.com/gh/uhawaii-system-its-ti-iam/uh-groupings-ui/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=uhawaii-system-its-ti-iam/uh-groupings-ui&amp;utm_campaign=Badge_Grade)
-[![LGTM Alert Badge](https://img.shields.io/lgtm/alerts/github/uhawaii-system-its-ti-iam/uh-groupings-ui)](https://lgtm.com/projects/g/uhawaii-system-its-ti-iam/uh-groupings-ui/?mode=list)
-[![LGTM JavaScript Badge](https://img.shields.io/lgtm/grade/javascript/github/uhawaii-system-its-ti-iam/uh-groupings-ui)](https://lgtm.com/projects/g/uhawaii-system-its-ti-iam/uh-groupings-ui/context:javascript)
-[![LGTM Java Badge](https://img.shields.io/lgtm/grade/java/github/uhawaii-system-its-ti-iam/uh-groupings-ui)](https://lgtm.com/projects/g/uhawaii-system-its-ti-iam/uh-groupings-ui/context:java)
+[![CodeQL](https://github.com/uhawaii-system-its-ti-iam/uh-groupings-api/actions/workflows/codeql.yml/badge.svg)](https://github.com/uhawaii-system-its-ti-iam/uh-groupings-ui/actions/workflows/codeql.yml)
 
 ##### Java
 You'll need a Java JDK to build and run the project (version 1.8).
