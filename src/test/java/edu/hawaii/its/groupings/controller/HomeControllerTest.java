@@ -493,20 +493,20 @@ public class HomeControllerTest {
 
     @Test
     @WithMockUhUser(username = "uh")
-    public void requestMultiRemovePromptModal() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(get("/modal/multiRemovePromptModal"))
+    public void requestMultiRemoveModal() throws Exception {
+        MvcResult mvcResult = mockMvc.perform(get("/modal/multiRemoveModal"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("modal/multiRemovePromptModal"))
+                .andExpect(view().name("modal/multiRemoveModal"))
                 .andReturn();
         assertNotNull(mvcResult);
     }
 
     @Test
     @WithMockUhUser(username = "uh")
-    public void requestMultiRemoveConfirmationModal() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(get("/modal/multiRemoveConfirmationModal"))
+    public void requestMultiRemoveResultModal() throws Exception {
+        MvcResult mvcResult = mockMvc.perform(get("/modal/multiRemoveResultModal"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("modal/multiRemoveConfirmationModal"))
+                .andExpect(view().name("modal/multiRemoveResultModal"))
                 .andReturn();
         assertNotNull(mvcResult);
     }

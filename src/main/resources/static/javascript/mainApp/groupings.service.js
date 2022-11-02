@@ -105,7 +105,7 @@
             },
 
             /**
-             * Add a member to the exclude group of a grouping.
+             * Add owners to owners group of grouping
              */
             addOwnerships(path, newOwner, onSuccess, onError) {
                 let endpoint = BASE_URL + path + "/" + newOwner + "/addOwnerships";
@@ -147,7 +147,7 @@
             /**
              * Remove owners from owners group of grouping
              */
-            removeOwners(path, owners, onSuccess, onError) {
+            removeOwnerships(path, owners, onSuccess, onError) {
                 let endpoint = BASE_URL + path + "/" + owners + "/removeOwnerships";
                 dataProvider.updateData(endpoint, onSuccess, onError);
             },

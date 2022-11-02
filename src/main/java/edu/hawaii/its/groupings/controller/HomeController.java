@@ -216,13 +216,13 @@ public class HomeController {
         return "modal/multiAddResultModal";
     }
 
-    @GetMapping(value = "/modal/multiRemovePromptModal")
-    public String multiRemovePromptModal() {
-        return "modal/multiRemovePromptModal";
+    @GetMapping(value = "/modal/multiRemoveModal")
+    public String multiRemoveModal() {
+        return "modal/multiRemoveModal";
     }
 
-    @GetMapping(value = "/modal/multiRemoveConfirmationModal")
+    @GetMapping(value = "/modal/multiRemoveResultModal")
     public String multiRemoveConfirmationModal() {
-        return "modal/multiRemoveConfirmationModal";
+        return "modal/multiRemoveResultModal";
     }
 }

@@ -98,6 +98,12 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.webjars.bower</groupId>
+            <artifactId>jasmine</artifactId>
+            <version>3.7.1</version>
+            <scope>test</scope>
+        </dependency>
 
         <dependency>
             <groupId>com.googlecode.owasp-java-html-sanitizer</groupId>

@@ -18,6 +18,7 @@
         $scope.personList = [];
         $scope.pagedItemsPerson = [];
         $scope.currentPagePerson = 0;
+        $scope.personToLookup = "";
         $scope.currentManagePerson = "";
         $scope.selectedGroupingsPaths = [];
         $scope.emptySelect = false;
@@ -63,7 +64,7 @@
          */
         $scope.searchForUserGroupingInformation = function () {
             $scope.loading = true;
-            const validUser = $scope.sanitizer([$scope.personToLookup]);
+            const validUser = $scope.sanitizer($scope.personToLookup);
             if (validUser !== "") {
                 groupingsService.getMembershipAssignmentForUser(
                     $scope.searchForUserGroupingInformationOnSuccessCallback,
@@ -99,7 +100,7 @@
             if (res === "") {
                 return;
             }
-            let userToRemove = {
+            let memberToRemove = {
                 username: res.username,
                 name: res.name,
                 uhUuid: res.uhUuid
@@ -108,29 +109,29 @@
             $scope.soleOwnerGroupingNames = [];
 
             if ($scope.selectedOwnedGroupings.length === 0) {
-                $scope.removeFromGroupsCallbackOnSuccess(userToRemove);
+                $scope.removeFromGroupsCallbackOnSuccess(memberToRemove);
             }
             _.forEach($scope.selectedOwnedGroupings, function (grouping) {
-                    groupingsService.isSoleOwner(grouping.path, userToRemove.username, (res) => {
+                    groupingsService.isSoleOwner(grouping.path, memberToRemove.username, (res) => {
                         if (res) {
                             $scope.soleOwnerGroupingNames.push(grouping.name);
                         }
                         if (grouping === $scope.selectedOwnedGroupings[$scope.selectedOwnedGroupings.length - 1]) {
-                            $scope.removeFromGroupsCallbackOnSuccess(userToRemove);
+                            $scope.removeFromGroupsCallbackOnSuccess(memberToRemove);
                         }
                     }, () => $scope.createApiErrorModal());
                 }
             );
         };
 
-        $scope.removeFromGroupsCallbackOnSuccess = function (userToRemove) {
+        $scope.removeFromGroupsCallbackOnSuccess = function (memberToRemove) {
             if (_.isEmpty($scope.selectedGroupingsPaths)) {
                 $scope.emptySelect = true;
             } else if ($scope.soleOwnerGroupingNames.length >= 1) {
                 $scope.createRemoveErrorModal("owner");
             } else {
                 $scope.createRemoveFromGroupsModal({
-                    user: userToRemove,
+                    member: memberToRemove,
                     groupPaths: $scope.selectedGroupingsPaths,
                     listName: $scope.selectedGroupingsNames
                 });
@@ -205,7 +206,7 @@
          */
         $scope.addAdmin = function () {
             $scope.waitingForImportResponse = true;
-            const sanitizedAdmin = $scope.sanitizer([$scope.adminToAdd]);
+            const sanitizedAdmin = $scope.sanitizer($scope.adminToAdd);
             if (_.isEmpty(sanitizedAdmin)) {
                 // Todo : Error message pop up needs implementation.
                 $scope.emptyInput = true;
@@ -236,7 +237,7 @@
 
             if ($scope.adminsList.length > 1) {
                 $scope.createRemoveModal({
-                    user: adminToRemove,
+                    members: adminToRemove,
                     listName: "admins"
                 });
             } else {
@@ -258,14 +259,14 @@
          * Create a modal that prompts the user whether they want to delete the user or not. If 'Yes' is pressed, then
          * a request is made to delete the user.
          * @param {object} options - the options object
-         * @param {object} options.user - the user being removed
+         * @param {object} options.member - the user being removed
          * @param {string} options.groupPaths - groups the user is being removed from
          * @param {string} options.listName - groups the user is being removed from
          */
         $scope.createRemoveFromGroupsModal = function (options) {
-            const userToRemove = options.user.uhUuid;
-            const sanitizedUser = $scope.sanitizer([userToRemove]);
-            $scope.userToRemove = options.user;
+            const memberToRemove = options.member.uhUuid;
+            const sanitizedUser = $scope.sanitizer(memberToRemove);
+            $scope.memberToRemove = options.member;
             $scope.groupPaths = options.groupPaths;
             $scope.listName = options.listName;
             $scope.ownerOfListName = $scope.selectedOwnedGroupingsNames.join(", ");
@@ -288,12 +289,12 @@
 
                 $scope.removeModalInstance.result.then(function () {
                     $scope.loading = true;
-                    let userToRemove = options.user.uhUuid;
+                    let memberToRemove = options.member.uhUuid;
                     let groupingPath = $scope.groupPaths;
-                    groupingsService.removeFromGroups(groupingPath, userToRemove, handleRemoveFromGroupsOnSuccess, handleRemoveFromGroupsOnError);
+                    groupingsService.removeFromGroups(groupingPath, memberToRemove, handleRemoveFromGroupsOnSuccess, handleRemoveFromGroupsOnError);
                 });
             }, function (res) {
-                $scope.user = userToRemove;
+                $scope.user = memberToRemove;
                 $scope.resStatus = res.status;
             });
         };
