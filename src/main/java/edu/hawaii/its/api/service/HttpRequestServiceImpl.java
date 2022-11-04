@@ -26,7 +26,6 @@ public class HttpRequestServiceImpl implements HttpRequestService {
      * LGTM reporting a possible false positive: Groupings-1001
      */
     @Override
-    @SuppressWarnings({"lgtm[java/ssrf]"})
     public ResponseEntity<String> makeApiRequest(String currentUser, String uri, HttpMethod method) {
 
         HttpHeaders httpHeaders = new HttpHeaders();
