@@ -111,8 +111,9 @@ public class GroupingsRestController {
     @GetMapping(value = "/adminLists")
     public ResponseEntity<String> adminLists(Principal principal) {
         logger.info("Entered REST adminLists...");
+        String principalName = policy.sanitize(principal.getName());
         String uri = API_2_1_BASE + "/admins-and-groupings";
-        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
+        return httpRequestService.makeApiRequest(principalName, uri, HttpMethod.GET);
     }
 
     /**
