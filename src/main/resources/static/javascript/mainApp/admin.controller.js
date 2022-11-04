@@ -66,17 +66,7 @@
             $scope.loading = true;
             const validUser = $scope.sanitizer($scope.personToLookup);
             if (validUser !== "") {
-                groupingsService.getMembershipAssignmentForUser(
-                    $scope.searchForUserGroupingInformationOnSuccessCallback,
-                    $scope.searchForUserGroupingInformationOnErrorCallback,
-                    $scope.personToLookup);
-                groupingsService.getMemberAttributes(validUser, function (person) {
-                    $scope.initMemberDisplayName(person);
-                    $scope.currentManagePerson = "(" + $scope.fullName + ", " + $scope.uid + ", " + $scope.uhUuid + ")";
-                }, function (res) {
-                    $scope.currentManagePerson = "";
-                    $scope.resStatus = res.status;
-                });
+                $scope.getMemberDetails(validUser);
             } else {
                 if (!$scope.personToLookup) {
                     $scope.emptyInput = true;
@@ -90,6 +80,26 @@
                 $scope.currentManagePerson = "";
             }
             $scope.checkAll = false;
+        };
+
+        /**
+         * Helper - searchForUserGroupingInformation
+         * @param validUser
+         */
+        $scope.getMemberDetails = function (validUser) {
+            groupingsService.getMembershipAssignmentForUser(
+                $scope.searchForUserGroupingInformationOnSuccessCallback,
+                $scope.searchForUserGroupingInformationOnErrorCallback,
+                $scope.personToLookup);
+            groupingsService.getMemberAttributes(validUser, function (person) {
+                $scope.initMemberDisplayName(person);
+                if ($scope.user != null) {
+                    $scope.currentManagePerson = "(" + $scope.fullName + ", " + $scope.uid + ", " + $scope.uhUuid + ")";
+                } else {
+                    $scope.currentManagePerson = "";
+                    $scope.resStatus = 500;
+                }
+            }, () => {});
         };
 
         /**
