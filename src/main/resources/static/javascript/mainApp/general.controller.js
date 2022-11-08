@@ -671,6 +671,12 @@
          * The file is retrieved from the html input with id 'upload'.
          */
         $scope.readTextFile = function (inputFile) {
+            console.log(' <><> inputFile: ', inputFile);
+            const filetype = inputFile.type;
+            console.log(' <><> inputFile.type: ' + filetype);
+            if (filetype !== "text/plain") {
+                console.log(' <><> inputFile.type: ' + "was successful.")
+            }
             let reader = new FileReader();
             reader.onload = function (e) {
                 const str = e.target.result;
@@ -680,6 +686,19 @@
             };
             reader.readAsText(inputFile);
         };
+
+        $scope.verifyContentType = function(inputFile) {
+            let fileType = inputFile.type;
+            if (fileType !== "text/plain") {
+                console.log(' <><> inputFile.type: ' + "was successful.")
+            }
+        }
+
+        $scope.verfySize = function(inputFile) {
+            let fileSize = inputFile.size;
+            if (inputFile !== )
+        }
+
 
         $scope.removeTextFile = function () {
             angular.element(document.querySelector("#upload")).val(null);
