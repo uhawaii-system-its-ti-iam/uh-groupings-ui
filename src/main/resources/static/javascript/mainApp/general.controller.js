@@ -2169,4 +2169,4 @@
     }
 
     UHGroupingsApp.controller("GeneralJsController", GeneralJsController);
-}());
+})();

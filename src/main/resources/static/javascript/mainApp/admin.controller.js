@@ -321,4 +321,4 @@
     }
 
     UHGroupingsApp.controller("AdminJsController", AdminJsController);
-}());
+})();

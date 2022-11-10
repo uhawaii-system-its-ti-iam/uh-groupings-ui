@@ -192,4 +192,4 @@
     }
 
     UHGroupingsApp.controller("TimeoutJsController", TimeoutJsController);
-}());
+})();

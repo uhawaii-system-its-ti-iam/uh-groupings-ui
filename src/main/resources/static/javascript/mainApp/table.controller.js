@@ -221,5 +221,4 @@
 
     UHGroupingsApp.controller("TableJsController", TableJsController);
 
-}());
-//})();
+})();

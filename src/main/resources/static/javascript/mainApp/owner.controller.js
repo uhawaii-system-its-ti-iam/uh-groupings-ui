@@ -53,4 +53,4 @@
     }
 
     UHGroupingsApp.controller("OwnerJsController", OwnerJsController);
-}());
+})();
