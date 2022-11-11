@@ -1,4 +1,4 @@
-(function () {
+(() => {
 
     /**
      * Controller for the timeout functionality. When a user is idle for more than 30 min, user will be logged out.

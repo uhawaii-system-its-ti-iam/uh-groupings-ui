@@ -1,4 +1,4 @@
-(function () {
+(() => {
 
     /**
      * Service for requesting data from the groupings API.

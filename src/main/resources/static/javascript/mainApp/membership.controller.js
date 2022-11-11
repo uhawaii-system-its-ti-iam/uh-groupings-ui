@@ -1,5 +1,4 @@
-(function () {
-
+(() => {
     /**
      * Controller for the memberships page.
      * @param $scope - binding between controller and HTML page

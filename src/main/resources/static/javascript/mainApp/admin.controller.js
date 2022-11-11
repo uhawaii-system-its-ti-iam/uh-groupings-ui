@@ -1,4 +1,4 @@
-(function () {
+(() => {
 
     /**
      * This controller contains functions specific to the admin page.

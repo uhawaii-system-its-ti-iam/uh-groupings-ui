@@ -1,4 +1,4 @@
-(function () {
+(() => {
 
     /**
      * Controller for handling tables, including pagination, sorting by columns, and filtering.

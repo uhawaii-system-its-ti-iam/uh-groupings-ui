@@ -1,4 +1,4 @@
-(function () {
+(() => {
     /**
      * This controller contains shared functions between the admin and groupings page.
      * @param $scope - binding between controller and HTML page
