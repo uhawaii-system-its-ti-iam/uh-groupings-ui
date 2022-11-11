@@ -176,11 +176,11 @@ describe("AdminController", function () {
             expect(scope.personList).toEqual([]);
             expect(scope.currentManagePerson).toEqual("");
         });
-        it("should call groupingsService.getMembershipAssignmentForUser", () => {
+        it("should call groupingsService.managePersonResults", () => {
             scope.personToLookup = "iamtst01";
-            spyOn(gs, "getMembershipAssignmentForUser").and.callThrough();
+            spyOn(gs, "managePersonResults").and.callThrough();
             scope.searchForUserGroupingInformation();
-            expect(gs.getMembershipAssignmentForUser).toHaveBeenCalled();
+            expect(gs.managePersonResults).toHaveBeenCalled();
         });
         it("should call groupingsService.getMemberAttributes", () => {
             scope.personToLookup = "iamtst01";
