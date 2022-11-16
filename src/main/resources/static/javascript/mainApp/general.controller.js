@@ -12,33 +12,30 @@
      * @param groupingsService - service for creating requests to the groupings API
      */
 
-    function GeneralJsController($scope, $window, $uibModal, $controller, groupingsService, dataProvider, PAGE_SIZE, Message) {
-
-        $scope.userToAdd = "";
-        $scope.manageMembers = "";
-        $scope.multiAddThreshold = 100;
-        $scope.maxImport = 100000;
+    function GeneralJsController($scope, $window, $uibModal, $controller, groupingsService, dataProvider, PAGE_SIZE, Message, Threshold) {
+        // Add members
         $scope.multiAddResults = [];
-        $scope.multiAddResultsGeneric = [];
-        $scope.personProps = [];
-        $scope.resetResults = [];
-        $scope.waitingForImportResponse = false;
-        $scope.resetUser = [];
-        $scope.resetID = [];
-        $scope.resetName = [];
+        $scope.invalidMembers = [];
+        $scope.membersInList = "";
+        $scope.isMultiAdd = false;
+
+        // Remove members
+        $scope.multiRemoveResults = [];
+        $scope.membersToRemove = [];
+        $scope.membersToModify = "";
+        $scope.membersNotInList = "";
+        $scope.isMultiRemove = false;
+
         // This is a regex Pattern that contains all valid UH Identifiers which consists of uid (Username) and uhUuid (UH Numbers) chars.
         $scope.uhIdentifierPattern = new RegExp("^[_?a-z-?@?0-9]{3,64}$");
 
-        // Remove members
-        $scope.memberToRemove = "";
-        $scope.membersToRemove = [];
-        $scope.multiRemoveThreshold = 100;
-        $scope.multiRemoveResults = [];
-        $scope.membersToModify = [];
-        $scope.membersNotInList = [];
-        $scope.isMultiRemove = false;
-
         $scope.currentUser = {};
+        $scope.manageMembers = "";
+        $scope.personProps = [];
+        $scope.resetResults = [];
+        $scope.resetUser = [];
+        $scope.resetID = [];
+        $scope.resetName = [];
 
         $scope.groupingsList = [];
         $scope.pagedItemsGroupings = [];
@@ -77,6 +74,7 @@
         $scope.showGrouping = false;
 
         $scope.loading = false;
+        $scope.waitingForImportResponse = false;
         $scope.paginatingProgress = true;
         $scope.paginatingComplete = false;
         $scope.largeGrouping = false;
@@ -132,9 +130,11 @@
          * Get the username of the current user
          */
         groupingsService.getCurrentUser((res) => {
-                $scope.currentUser = res.data.username;
-            }
-        );
+            $scope.currentUser = {
+                uid: res.data.username,
+                uhUuid: res.data.uhUuid
+            };
+        });
 
         /**
          * Get the number of memberships that the current user is associated with.
@@ -552,7 +552,7 @@
          * @param {object[]} group - the group to check
          */
         $scope.addInBasis = function (group) {
-            _.forEach(group, function (member) {
+            group.forEach((member) => {
                 const memberUhUuid = member.uhUuid;
                 member.inBasis = _.some($scope.groupingBasis, { uhUuid: memberUhUuid })
                     ? "Yes"
@@ -560,14 +560,48 @@
             });
         };
 
+        /**
+         * Check if the members in the group are in the include group.
+         * @param {object[]} group - the group to check
+         */
+        $scope.addInInclude = function (group) {
+            group.forEach((member) => {
+                const memberUhUuid = member.uhUuid;
+                member.inInclude = _.some($scope.groupingInclude, { uhUuid: memberUhUuid })
+                    ? "Yes"
+                    : "No";
+            });
+        };
+
+        /**
+         * Check if the members in the group are in the exclude group.
+         * @param {object[]} group - the group to check
+         */
+        $scope.addInExclude = function (group) {
+            group.forEach((member) => {
+                const memberUhUuid = member.uhUuid;
+                member.inExclude = _.some($scope.groupingExclude, { uhUuid: memberUhUuid })
+                    ? "Yes"
+                    : "No";
+            });
+        };
+
+        /**
+         * Check if the members in the group are in Basis, Include, and Exclude groups.
+         * @param {object[]} group - the group to check
+         */
+        $scope.addInGroups = function (group) {
+            $scope.addInBasis(group);
+            $scope.addInInclude(group);
+            $scope.addInExclude(group);
+        };
 
         /**
          * Check what lists a member in a grouping are in.
          * @param {object[]} compositeGroup - the composite / all members group
          */
         $scope.addWhereListed = function (compositeGroup) {
-            _.forEach(compositeGroup, function (member) {
-
+            compositeGroup.forEach((member) => {
                 const memberUhUuid = member.uhUuid;
                 if (_.some($scope.groupingBasis, { uhUuid: memberUhUuid })) {
 
@@ -589,47 +623,11 @@
         $scope.launchImportModal = function (listName) {
             $scope.listName = listName;
 
-            $scope.confirmImportInstance = $uibModal.open({
+            $scope.importModalInstance = $uibModal.open({
                 templateUrl: "modal/importModal",
                 size: "lg",
                 scope: $scope
             });
-        };
-
-        /**
-         * Take $scope.manageMembers count the number of words it contains and split it into a comma separated string, then
-         * decide whether to a multi add or a single add is necessary.
-         * @param listName
-         */
-        $scope.addMembers = function (listName) {
-            if (_.isEmpty($scope.manageMembers)) {
-                $scope.emptyInput = true;
-            } else {
-                let numMembers = ($scope.manageMembers.split(" ").length - 1);
-                if (numMembers > 0) {
-                    let users = $scope.parseAddRemoveInputStr($scope.manageMembers);
-                    $scope.manageMembers = [];
-                    if (numMembers > $scope.maxImport) {
-                        $scope.launchDynamicModal(
-                            Message.Title.IMPORT_OUT_OF_BOUNDS,
-                            `Importing more than ${$scope.maxImport} users is not allowed.`,
-                            8000);
-                    } else {
-                        if (numMembers > $scope.multiAddThreshold) {
-                            $scope.launchDynamicModal(
-                                Message.Title.LARGE_IMPORT,
-                                `You are attempting to import ${numMembers} new users to the ${listName} list.
-                             Imports larger than ${$scope.multiAddThreshold} can take a few minutes.  An email with
-                             the import results will be sent.`,
-                                8000);
-                        }
-                        $scope.addMultipleMembers(users, listName);
-                    }
-                } else {
-                    $scope.userToAdd = $scope.manageMembers;
-                    $scope.validateAndAddUser($scope.userToAdd, listName);
-                }
-            }
         };
 
         /**
@@ -690,8 +688,7 @@
             reader.onload = function (e) {
                 const str = e.target.result;
                 const namesInFile = str.split(/[\r\n,]+/);
-                $scope.manageMembers = $scope.sanitizer(namesInFile).join(" ");
-                $scope.addMembers($scope.listName);
+                $scope.addMembers($scope.listName, namesInFile);
             };
             reader.readAsText(inputFile);
         };
@@ -712,7 +709,7 @@
         };
 
         $scope.verifyImportFileName = function(inputFile) {
-            let regex = /^[a-zA-Z0-9._-]+$/;
+            let regex = /^[a-zA-Z0-9 ._-]+$/;
             return regex.test(inputFile.name);
         };
 
@@ -730,63 +727,6 @@
             $scope.personProps.push(attributes.splice(attributes.indexOf("username"), 1));
             $scope.personProps.push(attributes.splice(attributes.indexOf("uhUuid"), 1));
             $scope.personProps.push(attributes.splice(attributes.indexOf("name"), 1));
-        };
-
-        $scope.successfulAddHandler = function (res, list, listName) {
-            let membersNotInList = [];
-            $scope.waitingForImportResponse = false; /* Small spinner off. */
-
-            for (let data of res) {
-                let result = data.result;
-                let userWasAdded = data.userWasAdded;
-
-                if (result === "FAILURE" || !userWasAdded) {
-                    membersNotInList.push(data.name);
-                    $scope.membersNotInList = membersNotInList.join(", ");
-                } else {
-                    let person = {
-                        "uid": data.uid,
-                        "uhUuid": data.uhUuid,
-                        "name": data.name
-                    };
-                    $scope.multiAddResults.push(person);
-                    $scope.multiAddResultsGeneric.push(person);
-                }
-            }
-            if ($scope.multiAddResults.length > 0) {
-                $scope.personProps = Object.keys($scope.multiAddResults[0]);
-                $scope.launchMultiAddResultModal(listName);
-            } else {
-                $scope.launchDynamicModal(Message.Title.NO_MEMBERS_ADDED, Message.Body.NO_MEMBERS_ADDED);
-            }
-        };
-
-        /**
-         * Send the list of users to be added to the server as an HTTP POST request.
-         * @param list - comma separated string of user names to be added
-         * @param listName - current list being added to
-         * @returns {Promise<void>}
-         */
-        $scope.addMultipleMembers = async function (list, listName) {
-            let groupingPath = $scope.selectedGrouping.path;
-
-            let timeoutModal = function () {
-                return $scope.launchDynamicModal(
-                    Message.Title.SLOW_IMPORT,
-                    Message.Body.SLOW_IMPORT,
-                    8000);
-            };
-            let handleSuccessfulAdd = (res) => {
-                $scope.successfulAddHandler(res, list, listName);
-            };
-            $scope.waitingForImportResponse = true; /* Small spinner on. */
-            if (listName === "Include") {
-                await groupingsService.addMembersToIncludeAsync(list, groupingPath, handleSuccessfulAdd, handleUnsuccessfulRequest, timeoutModal);
-            } else if (listName === "Exclude") {
-                await groupingsService.addMembersToExcludeAsync(list, groupingPath, handleSuccessfulAdd, handleUnsuccessfulRequest, timeoutModal);
-            } else if (listName === "owners") {
-                await groupingsService.addOwnerships(groupingPath, list, handleSuccessfulAdd, handleUnsuccessfulRequest);
-            }
         };
 
         /**
@@ -807,68 +747,37 @@
             switch (listName) {
                 case "Include":
                 case "Exclude":
-                    $scope.userToAdd = "";
+                case "owners:":
                     $scope.manageMembers = "";
-                    $scope.userNameList = [];
-                    $scope.multiAddResults = [];
-                    $scope.waitingForImportResponse = false;
                     $scope.personProps = [];
-                    $scope.multiRemoveResults = [];
-                    $scope.membersToModify = [];
-                    $scope.membersNotInList = [];
-                    $scope.memberName = "";
-                    $scope.memberUhUuid = "";
                     $scope.membersInCheckboxList = {};
+                    $scope.waitingForImportResponse = false;
                     resetCheckboxes();
-                    break;
-                case "owners":
-                    $scope.manageMembers = "";
-                    $scope.multiRemoveResults = [];
-                    $scope.multiAddResults = [];
-                    $scope.membersNotInList = [];
                     break;
                 case "admins":
                     $scope.adminToAdd = "";
                     break;
                 default:
-                    $scope.userToAdd = "";
                     $scope.manageMembers = "";
                     $scope.adminToAdd = "";
             }
         }
 
         /**
-         * Launch a modal containing a table of the results(user info) received from the server's response message.
-         * @param listName - current list being added to
+         * Launch the import error modal.
          */
-        $scope.launchMultiAddResultModal = function (listName) {
-            $scope.multiAddResultModalInstance = $uibModal.open({
-                templateUrl: "modal/multiAddResultModal",
+        $scope.launchImportErrorModal = function () {
+            $scope.importErrorModalInstance = $uibModal.open({
+                templateUrl: "modal/importErrorModal",
                 scope: $scope
-            });
-            $scope.loading = false;
-            $scope.multiAddResultModalInstance.result.finally(function () {
-                clearMemberInput(listName);
-                $scope.loading = true;
-                $scope.waitingForImportResponse = false;
-                if ($scope.listName === "admins") {
-                    // Refreshes the groupings list and the admins list
-                    $scope.init();
-                } else {
-                    $scope.getGroupingInformation();
-                }
             });
         };
 
         /**
-         * Close the import modal instance then launch an error modal.
+         * Close the import error modal.
          */
-        $scope.launchImportErrorModal = function () {
-            $scope.cancelImportModalInstance();
-            $scope.confirmImportErrorInstance = $uibModal.open({
-                templateUrl: "modal/importErrorModal",
-                scope: $scope
-            });
+        $scope.closeImportErrorModal = function () {
+            $scope.importErrorModalInstance.dismiss();
         };
 
         /**
@@ -882,48 +791,33 @@
         };
 
         /**
-         * Clear all data from the add member(s) instance. Close the modal.
+         * Cancel the import modal instance
          */
-        $scope.closeMultiAddResultInstance = function () {
-            clearMemberInput($scope.listName);
-            $scope.multiAddResultModalInstance.dismiss();
-        };
-        /**
-         * Cancel the import Modal instance
-         */
-        $scope.cancelImportModalInstance = function () {
-            clearMemberInput($scope.listName);
-            $scope.confirmImportInstance.dismiss();
+        $scope.cancelImportModal = function () {
+            $scope.importModalInstance.dismiss();
         };
 
         /**
-         * Close import modal instance when user confirms that they would like to add the list they imported
-         */
-        $scope.proceedAddMembers = function () {
-            $scope.confirmImportInstance.close();
-        };
-
-        /**
-         * Launch a modal with a title, and body message. The modal will dismiss in the case of pressing the ok button
-         * and/or if the timeTillClose is set and time runs out. The modal will not timeout unless the timeTillClose is
-         * set.
+         * Launch a modal with a title, and body message. The modal will close in the case of pressing the ok button
+         * and will cancel if the timeTillClose is set and time runs out. The modal will not timeout unless the
+         * timeTillClose is set.
          */
         $scope.launchDynamicModal = function (title, body, timeTillClose) {
             $scope.currentModalTitle = title;
             $scope.currentModalBody = body;
 
-            $scope.createDynamicModal = $uibModal.open({
+            $scope.dynamicModal = $uibModal.open({
                 templateUrl: "modal/dynamicModal",
                 scope: $scope
             });
             if (!_.isUndefined(timeTillClose)) {
                 let closeOnTimeout = function () {
-                    $scope.createDynamicModal.dismiss();
+                    $scope.dynamicModal.dismiss();
                 };
                 setTimeout(closeOnTimeout, timeTillClose);
             }
-            $scope.dismissDynamicModal = function () {
-                $scope.createDynamicModal.dismiss();
+            $scope.closeDynamicModal = function () {
+                $scope.dynamicModal.close();
             };
         };
 
@@ -941,298 +835,101 @@
         };
 
         /**
-         * Helper - validateAndAddUser
-         * Add a user to a group.
-         * @param {Object} list - the list the user is being added to (either Include or Exclude)
+         * Add uhIdentifiers to a group. Leave the uhIdentifiers parameter null to take the member input from
+         * $scope.manageMembers. Checks that all uhIdentifiers are valid before launching the
+         * add/multiAdd/importConfirmation modal.
+         * @param {string} listName
+         * @param {Object[]|null} uhIdentifiers
          */
-        $scope.addMember = function (list) {
-            $scope.waitingForImportResponse = true;
-            let user = $scope.userToAdd;
-            let inBasis = _.some($scope.groupingBasis, { username: user }) ||
-                _.some($scope.groupingBasis, { uhUuid: user });
-            if ($scope.existInList(user, list)) {
-                $scope.listName = list;
-                $scope.swap = false;
-            } else if ($scope.isInAnotherList(user, list)) {
-                $scope.createCheckModal(user, list, true, inBasis);
-            } else if ((inBasis && list === "Include") || (!inBasis && list === "Exclude")) {
-                $scope.createBasisWarningModal(user, list, inBasis);
-            } else {
-                $scope.createConfirmAddModal({
-                    userToAdd: user,
-                    listName: list
-                });
-            }
-            $scope.waitingForImportResponse = false;
-        };
-
-        /**
-         * Initiate the adding of a member to a list.
-         * @param {string} userToAdd - user being added
-         * @param {string} list - the list the user is being added to
-         */
-        $scope.updateAddMember = function (userToAdd, list) {
-            // only initialize groupingPath if listName is not "admins"
-            let groupingPath;
-            const sanitizedUser = $scope.sanitizer([userToAdd]);
-
-            if ($scope.listName !== "admins") {
-                groupingPath = $scope.selectedGrouping.path;
-            }
-
-            const handleSuccessfulAdd = function (res) {
-                $scope.createSuccessfulAddModal({
-                    user: sanitizedUser,
-                    listName: list,
-                    response: res
-                });
-            };
-
-            if (list === "Include") {
-                groupingsService.addMembersToInclude(sanitizedUser, groupingPath, handleSuccessfulAdd, handleUnsuccessfulRequest);
-            } else if (list === "Exclude") {
-                groupingsService.addMembersToExclude(sanitizedUser, groupingPath, handleSuccessfulAdd, handleUnsuccessfulRequest);
-            } else if (list === "owners") {
-                groupingsService.addOwnerships(groupingPath, sanitizedUser, handleSuccessfulAdd, handleUnsuccessfulRequest);
-            } else if (list === "admins") {
-                groupingsService.addAdmin(sanitizedUser, handleSuccessfulAdd, handleUnsuccessfulRequest);
-            }
-        };
-
-        /**
-         * Helper - addMember
-         * @param {string} user - the user you are checking to see if they are in another list.
-         * @param {Object} list - the list the user is currently being added to
-         * @returns {boolean} - true if the person is already in another list, else false.
-         */
-        $scope.isInAnotherList = function (user, list) {
-            if (list === "Include") {
-                return _.some($scope.groupingExclude, { username: user }) ||
-                    _.some($scope.groupingExclude, { uhUuid: user });
-            } else if (list === "Exclude") {
-                return _.some($scope.groupingInclude, { username: user }) ||
-                    _.some($scope.groupingInclude, { uhUuid: user });
-            }
-            return false;
-        };
-
-        /**
-         * Helper - addMember
-         * @param {string} user - the user you are checking to see if they are already in the list being added to
-         * @param {Object} list - the list the user is currently being added to
-         * @returns {boolean} true if the user is already in the list being added to, otherwise returns false
-         */
-        $scope.existInList = function (user, list) {
-            if (list === "Include") {
-                return _.some($scope.groupingInclude, { username: user }) ||
-                    _.some($scope.groupingInclude, { uhUuid: user });
-            } else if (list === "Exclude") {
-                return _.some($scope.groupingExclude, { username: user }) ||
-                    _.some($scope.groupingExclude, { uhUuid: user });
-            } else if (list === "owners") {
-                return _.some($scope.groupingOwners, { username: user }) ||
-                    _.some($scope.groupingOwners, { uhUuid: user });
-            }
-            return false;
-        };
-
-        /**
-         * Create a modal that asks whether or not they want to add a person that is already in another list.
-         * @param user - Username of the user they are trying to add.
-         * @param listName - name of the list they are adding to (either Include or Exclude)
-         * @param swap - User being swapped
-         * @param inBasis - boolean if user is in basis or not
-         */
-        $scope.createCheckModal = function (user, listName, swap, inBasis) {
+        $scope.addMembers = function (listName, uhIdentifiers) {
+            // If uhIdentifiers parameter is null, get member input from $scope.manageMembers
+            uhIdentifiers = $scope.sanitizer(uhIdentifiers ?? $scope.parseAddRemoveInputStr($scope.manageMembers));
             $scope.listName = listName;
-            $scope.swap = swap;
-            $scope.inBasis = inBasis;
 
-            $scope.checkModalInstance = $uibModal.open({
-                templateUrl: "modal/checkModal",
-                scope: $scope,
-                backdrop: "static",
-                keyboard: false
-            });
-            $scope.checkModalInstance.result.then(function () {
-                $scope.waitingForImportResponse = true;
-                $scope.updateAddMember(user, listName);
-            });
-        };
-
-        /**
-         * Create a modal that asks for confirmation when importing multiple users.
-         * @param {object} options - the options object
-         * @param {string} options.manageMembers - the users to import
-         * @param {string} options.listName - name of the list being added to
-         */
-        $scope.createConfirmAddMembersModal = function (options) {
-            $scope.confirmAddModalInstance = $uibModal.open({
-                templateUrl: "modal/confirmAddModal",
-                scope: $scope,
-                backdrop: "static",
-                keyboard: false
-            });
-            $scope.confirmAddModalInstance.result.then(function () {
-                $scope.updateAddMember(options.manageMembers, options.listName);
-            });
-        };
-
-        /**
-         * Initializes the name of the member to display on modals
-         * @param {object} attributes - the user's attributes
-         */
-        $scope.initMemberDisplayName = function (attributes) {
-            $scope.fullName = attributes.name;
-            $scope.givenName = attributes.firstName;
-            $scope.uhUuid = attributes.uhUuid;
-            $scope.uid = attributes.username;
-
-            if ($scope.fullName != null && $scope.fullName.length > 0) {
-                $scope.user = $scope.fullName;
-            } else if ($scope.fullName != null && $scope.uid.length > 0) {
-                $scope.user = $scope.uid;
-            } else {
-                $scope.user = $scope.uhUuid;
-            }
-        };
-
-        /**
-         * Checks if the user is in the Grouper database
-         * @param {string} user - the user you are checking to see if they are in Grouper
-         * @param {object} list - the the list the user is being added to
-         */
-        $scope.validateAndAddUser = function (user, list) {
-            const validUser = $scope.sanitizer([user]);
-            groupingsService.getMemberAttributes(user, function (person) {
-                $scope.user = person;
-                if (person.uhUuid !== null) {
-                    $scope.initMemberDisplayName(person);
-                    $scope.addMember(list);
-                } else {
-                    $scope.user = user;
-                    $scope.resStatus = 404;
-                }
-            }, function (res) {
-                $scope.resStatus = res.status;
-                $scope.user = user;
-                if (res.status === -1) {
-                    $scope.createApiErrorModal();
-                }
-            });
-        };
-
-        /**
-         * Creates a modal that asks for confirmation when adding a user.
-         * @param {{userToAdd: (*|string), listName: Object}} options - the options object
-         * @param {string} options.userToAdd - the user to add
-         * @param {string} options.listName - name of the list being added to
-         */
-        $scope.createConfirmAddModal = function (options) {
-            const userToAdd = options.userToAdd;
-            $scope.listName = options.listName;
-
-            groupingsService.getMemberAttributes(userToAdd, function (person) {
-                if (person === "") {
-                    return;
-                } else {
-                    $scope.initMemberDisplayName(person);
-                }
-                // Ask for confirmation from the user to add the member
-                $scope.confirmAddModalInstance = $uibModal.open({
-                    templateUrl: "modal/confirmAddModal",
-                    scope: $scope,
-                    backdrop: "static",
-                    keyboard: false
-                });
-
-                $scope.confirmAddModalInstance.result.then(function () {
-                    $scope.waitingForImportResponse = true;
-                    $scope.updateAddMember(userToAdd, options.listName);
-                });
-            }, function (res) {
-                $scope.user = userToAdd;
-                $scope.resStatus = res.status;
-            });
-        };
-
-        /**
-         * Close CheckModal and proceeds with the checkModalInstance result.then function
-         */
-        $scope.proceedCheckModal = function () {
-            $scope.checkModalInstance.close();
-        };
-
-        /**
-         * Dismiss the CheckModal and closes it with proceeding with checkModalInstance's result.then function.
-         */
-        $scope.closeCheckModal = function () {
-            $scope.checkModalInstance.dismiss();
-        };
-
-        /**
-         * ConfirmAddModal "Yes" button
-         */
-        $scope.proceedConfirmAddUser = function () {
-            $scope.confirmAddModalInstance.close();
-        };
-
-        /**
-         * ConfirmAddModal "Cancel" button
-         */
-        $scope.cancelConfirmAddUser = function () {
-            $scope.confirmAddModalInstance.dismiss();
-        };
-
-        /**
-         * Give a user or multiple users ownership of a grouping.
-         */
-        $scope.addOwners = function () {
-            const manageOwners = $scope.manageMembers;
-            const list = "owners";
-            $scope.userToAdd = manageOwners;
-            if (_.isEmpty(manageOwners)) {
+            // Check if uhIdentifiers/member input is empty
+            if (_.isEmpty(uhIdentifiers)) {
                 $scope.emptyInput = true;
-            } else {
-                let numOwners = ($scope.manageMembers.split(" ").length - 1);
-                if (numOwners > 0) {
-                    let users = $scope.parseAddRemoveInputStr(manageOwners);
-                    $scope.manageMembers = [];
-                    if (numOwners > $scope.multiAddThreshold) {
-                        $scope.launchDynamicModal(
-                            Message.Title.LARGE_IMPORT,
-                            `You are attempting to import ${numOwners} new users to the ${list} list.
-                             Imports larger than ${$scope.multiAddThreshold} can take a few minutes.  An email with
-                             the import results will be sent.`,
-                            8000);
-                    }
-                    $scope.addMultipleMembers(users, list);
-                } else {
-                    $scope.userToAdd = manageOwners;
-                    $scope.validateAndAddUser(manageOwners, list);
-                }
+                return;
             }
+            // Prevent adding more than Threshold.MAX_IMPORT
+            if (uhIdentifiers.length > Threshold.MAX_IMPORT) {
+                $scope.launchDynamicModal(
+                    Message.Title.IMPORT_OUT_OF_BOUNDS,
+                    Message.Body.IMPORT_OUT_OF_BOUNDS);
+                return;
+            }
+            // Check for members already in list, display error when all members to add already exist in the list
+            if ($scope.existsInList(listName, uhIdentifiers)) {
+                // Determine whether to display members already in the list in a modal or add-error-messages.html
+                if (uhIdentifiers.length > Threshold.MAX_LIST_SIZE) {
+                    $scope.launchDynamicModal(
+                        Message.Title.NO_MEMBERS_ADDED,
+                        Message.Body.NO_MEMBERS_ADDED.with(listName));
+                } else {
+                    $scope.errorDismissed = false;
+                }
+                return;
+            }
+
+            $scope.waitingForImportResponse = true; // Small spinner on
+            groupingsService.invalidUhIdentifiers(uhIdentifiers, (res) => { // Check for invalid uhIdentifiers
+                $scope.waitingForImportResponse = false; // Small spinner off
+                const isBatchImport = uhIdentifiers.length > Threshold.MULTI_ADD;
+                
+                // Check if res returned any invalid uhIdentifiers
+                if (!_.isEmpty(res)) {
+                    // Display invalid uhIdentifiers in add-error-messages.html or importError modal
+                    $scope.invalidMembers = res;
+                    $scope.addInputError = true;
+                    if (isBatchImport) {
+                        $scope.launchImportErrorModal();
+                    }
+                    return;
+                }
+
+                // Filter out members already in the group
+                uhIdentifiers = uhIdentifiers.filter((member) => !$scope.membersInList.includes(member));
+
+                // Display the appropriate modal
+                if (isBatchImport) {
+                    $scope.launchImportConfirmationModal(listName, uhIdentifiers);
+                } else {
+                    $scope.launchAddModal({
+                        membersToAdd: uhIdentifiers,
+                        listName
+                    });
+                }
+            }, (res) => {
+                // Display API error modal
+                $scope.waitingForImportResponse = false;
+                $scope.resStatus = res.status;
+                $scope.createApiErrorModal();
+            });
         };
 
-        /**
-         * Create a modal telling the user whether or not the user was successfully added into the grouping/admin list.
-         * @param {object} options - the options object
-         * @param {string} options.userToAdd - the user being added
-         * @param {string?} options.response - the response from adding a member
-         * @param {string?} options.listName - the list where the user was being added to
-         */
-        $scope.createSuccessfulAddModal = function (options) {
-            $scope.listName = options.listName;
+        function timeoutModal() {
+            return $scope.launchDynamicModal(
+                Message.Title.SLOW_IMPORT,
+                Message.Body.SLOW_IMPORT,
+                8000);
+        }
 
-            $scope.addModalInstance = $uibModal.open({
-                templateUrl: "modal/addModal",
-                scope: $scope,
-                backdrop: "static",
-                keyboard: false
-            });
+        function handleSuccessfulAdd() {
+            $scope.waitingForImportResponse = false; // Small spinner off
+            // Display the appropriate result modal
+            if ($scope.isMultiAdd) {
+                $scope.launchDynamicModal(
+                    Message.Title.ADD_MEMBERS,
+                    Message.Body.ADD_MEMBERS.with($scope.listName));
+            } else {
+                $scope.launchDynamicModal(
+                    Message.Title.ADD_MEMBER,
+                    Message.Body.ADD_MEMBER.with($scope.member, $scope.listName));
+            }
 
-            $scope.addModalInstance.result.finally(function () {
-                clearMemberInput(options.listName);
+            // On pressing "Ok" in the Dynamic modal, reload the grouping
+            $scope.dynamicModal.result.finally(function () {
+                clearMemberInput($scope.listName);
                 $scope.loading = true;
                 $scope.waitingForImportResponse = false;
                 if ($scope.listName === "admins") {
@@ -1243,36 +940,180 @@
                     $scope.syncDestArray = [];
                 }
             });
+        }
+
+        /**
+         * Launch a modal that prompts the user whether they want to add the member(s) or not. If 'Yes' is pressed, then
+         * a request is made to add the member(s).
+         * @param {object} options - the options object
+         * @param {string|object[]} options.membersToAdd - the member object or array of member(s) to add
+         * @param {string} options.listName - the grouping list the member(s) is/are being added to
+         */
+        $scope.launchAddModal = function (options) {
+            const membersToAdd = [].concat(options.membersToAdd); // Allows either string or array to be passed in
+            $scope.listName = options.listName;
+            $scope.isMultiAdd = membersToAdd.length > 1;
+
+            // Prevent launching add/multiAdd modal with 0 members
+            if (_.isEmpty(membersToAdd)) {
+                $scope.containsInput = true;
+                return;
+            }
+
+            $scope.waitingForImportResponse = true; // Small spinner on
+            groupingsService.getMembersAttributes(membersToAdd, (res) => { // Get attributes for each member
+                $scope.waitingForImportResponse = false; // Small spinner off
+
+                // Sets information to be displayed in add/multiAdd modal
+                $scope.multiAddResults = res;
+                $scope.addInGroups($scope.multiAddResults);
+                $scope.initMemberDisplayName($scope.multiAddResults[0]);
+
+                // Open add or multiAdd modal
+                const templateUrl = $scope.isMultiAdd ? "modal/multiAddModal" : "modal/addModal";
+                $scope.addModalInstance = $uibModal.open({
+                    templateUrl,
+                    scope: $scope,
+                    backdrop: "static"
+                });
+
+                // On pressing "Yes/Add" in the modal, make API call to add members to the group
+                $scope.addModalInstance.result.then(async function () {
+                    $scope.waitingForImportResponse = true; // Small spinner on
+                    const groupingPath = $scope.selectedGrouping.path;
+                    if ($scope.listName === "Include") {
+                        await groupingsService.addMembersToIncludeAsync(membersToAdd, groupingPath, handleSuccessfulAdd, handleUnsuccessfulRequest, timeoutModal);
+                    } else if ($scope.listName === "Exclude") {
+                        await groupingsService.addMembersToExcludeAsync(membersToAdd, groupingPath, handleSuccessfulAdd, handleUnsuccessfulRequest, timeoutModal);
+                    } else if ($scope.listName === "owners") {
+                        await groupingsService.addOwnerships(groupingPath, membersToAdd, handleSuccessfulAdd, handleUnsuccessfulRequest);
+                    } else if ($scope.listName === "admins") {
+                        await groupingsService.addAdmin(membersToAdd, handleSuccessfulAdd, handleUnsuccessfulRequest);
+                    }
+                });
+            }, (res) => {
+                // Display API error modal
+                $scope.waitingForImportResponse = false;
+                $scope.resStatus = res.status;
+                $scope.createApiErrorModal();
+            });
         };
 
         /**
-         * Close the add user modal.
+         * Closes the add modal instance
          */
-        $scope.closeSuccessfulAddModal = function () {
+        $scope.proceedAddModal = function () {
             $scope.addModalInstance.close();
         };
 
         /**
-         * Create a modal telling the user the multi-removal was successful.
+         * Cancels the add modal instance
          */
-        $scope.createSuccessfulMultiRemoveModal = function () {
-            $scope.multiRemoveResultModalInstance = $uibModal.open({
-                templateUrl: "modal/multiRemoveResultModal",
-                scope: $scope,
-                backdrop: "static"
+        $scope.cancelAddModal = function () {
+            $scope.addModalInstance.dismiss("cancel");
+        };
+
+        /**
+         * Launch a modal to confirm/cancel the import
+         * @param listName - current list
+         * @param membersToAdd - the members to add
+         */
+        $scope.launchImportConfirmationModal = function (listName, membersToAdd) {
+            // Set information to be displayed in the modal
+            $scope.importSize = membersToAdd.length;
+            $scope.listName = listName;
+            $scope.isMultiAdd = true;
+            $scope.waitingForImportResponse = false;
+
+            // Open importConfirmation modal
+            $scope.importConfirmationModalInstance = $uibModal.open({
+                templateUrl: "modal/importConfirmationModal",
+                scope: $scope
             });
 
-            $scope.multiRemoveResultModalInstance.result.finally(function () {
-                $scope.loading = true;
-                $scope.getGroupingInformation();
+            // On pressing "Add" in the modal, make API call to add members to the group
+            const groupingPath = $scope.selectedGrouping.path;
+            $scope.importConfirmationModalInstance.result.then(async function () {
+                $scope.waitingForImportResponse = true; // Small spinner on
+                if ($scope.listName === "Include") {
+                    await groupingsService.addMembersToIncludeAsync(membersToAdd, groupingPath, handleSuccessfulAdd, handleUnsuccessfulRequest, timeoutModal);
+                } else if ($scope.listName === "Exclude") {
+                    await groupingsService.addMembersToExcludeAsync(membersToAdd, groupingPath, handleSuccessfulAdd, handleUnsuccessfulRequest, timeoutModal);
+                }
             });
         };
 
         /**
-         * Close the add user modal.
+         * Cancel the import confirmation modal instance
          */
-        $scope.closeSuccessfulMultiRemoveModal = function () {
-            $scope.multiRemoveResultModalInstance.close();
+        $scope.cancelImportConfirmationModal = function () {
+            $scope.importConfirmationModalInstance.dismiss();
+        };
+
+        /**
+         * Close the import confirmation modal instance
+         */
+        $scope.proceedImportConfirmationModal = function () {
+            $scope.importConfirmationModalInstance.close();
+        };
+
+        /**
+         * Helper - addMembers
+         * Sets $scope.membersInList to a comma-seperated string of members already in the list.
+         * $scope.membersInList is used in addModal.html and multiAddModal.html.
+         * If ALL the members are already are in the list, display add-error-messages.html instead of modal.
+         * @param {Object[]} members - the array of members to check whether they are already in the list being added to
+         * @param {string} listName - the list the user is currently being added to
+         * @returns {boolean} - true if ALL the members are already in the list
+         */
+        $scope.existsInList = function (listName, members) {
+            let currentPage;
+            switch (listName) {
+                case "Exclude":
+                    currentPage = $scope.groupingExclude;
+                    break;
+                case "Include":
+                    currentPage = $scope.groupingInclude;
+                    break;
+                case "owners":
+                    currentPage = $scope.groupingOwners;
+                    break;
+                default:
+                    break;
+            }
+
+            const membersInList = members.filter((member) =>
+                _.some(currentPage, { uhUuid: member }) || _.some(currentPage, { username: member })
+            );
+            $scope.membersInList = membersInList.join(", ");
+
+            if (_.isEqual(members, membersInList)) {
+                $scope.containsInput = true;
+            }
+
+            return $scope.containsInput;
+        };
+
+        /**
+         * Initializes the name of the member to display on modals
+         * @param {object} attributes - the user's attributes
+         */
+        $scope.initMemberDisplayName = function (attributes) {
+            $scope.fullName = attributes.name;
+            $scope.givenName = attributes.firstName;
+            $scope.uhUuid = attributes.uhUuid;
+            $scope.uid = attributes.username ?? attributes.uid;
+            $scope.inBasis = attributes.inBasis ?? "No";
+            $scope.inInclude = attributes.inInclude ?? "No";
+            $scope.inExclude = attributes.inExclude ?? "No";
+
+            if ($scope.fullName != null && $scope.fullName.length > 0) {
+                $scope.member = $scope.fullName;
+            } else if ($scope.fullName != null && $scope.uid.length > 0) {
+                $scope.member = $scope.uid;
+            } else {
+                $scope.member = $scope.uhUuid;
+            }
         };
 
         /**
@@ -1293,28 +1134,6 @@
                 scope: $scope,
                 backdrop: "static",
                 keyboard: false
-            });
-        };
-
-        /**
-         * Remove a single member from include/exclude by using the "trashcan" UI implementation.
-         * @param {string} listName - the list to remove the user from (either Include or Exclude)
-         * @param {number} currentPage - the current page in the table
-         * @param {number} index - the index of the user clicked by the user
-         * account
-         */
-        $scope.removeMemberWithTrashcan = function (listName, currentPage, index) {
-            let memberToRemove;
-            if (listName === "Include") {
-                memberToRemove = $scope.pagedItemsInclude[currentPage][index];
-            } else if (listName === "Exclude") {
-                memberToRemove = $scope.pagedItemsExclude[currentPage][index];
-            }
-
-            $scope.createRemoveModal({
-                members: memberToRemove,
-                listName,
-                scope: $scope
             });
         };
 
@@ -1388,6 +1207,9 @@
         $scope.returnMemberObject = function (memberIdentifier, listName) {
             let currentPage;
             switch (listName) {
+                case "Basis":
+                    currentPage = $scope.groupingBasis;
+                    break;
                 case "Exclude":
                     currentPage = $scope.groupingExclude;
                     break;
@@ -1443,10 +1265,6 @@
             $scope.membersNotInList = membersNotInList.join(", ");
             $scope.multiRemoveResults = membersInList;
 
-            if ($scope.multiRemoveResults.length > 0) {
-                $scope.personProps = Object.keys($scope.multiRemoveResults[0]);
-            }
-
             return !_.isEmpty($scope.multiRemoveResults);
         };
 
@@ -1456,34 +1274,185 @@
          * @param listName {string} - Name of list to remove the members from.
          */
         $scope.removeMembers = function (listName) {
+            // Extract members from checkboxes or input box
             $scope.listName = listName;
+            $scope.membersToModify = _.isEmpty($scope.manageMembers)
+                ? $scope.extractSelectedUsersFromCheckboxes($scope.membersInCheckboxList)
+                : $scope.manageMembers;
+            let uhIdentifiers = $scope.sanitizer($scope.parseAddRemoveInputStr($scope.membersToModify));
 
-            if (!_.isEmpty($scope.manageMembers)) {
-                $scope.membersToModify = $scope.manageMembers;
-            } else {
-                $scope.membersToModify = $scope.extractSelectedUsersFromCheckboxes($scope.membersInCheckboxList);
-            }
-
+            // Check if members from checkboxes or input box are empty
             if (_.isEmpty($scope.membersToModify)) {
                 $scope.emptyInput = true;
-            } else {
-                let membersToRemove = $scope.sanitizer($scope.parseAddRemoveInputStr($scope.membersToModify));
+                return;
+            }
+            // Check if members to remove exist in the list
+            if (!$scope.fetchMemberProperties(uhIdentifiers, listName)) {
+                $scope.launchDynamicModal(Message.Title.REMOVE_INPUT_ERROR, Message.Body.REMOVE_INPUT_ERROR);
+                return;
+            }
+            // Prevent removing all owners
+            if (listName === "owners" && $scope.multiRemoveResults.length === $scope.groupingOwners.length) {
+                $scope.launchRemoveErrorModal("owner");
+                clearMemberInput(listName);
+                return;
+            }
 
-                if ($scope.fetchMemberProperties(membersToRemove, listName)) {
-                    if (listName === "owners" && $scope.multiRemoveResults.length === $scope.groupingOwners.length) {
-                        $scope.createRemoveErrorModal("owner");
-                        clearMemberInput(listName);
-                    } else {
-                        $scope.createRemoveModal({
-                            members: membersToRemove,
-                            listName,
-                            scope: $scope
-                        });
-                    }
+            // Filter out members to remove that do not exist in the group
+            uhIdentifiers = uhIdentifiers.filter((member) => !$scope.membersNotInList.includes(member));
+
+            // Display the remove/multiRemove modal
+            $scope.launchRemoveModal({
+                membersToRemove: uhIdentifiers,
+                listName
+            });
+        };
+
+        /**
+         * Handler for successfully removing a member from the Include or Exclude group.
+         */
+        function handleSuccessfulRemove() {
+            $scope.loading = false;
+            $scope.waitingForImportResponse = false;
+            $scope.syncDestArray = [];
+
+            // Display the appropriate modal
+            if ($scope.isMultiRemove) {
+                $scope.launchDynamicModal(
+                    Message.Title.REMOVE_MEMBERS,
+                    Message.Body.REMOVE_MEMBERS.with($scope.listName)
+                );
+            } else {
+                $scope.launchDynamicModal(
+                    Message.Title.REMOVE_MEMBER,
+                    Message.Body.REMOVE_MEMBER.with($scope.member, $scope.listName)
+                );
+            }
+
+            // On pressing "Ok" in the Dynamic modal, reload the grouping
+            $scope.dynamicModal.result.finally(function () {
+                $scope.loading = true;
+                clearMemberInput($scope.listName);
+                $scope.getGroupingInformation();
+            });
+        }
+
+        /**
+         * Handler for successfully removing an owner from a grouping.
+         */
+        function handleOwnerRemove() {
+            // Reload the grouping if you are not removing yourself, or if deleting anyone from the admins page
+            if (!$scope.membersToRemove.includes($scope.currentUser) || !_.isUndefined($scope.adminsList)) {
+                handleSuccessfulRemove();
+            } else if ($scope.membersToRemove.includes($scope.currentUser)) {
+                // Removing self from last grouping owned -> redirect to home page and then logout
+                if ($scope.groupingsList.length === 1) {
+                    $scope.returnHome();
                 } else {
-                    $scope.launchDynamicModal(Message.Title.REMOVE_INPUT_ERROR, Message.Body.REMOVE_INPUT_ERROR);
+                    $window.location.href = "groupings";
                 }
             }
+        }
+
+        /**
+         * Handler for successfully removing an admin from a grouping.
+         */
+        function handleAdminRemove() {
+            $scope.waitingForImportResponse = false;
+            // Removing self as admin -> redirect to home page and then logout
+            if ($scope.membersToRemove.includes($scope.currentUser)) {
+                $scope.returnHome();
+            } else {
+                $scope.init();
+            }
+        }
+
+        /**
+         * Launch a modal that prompts the user whether they want to remove the member(s) or not. If 'Yes' is pressed,
+         * then a request is made to remove the member(s).
+         * @param {object} options - the options object
+         * @param {object|object[]} options.membersToRemove - the array of members to remove
+         * @param {string} options.listName - the grouping list the member(s) is/are being removed from
+         */
+        $scope.launchRemoveModal = function (options) {
+            $scope.membersToRemove = options.membersToRemove;
+            $scope.listName = options.listName;
+
+            // Display invalid input error message in add-error-messages.html
+            if (_.isEmpty($scope.membersToRemove)) {
+                $scope.removeInputError = true;
+                return;
+            }
+
+            // Allows for member object from $scope.pagedItemsInclude/Exclude/Owners to be passed in
+            if (_.isPlainObject($scope.membersToRemove)) {
+                $scope.membersToRemove = [$scope.membersToRemove.uhUuid];
+            }
+
+            // Set information for the remove/multiRemove modal
+            const memberObject = $scope.returnMemberObject($scope.membersToRemove[0], $scope.listName);
+            $scope.initMemberDisplayName(memberObject);
+            $scope.isMultiRemove = $scope.membersToRemove.length > 1;
+
+            // Open remove or multiRemove modal and set modal red when removing yourself (currentUser) from owners
+            const windowClass = $scope.showWarningRemovingSelf() ? "modal-danger" : "";
+            const templateUrl = $scope.isMultiRemove ? "modal/multiRemoveModal" : "modal/removeModal";
+            $scope.removeModalInstance = $uibModal.open({
+                windowClass,
+                templateUrl,
+                backdrop: "static",
+                scope: $scope
+            });
+
+            // On pressing "Yes/Remove" in the modal, make API call to remove members from the group
+            $scope.removeModalInstance.result.then(function () {
+                $scope.waitingForImportResponse = true; // Small spinner on
+                const groupingPath = $scope.selectedGrouping.path;
+                if ($scope.listName === "Include") {
+                    groupingsService.removeMembersFromInclude(groupingPath, $scope.membersToRemove, handleSuccessfulRemove, handleUnsuccessfulRequest);
+                } else if ($scope.listName === "Exclude") {
+                    groupingsService.removeMembersFromExclude(groupingPath, $scope.membersToRemove, handleSuccessfulRemove, handleUnsuccessfulRequest);
+                } else if ($scope.listName === "owners") {
+                    groupingsService.removeOwnerships(groupingPath, $scope.membersToRemove, handleOwnerRemove, handleUnsuccessfulRequest);
+                } else if ($scope.listName === "admins") {
+                    groupingsService.removeAdmin($scope.membersToRemove, handleAdminRemove, handleUnsuccessfulRequest);
+                }
+            });
+        };
+
+        /**
+         * Closes the remove modal instance.
+         */
+        $scope.proceedRemoveModal = function () {
+            $scope.removeModalInstance.close();
+        };
+
+        /**
+         * Cancels the remove modal instance
+         */
+        $scope.cancelRemoveModal = function () {
+            $scope.removeModalInstance.dismiss("cancel");
+        };
+
+        /**
+         * Remove a single member from include/exclude by using the "trashcan" UI implementation.
+         * @param {string} listName - the list to remove the user from (either Include or Exclude)
+         * @param {number} currentPage - the current page in the table
+         * @param {number} index - the index of the user clicked by the user
+         * account
+         */
+        $scope.removeMemberWithTrashcan = function (listName, currentPage, index) {
+            let memberToRemove;
+            if (listName === "Include") {
+                memberToRemove = $scope.pagedItemsInclude[currentPage][index];
+            } else if (listName === "Exclude") {
+                memberToRemove = $scope.pagedItemsExclude[currentPage][index];
+            }
+
+            $scope.launchRemoveModal({
+                membersToRemove: memberToRemove,
+                listName
+            });
         };
 
         /**
@@ -1493,33 +1462,19 @@
          * @param {number} index - the index of the owner clicked by the user
          */
         $scope.removeOwnerWithTrashcan = function (currentPage, index) {
-            $scope.listName = "owners";
             const ownerToRemove = $scope.pagedItemsOwners[currentPage][index];
+            $scope.listName = "owners";
 
-            if ($scope.groupingOwners.length > 1) {
-                $scope.createRemoveModal({
-                    members: ownerToRemove,
-                    listName: "owners",
-                    scope: $scope
-                });
-            } else {
-                $scope.createRemoveErrorModal("owner");
+            if ($scope.groupingOwners.length === 1) {
+                $scope.launchRemoveErrorModal("owner");
+                return;
             }
+
+            $scope.launchRemoveModal({
+                membersToRemove: ownerToRemove,
+                listName: "owners"
+            });
         };
-
-        /**
-         * Handler for successfully removing a member from the Include or Exclude group.
-         */
-        function handleSuccessfulRemove() {
-            $scope.loading = false;
-            if ($scope.isMultiRemove) {
-                $scope.createSuccessfulMultiRemoveModal();
-            } else {
-                $scope.getGroupingInformation();
-            }
-            $scope.syncDestArray = [];
-            $scope.membersToModify = [];
-        }
 
         function handleGroupingReset() {
             $scope.getGroupingInformation();
@@ -1548,96 +1503,6 @@
         };
 
         /**
-         * Handler for successfully removing an owner from a grouping.
-         */
-        function handleOwnerRemove() {
-            // Reload the grouping if you are not removing yourself, or if deleting anyone from the admins page
-            if ($scope.currentUser !== $scope.memberToRemove || !_.isUndefined($scope.adminsList)) {
-                $scope.getGroupingInformation();
-                $scope.syncDestArray = [];
-            } else if ($scope.currentUser === $scope.memberToRemove) {
-                // Removing self from last grouping owned -> redirect to home page and then logout
-                if ($scope.groupingsList.length === 1) {
-                    $scope.returnHome();
-                } else {
-                    $window.location.href = "groupings";
-                }
-            }
-        }
-
-        /**
-         * Handler for successfully removing an admin from a grouping.
-         */
-        function handleAdminRemove() {
-            // Removing self as admin -> redirect to home page and then logout
-            if ($scope.currentUser === $scope.memberToRemove) {
-                $scope.returnHome();
-            } else {
-                $scope.init();
-            }
-        }
-
-        /**
-         * Create a modal that prompts the user whether they want to delete the user or not. If 'Yes' is pressed, then
-         * a request is made to delete the user.
-         * @param {object} options - the options object
-         * @param {object|object[]} options.members - the member object or array of member(s) to remove
-         * @param {string} options.listName - the grouping list the member(s) is/are being removed from
-         */
-        $scope.createRemoveModal = function (options) {
-            if (_.isEmpty(options.members)) {
-                $scope.removeInputError = true;
-            } else {
-                let templateUrl;
-                let membersToRemove = options.members;
-                $scope.listName = options.listName;
-
-                if (_.isPlainObject(membersToRemove)) {
-                    membersToRemove = [membersToRemove.username];
-                }
-
-                if (membersToRemove.length === 1) {
-                    const memberObject = $scope.returnMemberObject(membersToRemove[0], $scope.listName);
-                    $scope.initMemberDisplayName(memberObject);
-                    $scope.memberToRemove = memberObject.username;
-                    $scope.isMultiRemove = false;
-                    templateUrl = "modal/removeModal";
-                } else {
-                    $scope.membersToRemove = membersToRemove;
-                    $scope.isMultiRemove = true;
-                    templateUrl = "modal/multiRemoveModal";
-                }
-
-                const windowClass = $scope.showWarningRemovingSelf() ? "modal-danger" : "";
-                $scope.removeModalInstance = $uibModal.open({
-                    templateUrl,
-                    windowClass,
-                    backdrop: "static",
-                    scope: $scope
-                });
-
-                $scope.removeModalInstance.result.then(function () {
-                    $scope.loading = true;
-                    $scope.manageMembers = "";
-                    $scope.membersInCheckboxList = {};
-
-                    const groupingPath = $scope.selectedGrouping.path;
-                    if ($scope.listName === "Include") {
-                        groupingsService.removeMembersFromInclude(groupingPath, membersToRemove, handleSuccessfulRemove, handleUnsuccessfulRequest);
-                    } else if ($scope.listName === "Exclude") {
-                        groupingsService.removeMembersFromExclude(groupingPath, membersToRemove, handleSuccessfulRemove, handleUnsuccessfulRequest);
-                    } else if ($scope.listName === "owners") {
-                        groupingsService.removeOwnerships(groupingPath, membersToRemove, handleOwnerRemove, handleUnsuccessfulRequest);
-                    } else if ($scope.listName === "admins") {
-                        groupingsService.removeAdmin(membersToRemove, handleAdminRemove, handleUnsuccessfulRequest);
-                    }
-                }, function () {
-                    // handle $scope.removeModalInstance.dismiss() callback
-                });
-            }
-        };
-
-        /**
          * Log out user and redirect them to Homepage
          */
         $scope.returnHome = function () {
@@ -1646,20 +1511,6 @@
             r.open("POST", "/uhgroupings/logout", true);
             r.setRequestHeader("X-XSRF-TOKEN", $scope.getCookie("XSRF-TOKEN"));
             r.send();
-        };
-
-        /**
-         * Close the modal, then proceeds with removing a user from a grouping.
-         */
-        $scope.removeModalProceed = function () {
-            $scope.removeModalInstance.close();
-        };
-
-        /**
-         * Closes the modal for removing a user. This does not remove the user from the grouping/admin list.
-         */
-        $scope.removeModalCancel = function () {
-            $scope.removeModalInstance.dismiss("cancel");
         };
 
         /**
@@ -1684,14 +1535,13 @@
          * Creates a modal stating there was an error removing the user from a group.
          * @param {string} userType - the type of user being removed (either admin or owner)
          */
-        $scope.createRemoveErrorModal = function (userType) {
+        $scope.launchRemoveErrorModal = function (userType) {
             $scope.userType = userType;
 
             $scope.removeErrorModalInstance = $uibModal.open({
                 templateUrl: "modal/removeErrorModal",
                 scope: $scope,
-                backdrop: "static",
-                keyboard: false
+                backdrop: "static"
             });
         };
 
@@ -1822,14 +1672,11 @@
         $scope.createResetGroupModal = function (options) {
             $scope.groupReset = options.group;
             $scope.listNames = options.listNames;
-            const windowClass = $scope.showWarningRemovingSelfResetModal() ? "modal-danger" : "";
 
             $scope.resetModalInstance = $uibModal.open({
                 templateUrl: "modal/resetModal",
-                windowClass,
                 scope: $scope,
-                backdrop: "static",
-                keyboard: false
+                backdrop: "static"
             });
             $scope.resetModalInstance.result.then(function () {
                 $scope.loading = true;
@@ -1975,7 +1822,6 @@
 
         $scope.resetFields = function (type) {
             $scope.getGroupingInformation(type);
-            $scope.userToAdd = "";
             $scope.manageMembers = "";
             $scope.membersInCheckboxList = {};
             $scope.allSelected = false;
@@ -1986,8 +1832,9 @@
             $scope.resStatus = 0;
             $scope.emptyInput = false;
             $scope.emptySelect = false;
-            $scope.swap = true;
+            $scope.containsInput = false;
             $scope.inGrouper = false;
+            $scope.addInputError = false;
             $scope.removeInputError = false;
         };
 
@@ -1997,10 +1844,8 @@
          */
         $scope.addOnClick = function (listName) {
             $scope.resetErrors();
-            if (listName === "owners") {
-                $scope.addOwners();
-            } else if (listName === "Include" || listName === "Exclude") {
-                $scope.addMembers(listName, $scope.manageMembers);
+            if (listName === "Include" || listName === "Exclude" || listName === "owners") {
+                $scope.addMembers(listName);
             }
             $scope.errorDismissed = false;
         };
@@ -2048,36 +1893,6 @@
             }).catch(function () {
                 //do nothing
             });
-        };
-
-        /**
-         * Create warning modal if user is in being added to include and is a basis member or if
-         * a user is being added to exclude and is not a basis member
-         * @param user - user being added
-         * @param listName - grouping list (i.e. include or exclude)
-         * @param inBasis - boolean if user is in basis or not
-         */
-        $scope.createBasisWarningModal = function (user, listName, inBasis) {
-            $scope.listName = listName;
-            $scope.inBasis = inBasis;
-
-            $scope.basisWarningModalInstance = $uibModal.open({
-                templateUrl: "modal/basisWarningModal",
-                scope: $scope
-            });
-
-            $scope.basisWarningModalInstance.result.then(function () {
-                $scope.waitingForImportResponse = true;
-                $scope.updateAddMember(user, listName);
-            });
-        };
-
-        $scope.proceedBasisWarningModal = function () {
-            $scope.basisWarningModalInstance.close();
-        };
-
-        $scope.closeBasisWarningModal = function () {
-            $scope.basisWarningModalInstance.dismiss();
         };
 
         /**
@@ -2200,26 +2015,8 @@
          * returns false
          */
         $scope.showWarningRemovingSelf = function () {
-            return $scope.currentUser === $scope.memberToRemove
-                && ($scope.listName === "owners" || $scope.listName === "admins");
-        };
-
-        /**
-         * Determine whether a warning message should be displayed when removing yourself from a list.
-         * @returns {boolean} returns true if you are removing yourself from either the owners or admins list, otherwise
-         * returns false
-         */
-        $scope.showWarningRemovingSelfFromList = function () {
-            return $scope.currentUser === $scope.memberToRemove
-                || $scope.membersToRemove.includes($scope.currentUser);
-        };
-
-        /*** Determines whether a warning message should be displayed when removing yourself from a list.
-         * @returns {boolean} returns true if you are removing yourself from either the owners or admins list, otherwise
-         * returns false
-         */
-        $scope.showWarningRemovingSelfResetModal = function () {
-            return $scope.membersToRemove.includes($scope.currentUser)
+            return ($scope.membersToRemove.includes($scope.currentUser.uid)
+                    || $scope.membersToRemove.includes($scope.currentUser.uhUuid))
                 && ($scope.listName === "owners" || $scope.listName === "admins");
         };
 

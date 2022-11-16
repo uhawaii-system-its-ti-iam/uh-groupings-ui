@@ -1,13 +1,88 @@
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
-      lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <div class="modal-header">
-    <h5 class="modal-title" id="modal-title">Add User</h5>
+    <h5 class="modal-title" id="modal-title">Add Member</h5>
+    <a class="close" type="button"  ng-click="cancelAddModal()">
+        <span aria-hidden="true">&times;</span>
+    </a>
 </div>
+
 <div class="modal-body" id="modal-body">
-    <p th:utext="#{screen.message.modal.add.success}">Success</p>
+    <p>
+        <span class="modal-black-text" th:text="#{screen.message.modal.add.confirmation}"></span>
+        <span class="modal-black-text">{{listName}} list.</span>
+    </p>
+
+    <table>
+        <tr>
+            <th th:utext="#{screen.message.modal.add.name}"></th>
+            <th class="font-weight-normal modal-attributes">{{fullName}}</th>
+        </tr>
+        <tr>
+            <th th:utext="#{screen.message.modal.add.uid}"></th>
+            <th class="font-weight-normal modal-attributes">
+                {{uid}}
+                <span class="modal-black-text" ng-if="!uid">
+                    N/A
+                    <span class="fa fa-question-circle clickable" aria-hidden="true"
+                          data-toggle="tooltip" data-boundary="window" onmouseover="$(this).tooltip('toggle')"
+                          th:title="#{screen.message.common.tooltip.username.notApplicable}">
+                    </span>
+                </span>
+            </th>
+        </tr>
+        <tr>
+            <th th:utext="#{screen.message.modal.add.uhUserId}"></th>
+            <th class="font-weight-normal modal-attributes">{{uhUuid}}</th>
+        </tr>
+        <tr ng-if="listName !== 'owners'">
+            <th th:utext="#{screen.message.modal.add.inBasis}"></th>
+            <th class="font-weight-normal modal-attributes">
+                {{ inBasis }}
+                <span class="fa fa-info-circle clickable" ng-if="inBasis === 'Yes' && listName === 'Include'"
+                      data-toggle="tooltip" data-boundary="window" onmouseover="$(this).tooltip('toggle')"
+                      th:title="#{screen.message.modal.add.tooltip.inBasis.include}" aria-hidden="true">
+                </span>
+                <span class="fa fa-info-circle clickable" ng-if="inBasis === 'Yes' && listName === 'Exclude'"
+                      data-toggle="tooltip" data-boundary="window" onmouseover="$(this).tooltip('toggle')"
+                      th:title="#{screen.message.modal.add.tooltip.inBasis.exclude}" aria-hidden="true">
+                </span>
+                <span class="fa fa-info-circle clickable" ng-if="inBasis === 'No' && listName === 'Exclude' && allowOptIn"
+                      data-toggle="tooltip" data-boundary="window" onmouseover="$(this).tooltip('toggle')"
+                      th:title="#{screen.message.modal.add.tooltip.not.inBasis.exclude}" aria-hidden="true">
+                </span>
+            </th>
+        </tr>
+        <tr ng-if="listName !== 'owners' && listName === 'Exclude'">
+            <th th:utext="#{screen.message.modal.add.inInclude}"></th>
+            <th class="font-weight-normal modal-attributes">
+                {{ inInclude }}
+                <span class="fa fa-info-circle clickable" ng-if="inInclude === 'Yes'"
+                   data-toggle="tooltip" data-boundary="window" onmouseover="$(this).tooltip('toggle')"
+                   th:title="#{screen.message.modal.add.tooltip.inInclude}" aria-hidden="true">
+                </span>
+            </th>
+        </tr>
+        <tr ng-if="listName !== 'owners' && listName === 'Include'">
+            <th th:utext="#{screen.message.modal.add.inExclude}"></th>
+            <th class="font-weight-normal modal-attributes">
+                {{ inExclude }}
+                <span class="fa fa-info-circle clickable" ng-if="inExclude === 'Yes'"
+                   data-toggle="tooltip" data-boundary="window" onmouseover="$(this).tooltip('toggle')"
+                   th:title="#{screen.message.modal.add.tooltip.inExclude}" aria-hidden="true">
+                </span>
+            </th>
+        </tr>
+    </table>
+
+    <p>
+        <span class="modal-black-text">Are you sure you want to add</span>
+        <span class="font-weight-bold">{{fullName}}</span>
+        <span class="modal-black-text">to the {{listName}} list?</span>
+    </p>
 </div>
+
 <div class="modal-footer">
-    <button class="btn btn-primary" ng-click="closeSuccessfulAddModal()">OK</button>
+    <button class="btn btn-primary" ng-click="proceedAddModal()">Yes</button>
+    <button class="btn btn-light" ng-click="cancelAddModal()" data-dismiss="modal">Cancel</button>
 </div>
 </html>

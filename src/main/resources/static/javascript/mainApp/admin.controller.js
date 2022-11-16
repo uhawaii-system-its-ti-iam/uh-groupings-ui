@@ -138,7 +138,7 @@
             if (_.isEmpty($scope.selectedGroupingsPaths)) {
                 $scope.emptySelect = true;
             } else if ($scope.soleOwnerGroupingNames.length >= 1) {
-                $scope.createRemoveErrorModal("owner");
+                $scope.launchRemoveErrorModal("owner");
             } else {
                 $scope.createRemoveFromGroupsModal({
                     member: memberToRemove,
@@ -223,12 +223,12 @@
             } else {
                 if (inAdminList(sanitizedAdmin)) {
                     // Todo : Error message pop up needs implementation.
-                    $scope.user = sanitizedAdmin;
+                    $scope.member = sanitizedAdmin;
                     $scope.listName = "admins";
-                    $scope.swap = false;
+                    $scope.containsInput = true;
                 } else {
-                    $scope.createConfirmAddModal({
-                        userToAdd: sanitizedAdmin,
+                    $scope.launchAddModal({
+                        membersToAdd: sanitizedAdmin,
                         listName: "admins"
                     });
                 }
@@ -246,13 +246,13 @@
             const adminToRemove = $scope.pagedItemsAdmins[currentPage][index];
 
             if ($scope.adminsList.length > 1) {
-                $scope.createRemoveModal({
-                    members: adminToRemove,
+                $scope.launchRemoveModal({
+                    membersToRemove: adminToRemove,
                     listName: "admins"
                 });
             } else {
                 const userType = "admin";
-                $scope.createRemoveErrorModal(userType);
+                $scope.launchRemoveErrorModal(userType);
             }
         };
 
@@ -281,7 +281,7 @@
             $scope.listName = options.listName;
             $scope.ownerOfListName = $scope.selectedOwnedGroupingsNames.join(", ");
 
-            const windowClass = $scope.showWarningRemovingSelfFromList() ? "modal-danger" : "";
+            const windowClass = $scope.showWarningRemovingSelf() ? "modal-danger" : "";
 
             groupingsService.getMemberAttributes(sanitizedUser, function (person) {
                 if (person === "") {

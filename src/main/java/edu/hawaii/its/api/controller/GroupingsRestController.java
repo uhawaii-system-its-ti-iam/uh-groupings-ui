@@ -181,9 +181,19 @@ public class GroupingsRestController {
     }
 
     /**
+     * Get a list of invalid uhIdentifiers given a list of uhIdentifiers.
+     */
+    @PostMapping(value = "/members/invalid")
+    @ResponseBody
+    public ResponseEntity<String> invalidUhIdentifiers(Principal principal, @RequestBody List<String> uhIdentifiers) {
+        logger.info("Entered REST memberAttributes...");
+        List<String> safeInput = sanitizeList(uhIdentifiers);
+        String uri = String.format(API_2_1_BASE + "/members/invalid");
+        return httpRequestService.makeApiRequestWithBody(principal.getName(), uri, safeInput, HttpMethod.POST);
+    }
+
+    /**
      * Get a member's attributes based off username.
-     *
-     * @return Map of user attributes
      */
     @GetMapping(value = "/members/{uhIdentifier}")
     @ResponseBody
@@ -192,6 +202,18 @@ public class GroupingsRestController {
         String safeInput = policy.sanitize(uhIdentifier);
         String uri = String.format(API_2_1_BASE + "/members/%s", safeInput);
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
+    }
+
+    /**
+     * Get a member's attributes based off username.
+     */
+    @PostMapping(value = "/members")
+    @ResponseBody
+    public ResponseEntity<String> membersAttributes(Principal principal, @RequestBody List<String> uhIdentifiers) {
+        logger.info("Entered REST memberAttributes...");
+        List<String> safeInput = sanitizeList(uhIdentifiers);
+        String uri = String.format(API_2_1_BASE + "/members");
+        return httpRequestService.makeApiRequestWithBody(principal.getName(), uri, safeInput, HttpMethod.POST);
     }
 
     /**

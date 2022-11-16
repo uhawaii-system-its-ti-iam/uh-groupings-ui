@@ -1,8 +1,9 @@
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
-      lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <div class="modal-header">
     <h5 class="modal-title" id="modal-title">Error Removing User</h5>
+    <a class="close" type="button" ng-click="closeRemoveErrorModal()">
+        <span aria-hidden="true">&times;</span>
+    </a>
 </div>
 <div class="modal-body" id="modal-body">
     <p th:text="#{screen.message.modal.remove.error}"></p>

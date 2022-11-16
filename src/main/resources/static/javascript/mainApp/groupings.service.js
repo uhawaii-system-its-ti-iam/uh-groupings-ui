@@ -69,19 +69,19 @@
              * Add a members to the include group of a grouping. A modal is passed in an launched after a certain amount
              * of time has elapsed.
              */
-            addMembersToInclude(usersToAdd, path, onSuccess, onError) {
+            addMembersToInclude(members, path, onSuccess, onError) {
                 let endpoint = BASE_URL + path + "/addMembersToIncludeGroup";
-                dataProvider.updateDataWithBody(endpoint, usersToAdd, onSuccess, onError);
+                dataProvider.updateDataWithBody(endpoint, members, onSuccess, onError);
             },
 
             /**
              * Add a members to the include group of a grouping. A modal is passed in an launched after a certain amount
              * of time has elapsed.
              */
-            addMembersToIncludeAsync(usersToAdd, path, onSuccess, onError, modal) {
+            addMembersToIncludeAsync(members, path, onSuccess, onError, modal) {
                 let endpoint = BASE_URL + path + "/addMembersToIncludeGroup";
-                return new Promise((resolve) => {
-                    dataProvider.updateDataWithBodyAndTimeoutModal(endpoint, usersToAdd, onSuccess, onError, modal);
+                return new Promise(() => {
+                    dataProvider.updateDataWithBodyAndTimeoutModal(endpoint, members, onSuccess, onError, modal);
                 });
             },
 
@@ -89,18 +89,18 @@
              * Add a members to the exclude group of a grouping. A modal is passed in an launched after a certain amount
              * of time has elapsed.
              */
-            addMembersToExclude(usersToAdd, path, onSuccess, onError) {
+            addMembersToExclude(members, path, onSuccess, onError) {
                 let endpoint = BASE_URL + path + "/addMembersToExcludeGroup";
-                dataProvider.updateDataWithBody(endpoint, usersToAdd, onSuccess, onError);
+                dataProvider.updateDataWithBody(endpoint, members, onSuccess, onError);
             },
             /**
              * Add a members to the exclude group of a grouping. A modal is passed in an launched after a certain amount
              * of time has elapsed.
              */
-            addMembersToExcludeAsync(usersToAdd, path, onSuccess, onError, modal) {
+            addMembersToExcludeAsync(members, path, onSuccess, onError, modal) {
                 let endpoint = BASE_URL + path + "/addMembersToExcludeGroup";
-                return new Promise((resolve) => {
-                    dataProvider.updateDataWithBodyAndTimeoutModal(endpoint, usersToAdd, onSuccess, onError, modal);
+                return new Promise(() => {
+                    dataProvider.updateDataWithBodyAndTimeoutModal(endpoint, members, onSuccess, onError, modal);
                 });
             },
 
@@ -129,7 +129,8 @@
             },
 
             /**
-             * Remove members from include group of grouping.
+             * Remove members from include group of grouping. A modal is passed in an launched after a certain amount
+             * of time has elapsed.
              */
             removeMembersFromInclude(path, members, onSuccess, onError) {
                 let endpoint = BASE_URL + path + "/removeMembersFromIncludeGroup";
@@ -137,7 +138,8 @@
             },
 
             /**
-             * Remove members from exclude group of grouping.
+             * Remove members from exclude group of grouping. A modal is passed in an launched after a certain amount
+             * of time has elapsed.
              */
             removeMembersFromExclude(path, members, onSuccess, onError) {
                 let endpoint = BASE_URL + path + "/removeMembersFromExcludeGroup";
@@ -161,12 +163,29 @@
             },
 
             /**
+             * Get a list of invalid given a list of uhIdentifiers.
+             */
+            invalidUhIdentifiers(uhIdentifiers, onSuccess, onError) {
+                let endpoint = BASE_URL + "members/invalid";
+                dataProvider.loadDataWithBody(endpoint, uhIdentifiers, onSuccess, onError);
+            },
+
+            /**
              * Get the attributes of a user, which includes their uid, uhUuid, givenName, cn, and sn.
              */
             getMemberAttributes(member, onSuccess, onError) {
                 let endpoint = BASE_URL + "members/" + member;
                 dataProvider.loadData(endpoint, onSuccess, onError);
             },
+
+            /**
+             * Get the attributes of a user, which includes their uid, uhUuid, givenName, cn, and sn.
+             */
+            getMembersAttributes(members, onSuccess, onError) {
+                let endpoint = BASE_URL + "members";
+                dataProvider.loadDataWithBody(endpoint, members, onSuccess, onError);
+            },
+
             /**
              * Opt member out of a grouping.
              */

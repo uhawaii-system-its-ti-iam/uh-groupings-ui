@@ -1,54 +1,41 @@
-<!---
-    - resetModal.html
-    - A modal that confirms with user whether or not they want to continue reset the entireGroup. (Does not remove a modal :) )
---->
-
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
-      lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <div class="modal-header">
     <h5 class="modal-title" id="modal-title">Reset Grouping</h5>
+    <a class="close" type="button" ng-click="cancelResetGroup()">
+        <span aria-hidden="true">&times;</span>
+    </a>
 </div>
 <div class="modal-body" id="modal-body">
-    <!--Warning message if users try to delete themselves from the admins or owners list -->
-    <div class="modal-danger-message" ng-if="showWarningRemovingSelfResetModal()">
-        <p th:utext="#{screen.message.modal.remove.warning}">Warning</p>
-        <div ng-switch="listName">
-            <div ng-switch-when="owners">
-                <!-- Warning message that tells the user what will happen if they remove themselves -->
-                <p th:text="#{screen.message.modal.remove.message}"></p>
-                <p ng-if="adminsList === undefined &amp;&amp; groupingsList.length === 1"
-                   th:text="#{screen.message.modal.remove.redirect.home}"></p>
-                <p ng-if="adminsList === undefined &amp;&amp; groupingsList.length > 1"
-                   th:text="#{screen.message.modal.remove.redirect.groupings}"></p>
-            </div>
-            <div ng-switch-when="admins">
-                <p th:text="#{screen.message.modal.remove.admin}"></p>
-                <p th:text="#{screen.message.modal.remove.redirect.home}"></p>
-            </div>
-        </div>
-    </div>
     <p>
         <span class="text-dark" th:text="#{screen.message.modal.reset.confirmation}"></span>
         <span class="text-dark">{{listNames}} in the {{groupReset}} group.</span>
     </p>
-    <div class="container">
-        <table>
-            <thead class="import-table-thead-tbody-tr import-table-thead">
-            <tr class="import-table-thead-tbody-tr">
-                <!-- Display table headings -->
-                <th scope="col">Username</th>
-                <th scope="col">Uh Number</th>
-                <th scope="col">Name</th>
-            </tr>
+    <div class="container modal-tables">
+        <table class="table table-sm table-borderless">
+            <thead class="thead-sticky">
+                <tr class="text-nowrap">
+                    <!-- Display table headings -->
+                    <th scope="col">Username</th>
+                    <th scope="col">Uh Number</th>
+                    <th scope="col">Name</th>
+                </tr>
             </thead>
-            <tbody class="import-table-tbody">
-            <tr class="import-table-thead-tbody-tr" ng-repeat="person in resetResults">
-                <!-- Display table data -->
-                <td class="modal-names overflow-hidden" ng-repeat="prop in personProps">
-                    {{ person[prop] }}
-                </td>
-            </tr>
+            <tbody>
+                <tr ng-repeat="person in resetResults">
+                    <!-- Display table data -->
+                    <td>
+                        {{ person['username'] }}
+                        <span class="modal-black-text" ng-if="!person['username']">
+                            N/A
+                            <span class="fa fa-question-circle clickable" aria-hidden="true"
+                                  data-toggle="tooltip" data-boundary="window" onmouseover="$(this).tooltip('toggle')"
+                                  th:title="#{screen.message.common.tooltip.username.notApplicable}">
+                            </span>
+                        </span>
+                    </td>
+                    <td>{{ person['uhUuid'] }}</td>
+                    <td>{{ person['name'] }}</td>
+                </tr>
             </tbody>
         </table>
     </div>
@@ -58,7 +45,7 @@
 </div>
 <div class="modal-footer">
     <button class="btn btn-primary" ng-click="proceedResetGroup()">Yes</button>
-    <button class="btn btn-default" ng-click="cancelResetGroup()" data-dismiss="modal">Cancel</button>
+    <button class="btn btn-light" ng-click="cancelResetGroup()" data-dismiss="modal">Cancel</button>
 </div>
 
 </html>
