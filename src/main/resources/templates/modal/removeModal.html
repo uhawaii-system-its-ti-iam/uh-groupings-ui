@@ -1,13 +1,9 @@
-<!---
-    - removeModal.html
-    - A modal that confirms with user whether or not they want to continue and remove the uhid that they selected for removal. (Does not remove a modal :) )
---->
-
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
-      lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <div class="modal-header">
-    <h5 class="modal-title" id="modal-title">Remove User</h5>
+    <h5 class="modal-title" id="modal-title">Remove Member</h5>
+    <button type="button" class="close" data-dismiss="dialog" ng-click="cancelRemoveModal()">
+        <span aria-hidden="true">&times;</span>
+    </button>
 </div>
 <div class="modal-body" id="modal-body">
     <!--Warning message if users try to delete themselves from the admins or owners list -->
@@ -28,17 +24,6 @@
             </div>
         </div>
     </div>
-    <div class="modal-danger-message" ng-if="showWarningRemovingSelfFromList()">
-        <p th:utext="#{screen.message.modal.remove.warning}">Warning</p>
-        <div>
-            <div ng-if="selectedOwnedGroupingsNames.length === 1">
-                <p th:text="#{screen.message.modal.multiremove.owner}"></p>
-            </div>
-            <div ng-if="selectedOwnedGroupingsNames.length > 1">
-                <p th:text="#{screen.message.modal.multiremove.multiowner}"></p>
-            </div>
-        </div>
-    </div>
     <p>
         <span class="text-dark" th:text="#{screen.message.modal.remove.confirmation}"></span>
         <span class="text-dark">{{listName}} list.</span>
@@ -50,7 +35,16 @@
         </tr>
         <tr>
             <th th:utext="#{screen.message.modal.remove.uid}"></th>
-            <th class="font-weight-normal modal-attributes"> {{uid}}</th>
+            <th class="font-weight-normal modal-attributes">
+                {{uid}}
+                <span class="modal-black-text" ng-if="!uid">
+                    N/A
+                    <span class="fa fa-question-circle clickable" aria-hidden="true"
+                       data-toggle="tooltip" data-boundary="window" onmouseover="$(this).tooltip('toggle')"
+                       th:title="#{screen.message.common.tooltip.username.notApplicable}">
+                    </span>
+                </span>
+            </th>
         </tr>
         <tr>
             <th th:utext="#{screen.message.modal.remove.uhUserId}"></th>
@@ -58,14 +52,14 @@
         </tr>
     </table>
     <p>
-        <span class="text-dark">Are you sure you want to remove</span>
-        <span class="font-weight-bold">{{user}}</span>
-        <span class="text-dark"> from the {{listName}} list?</span>
+        <span class="modal-black-text">Are you sure you want to remove</span>
+        <span class="font-weight-bold">{{member}}</span>
+        <span class="modal-black-text"> from the {{listName}} list?</span>
     </p>
 </div>
 <div class="modal-footer">
-    <button class="btn btn-primary" ng-click="removeModalProceed()">Yes</button>
-    <button class="btn btn-light" ng-click="removeModalCancel()" data-dismiss="modal">Cancel</button>
+    <button class="btn btn-primary" ng-click="proceedRemoveModal()">Yes</button>
+    <button class="btn btn-light" ng-click="cancelRemoveModal()" data-dismiss="modal">Cancel</button>
 </div>
 
 </html>

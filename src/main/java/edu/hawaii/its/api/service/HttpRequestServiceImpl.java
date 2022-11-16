@@ -2,6 +2,7 @@ package edu.hawaii.its.api.service;
 
 import edu.hawaii.its.api.controller.RestTemplateResponseErrorHandler;
 
+import org.owasp.encoder.Encode;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
@@ -34,7 +35,8 @@ public class HttpRequestServiceImpl implements HttpRequestService {
 
         RestTemplate restTemplate =
                 new RestTemplateBuilder().errorHandler(new RestTemplateResponseErrorHandler()).build();
-        return restTemplate.exchange(uri, method, httpEntity, String.class);
+        String responseBody = restTemplate.exchange(uri, method, httpEntity, String.class).getBody();
+        return ResponseEntity.ok().body(responseBody);
     }
 
     /*
@@ -50,7 +52,8 @@ public class HttpRequestServiceImpl implements HttpRequestService {
 
         RestTemplate restTemplate =
                 new RestTemplateBuilder().errorHandler(new RestTemplateResponseErrorHandler()).build();
-        return restTemplate.exchange(uri, method, httpEntity, String.class);
+        String responseBody = restTemplate.exchange(uri, method, httpEntity, String.class).getBody();
+        return ResponseEntity.ok().body(responseBody);
     }
 
     @Override
@@ -63,7 +66,8 @@ public class HttpRequestServiceImpl implements HttpRequestService {
 
         RestTemplate restTemplate =
                 new RestTemplateBuilder().errorHandler(new RestTemplateResponseErrorHandler()).build();
-        return restTemplate.exchange(uri, method, httpEntity, String.class);
+        String responseBody = restTemplate.exchange(uri, method, httpEntity, String.class).getBody();
+        return ResponseEntity.ok().body(responseBody);
     }
 
     @Override
@@ -75,6 +79,7 @@ public class HttpRequestServiceImpl implements HttpRequestService {
 
         RestTemplate restTemplate =
                 new RestTemplateBuilder().errorHandler(new RestTemplateResponseErrorHandler()).build();
-        return restTemplate.exchange(urlTemplate, method, httpEntity, String.class, params);
+        String responseBody = restTemplate.exchange(urlTemplate, method, httpEntity, String.class).getBody();
+        return ResponseEntity.ok().body(responseBody);
     }
 }

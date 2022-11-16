@@ -10,8 +10,8 @@ import javax.annotation.PostConstruct;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.owasp.html.HtmlPolicyBuilder;
 import org.owasp.html.PolicyFactory;
-import org.owasp.html.Sanitizers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,15 +19,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import edu.hawaii.its.api.service.HttpRequestService;
@@ -76,7 +69,7 @@ public class GroupingsRestController {
 
     // Constructor.
     public GroupingsRestController() {
-        policy = Sanitizers.FORMATTING;
+        policy = new HtmlPolicyBuilder().toFactory();
     }
 
     /*
@@ -181,9 +174,20 @@ public class GroupingsRestController {
     }
 
     /**
+     * Get a list of invalid uhIdentifiers given a list of uhIdentifiers.
+     */
+    @PostMapping(value = "/members/invalid")
+    @ResponseBody
+    public ResponseEntity<String> invalidUhIdentifiers(Principal principal, @RequestBody List<String> uhIdentifiers) {
+        logger.info("Entered REST memberAttributes...");
+        String principalName = policy.sanitize(principal.getName());
+        List<String> safeInput = sanitizeList(uhIdentifiers);
+        String uri = String.format(API_2_1_BASE + "/members/invalid");
+        return httpRequestService.makeApiRequestWithBody(principalName, uri, safeInput, HttpMethod.POST);
+    }
+
+    /**
      * Get a member's attributes based off username.
-     *
-     * @return Map of user attributes
      */
     @GetMapping(value = "/members/{uhIdentifier}")
     @ResponseBody
@@ -192,6 +196,20 @@ public class GroupingsRestController {
         String safeInput = policy.sanitize(uhIdentifier);
         String uri = String.format(API_2_1_BASE + "/members/%s", safeInput);
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
+    }
+
+    /**
+     * Get a member's attributes based off username.
+     */
+    @PostMapping(value = "/members")
+    @ResponseBody
+    public ResponseEntity<String> membersAttributes(Principal principal, @RequestBody List<String> uhIdentifiers) {
+        logger.info("Entered REST memberAttributes...");
+        String principalName = policy.sanitize(principal.getName());
+        List<String> safeInput = sanitizeList(uhIdentifiers);
+        String uri = String.format(API_2_1_BASE + "/members");
+        String safeUri = policy.sanitize(uri);
+        return httpRequestService.makeApiRequestWithBody(principalName, safeUri, safeInput, HttpMethod.POST);
     }
 
     /**

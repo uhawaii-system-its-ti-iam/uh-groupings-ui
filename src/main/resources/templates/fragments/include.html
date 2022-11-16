@@ -116,9 +116,7 @@
                         </div>
                         <div id = "memBtns">
                             <button class="btn btn-primary add-margin"
-                                    ng-blur="dismissErrors()"
                                     ng-click="addOnClick('Include')">
-
                                 Add
                             </button>
                             <button class="btn btn-remove"
@@ -126,7 +124,9 @@
                                     ng-click="removeOnClick('Include')">
                                 Remove
                             </button>
-                            <button class="btn btn-primary" ng-click="launchImportModal('Include')">
+                            <button class="btn btn-primary"
+                                    ng-blur="dismissErrors()"
+                                    ng-click="launchImportModal('Include')">
                                 Import File
                             </button>
                             <div class="spinner-border spinner-border-sm d-inline-block" ng-if="waitingForImportResponse">

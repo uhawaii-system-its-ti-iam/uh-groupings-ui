@@ -1,19 +1,20 @@
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
-      lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <div class="modal-header">
-    <h5 class="modal-title" id="modal-title"></h5>
+    <h5 class="modal-title">No Members Were Added</h5>
+    <button type="button" class="close" data-dismiss="dialog" ng-click="closeRemoveErrorModal()">
+        <span aria-hidden="true">&times;</span>
+    </button>
 </div>
-<div class="modal-body" id="modal-body">
-    <div ng-if="user.length > 0">
-        <p th:text="#{screen.message.modal.add.fail}"></p>
-        <p th:text="#{screen.message.modal.add.ensureValid}"></p>
-    </div>
-    <div ng-if="user.length === 0">
-        <p th:utext="#{screen.message.modal.add.empty}">Empty</p>
-    </div>
+<div class="modal-body">
+    <p th:text="#{screen.message.import.modal.error}"></p>
+    <ul>
+        <li ng-repeat="member in invalidMembers | limitTo : Threshold.MAX_INVALID_UH_IDS">{{ member }}</li>
+    </ul>
+    <p ng-if="invalidMembers.length > Threshold.MAX_INVALID_UH_IDS"
+       th:text="#{screen.message.import.modal.error.truncated}"></p>
+    <p th:text="#{screen.message.modal.add.ensureValid}"></p>
 </div>
 <div class="modal-footer">
-    <button class="btn btn-primary" ng-click="confirmImportErrorInstance.dismiss()">OK</button>
+    <button class="btn btn-primary" ng-click="closeImportErrorModal()">OK</button>
 </div>
 </html>

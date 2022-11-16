@@ -8,10 +8,13 @@
       lang="en">
 <div class="modal-header">
     <h5 class="modal-title" id="modal-title">Remove Members</h5>
+    <button type="button" class="close" data-dismiss="dialog" ng-click="cancelRemoveModal()">
+        <span aria-hidden="true">&times;</span>
+    </button>
 </div>
 <div class="modal-body" id="modal-body">
     <!--Warning message if users try to delete themselves from the admins or owners list -->
-    <div class="modal-danger-message" ng-if="showWarningRemovingSelfResetModal()">
+    <div class="modal-danger-message" ng-if="showWarningRemovingSelf()">
         <p th:utext="#{screen.message.modal.remove.warning}">Warning</p>
         <div ng-switch="listName">
             <div ng-switch-when="owners">
@@ -28,48 +31,47 @@
             </div>
         </div>
     </div>
-    <div class="modal-danger-message" ng-if="showWarningRemovingSelfFromList()">
-        <p th:utext="#{screen.message.modal.remove.warning}">Warning</p>
-        <div>
-            <div ng-if="selectedOwnedGroupingsNames.length === 1">
-                <p th:text="#{screen.message.modal.multiremove.owner}"></p>
-            </div>
-            <div ng-if="selectedOwnedGroupingsNames.length > 1">
-                <p th:text="#{screen.message.modal.multiremove.multiowner}"></p>
-            </div>
-        </div>
-    </div>
     <p>
-        <span class="text-dark" th:text="#{screen.message.modal.multiremove.message}"></span>
+        <span class="text-dark" th:text="#{screen.message.modal.multi.remove.message}"></span>
         <span class="text-dark">{{ listName }} list.</span>
     </p>
-    <div class="container">
-        <table>
-            <thead class="import-table-thead-tbody-tr import-table-thead">
-            <tr class="import-table-thead-tbody-tr">
-                <!-- Display table headings -->
-                <th scope="col">Username</th>
-                <th scope="col">Uh Number</th>
-                <th scope="col">Name</th>
-            </tr>
+    <div class="container import-table">
+        <table class="table table-sm table-borderless">
+            <thead>
+                <tr class="text-nowrap">
+                    <!-- Display table headings -->
+                    <th scope="col">Username</th>
+                    <th scope="col">Uh Number</th>
+                    <th scope="col">Name</th>
+                </tr>
             </thead>
-            <tbody class="import-table-tbody">
-            <tr class="import-table-thead-tbody-tr" ng-repeat="person in multiRemoveResults">
-                <td class="modal-names" ng-repeat="prop in personProps">
-                    {{ person[prop] }}
-                </td>
-            </tr>
+            <tbody>
+                <tr ng-repeat="person in multiRemoveResults">
+                    <!-- Display table data -->
+                    <td>
+                        {{ person['uid'] }}
+                        <span class="modal-black-text" ng-if="person['uid'] === ''">
+                            N/A
+                            <span class="fa fa-question-circle clickable" aria-hidden="true"
+                               data-toggle="tooltip" data-boundary="window" onmouseover="$(this).tooltip('toggle')"
+                               th:title="#{screen.message.common.tooltip.username.notApplicable}">
+                            </span>
+                        </span>
+                    </td>
+                    <td>{{ person['uhUuid'] }}</td>
+                    <td>{{ person['name'] }}</td>
+                </tr>
             </tbody>
         </table>
     </div>
 </div>
-<div ng-show="membersNotInList.length > 0" class="modal-body">
-    <span class="modal-black-text">Invalid Users: </span>
+<div ng-if="membersNotInList.length > 0" class="modal-body">
+    <span class="modal-black-text">Not in list: </span>
     <span class="modal-black-text">{{membersNotInList}}</span>
 </div>
 <div class="modal-footer">
-    <button class="btn btn-primary" ng-click="removeModalProceed()">Remove</button>
-    <button class="btn btn-light" ng-click="removeModalCancel()" data-dismiss="modal">Cancel</button>
+    <button class="btn btn-primary" ng-click="proceedRemoveModal()">Remove</button>
+    <button class="btn btn-light" ng-click="cancelRemoveModal()" data-dismiss="modal">Cancel</button>
 </div>
 
 </html>

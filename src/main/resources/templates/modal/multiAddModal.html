@@ -1,0 +1,85 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<div class="modal-header">
+    <h5 class="modal-title" id="modal-title">Add Members</h5>
+    <button type="button" class="close" data-dismiss="dialog" ng-click="cancelAddModal()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body" id="modal-body">
+    <p>
+        <span class="modal-black-text">Are you sure you want to add the following to the </span>
+        <span class="modal-black-text">{{listName}} list?</span>
+    </p>
+    <div class="container import-table">
+        <table class="table table-sm table-borderless">
+            <thead>
+                <tr class="text-nowrap">
+                    <!-- Display table headings -->
+                    <th scope="col">Username</th>
+                    <th scope="col">UH Number</th>
+                    <th scope="col">Name</th>
+                    <th scope="col" class="text-center"  ng-if="listName !== 'owners'">
+                        Basis
+                        <span class="fa fa-info-circle clickable" ng-if="listName === 'Include'"
+                              data-toggle="tooltip" data-boundary="window" onmouseover="$(this).tooltip('toggle')"
+                              th:title="#{screen.message.modal.multi.add.tooltip.inBasis.include}" aria-hidden="true">
+                        </span>
+                        <span class="fa fa-info-circle clickable" ng-if="listName === 'Exclude' && !allowOptIn"
+                              data-toggle="tooltip" data-boundary="window" onmouseover="$(this).tooltip('toggle')"
+                              th:title="#{screen.message.modal.multi.add.tooltip.inBasis.exclude}" aria-hidden="true">
+                        </span>
+                        <span class="fa fa-info-circle clickable" ng-if="listName === 'Exclude' && allowOptIn"
+                              data-toggle="tooltip" data-boundary="window" onmouseover="$(this).tooltip('toggle')"
+                              th:title="#{screen.message.modal.multi.add.tooltip.not.inBasis.exclude}" aria-hidden="true">
+                        </span>
+                    </th>
+                    <th scope="col" class="text-center" ng-if="listName !== 'owners' && listName === 'Exclude'">
+                        Include
+                        <span class="fa fa-info-circle clickable" aria-hidden="true"
+                              data-toggle="tooltip" data-boundary="window" onmouseover="$(this).tooltip('toggle')"
+                              th:title="#{screen.message.modal.multi.add.tooltip.inInclude}">
+                        </span>
+                    </th>
+                    <th scope="col" class="text-center" ng-if="listName !== 'owners' && listName === 'Include'">
+                        Exclude
+                        <span class="fa fa-info-circle clickable" aria-hidden="true"
+                              data-toggle="tooltip" data-boundary="window" onmouseover="$(this).tooltip('toggle')"
+                              th:title="#{screen.message.modal.multi.add.tooltip.inExclude}">
+                        </span>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="person in multiAddResults">
+                    <!-- Display table data -->
+                    <td>
+                        {{ person['uid'] }}
+                        <span class="modal-black-text" ng-if="!person['uid']">
+                            N/A
+                            <span class="fa fa-question-circle clickable" aria-hidden="true"
+                            data-toggle="tooltip" data-boundary="window" onmouseover="$(this).tooltip('toggle')"
+                            th:title="#{screen.message.common.tooltip.username.notApplicable}">
+                            </span>
+                        </span>
+                    </td>
+                    <td>{{ person['uhUuid'] }}</td>
+                    <td>{{ person['name'] }}</td>
+                    <td class="text-center" ng-if="listName !== 'owners'">
+                        {{ person['inBasis'] }}
+                    </td>
+                    <td class="text-center" ng-if="listName !== 'owners' && listName === 'Exclude'">
+                        {{ person['inInclude'] }}
+                    </td>
+                    <td class="text-center" ng-if="listName !== 'owners' && listName === 'Include'">
+                        {{ person['inExclude'] }}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-click="proceedAddModal()">Add</button>
+    <button class="btn btn-light" ng-click="cancelAddModal()" data-dismiss="modal">Cancel</button>
+</div>
+</html>

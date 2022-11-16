@@ -89,18 +89,8 @@ form.seamless {
 
 /* Styling for multi-add modal tables */
 .import-table {
-    &-tbody {
-        display: block;
-        height: 175px;
-        overflow-y: auto;
-    }
-
-    &-thead-tbody-tr {
-        display: table;
-        width: 100%;
-        table-layout: fixed;
-        white-space: nowrap;
-    }
+    max-height: 25rem;
+    overflow-y: auto;
 }
 
 .clickable {

@@ -236,6 +236,26 @@ public class GroupingsRestControllerTest {
 
     @Test
     @WithMockUhUser
+    public void membersAttributesTest() throws Exception {
+        String uri = REST_CONTROLLER_BASE + "members/";
+        List<String> members = new ArrayList<>();
+        members.add(USERNAME);
+
+        given(httpRequestService.makeApiRequestWithBody(eq(USERNAME), anyString(), anyList(), eq(HttpMethod.POST)))
+                .willReturn(new ResponseEntity(HttpStatus.OK));
+
+        assertNotNull(mockMvc.perform(post(uri).with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(JsonUtil.asJson(members)))
+                .andExpect(status().isOk())
+                .andReturn());
+
+        verify(httpRequestService, times(1))
+                .makeApiRequestWithBody(eq(USERNAME), anyString(), anyList(), eq(HttpMethod.POST));
+    }
+
+    @Test
+    @WithMockUhUser
     public void membershipResultsTest() throws Exception {
         String uri = REST_CONTROLLER_BASE + "members/memberships";
 

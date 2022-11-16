@@ -53,6 +53,21 @@
              * @param {function} callback - the function to perform on a successful request (200)
              * @param {function} callError - Execute if response returns as an error.
              */
+            loadDataWithBody(url, data, callback, callError) {
+                $http.post(encodeURI(url), data)
+                    .then(function (response) {
+                        callback(response.data);
+                    }, function (response) {
+                        callError(response);
+                    });
+            },
+
+            /**
+             * Perform a POST request to the specified URL.
+             * @param {string} url - the URL to perform the request on
+             * @param {function} callback - the function to perform on a successful request (200)
+             * @param {function} callError - Execute if response returns as an error.
+             */
             updateData(url, callback, callError) {
                 $http.post(encodeURI(url))
                     .then(function (response) {
