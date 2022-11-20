@@ -31,7 +31,9 @@
     </div>
     <div class="container">
         <div id="overlay" ng-show="loading">
-            <div class="loader" ng-show="loading"></div>
+            <div class="d-flex justify-content-center">
+            <div class="spinner-border text-light" style="width: 7rem; height: 7rem; margin-top: 17em;" ng-show="loading"></div>
+                </div>
         </div>
         <div ng-show="!showGrouping" id="adminContainer" class="hide-content">
             <div class="tab-content"
@@ -294,7 +296,7 @@
                                     </div>
                                     <div ng-if="!l.inOwner && !l.inInclude && !l.inExclude">
                                         <label aria-label="Remove"><input type="checkbox"
-                                                      ng-model="l.isSelected" ng-change="update(l)" disabled></label>
+                                                                          ng-model="l.isSelected" ng-change="update(l)" disabled></label>
                                     </div>
                                 </td>
                             </tr>

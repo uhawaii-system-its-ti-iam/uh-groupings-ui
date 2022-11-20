@@ -4,7 +4,7 @@
             <thead>
             <tr>
                 <th ng-click="sortBy('groupingsList', 'pagedItemsGroupings', 'name')"
-                    class="w-35 clickable align-middle">
+                    class="w-35 align-middle" role="button">
                     Grouping Name
                     <i class="fa sort-icon"
                        ng-show="columnSort.groupingsList.property === 'name' || !columnSort.groupingsList"
@@ -19,7 +19,7 @@
                 </th>
                 <th ng-click="sortBy('groupingsList', 'pagedItemsGroupings', 'path')"
                     ng-show="showPathColumn"
-                    class="clickable d-none d-sm-table-cell">
+                    class=" d-none d-sm-table-cell" role="button">
                     Grouping Path
                     <i class="fa sort-icon" ng-show="columnSort.groupingsList.property === 'path'"
                        ng-class="{ reverse: columnSort.groupingsList.reverse }"></i>
@@ -28,7 +28,7 @@
             </thead>
             <tbody class="table table-borderless">
             <tr class="row-height" ng-repeat="l in pagedItemsGroupings[currentPageGroupings] ">
-                <td class="w-35 p-10 clickable align-middle" tabindex="0" aria-label="Click to Manage {{l.name}}"
+                <td class="w-35 p-10 align-middle" role="button" tabindex="0" aria-label="Click to Manage {{l.name}}"
                     ng-keypress="$event.keyCode === 13 ? displayGrouping(currentPageGroupings, $index) : null"
                     ng-click="displayGrouping(currentPageGroupings, $index)">
                     <i class="far fa-fw fa-edit" aria-hidden="true"></i>
@@ -52,7 +52,7 @@
                                tooltip-on-truncate="{{l.description}}" value={{l.path}} id={{l.path}}>
                         <div class="hover-text" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="copy">
                             <div class="hover-text" data-toggle="popover" data-placement="top" data-trigger="click" data-content="copied!">
-                                <button class="btn btn-sm btn-clipboard" aria-label="Copy Path Button" tabindex="-1"
+                                <button class="btn btn-sm pt-0 px-2" aria-label="Copy Path Button" tabindex="-1"
                                     ng-click=copyPath(l) ng-mouseover=hoverCopy()>
                                 <i class="far fa-fw fa-clipboard" aria-hidden="true"></i>
                                 </button>

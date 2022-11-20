@@ -7,12 +7,12 @@
                 <h3>User Options</h3>
                 <div>
                     <div class="form-check">
-                        <input type="checkbox" class="form-check-input" ng-model="allowOptIn" id="allowOptIn"
+                        <input type="checkbox" class="position-relative ml-0" ng-model="allowOptIn" id="allowOptIn"
                                ng-change="updateAllowOptIn()"/>
                         <label class="form-check-label" for="allowOptIn">
                             Allow people to add themselves to this group
                         </label>
-                        <span class="fa fa-question-circle clickable"
+                        <span class="fa fa-question-circle" role="button"
                               data-toggle="tooltip" data-placement="right"
                               tabindex="0"
                               th:title="#{screen.message.common.tooltip.preference.allowOptIn}"
@@ -20,12 +20,12 @@
                               ng-keypress='$event.keyCode === 13 ? createPreferenceInfoModal(\'' + #{screen.message.common.tooltip.preference.allowOptIn} + '\') : null'"></span>
                     </div>
                     <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="allowOptOut" ng-model="allowOptOut"
+                        <input type="checkbox" class="position-relative ml-0" id="allowOptOut" ng-model="allowOptOut"
                                ng-change="updateAllowOptOut()"/>
                         <label class="form-check-label" for="allowOptOut">
                             Allow people to remove themselves from this group
                         </label>
-                        <span class="fa fa-question-circle clickable"
+                        <span class="fa fa-question-circle" role="button"
                               data-toggle="tooltip" data-placement="right"
                               tabindex="0"
                               th:title="#{screen.message.common.tooltip.preference.allowOptOut}"
@@ -37,13 +37,13 @@
                 <div>
                     <form ng-submit="resetGroup()">
                         <div class="form-check">
-                            <input type="checkbox" class="form-check-input" id="resetIncludeCheck"
+                            <input type="checkbox" class="position-relative ml-0" id="resetIncludeCheck"
                                    ng-click="updateIncludeCheck()"
                                    ng-model="includeCheck" ng-disabled="includeDisable">
                             <label class="form-check-label" for="resetIncludeCheck">Reset Include</label>
                         </div>
                         <div class="form-check">
-                            <input type="checkbox" class="form-check-input" id="resetExcludeCheck"
+                            <input type="checkbox" class="position-relative ml-0" id="resetExcludeCheck"
                                    ng-click="updateExcludeCheck()"
                                    ng-model="excludeCheck" ng-disabled="excludeDisable">
                             <label class="form-check-label" for="resetExcludeCheck">Reset Exclude</label>
@@ -52,7 +52,7 @@
                             <button class="btn btn-primary btn-sm" type="submit"
                                     ng-disabled="excludeCheck == false && includeCheck == false">Reset Selected
                             </button>
-                            <span class="fa fa-question-circle clickable"
+                            <span class="fa fa-question-circle" role="button"
                                   data-toggle="tooltip" data-placement="right"
                                   tabindex="0"
                                   th:title="#{screen.message.common.tooltip.preference.resetGroup}"
@@ -74,7 +74,7 @@
                                 <label class="form-check-label" for="syncDest.isSynced-{{syncDest.name}}">
                                     {{ syncDest.description }}
                                 </label>
-                                <span class="fa fa-question-circle clickable"
+                                <span class="fa fa-question-circle" role="button"
                                       data-toggle="tooltip" data-placement="right"
                                       tabindex="0"
                                       title="{{syncDest.tooltip}}"

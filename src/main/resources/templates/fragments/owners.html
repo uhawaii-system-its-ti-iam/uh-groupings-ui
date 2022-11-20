@@ -17,14 +17,14 @@
             <table class="table table-striped table-hover" aria-live="assertive">
                 <thead>
                 <tr>
-                    <th scope="col" class="clickable"
+                    <th scope="col" role="button"
                         ng-click="sortBy('groupingOwners', 'pagedItemsOwners', 'name')">
                         Name
                         <i class="fa sort-icon"
-                           ng-show="columnSort.groupingOwners.property === 'name' || !columnSort.groupingOwners"
-                           ng-class="{ reverse: columnSort.groupingOwners.reverse }"></i>
+                        ng-show="columnSort.groupingOwners.property === 'name' || !columnSort.groupingOwners"
+                        ng-class="{ reverse: columnSort.groupingOwners.reverse }"></i>
                     </th>
-                    <th scope="col" class="clickable"
+                    <th scope="col" role="button"
                         ng-click="sortBy('groupingOwners', 'pagedItemsOwners', 'username')">
                         UH Username
                         <i class="fa sort-icon" ng-show="columnSort.groupingOwners.property === 'username'"
@@ -34,9 +34,9 @@
                 </thead>
                 <tbody>
                 <tr ng-repeat="owner in pagedItemsOwners[currentPageOwners]" class="table table-sm">
-                    <td class="p-10" aria-label="{{owner.name}}">
+                    <td class="overflow-auto py-1 px-3" aria-label="{{owner.name}}">
                         {{owner.name}}
-                        <span class="far fa-trash-alt fa-pull-right clickable pt-1" role="button"
+                        <span class="far fa-trash-alt fa-pull-right pt-1" role="button"
                               data-toggle="tooltip" data-placement="top" data-boundary="window"
                               onmouseover="$(this).tooltip('show')" onmouseout="$(this).tooltip('dispose')"
                               tabindex="0" aria-label="Remove {{owner.name}} from the Owner members list"
@@ -45,11 +45,11 @@
                               ng-click="removeOwnerWithTrashcan(currentPageOwners, $index)">
                     </span>
                     </td>
-                    <td class="p-10">
+                    <td class="overflow-auto py-1 px-3">
                         {{owner.username}}
                         <div ng-if="owner.username === ''">
                             <span>N/A</span>
-                            <i class="fa fa-question-circle clickable" aria-hidden="true"
+                            <i class="fa fa-question-circle" aria-hidden="true" role="button"
                                data-toggle="tooltip" data-placement="right"
                                onmouseover="$(this).tooltip('show')" onmouseout="$(this).tooltip('dispose')"
                                th:title="#{screen.message.common.tooltip.username.notApplicable}">
@@ -84,7 +84,7 @@
                                     ng-click="removeOnClick('owners')">
                                 Remove
                             </button>
-                            <div class="spinner-border spinner-border-sm inline-block" ng-if="waitingForImportResponse">
+                            <div class="spinner-border spinner-border-sm d-inline-block" ng-if="waitingForImportResponse">
                             </div>
                         </div>
                     </div>

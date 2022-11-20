@@ -124,7 +124,7 @@
                     <div class="dashboard-item-icon text-primary mb-3">
                         <i class="fa fa-key fa-3x mr-4" aria-hidden="true"></i>
                     </div>
-                    <div class="dashboard-item-content">
+                    <div>
                         <h2 class="h4">Administration</h2>
                         <p>Manage the list of Administrators for this service. Search for and manage any grouping on
                             behalf of the owner.</p>
@@ -133,11 +133,11 @@
                 </div>
                 <div class="col-md-4 mb-5 mb-md-0" sec:authorize="hasRole('ROLE_UH')"
                      ng-controller="GeneralJsController" data-ng-init="init()">
-                    <div class="dashboard-item-icon text-primary mb-3">
+                    <div class="text-primary mb-3">
                         <i class="fa fa-id-card fa-3x mr-4" aria-hidden="true"></i>
                         <span ng-bind="numberOfMemberships" id="memberCount" class="h1"></span>
                     </div>
-                    <div class="dashboard-item-content">
+                    <div>
                         <h2 class="h4">Memberships</h2>
                         <p>View and manage my memberships. Search for new groupings to join as a member.</p>
                         <a class="btn dark-teal-bg btn-bottom" th:href="@{/memberships}">Memberships</a>
@@ -145,11 +145,11 @@
                 </div>
                 <div class="col-md-4" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_OWNER')"
                      ng-controller="GeneralJsController" data-ng-init="init()">
-                    <div class="dashboard-item-icon text-primary mb-3">
+                    <div class="text-primary mb-3">
                         <i class="fa fa-wrench fa-3x mr-3" aria-hidden="true"></i>
                         <span ng-bind="numberOfGroupings" id="groupCount" class="h1"></span>
                     </div>
-                    <div class="dashboard-item-content">
+                    <div>
                         <h2 class="h4">Groupings</h2>
                         <p>View and manage groupings I own. Manage members, configure grouping options and sync
                             destinations.</p>

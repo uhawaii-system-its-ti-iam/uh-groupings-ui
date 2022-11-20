@@ -3,7 +3,7 @@
     <div ng-show="!errorDismissed && !waitingForImportResponse">
         <!--message for empty input-->
         <div ng-if="emptyInput"
-             class="float-md-left mt-3 form-alert alert alert-danger fade show">
+             class="border float-md-left my-3 px-3 pt-2 h-50 rounded alert-danger show ">
             <p th:utext="#{screen.message.modal.add.empty}"></p>
         </div>
         <!--message for invalid input when removing-->
@@ -14,24 +14,24 @@
         </div>
         <!--message for invalid input when adding-->
         <div ng-if="user.length > 0 && (resStatus === 404 || resStatus === 500)"
-             class="float-md-left mt-3 alert alert-danger fade show">
+             class="border float-md-left my-3 px-3 pt-2 h-50 rounded alert-danger show">
             <p th:text="#{screen.message.modal.add.fail}"></p>
             <p th:text="#{screen.message.modal.add.ensureValid}"></p>
         </div>
         <!--message for adding a member already in Include or Exclude or Owner -->
         <div ng-if="user.length > 0 && swap === false"
-             class="float-md-left mt-3 form-alert alert alert-danger fade show">
+             class="border float-md-left my-3 px-3 pt-2 h-50 rounded alert-danger show">
             <div ng-if="listName === 'Include'">
-                <p>{{user}} is already in Include</p>
+                <p>{{user}} is already in Include.</p>
             </div>
             <div ng-if="listName === 'Exclude'">
-                <p>{{user}} is already in Exclude</p>
+                <p>{{user}} is already in Exclude.</p>
             </div>
             <div ng-if="listName === 'owners'">
-                <p>{{user}} is already in Owner</p>
+                <p>{{user}} is already in Owner.</p>
             </div>
             <div ng-if="listName === 'admins'">
-                <p>{{user}} is already an admin</p>
+                <p>{{user}} is already an admin.</p>
             </div>
         </div>
     </div>
