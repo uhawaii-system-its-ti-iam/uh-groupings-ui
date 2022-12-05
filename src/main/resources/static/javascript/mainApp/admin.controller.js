@@ -87,7 +87,7 @@
          * @param validUser
          */
         $scope.getMemberDetails = function (validUser) {
-            groupingsService.getMembershipAssignmentForUser(
+            groupingsService.managePersonResults(
                 $scope.searchForUserGroupingInformationOnSuccessCallback,
                 $scope.searchForUserGroupingInformationOnErrorCallback,
                 $scope.personToLookup);

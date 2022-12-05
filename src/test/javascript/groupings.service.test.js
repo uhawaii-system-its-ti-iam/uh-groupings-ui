@@ -310,6 +310,20 @@ describe("GroupingsService", function () {
         });
     });
 
+    describe("managePersonResults", function () {
+        it("should call dataProvider.loadData", function () {
+            spyOn(dp, "loadData");
+            gs.managePersonResults(onSuccess, onError);
+            expect(dp.loadData).toHaveBeenCalled();
+        });
+
+        it("should use the correct path", function () {
+            gs.managePersonResults(onSuccess, onError);
+            httpBackend.expectGET(BASE_URL + "members/groupings/all/").respond(200);
+            expect(httpBackend.flush).not.toThrow();
+        });
+    });
+
     describe("getNumberOfMemberships", function () {
         it("should call dataProvider.loadData", function () {
             spyOn(dp, "loadData");

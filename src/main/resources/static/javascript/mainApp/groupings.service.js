@@ -191,6 +191,14 @@
                 dataProvider.loadData(endpoint, onSuccess, onError);
             },
 
+            /**
+             * Get a list of all groupings that a user is associated with.
+             */
+            managePersonResults(onSuccess, onError) {
+                let endpoint = BASE_URL + "members/groupings/all/";
+                dataProvider.loadData(endpoint, onSuccess, onError);
+            },
+
 
             /**
              * Get the number of memberships that the current user is associated with.
