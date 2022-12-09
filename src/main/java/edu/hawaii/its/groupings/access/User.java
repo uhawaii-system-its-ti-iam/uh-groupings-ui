@@ -45,6 +45,10 @@ public class User extends org.springframework.security.core.userdetails.User {
         return attributes.getValue("cn");
     }
 
+    public String getGivenName() {
+        return attributes.getValue("givenName");
+    }
+
     public boolean hasRole(Role role) {
         return getAuthorities().contains(new SimpleGrantedAuthority(role.longName()));
     }

@@ -104,7 +104,7 @@
                         </div>
                     </div>
                     <div class="col-sm-9 col-md-10">
-                        <h1 class="h3 text-center text-md-left">Welcome, <span sec:authentication="name"></span>!</h1>
+                        <h1 class="h3 text-center text-md-left">Welcome, <span sec:authentication="principal.givenName"></span>!</h1>
                         <div>
                             <h1 class="h3 text-center text-md-left">Role:
                                 <span th:switch="true">
