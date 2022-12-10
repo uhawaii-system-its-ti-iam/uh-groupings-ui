@@ -206,12 +206,13 @@ public class GroupingsRestController {
     }
 
     /**
-     * Get a list of all groupings that the current user is associated with.
+     * Get a list of all groupings that the uhIdentifier is associated with.
      */
-    @GetMapping(value = "/members/groupings/all")
-    public ResponseEntity<String> managePersonResults(Principal principal) {
+    @GetMapping(value = "/members/{uhIdentifier}/groupings/all")
+    public ResponseEntity<String> managePersonResults(Principal principal, @PathVariable String uhIdentifier) {
         logger.info("Entered REST managePersonResults...");
-        String uri = String.format(API_2_1_BASE + "/members/%s/groupings/all", principal.getName());
+        String safeInput = policy.sanitize(uhIdentifier);
+        String uri = String.format(API_2_1_BASE + "/members/%s/groupings/all", safeInput);
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
     }
 
