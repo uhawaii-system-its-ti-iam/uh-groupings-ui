@@ -87,10 +87,10 @@
          * @param validUser
          */
         $scope.getMemberDetails = function (validUser) {
-            groupingsService.managePersonResults(
+            groupingsService.managePersonResults( $scope.personToLookup,
                 $scope.searchForUserGroupingInformationOnSuccessCallback,
-                $scope.searchForUserGroupingInformationOnErrorCallback,
-                $scope.personToLookup);
+                $scope.searchForUserGroupingInformationOnErrorCallback
+               );
             groupingsService.getMemberAttributes(validUser, function (person) {
                 $scope.initMemberDisplayName(person);
                 if ($scope.user != null) {
