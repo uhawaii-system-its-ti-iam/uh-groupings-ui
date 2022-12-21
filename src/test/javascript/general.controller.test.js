@@ -48,10 +48,10 @@ describe("GeneralController", () => {
             httpBackend.whenGET(BASE_URL + "currentUser")
                 .respond(200, mockUser);
 
-            httpBackend.whenGET(BASE_URL + "members/memberships/")
+            httpBackend.whenGET(BASE_URL + "members/memberships/count")
                 .respond(200, mockResponse);
 
-            httpBackend.whenGET(BASE_URL + "owners/grouping/")
+            httpBackend.whenGET(BASE_URL + "owners/groupings/count")
                 .respond(200, mockResponse);
         });
 
@@ -67,25 +67,25 @@ describe("GeneralController", () => {
             expect(scope.currentUser).toEqual("jdoe");
         });
 
-        it("should make an API call to getNumberOfMembeships", () => {
-            httpBackend.expectGET(BASE_URL + "members/memberships/").respond(200, mockResponse);
+        it("should make an API call to getNumberOfMemberships", () => {
+            httpBackend.expectGET(BASE_URL + "members/memberships/count").respond(200, mockResponse);
             expect(httpBackend.flush).not.toThrow();
         });
 
         it("should initialize numberOfMemberships", () => {
-            httpBackend.expectGET(BASE_URL + "members/memberships/").respond(200, mockResponse);
+            httpBackend.expectGET(BASE_URL + "members/memberships/count").respond(200, mockResponse);
             httpBackend.flush();
 
             expect(scope.numberOfMemberships).toEqual(999);
         });
 
         it("should make an API call to getNumberOfGroupings", () => {
-            httpBackend.expectGET(BASE_URL + "owners/grouping/").respond(200, mockResponse);
+            httpBackend.expectGET(BASE_URL + "owners/groupings/count").respond(200, mockResponse);
             expect(httpBackend.flush).not.toThrow();
         });
 
         it("should initialize numberOfGroupings", () => {
-            httpBackend.expectGET(BASE_URL + "owners/grouping/").respond(200, mockResponse);
+            httpBackend.expectGET(BASE_URL + "owners/groupings/count").respond(200, mockResponse);
             httpBackend.flush();
 
             expect(scope.numberOfGroupings).toEqual(999);
@@ -1247,9 +1247,9 @@ describe("GeneralController", () => {
                 scope.userToAdd = "validUser";
                 httpBackend.whenGET(BASE_URL + "currentUser")
                     .respond(200);
-                httpBackend.whenGET(BASE_URL + "members/memberships/")
+                httpBackend.whenGET(BASE_URL + "members/memberships/count")
                     .respond(200);
-                httpBackend.whenGET(BASE_URL + "owners/grouping/")
+                httpBackend.whenGET(BASE_URL + "owners/groupings/count")
                     .respond(200);
                 httpBackend.whenGET(BASE_URL + "members/" + validUser.username)
                     .respond(200, validUser);
@@ -1277,9 +1277,9 @@ describe("GeneralController", () => {
             beforeEach(() => {
                 httpBackend.whenGET(BASE_URL + "currentUser")
                     .respond(200);
-                httpBackend.whenGET(BASE_URL + "members/memberships/")
+                httpBackend.whenGET(BASE_URL + "members/memberships/count")
                     .respond(200);
-                httpBackend.whenGET(BASE_URL + "owners/grouping/")
+                httpBackend.whenGET(BASE_URL + "owners/groupings/count")
                     .respond(200);
                 httpBackend.whenGET(BASE_URL + "members/" + "invalidUser")
                     .respond(200, invalidUser);
