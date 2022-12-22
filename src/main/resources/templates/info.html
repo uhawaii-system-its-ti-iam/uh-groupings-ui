@@ -84,37 +84,20 @@
             <h2 class="h5 text-uppercase font-weight-bold pb-4 text-center">What Happens If</h2>
             <div class="row">
                 <div class="col-md-12">
-                    <h3>I was an owner of just one grouping and someone (me or another owner) deleted my ownership
-                        while I was still logged in.</h3>
-                    <p class="pb-3">You will still see the Groupings menu option, but you will get an error message when
-                        you
-                        click on it. Next time you log in, the Groupings menu option will no longer appear, assuming
-                        that you
-                        don't reaquire the ownership of a grouping before then.
-                    </p>
+                    <h3 th:utext="#{screen.message.info.page.question1}"></h3>
+                    <p class="pb-3" th:utext="#{screen.message.info.page.answer1}"></p>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-12">
-                    <h3>I was not an owner of any groupings and someone made me an owner while I was still logged
-                        in.
-                    </h3>
-                    <p class="pb-3">You will have to log out and then log back in again to see the Groupings menu
-                        option.
-                    </p>
+                    <h3 th:utext="#{screen.message.info.page.question2}"></h3>
+                    <p class="pb-3" th:utext="#{screen.message.info.page.answer2}"></p>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-12">
-                    <h3>I was an admin and someone (me or another admin) deleted my admin role while I was still
-                        logged in.
-                    </h3>
-                    <p class="pb-3">You will still see the Admin menu option, but you will get an error message when you
-                        click on it.
-                        Next time you log in, the Admin menu option will no longer appear, assuming that you don't
-                        reaquire
-                        the Admin role before then.
-                    </p>
+                    <h3 th:utext="#{screen.message.info.page.question3}"></h3>
+                    <p class="pb-3" th:utext="#{screen.message.info.page.answer3}"></p>
                 </div>
             </div>
         </div>
