@@ -1,195 +1,120 @@
 (function () {
 
     /**
-     * Controller for the timeout functionality. When a user is idle for more than 30 min, user will be logged out.
+     * Controller for the timeout functionality. When a user is AFK for more than 30 min, user will be logged out.
      * Also creates timeout warning modal when 5 minutes are left in the timer.
      *
      * If user clicks or presses any key within the 30 min of inactivity, timer is reset.
      *
-     * @param $scope - Binding between controller and HTML page
-     * @param $window - A reference to the browser's window object
-     * @param $uibModal - Creates modal
-     * @param dataProvider - Used for HTTP requests
-     * @param BASE_URL - Base url for api calls
-     * @param $timeout - AngularJS wrapper for window.setTimeout, used to implement session timeout
-     * @param $interval - AngularJS wrapper for window.setInterval, used to implement session timeout
+     * @param $scope - binding between controller and HTML page
+     * @param $window -
+     * @param $uibModal - creates modal
+     * @param dataProvider - http request
+     * @param BASE_URL - base url for api calls
      * @constructor
      */
-    function TimeoutJsController($scope, $window, $uibModal, $controller, dataProvider, BASE_URL, $timeout, $interval) {
+    function TimeoutJsController($scope, $window, $uibModal, $controller, dataProvider, BASE_URL) {
 
         angular.extend(this, $controller("GeneralJsController", { $scope: $scope }));
 
-        let createTimeoutModalPromise = {};
-        let countdownTimerPromise = {};
-        let isModalOpen = false;
-        const MAX_TIME_IDLE = 1000 * 60 * 25; // Time until modal opens - 25 minutes in milliseconds
-        const TIME_TO_LOGOUT = 60 * 5; // When modal opens, seconds left until user is logged out
-
-        $scope.secondsRemaining = TIME_TO_LOGOUT; // Seconds remaining before log out
-        $scope.timeRemaining = ""; // Formatted string of seconds remaining
-
-        angular.element(function () {
-            // Start timeouts
-            createTimeoutModalPromise = $timeout(() => {
-                $scope.createTimeoutModal();
-            }, MAX_TIME_IDLE);
-
-            // Attach callback when the createTimeoutModalPromise is canceled
-            createTimeoutModalPromise.then(() => {
-                // Timeout ends and function is executed
-            }, () => {
-                // User resets timer or function execution failed
-                restartTimeouts();
-            });
-
-            // If user clicks, reset timeout
-            $(this).click(function (e) {
-                if (!isModalOpen) {
-                    $timeout.cancel(createTimeoutModalPromise);
-                }
-            });
-            // If user presses a key on the keyboard reset timeout
-            $(this).keypress(function (e) {
-                if (!isModalOpen) {
-                    $timeout.cancel(createTimeoutModalPromise);
-                }
-            });
-        });
-
+        $scope.seconds = 300;
+        $scope.idleTime = 0;
         /**
-         * Clear timeouts and intervals when DOM is destroyed.
+         * Every minute, checks whether or not user has clicked or pressed button
          */
-        $scope.$on("$destroy", function (event) {
-            if (angular.isDefined(createTimeoutModalPromise)) {
-                $timeout.cancel(createTimeoutModalPromise);
-                createTimeoutModalPromise = {};
-            }
-            if (angular.isDefined(countdownTimerPromise)) {
-                $timeout.cancel(countdownTimerPromise);
-                countdownTimerPromise = {};
-            }
+        $(document).ready(function () {
+            //Increment the idle time counter every minute.
+            let idleInterval = setInterval($scope.timerIncrement, 60000); // 1 minute
+            //Zero the idle timer on mouse movement.
+            $(this).click(function (e) {
+                $scope.idleTime = 0;
+            });
+
+            $(this).keypress(function (e) {
+                $scope.idleTime = 0;
+            });
         });
 
         /**
-         * Create a countdown timer.
+         *  Checks on time of inactivity, if time is meet, log out user.
+         */
+        $scope.timerIncrement = function () {
+            $scope.idleTime++;
+            if ($scope.idleTime === 25) { // Create warning modal when 5 min left
+                $scope.countdownTimer = setInterval(timer, 1000);
+                $scope.createTimeoutModal();
+            }
+            if ($scope.idleTime === 30) { // Logout user after 30 min has passed
+                let r = new XMLHttpRequest();
+                r.open("POST", "/uhgroupings/logout", false);
+                r.setRequestHeader("X-XSRF-TOKEN", $scope.getCookie("XSRF-TOKEN"));
+                r.send();
+                $window.location.href = "/uhgroupings/";
+            }
+        };
+
+        /**
+         * Creates a countdown timer.
          */
         function timer() {
-            $scope.timeRemaining = secondsToMinutes($scope.secondsRemaining);
-            if ($scope.secondsRemaining <= 0) {
-                $scope.logoutOnIdle();
-                restartTimeouts();
-            }
-            $scope.secondsRemaining--;
-        }
-
-        /**
-         * Convert seconds to minutes and return as a formatted string.
-         */
-        function secondsToMinutes(seconds) {
-            let minutes = Math.round((seconds - 30) / 60);
-            let remainingSeconds = seconds % 60;
+            let minutes = Math.round(($scope.seconds - 30) / 60);
+            let remainingSeconds = $scope.seconds % 60;
             if (remainingSeconds < 10) {
                 remainingSeconds = "0" + remainingSeconds;
             }
-            return `${minutes}:${remainingSeconds}`;
-        }
-
-        /**
-         * Restart createTimeoutModalPromise.
-         */
-        function restartTimeouts() {
-            if (angular.isDefined(createTimeoutModalPromise)) {
-                createTimeoutModalPromise = {};
-                createTimeoutModalPromise = $timeout(() => {
-                    $scope.createTimeoutModal();
-                }, MAX_TIME_IDLE);
-
-                createTimeoutModalPromise.then(() => {
-                    // timeout ends and modal is created
-                }, () => {
-                    // User resets timer or function execution fails
-                    restartTimeouts();
-                });
+            $scope.$apply(function() {
+                $scope.timeleft = minutes + ":" + remainingSeconds;
+            });
+            if ($scope.seconds === 0) {
+                clearInterval($scope.countdownTimer);
+            } else {
+                $scope.seconds--;
+                $scope.$apply();
             }
         }
 
         /**
-         * Create timeout modal.
+         * Creates timeout modal.
          */
         $scope.createTimeoutModal = function () {
             $scope.timeoutModalInstance = $uibModal.open({
                 templateUrl: "modal/timeoutModal",
-                scope: $scope,
-                backdrop: "static",
-                keyboard: false
+                scope: $scope
             });
-            // Callback when timeout modal is opened.
-            $scope.timeoutModalInstance.opened.then(() => {
-                countdownTimerPromise = $interval(timer, 1000); // Start 5 minute countdown
-                isModalOpen = true;
-            });
-            // Callback when timeout modal is closed.
-            // Execute when user clicks "Stay logged in" button.
             $scope.timeoutModalInstance.result.then(function () {
-                restartTimeouts();
-                restartCountdown();
-                $scope.pingServer();
-                isModalOpen = false;
+                //Filler in order to catch off click dismiss
             }, function () {
-                // Error catching if modal is not closed properly.
-                restartTimeouts();
-                restartCountdown();
+                $scope.idleTime = 0;
                 $scope.pingServer();
-                isModalOpen = false;
             });
         };
 
         /**
-         * Close timeout modal.
+         * Closes modal and restarts timer effect.
          */
         $scope.closeTimeoutModal = function () {
             $scope.timeoutModalInstance.close();
+            $scope.idleTime = 0;
+            $scope.pingServer();
         };
 
         /**
-         * Ping tomcat server with a GET request to retrieve user info.
+         * Pings tomcat server with a GET request to retrieve uses info.
          */
         $scope.pingServer = function () {
+
             const endpoint = BASE_URL + "members/aaronvil";
-            dataProvider.loadData(function () {
-            }, function () {
+
+            clearInterval($scope.countdownTimer);
+            $scope.seconds = 300;
+            dataProvider.loadData(function (res) {
+                console.log("Success in pinging tomcat");
+            }, function (res) {
+                console.log("Error in pinging tomcat");
             }, endpoint);
         };
 
-
-        /**
-         * Restart timer countdown.
-         */
-        function restartCountdown() {
-            $interval.cancel(countdownTimerPromise);
-            countdownTimerPromise = {};
-            $scope.secondsRemaining = TIME_TO_LOGOUT;
-            $scope.timeRemaining = secondsToMinutes(TIME_TO_LOGOUT);
-        }
-
-        /**
-         * Logout method used only when user is idle for too long. The other logout method is implemented in the html.
-         */
-        $scope.logoutOnIdle = () => {
-            let request = new XMLHttpRequest();
-            request.open("POST", "/uhgroupings/logout", true);
-            request.setRequestHeader("X-XSRF-TOKEN", $scope.getCookie("XSRF-TOKEN"));
-            // Attach event handler when POST request is successful.
-            request.onreadystatechange = () => {
-                if (request.readyState === XMLHttpRequest.DONE && request.status === 200) {
-                    // Redirect user to URL in location header in HTTP response, should be home page.
-                    $window.location.href = request.responseURL;
-                }
-            };
-            const requestBody = "_csrf: " + $scope.getCookie("XSRF-TOKEN");
-            request.send(requestBody);
-        };
     }
 
     UHGroupingsApp.controller("TimeoutJsController", TimeoutJsController);
-}());
+})();
