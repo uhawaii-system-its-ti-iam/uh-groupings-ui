@@ -2,12 +2,14 @@
 .nav-pills .show > .nav-link {
     background: white;
     color: #004252;
+    border-radius: 50%;
 }
 
 .nav-pills {
     .nav-link { /* Set icon styling for nav-bar icons. */
         color: $dark-teal;
         height: 44px;
+        width: 44px;
 
         &.active {
             position: relative;

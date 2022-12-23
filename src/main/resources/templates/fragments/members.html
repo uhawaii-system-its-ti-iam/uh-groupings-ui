@@ -61,14 +61,14 @@
                         {{g.username}}
                         <div ng-if="g.username === ''">
                             <span>N/A</span>
-                            <i class="fa fa-question-circle" role="button" aria-hidden="true"
+                            <i class="fa fa-question-circle" role="button" data-boundary="window" aria-hidden="true"
                                data-toggle="tooltip" data-placement="right"
                                onmouseover="$(this).tooltip('show')" onmouseout="$(this).tooltip('dispose')"
                                th:title="#{screen.message.common.tooltip.username.notApplicable}">
                             </i>
                         </div>
                     </td>
-                    <td class="basis-column overflow-auto py-1 px-3">{{ g.whereListed }}</td>
+                    <td class="basis-column overflow-auto py-1 px-3 text-nowrap">{{ g.whereListed }}</td>
                 </tr>
                 </tbody>
             </table>
