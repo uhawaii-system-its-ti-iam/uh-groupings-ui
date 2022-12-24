@@ -135,5 +135,10 @@
 @media (min-width: 377px) {
     #csvButton {
         float: right;
+
+        :disabled {
+            color: white;
+            background: gray;
+        }
     }
 }
