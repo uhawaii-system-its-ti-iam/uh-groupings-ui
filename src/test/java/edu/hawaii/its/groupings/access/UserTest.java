@@ -46,7 +46,8 @@ public class UserTest {
         Map<Object, Object> map = new HashMap<>();
         map.put("uid", "duckart");
         map.put("uhUuid", "666666");
-        map.put("cn", "Frank");
+        map.put("cn", "Frank6");
+        map.put("givenName", "Frank");
         map.put("mail", "frank@example.com");
         map.put("eduPersonAffiliation", "aff");
 
@@ -55,7 +56,8 @@ public class UserTest {
         user.setAttributes(new UhCasAttributes(map));
 
         assertThat(user.getAttribute("uid"), equalTo("duckart"));
-        assertThat(user.getName(), equalTo("Frank"));
+        assertThat(user.getName(), equalTo("Frank6"));
+        assertThat(user.getGivenName(), equalTo("Frank"));
         assertThat(user.toString(), containsString("uid=a"));
         assertThat(user.toString(), containsString("uhUuid=null"));
     }
