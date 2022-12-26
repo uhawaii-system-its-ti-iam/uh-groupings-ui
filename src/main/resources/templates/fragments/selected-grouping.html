@@ -40,7 +40,9 @@
                             <div ng-show="(descriptionLoaded)">
                                 <p class="text-light mb-0"><b>Description:</b> {{ descriptionDisplay() }} &nbsp;<button
                                         ng-click="editDescription()"
-                                        class="far fa-fw fa-edit mr-2 teal-bg border-0 text-light" tabindex="0"
+                                        class="far fa-fw fa-edit mr-2 teal-bg border-0 text-light tool"
+                                        data-toggle="tooltip" title="Edit this grouping's description"
+                                        data-placement="top"
                                         aria-label="Edit Description"
                                         role="button"></button>
                                 </p>
