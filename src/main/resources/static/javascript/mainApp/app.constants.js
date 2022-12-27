@@ -8,7 +8,8 @@ UHGroupingsApp.constant("Message", {
         LARGE_IMPORT: "Large Import Warning",
         SLOW_IMPORT: "Slow Import Warning",
         REMOVE_INPUT_ERROR  : "Error in Input",
-        NO_MEMBERS_ADDED: "No Members Were Added"
+        NO_MEMBERS_ADDED: "No Members Were Added",
+        INVALID_FILE: "Invalid File"
     },
     Body: {
         SLOW_IMPORT: "Feel free to exit your browser, an email will be sent of the add results.",
