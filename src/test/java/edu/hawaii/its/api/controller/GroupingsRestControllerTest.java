@@ -1,35 +1,5 @@
 package edu.hawaii.its.api.controller;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import edu.hawaii.its.groupings.util.JsonUtil;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.ApplicationContext;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.context.WebApplicationContext;
-
-import edu.hawaii.its.api.service.HttpRequestService;
-import edu.hawaii.its.groupings.configuration.Realm;
-import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
-import edu.hawaii.its.groupings.controller.WithMockUhUser;
-import edu.hawaii.its.groupings.exceptions.ApiServerHandshakeException;
-
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -57,6 +27,35 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
+
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.ApplicationContext;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.context.WebApplicationContext;
+
+import edu.hawaii.its.api.service.HttpRequestService;
+import edu.hawaii.its.groupings.configuration.Realm;
+import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
+import edu.hawaii.its.groupings.controller.WithMockUhUser;
+import edu.hawaii.its.groupings.exceptions.ApiServerHandshakeException;
+import edu.hawaii.its.groupings.util.JsonUtil;
 
 @RunWith(SpringRunner.class)
 @ActiveProfiles("localTest")
@@ -238,7 +237,23 @@ public class GroupingsRestControllerTest {
     @Test
     @WithMockUhUser
     public void membershipResultsTest() throws Exception {
-        String uri = REST_CONTROLLER_BASE + "members/groupings";
+        String uri = REST_CONTROLLER_BASE + "members/memberships";
+
+        given(httpRequestService.makeApiRequest(eq(USERNAME), anyString(), eq(HttpMethod.GET)))
+                .willReturn(new ResponseEntity(HttpStatus.OK));
+
+        assertNotNull(mockMvc.perform(get(uri))
+                .andExpect(status().isOk())
+                .andReturn());
+
+        verify(httpRequestService, times(1))
+                .makeApiRequest(eq(USERNAME), anyString(), eq(HttpMethod.GET));
+    }
+
+    @Test
+    @WithMockUhUser
+    public void managePersonResultsTest() throws Exception {
+        String uri = REST_CONTROLLER_BASE + "members/0000/groupings";
 
         given(httpRequestService.makeApiRequest(eq(USERNAME), anyString(), eq(HttpMethod.GET)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
@@ -254,7 +269,7 @@ public class GroupingsRestControllerTest {
     @Test
     @WithMockUhUser
     public void numberOfMembershipsTest() throws Exception {
-        String uri = REST_CONTROLLER_BASE + "/members/memberships";
+        String uri = REST_CONTROLLER_BASE + "members/memberships/count";
 
         given(httpRequestService.makeApiRequest(eq(USERNAME), anyString(), eq(HttpMethod.GET)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
@@ -432,7 +447,7 @@ public class GroupingsRestControllerTest {
     @Test
     @WithMockUhUser
     public void numberOfGroupingsTest() throws Exception {
-        String uri = REST_CONTROLLER_BASE + "owners/grouping";
+        String uri = REST_CONTROLLER_BASE + "owners/groupings/count";
 
         given(httpRequestService.makeApiRequest(eq(USERNAME), anyString(), eq(HttpMethod.GET)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));

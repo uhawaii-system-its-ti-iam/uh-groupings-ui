@@ -197,32 +197,32 @@ public class GroupingsRestController {
     /**
      * Get a list of memberships that the current user is associated with.
      */
-    @GetMapping(value = "/members/groupings")
+    @GetMapping(value = "/members/memberships")
     public ResponseEntity<String> membershipResults(Principal principal) {
         logger.info("Entered REST membershipResults...");
         String principalName = policy.sanitize(principal.getName());
-        String uri = String.format(API_2_1_BASE + "/members/%s/groupings", principalName);
+        String uri = String.format(API_2_1_BASE + "/members/%s/memberships", principalName);
         return httpRequestService.makeApiRequest(principalName, uri, HttpMethod.GET);
     }
 
     /**
      * Get a list of all groupings that the uhIdentifier is associated with.
      */
-    @GetMapping(value = "/members/{uhIdentifier}/groupings/all")
+    @GetMapping(value = "/members/{uhIdentifier}/groupings")
     public ResponseEntity<String> managePersonResults(Principal principal, @PathVariable String uhIdentifier) {
         logger.info("Entered REST managePersonResults...");
         String safeInput = policy.sanitize(uhIdentifier);
-        String uri = String.format(API_2_1_BASE + "/members/%s/groupings/all", safeInput);
+        String uri = String.format(API_2_1_BASE + "/members/%s/groupings", safeInput);
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
     }
 
     /**
      * Get the number of memberships that the current user is associated with.
      */
-    @GetMapping(value = "/members/memberships")
+    @GetMapping(value = "/members/memberships/count")
     public ResponseEntity<String> numberOfMemberships(Principal principal) {
         logger.info("Entered REST numberOfMemberships...");
-        String uri = String.format(API_2_1_BASE + "/groupings/members/%s/memberships", principal.getName());
+        String uri = String.format(API_2_1_BASE + "/members/%s/memberships/count", principal.getName());
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
     }
 
@@ -342,10 +342,10 @@ public class GroupingsRestController {
     /**
      * Request the number of grouping paths owned by principal.
      */
-    @GetMapping(value = "/owners/grouping")
+    @GetMapping(value = "/owners/groupings/count")
     public ResponseEntity<String> numberOfGroupings(Principal principal) {
         logger.info("Entered REST numberOfGroupings...");
-        String uri = String.format(API_2_1_BASE + "/owners/%s/grouping", principal.getName());
+        String uri = String.format(API_2_1_BASE + "/owners/%s/groupings/count", principal.getName());
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
     }
 
