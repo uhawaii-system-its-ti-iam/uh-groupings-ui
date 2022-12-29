@@ -5,18 +5,21 @@
 
 <div class="modal-header">
     <h5 class="modal-title" id="modal-title">Inactivity Warning</h5>
+    <button type="button" class="close" data-dismiss="dialog" ng-click="closeTimeoutModal()">
+        <span aria-hidden="true">&times;</span>
+    </button>
 </div>
 <div class="modal-body" id="modal-body">
     <p>Warning! This session will expire soon. You will be logged out in
-        <span id="countdown" class="timer timeout-counter">{{ timeRemaining }}</span>.
+        <span id="countdown" class="timer timeout-counter">{{ timeleft }}</span>.
     </p>
 </div>
 <div class="modal-footer">
     <button class="btn btn-primary" ng-click="closeTimeoutModal()">Stay logged in</button>
     <div sec:authorize="isAuthenticated()">
-       <form action="/logout" th:action="@{/logout}" method="post">
-           <button class="btn btn-primary" type="submit">Log off now</button>
-       </form>
+        <form action="/logout" th:action="@{/logout}" method="post">
+            <button class="btn btn-primary" type="submit">Log off now</button>
+        </form>
     </div>
 </div>
 </html>
