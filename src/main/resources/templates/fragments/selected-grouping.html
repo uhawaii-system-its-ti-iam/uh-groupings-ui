@@ -8,10 +8,10 @@
         </button>
         <!-- Export to CSV button -->
         <div class="btn-group"  id="csvButton">
-            <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-users"></i>
+            <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-disabled="!paginatingComplete"><i class="fa fa-users mr-1"></i>
                 Export Groups
             </button>
-            <div class="dropdown-menu">
+            <div class="dropdown-menu dropdown-menu-right">
                 <button class="dropdown-item" ng-click="exportGroupToCsv(groupingMembers, selectedGrouping.name, 'members')" ng-disabled="!paginatingComplete">Export members to CSV</button>
                 <button class="dropdown-item" ng-click="exportGroupToCsv([], selectedGrouping.name, 'include')" ng-disabled="!paginatingComplete">Export include to CSV</button>
                 <button class="dropdown-item" ng-click="exportGroupToCsv([], selectedGrouping.name, 'exclude')" ng-disabled="!paginatingComplete">Export exclude to CSV</button>
