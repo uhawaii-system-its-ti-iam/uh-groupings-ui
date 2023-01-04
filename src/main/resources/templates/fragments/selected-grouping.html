@@ -38,7 +38,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div ng-show="(descriptionLoaded)">
-                                <p class="text-light mb-0"><b>Description:</b> {{ descriptionDisplay() }} &nbsp;<button
+                                <p class="text-light mb-0 text-break"><b>Description:</b> {{ descriptionDisplay() }} &nbsp;<button
                                         ng-click="editDescription()"
                                         class="far fa-fw fa-edit mr-2 teal-bg border-0 text-light tool"
                                         data-toggle="tooltip" title="Edit this grouping's description"
@@ -53,8 +53,8 @@
                                 </p>
                             </div>
                             <div ng-show="descriptionForm" class="grouping-description-form">
-                                <form class="d-flex mw-100 ng-pristine ng-valid">
-                                    <input class="form-control float-left rounded-left"
+                                <form class="d-flex mw-100 rounded bg-white ng-pristine ng-valid">
+                                    <input class="form-control border-0 float-left edit-description-input-box"
                                            aria-label="Grouping Description"
                                            th:title="#{screen.message.admin.selectedGrouping.descriptionFormTitle}"
                                            th:placeholder="#{screen.message.admin.selectedGrouping.descriptionPlaceholder}"
@@ -64,7 +64,7 @@
                                            ng-trim="false"/>
                                     <span ng-show="descriptionForm" class="grouping-description-form">
                                         <button type="button"
-                                                class="description-form-button d-inline-flex"
+                                                class="description-form-button"
                                                 data-toggle="tooltip" data-placement="top" title="Save description"
                                                 ng-click="saveDescription()">
                                         <i class="far fa-check-circle fa-2x" role="button" aria-hidden="true"></i>
@@ -89,7 +89,7 @@
                 </div>
             </section>
             <section>
-                <div class="card-body p-0">
+                <div class="card-body p-0 border-bottom border-left border-right rounded-bottom">
                     <div class="row mx-auto">
                         <div class="col-lg-1 col-md-2 col-12 teal-tint-bg pt-3 pb-3" id="pills-column">
                             <div th:replace="fragments/side-nav :: side-nav"></div>

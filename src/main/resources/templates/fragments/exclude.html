@@ -69,7 +69,7 @@
                     <td class="overflow-auto py-1 px-3" tabindex="0">
                         {{e.name}}
                         <span class="far fa-trash-alt fa-pull-right pt-1"  role="button"
-                              data-toggle="tooltip" data-placement="top"
+                              data-toggle="tooltip" data-placement="top" data-boundary="window"
                               onmouseover="$(this).tooltip('show')" onmouseout="$(this).tooltip('dispose')"
                               tabindex="0" aria-label="Remove {{e.name}} from the Exclude members list"
                               th:title="#{screen.message.common.tooltip.remove.exclude}"
@@ -83,13 +83,13 @@
                         <div ng-if="e.username === ''">
                             <span>N/A</span>
                             <i class="fa fa-question-circle" role="button" aria-hidden="true"
-                               data-toggle="tooltip" data-placement="right"
+                               data-toggle="tooltip" data-placement="right" data-boundary="window"
                                onmouseover="$(this).tooltip('show')" onmouseout="$(this).tooltip('dispose')"
                                th:title="#{screen.message.common.tooltip.username.notApplicable}">
                             </i>
                         </div>
                     </td>
-                    <td class="text-center overflow-auto py-1 px-3">
+                    <td class="overflow-auto py-1 px-3">
                         <i id="inBasis-{{e.username}}" class="text-dark">
                             {{(e.inBasis === 'Yes') ? 'Yes' : 'No'}}
                         </i>
