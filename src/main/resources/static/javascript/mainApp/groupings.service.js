@@ -8,7 +8,7 @@
      * NOTE: All API requests defined here require at least two parameters, namely onSuccess and onError, which are
      * controller handlers(callback functions) for manipulating data on a successful or unsuccessful request.
      */
-    UHGroupingsApp.factory("groupingsService", function (dataProvider, BASE_URL) {
+    UHGroupingsApp.factory("groupingsService", function (dataProvider, BASE_URL, PAGE_SIZE) {
         return {
 
             /**
@@ -29,7 +29,7 @@
              * @param onSuccess - Function to be called if HTTP request returns as a success.
              * @param onError - Function to be called if HTTP request returns an error.
              */
-            getGrouping(path, page, size, sortString, isAscending, onSuccess, onError) {
+            getGrouping(path, page,size, sortString, isAscending, onSuccess, onError) {
                 let endpoint = BASE_URL + "groupings/" + path + "?";
                 let params = { page, size, sortString, isAscending };
                 let query = this.encodeParameterizedQueryString(params);

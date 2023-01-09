@@ -268,7 +268,7 @@ describe("GeneralController", () => {
         });
     });
 
-    describe("getPages", () => {
+    describe("fetchGrouping", () => {
         let pagesOfGrouping;
         beforeEach(() => {
             pagesOfGrouping = {
@@ -282,7 +282,7 @@ describe("GeneralController", () => {
 
         it("should return a promise", () => {
             spyOn(gs, "getGrouping").and.returnValue(Promise.resolve(true));
-            scope.getPages(pagesOfGrouping.groupingPath, pagesOfGrouping.currentPage, pagesOfGrouping.PAGE_SIZE, pagesOfGrouping.sortString, pagesOfGrouping.isAscending);
+            scope.fetchGrouping(pagesOfGrouping.groupingPath, pagesOfGrouping.currentPage, pagesOfGrouping.PAGE_SIZE, pagesOfGrouping.sortString, pagesOfGrouping.isAscending);
             expect(gs.getGrouping).toHaveBeenCalled();
         });
     });
