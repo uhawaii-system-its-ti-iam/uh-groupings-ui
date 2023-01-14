@@ -658,6 +658,34 @@
          * The file is retrieved from the html input with id 'upload'.
          */
         $scope.readTextFile = function (inputFile) {
+            if (!$scope.verifyImportFileType(inputFile)) {
+                $scope.launchDynamicModal(
+                    Message.Title.INVALID_FILE,
+                    "File must be a .txt file."
+                );
+                return;
+            }
+            if (!$scope.verifyImportFileSize(inputFile)) {
+                $scope.launchDynamicModal(
+                    Message.Title.INVALID_FILE,
+                    "File is too large. Maximum file size: 5MB"
+                );
+                return;
+            }
+            if (!$scope.verifyImportFileNameSize(inputFile)){
+                $scope.launchDynamicModal(
+                    Message.Title.INVALID_FILE,
+                    "File name has too many characters. Maximum character amount: 50"
+                );
+                return;
+            }
+            if (!$scope.verifyImportFileName(inputFile)){
+                $scope.launchDynamicModal(
+                    Message.Title.INVALID_FILE,
+                    "File name has illegal characters."
+                );
+                return;
+            }
             let reader = new FileReader();
             reader.onload = function (e) {
                 const str = e.target.result;
@@ -666,6 +694,26 @@
                 $scope.addMembers($scope.listName);
             };
             reader.readAsText(inputFile);
+        };
+
+        $scope.verifyImportFileType = function(inputFile) {
+            if (inputFile == null || inputFile.type == null) {
+                return false;
+            }
+            return inputFile.type.toLowerCase() === "text/plain";
+        };
+
+        $scope.verifyImportFileSize = function(inputFile) {
+            return inputFile.size <= 5242880 && inputFile.size > 0;
+        };
+
+        $scope.verifyImportFileNameSize = function(inputFile) {
+            return inputFile.name.length <= 53 && inputFile.name.length > 0;
+        };
+
+        $scope.verifyImportFileName = function(inputFile) {
+            let regex = /^[a-zA-Z0-9._-]+$/;
+            return regex.test(inputFile.name);
         };
 
         $scope.removeTextFile = function () {

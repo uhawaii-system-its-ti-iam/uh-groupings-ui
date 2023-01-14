@@ -780,6 +780,60 @@ describe("GeneralController", () => {
             ];
         });
 
+
+        describe("readTextFile", () => {
+            it("should check for the MIME type and match it with text/plain", () => {
+                let fakeNames = ["iamtst01","iamtst02","iamtst03","iamtst04","iamtst05","iamtst06","22222222","12345678","bogusname","fakename","_1234455","_iamtst01","_test_123-abc"];
+                const fakeFile = new File(fakeNames, "file.txt", {type: "text/plain"});
+                expect(scope.verifyImportFileType).toBeDefined();
+
+                expect(scope.verifyImportFileType(fakeFile)).toBeTrue();
+                expect(scope.verifyImportFileType({type: "text/plain"})).toBeTrue();
+                expect(scope.verifyImportFileType({type: "TEXT/PLAIN"})).toBeTrue();
+
+                expect(scope.verifyImportFileType({type: null})).toBeFalse();
+                expect(scope.verifyImportFileType({type: "text/csv"})).toBeFalse();
+                expect(scope.verifyImportFileType(null)).toBeFalse();
+            });
+
+            it("should check for the file size to be within 5MB",() => {
+                let fakeNames = ["iamtst01","iamtst02","iamtst03","iamtst04","iamtst05","iamtst06","22222222","12345678","bogusname","fakename","_1234455","_iamtst01","_test_123-abc"];
+                const fakeFile = new File(fakeNames, "file.txt", {type: "text/plain"});
+                expect(scope.verifyImportFileSize).toBeDefined();
+
+                expect(scope.verifyImportFileSize(fakeFile)).toBeTrue();
+                expect(scope.verifyImportFileSize({size: 1000000})).toBeTrue();
+                expect(scope.verifyImportFileSize({size: 5242880})).toBeTrue();
+
+                expect(scope.verifyImportFileSize({size: 5242881})).toBeFalse();
+            });
+
+            it("should check for file name size to be under 50 characters.", () => {
+                let fakeNames = ["iamtst01","iamtst02","iamtst03","iamtst04","iamtst05","iamtst06","22222222","12345678","bogusname","fakename","_1234455","_iamtst01","_test_123-abc"];
+                const fakeFile = new File(fakeNames, "file.txt", {type: "text/plain"});
+                expect(scope.verifyImportFileSize).toBeDefined();
+
+                expect(scope.verifyImportFileNameSize(fakeFile)).toBeTrue();
+                expect(scope.verifyImportFileNameSize({name: "ThisIsALongNameOverFiftyCharactersaaaaaaaaaaaaaaaa.txt"}));
+
+                expect(scope.verifyImportFileNameSize({name: "ThisIsALongNameOverFiftyCharactersaaaaaaaaaaaaaaaa.txt"})).toBeFalse();
+            });
+
+            it("should check for the file name for any illegal characters.",() => {
+                let fakeNames = ["iamtst01","iamtst02","iamtst03","iamtst04","iamtst05","iamtst06","22222222","12345678","bogusname","fakename","_1234455","_iamtst01","_test_123-abc"];
+                const fakeFile = new File(fakeNames, "file.txt", {type: "text/plain"});
+                expect(scope.verifyImportFileName).toBeDefined();
+
+                expect(scope.verifyImportFileName(fakeFile)).toBeTrue();
+                expect(scope.verifyImportFileName({name: "THISISATEXTFILE.txt"})).toBeTrue();
+                expect(scope.verifyImportFileName({name: "thisisatextfile.txt"})).toBeTrue();
+                expect(scope.verifyImportFileName({name: "this_is_a_text_file.txt"})).toBeTrue();
+
+                expect(scope.verifyImportFileName({name: "badtextfile%.txt"})).toBeFalse();
+                expect(scope.verifyImportFileName({name: "Incorrect file name"})).toBeFalse();
+            });
+        });
+
         it("should return a list of the members to be imported to the include list", () => {
             scope.multiAddResults = [];
             scope.multiAddResultsGeneric = [];
