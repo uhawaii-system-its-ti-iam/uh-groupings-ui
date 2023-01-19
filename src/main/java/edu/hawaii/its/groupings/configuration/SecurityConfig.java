@@ -174,8 +174,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/home").permitAll()
                 .antMatchers("/info").permitAll()
                 .antMatchers("/feedback").hasRole("UH")
-                .antMatchers("/campus").hasRole("UH")
-                .antMatchers("/campuses").hasRole("UH")
                 .antMatchers("/denied").permitAll()
                 .antMatchers("/404").permitAll()
                 .antMatchers("/login").hasRole("UH")
