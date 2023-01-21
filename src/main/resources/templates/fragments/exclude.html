@@ -26,8 +26,10 @@
                         <input class="position-relative ml-0" type="checkbox"
                                ng-model="allSelected"
                                ng-click="toggleCheckAllSelection('Exclude')"
-                               value="option1" data-toggle="tooltip" data-placement="top" title="Check all"
+                               tooltip="Check all"
+                               data-placement="top"
                                aria-label="assertive">
+
                     </th>
                     <th scope="col" role="button"
                         ng-click="sortBy('groupingExclude', 'pagedItemsExclude', 'name')">
@@ -67,8 +69,8 @@
                     <td class="overflow-auto py-1 px-3" tabindex="0">
                         {{e.name}}
                         <span class="far fa-trash-alt fa-pull-right pt-1"  role="button"
-                              data-toggle="tooltip" data-placement="top" data-boundary="window"
-                              onmouseover="$(this).tooltip('show')" onmouseout="$(this).tooltip('dispose')"
+                              tooltip
+                              data-placement="top"
                               tabindex="0" aria-label="Remove {{e.name}} from the Exclude members list"
                               th:title="#{screen.message.common.tooltip.remove.exclude}"
                               ng-keypress="$event.keyCode === 13 ? removeMemberWithTrashcan('Exclude', currentPageExclude, $index) : null"
@@ -81,8 +83,8 @@
                         <div ng-if="e.username === ''">
                             <span>N/A</span>
                             <i class="fa fa-question-circle" role="button" aria-hidden="true"
-                               data-toggle="tooltip" data-placement="right" data-boundary="window"
-                               onmouseover="$(this).tooltip('show')" onmouseout="$(this).tooltip('dispose')"
+                               tooltip
+                               tooltipdirection="right"
                                th:title="#{screen.message.common.tooltip.username.notApplicable}">
                             </i>
                         </div>

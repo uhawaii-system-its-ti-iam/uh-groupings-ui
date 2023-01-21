@@ -124,18 +124,16 @@
                                     <div ng-if="l.username === ''">
                                         <span>N/A</span>
                                         <i class="fa fa-question-circle clickable"
-                                           data-toggle="tooltip" data-placement="right"
-                                           onmouseover="$(this).tooltip('show')" onmouseout="$(this).tooltip('dispose')"
+                                           tooltip data-placement="right"
                                            th:title="#{screen.message.common.tooltip.username.notApplicable}">
                                         </i>
                                     </div>
                                 </td>
                                 <td class="p-10">
                                     <i class="far fa-trash-alt pull-right clickable pt-1" role="button"
-                                       data-toggle="tooltip" data-placement="top"
+                                       tooltip data-placement="top"
                                        tabindex="0"
                                        aria-label="Remove {{l.name}} as admin. There must be at least one admin remaining."
-                                       onmouseover="$(this).tooltip('show')" onmouseout="$(this).tooltip('dispose')"
                                        th:title="#{screen.message.admin.tooltip.nav.delete.admin}"
                                        ng-click="removeAdmin(currentPageAdmins, $index)" aria-hidden="false"
                                        ng-keypress="$event.keyCode === 13 ? removeAdmin(currentPageAdmins, $index) : null">

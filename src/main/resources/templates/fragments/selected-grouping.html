@@ -45,7 +45,7 @@
                                 <p class="text-light mb-0 text-break"><b>Description:</b> {{ descriptionDisplay() }} &nbsp;<button
                                         ng-click="editDescription()"
                                         class="far fa-fw fa-edit mr-2 teal-bg border-0 text-light tool"
-                                        data-toggle="tooltip" title="Edit this grouping's description"
+                                        tooltip="Edit this grouping's description"
                                         data-placement="top"
                                         aria-label="Edit Description"
                                         role="button"></button>
@@ -69,7 +69,8 @@
                                     <span ng-show="descriptionForm" class="grouping-description-form">
                                         <button type="button"
                                                 class="description-form-button"
-                                                data-toggle="tooltip" data-placement="top" title="Save description"
+                                                tooltip="Save description"
+                                                data-placement="top"
                                                 ng-click="saveDescription()">
                                         <i class="far fa-check-circle fa-2x" role="button" aria-hidden="true"></i>
                                         </button>
@@ -77,7 +78,8 @@
                                     <span ng-show="descriptionForm" class="grouping-description-form">
                                         <button type="button"
                                                 class="description-form-button rounded-right"
-                                                data-toggle="tooltip" data-placement="top" title="Cancel changes"
+                                                tooltip="Cancel changes"
+                                                data-placement="top"
                                                 ng-click="cancelDescriptionEdit()">
                                         <i class="far fa-times-circle fa-2x" role="button" aria-hidden="true"></i>
                                         </button>

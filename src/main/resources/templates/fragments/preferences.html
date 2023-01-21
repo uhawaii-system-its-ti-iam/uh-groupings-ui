@@ -14,7 +14,8 @@
                             Allow people to add themselves to this group
                         </label>
                         <span class="fa fa-question-circle" role="button"
-                              data-toggle="tooltip" data-placement="right"
+                              tooltip
+                              data-placement="right"
                               tabindex="0"
                               th:title="#{screen.message.common.tooltip.preference.allowOptIn}"
                               th:attr="ng-click='createPreferenceInfoModal(\'' + #{screen.message.common.tooltip.preference.allowOptIn} + '\')',
@@ -27,8 +28,9 @@
                             Allow people to remove themselves from this group
                         </label>
                         <span class="fa fa-question-circle" role="button"
-                              data-toggle="tooltip" data-placement="right"
                               tabindex="0"
+                              tooltip
+                              data-placement="right"
                               th:title="#{screen.message.common.tooltip.preference.allowOptOut}"
                               th:attr="ng-click='createPreferenceInfoModal(\'' + #{screen.message.common.tooltip.preference.allowOptOut} + '\')',
                               ng-keypress='$event.keyCode === 13 ? createPreferenceInfoModal(\'' + #{screen.message.common.tooltip.preference.allowOptOut} + '\') : null'"></span>
@@ -54,8 +56,9 @@
                                     ng-disabled="excludeCheck == false && includeCheck == false">Reset Selected
                             </button>
                             <span class="fa fa-question-circle" role="button"
-                                  data-toggle="tooltip" data-placement="right"
                                   tabindex="0"
+                                  tooltip
+                                  data-placement="right"
                                   th:title="#{screen.message.common.tooltip.preference.resetGroup}"
                                   th:attr="ng-click='createPreferenceInfoModal(\'' + #{screen.message.common.tooltip.preference.resetGroup} + '\')',
                               ng-keypress='$event.keyCode === 13 ? createPreferenceInfoModal(\'' + #{screen.message.common.tooltip.preference.resetGroup} + '\') : null'"></span>
@@ -76,9 +79,9 @@
                                     {{ syncDest.description }}
                                 </label>
                                 <span class="fa fa-question-circle" role="button"
-                                      data-toggle="tooltip" data-placement="right"
-                                      tabindex="0" onmouseover="$(this).tooltip('toggle')"
-                                      title="{{syncDest.tooltip}}"
+                                      tooltip="{{syncDest.tooltip}}"
+                                      data-placement="right"
+                                      tabindex="0"
                                       th:attr="ng-click='createPreferenceInfoModal(syncDest.tooltip)',
                               ng-keypress='$event.keyCode === 13 ? createPreferenceInfoModal(syncDest.tooltip) : null'"></span>
                             </div>
