@@ -185,11 +185,11 @@ public class GroupingsRestController {
      *
      * @return Map of user attributes
      */
-    @GetMapping(value = "/members/{uid}")
+    @GetMapping(value = "/members/{uhIdentifier}")
     @ResponseBody
-    public ResponseEntity<String> memberAttributes(Principal principal, @PathVariable String uid) {
+    public ResponseEntity<String> memberAttributes(Principal principal, @PathVariable String uhIdentifier) {
         logger.info("Entered REST memberAttributes...");
-        String safeInput = policy.sanitize(uid);
+        String safeInput = policy.sanitize(uhIdentifier);
         String uri = String.format(API_2_1_BASE + "/members/%s", safeInput);
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
     }
@@ -226,12 +226,12 @@ public class GroupingsRestController {
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
     }
 
-    @GetMapping(value = "/members/{uid}/groupings",
+    @GetMapping(value = "/members/{uhIdentifier}/groupings",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> membershipAssignment(Principal principal,
-            @PathVariable String uid) {
+            @PathVariable String uhIdentifier) {
         logger.info("Entered REST MembershipAssignment...");
-        String uri = String.format(API_2_1_BASE + "/members/%s/groupings", uid);
+        String uri = String.format(API_2_1_BASE + "/members/%s/groupings", uhIdentifier);
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
     }
 
@@ -360,12 +360,12 @@ public class GroupingsRestController {
     }
 
     /**
-     * Get a list of groupings owned by uid.
+     * Get a list of groupings owned by uhIdentifier.
      */
-    @GetMapping(value = "/owners/{uid}/groupings")
-    public ResponseEntity<String> groupingsOwnedUid(Principal principal, @PathVariable String uid) {
+    @GetMapping(value = "/owners/{uhIdentifier}/groupings")
+    public ResponseEntity<String> groupingsOwnedUid(Principal principal, @PathVariable String uhIdentifier) {
         logger.info("Entered REST GroupingAssignment...");
-        String safeUid = policy.sanitize(uid);
+        String safeUid = policy.sanitize(uhIdentifier);
         String uri = String.format(API_2_1_BASE + "/owners/%s/groupings", safeUid);
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
     }
@@ -542,22 +542,22 @@ public class GroupingsRestController {
         return uriComponentsBuilder.encode().toUriString();
     }
 
-    private ResponseEntity<String> changePreference(String grouping, String uid, String preference, Boolean isOn) {
+    private ResponseEntity<String> changePreference(String grouping, String uhIdentifier, String preference, Boolean isOn) {
         String ending = "disable";
         if (isOn) {
             ending = "enable";
         }
         String uri = String.format(API_2_1_BASE + "/groupings/%s/preference/%s/%s", grouping, preference, ending);
-        return httpRequestService.makeApiRequest(uid, uri, HttpMethod.PUT);
+        return httpRequestService.makeApiRequest(uhIdentifier, uri, HttpMethod.PUT);
     }
 
-    private ResponseEntity<String> changeSyncDest(String grouping, String uid, String syncDest, Boolean isOn) {
+    private ResponseEntity<String> changeSyncDest(String grouping, String uhIdentifier, String syncDest, Boolean isOn) {
         String ending = "disable";
         if (isOn) {
             ending = "enable";
         }
         String uri = String.format(API_2_1_BASE + "/groupings/%s/sync-destination/%s/%s", grouping, syncDest, ending);
-        return httpRequestService.makeApiRequest(uid, uri, HttpMethod.PUT);
+        return httpRequestService.makeApiRequest(uhIdentifier, uri, HttpMethod.PUT);
     }
 
     protected Boolean shouldDoApiHandshake() {
@@ -573,9 +573,9 @@ public class GroupingsRestController {
         if (shouldDoApiHandshake()) {
             boolean success = false;
             try {
-                final String uid = CREDENTIAL_CHECK_USER;
+                final String uhIdentifier = CREDENTIAL_CHECK_USER;
                 final String url = API_2_1_BASE + "/";
-                success = httpRequestService.makeApiRequest(uid, url, HttpMethod.GET)
+                success = httpRequestService.makeApiRequest(uhIdentifier, url, HttpMethod.GET)
                         .getStatusCode()
                         .is2xxSuccessful();
             } catch (Exception e) {
