@@ -7,11 +7,16 @@ const threshold = {
     "MAX_LIST_SIZE": 10
 };
 UHGroupingsApp.constant("Threshold", threshold);
+UHGroupingsApp.constant("Utility", {
+    compareObjects: (obj1, obj2) => {
+        return (JSON.stringify(obj1) === JSON.stringify(obj2));
+    }
+});
 UHGroupingsApp.constant("Message", {
     Title: {
         IMPORT_OUT_OF_BOUNDS: "Out of Bounds Import Warning",
         SLOW_IMPORT: "Slow Import Warning",
-        REMOVE_INPUT_ERROR  : "Error in Input",
+        REMOVE_INPUT_ERROR: "Error in Input",
         NO_MEMBERS_ADDED: "No Members Were Added",
         INVALID_FILE: "Invalid File",
         ADD_MEMBER: "Add Member",
@@ -23,16 +28,40 @@ UHGroupingsApp.constant("Message", {
         IMPORT_OUT_OF_BOUNDS: `Importing more than ${threshold.MAX_IMPORT} users is not allowed.`,
         SLOW_IMPORT: "Feel free to exit your browser.",
         REMOVE_INPUT_ERROR: "The members you've attempted to remove do not exist.",
-        NO_MEMBERS_ADDED: {with: (listName) => `All the members you attempted to add already exist in the ${listName} list.`},
-        ADD_MEMBER: {with: (member, listName) => `${member} has been successfully added to the ${listName} list.`},
-        ADD_MEMBERS: {with: (listName) => `All members have been added successfully to the ${listName} list.`},
-        REMOVE_MEMBER: {with: (member, listName) => `${member} has been successfully removed from the ${listName} list.`},
-        REMOVE_MEMBERS: {with: (listName) => `All selected members have been successfully removed from the ${listName} list.`}
+        NO_MEMBERS_ADDED: { with: (listName) => `All the members you attempted to add already exist in the ${listName} list.` },
+        ADD_MEMBER: { with: (member, listName) => `${member} has been successfully added to the ${listName} list.` },
+        ADD_MEMBERS: { with: (listName) => `All members have been added successfully to the ${listName} list.` },
+        REMOVE_MEMBER: { with: (member, listName) => `${member} has been successfully removed from the ${listName} list.` },
+        REMOVE_MEMBERS: { with: (listName) => `All selected members have been successfully removed from the ${listName} list.` }
     },
     Csv: {
         GROUP_NOT_LOADED: "Export will be available once all members are loaded.",
         GROUP_LOADED: "Export entire member list to CSV.",
         EMAIL_SUFFIX: "@hawaii.edu"
+    },
+    ResetGroup: {
+        INCLUDE_AND_EXCLUDE: "include and exclude groups have",
+        INCLUDE: "include group has",
+        EXCLUDE: "exclude group has"
+    },
+    ResetGroupError: {
+        ResetGroupErrorMessages: {
+            TITLE: "Reset Group Error",
+            Body: [
+                "Neither list has been reset due to an error.",
+                "The Exclude group has been reset. There was an error preventing the Include list reset.",
+                "There was an error preventing the Include list reset.",
+                "The Include group has been reset. There was an error preventing the Exclude list reset.",
+                "There was an error preventing the Exclude list reset."
+            ]
+        },
+        ResetGroupErrorMessageMap: [
+            { includeFailure: true, excludeFailure: true, includeSuccess: false, excludeSuccess: false },
+            { includeFailure: true, excludeFailure: false, includeSuccess: false, excludeSuccess: true },
+            { includeFailure: true, excludeFailure: false, includeSuccess: false, excludeSuccess: false },
+            { includeFailure: false, excludeFailure: true, includeSuccess: true, excludeSuccess: false },
+            { includeFailure: false, excludeFailure: true, includeSuccess: false, excludeSuccess: false }
+        ]
     }
 });
 UHGroupingsApp.constant("BASE_URL", "api/groupings/");

@@ -268,6 +268,22 @@
                 dataProvider.updateData(endpoint, onSuccess, onError);
             },
 
+            /**
+             * Remove all members from the include group.
+             */
+            resetIncludeGroup(groupingPath, onSuccess, onError) {
+                let endpoint = BASE_URL + groupingPath + "/resetIncludeGroup";
+                dataProvider.updateData(endpoint, onSuccess, onError);
+            },
+
+            /**
+             * Remove all members from the exclude group.
+             */
+            resetExcludeGroup(groupingPath, onSuccess, onError) {
+                let endpoint = BASE_URL + groupingPath + "/resetExcludeGroup";
+                dataProvider.updateData(endpoint, onSuccess, onError);
+            },
+
             //todo Might not need this as the syncDests come back in getGrouping already
             /**
              * Get the list of sync destinations

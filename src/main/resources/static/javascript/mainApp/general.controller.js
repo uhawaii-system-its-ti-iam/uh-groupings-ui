@@ -12,7 +12,7 @@
      * @param groupingsService - service for creating requests to the groupings API
      */
 
-    function GeneralJsController($scope, $window, $uibModal, $controller, groupingsService, dataProvider, PAGE_SIZE, Message, Threshold) {
+    function GeneralJsController($scope, $window, $uibModal, $controller, groupingsService, dataProvider, PAGE_SIZE, Message, Threshold, Utility) {
         // Add members
         $scope.multiAddResults = [];
         $scope.invalidMembers = [];
@@ -670,14 +670,14 @@
                 );
                 return;
             }
-            if (!$scope.verifyImportFileNameSize(inputFile)){
+            if (!$scope.verifyImportFileNameSize(inputFile)) {
                 $scope.launchDynamicModal(
                     Message.Title.INVALID_FILE,
                     "File name has too many characters. Maximum character amount: 50"
                 );
                 return;
             }
-            if (!$scope.verifyImportFileName(inputFile)){
+            if (!$scope.verifyImportFileName(inputFile)) {
                 $scope.launchDynamicModal(
                     Message.Title.INVALID_FILE,
                     "File name has illegal characters."
@@ -693,22 +693,22 @@
             reader.readAsText(inputFile);
         };
 
-        $scope.verifyImportFileType = function(inputFile) {
+        $scope.verifyImportFileType = function (inputFile) {
             if (inputFile == null || inputFile.type == null) {
                 return false;
             }
             return inputFile.type.toLowerCase() === "text/plain";
         };
 
-        $scope.verifyImportFileSize = function(inputFile) {
+        $scope.verifyImportFileSize = function (inputFile) {
             return inputFile.size <= 5242880 && inputFile.size > 0;
         };
 
-        $scope.verifyImportFileNameSize = function(inputFile) {
+        $scope.verifyImportFileNameSize = function (inputFile) {
             return inputFile.name.length <= 53 && inputFile.name.length > 0;
         };
 
-        $scope.verifyImportFileName = function(inputFile) {
+        $scope.verifyImportFileName = function (inputFile) {
             let regex = /^[a-zA-Z0-9 ._-]+$/;
             return regex.test(inputFile.name);
         };
@@ -875,7 +875,7 @@
             groupingsService.invalidUhIdentifiers(uhIdentifiers, (res) => { // Check for invalid uhIdentifiers
                 $scope.waitingForImportResponse = false; // Small spinner off
                 const isBatchImport = uhIdentifiers.length > Threshold.MULTI_ADD;
-                
+
                 // Check if res returned any invalid uhIdentifiers
                 if (!_.isEmpty(res)) {
                     // Display invalid uhIdentifiers in add-error-messages.html or importError modal
@@ -1116,11 +1116,9 @@
             }
         };
 
-        /**
-         * Close the reset notif modal.
-         */
-        $scope.closeResetNotifModal = function () {
-            $scope.resetNotifModalInstance.close();
+        $scope.closeSuccessfulGroupResetModal = function () {
+            $scope.getGroupingInformation();
+            $scope.successfulGroupResetModalInstance.close();
         };
 
         /**
@@ -1476,11 +1474,51 @@
             });
         };
 
-        function handleGroupingReset() {
-            $scope.getGroupingInformation();
-            $scope.loading = false;
-            $scope.createResetNotifModal($scope.selectedGrouping.name);
-        }
+
+        $scope.displayUnsuccessfulGroupResetModal = function (message) {
+            $scope.launchDynamicModal(Message.ResetGroupError.ResetGroupErrorMessages.TITLE, message);
+        };
+        /**
+         * Helper-Guard: handleGroupingReset:
+         * If there are error results, render an error modal and return true, otherwise return false.
+         */
+        $scope.handleGroupingReset = function (groupingPath, resetIncludeResult, resetExcludeResult) {
+            let hasErrors = function (result) {
+                return (typeof result !== "undefined" && typeof result.status !== "undefined");
+            };
+            let checkResetResult = (groupingPath, resetResult) => {
+                return (typeof resetResult !== "undefined") &&
+                    (resetResult.resultCode === "SUCCESS" && resetResult.groupPath.includes(groupingPath));
+            };
+            let results = {
+                "includeFailure": hasErrors(resetIncludeResult),
+                "excludeFailure": hasErrors(resetExcludeResult),
+                "includeSuccess": checkResetResult(groupingPath, resetIncludeResult),
+                "excludeSuccess": checkResetResult(groupingPath, resetExcludeResult)
+            };
+            if (results.includeFailure || results.excludeFailure) {
+                for (let i = 0; i < Message.ResetGroupError.ResetGroupErrorMessageMap.length; i++) {
+                    let object = Message.ResetGroupError.ResetGroupErrorMessageMap[parseInt(i, 10)];
+                    if (Utility.compareObjects(object, results)) {
+                        let message = Message.ResetGroupError.ResetGroupErrorMessages.Body[parseInt(i, 10)];
+                        $scope.displayUnsuccessfulGroupResetModal(message);
+                        return;
+                    }
+                }
+            }
+            // Otherwise, reload the grouping and display the result modal.
+            $scope.displaySuccessfulGroupResetModal((() => {
+                if (results.includeSuccess && results.excludeSuccess) {
+                    return Message.ResetGroup.INCLUDE_AND_EXCLUDE;
+                } else if (results.includeSuccess) {
+                    return Message.ResetGroup.INCLUDE;
+                } else if (results.excludeSuccess) {
+                    return Message.ResetGroup.EXCLUDE;
+                } else {
+                    return "ERROR";
+                }
+            })());
+        };
 
         $scope.createEmptyGroupModal = function () {
             $scope.emptyGroupModalInstance = $uibModal.open({
@@ -1491,11 +1529,11 @@
             });
         };
 
-        $scope.createResetNotifModal = function (groupReset) {
-            $scope.group = groupReset;
+        $scope.displaySuccessfulGroupResetModal = function (resultString) {
+            $scope.group = resultString;
 
-            $scope.resetNotifModalInstance = $uibModal.open({
-                templateUrl: "modal/resetNotifModal",
+            $scope.successfulGroupResetModalInstance = $uibModal.open({
+                templateUrl: "modal/successfulGroupResetModal",
                 scope: $scope,
                 backdrop: "static",
                 keyboard: false
@@ -1678,14 +1716,39 @@
                 scope: $scope,
                 backdrop: "static"
             });
-            $scope.resetModalInstance.result.then(function () {
-                $scope.loading = true;
-                let resetInclude = $scope.resetInclude;
-                let resetExclude = $scope.resetExclude;
-                let groupingPath = $scope.selectedGrouping.path;
-                groupingsService.resetGroup(groupingPath, resetInclude, resetExclude, handleGroupingReset, handleUnsuccessfulRequest);
-            });
+            $scope.resetModalInstance.result.then($scope.initResetGroup);
         };
+
+        $scope.initResetGroup = async function () {
+            $scope.loading = true;
+            let groupingPath = $scope.selectedGrouping.path;
+            let resetInclude = $scope.includeCheck;
+            let resetExclude = $scope.excludeCheck;
+            var resetIncludeResult = [];
+            var resetExcludeResult = [];
+
+            let resetGroup = (resetFunction, groupingPath, resetResult) => {
+                return new Promise((resolve) => {
+                    resetFunction(groupingPath, (res) => {
+                        resetResult.push(res);
+                        resolve();
+                    }, (res) => {
+                        resetResult.push(res);
+                        resolve();
+                    });
+                });
+            };
+
+            if (resetInclude) {
+                await resetGroup(groupingsService.resetIncludeGroup, groupingPath, resetIncludeResult);
+            }
+            if (resetExclude) {
+                await resetGroup(groupingsService.resetExcludeGroup, groupingPath, resetExcludeResult);
+            }
+            $scope.loading = false;
+            $scope.handleGroupingReset(groupingPath, resetIncludeResult.pop(), resetExcludeResult.pop());
+        };
+
 
         $scope.resetGroup = function () {
             let listNames = "";

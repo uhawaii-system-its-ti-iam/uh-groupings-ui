@@ -42,7 +42,7 @@ describe("GeneralController", () => {
     });
 
     describe("get current user and home page numbers: ", () => {
-        const mockUser = {username: "iamtst01", uhUuid: "iamtst01"};
+        const mockUser = { username: "iamtst01", uhUuid: "iamtst01" };
         const mockResponse = 999;
         beforeEach(() => {
             httpBackend.whenGET(BASE_URL + "currentUser")
@@ -64,7 +64,7 @@ describe("GeneralController", () => {
             httpBackend.expectGET(BASE_URL + "currentUser").respond(200, mockUser);
             httpBackend.flush();
 
-            expect(scope.currentUser).toEqual({uid: "iamtst01", uhUuid: "iamtst01"});
+            expect(scope.currentUser).toEqual({ uid: "iamtst01", uhUuid: "iamtst01" });
         });
 
         it("should make an API call to getNumberOfMemberships", () => {
@@ -1239,54 +1239,54 @@ describe("GeneralController", () => {
 
     describe("readTextFile", () => {
         it("should check for the MIME type and match it with text/plain", () => {
-            let fakeNames = ["iamtst01","iamtst02","iamtst03","iamtst04","iamtst05","iamtst06","22222222","12345678","bogusname","fakename","_1234455","_iamtst01","_test_123-abc"];
-            const fakeFile = new File(fakeNames, "file.txt", {type: "text/plain"});
+            let fakeNames = ["iamtst01", "iamtst02", "iamtst03", "iamtst04", "iamtst05", "iamtst06", "22222222", "12345678", "bogusname", "fakename", "_1234455", "_iamtst01", "_test_123-abc"];
+            const fakeFile = new File(fakeNames, "file.txt", { type: "text/plain" });
             expect(scope.verifyImportFileType).toBeDefined();
 
             expect(scope.verifyImportFileType(fakeFile)).toBeTrue();
-            expect(scope.verifyImportFileType({type: "text/plain"})).toBeTrue();
-            expect(scope.verifyImportFileType({type: "TEXT/PLAIN"})).toBeTrue();
+            expect(scope.verifyImportFileType({ type: "text/plain" })).toBeTrue();
+            expect(scope.verifyImportFileType({ type: "TEXT/PLAIN" })).toBeTrue();
 
-            expect(scope.verifyImportFileType({type: null})).toBeFalse();
-            expect(scope.verifyImportFileType({type: "text/csv"})).toBeFalse();
+            expect(scope.verifyImportFileType({ type: null })).toBeFalse();
+            expect(scope.verifyImportFileType({ type: "text/csv" })).toBeFalse();
             expect(scope.verifyImportFileType(null)).toBeFalse();
         });
 
-        it("should check for the file size to be within 5MB",() => {
-            let fakeNames = ["iamtst01","iamtst02","iamtst03","iamtst04","iamtst05","iamtst06","22222222","12345678","bogusname","fakename","_1234455","_iamtst01","_test_123-abc"];
-            const fakeFile = new File(fakeNames, "file.txt", {type: "text/plain"});
+        it("should check for the file size to be within 5MB", () => {
+            let fakeNames = ["iamtst01", "iamtst02", "iamtst03", "iamtst04", "iamtst05", "iamtst06", "22222222", "12345678", "bogusname", "fakename", "_1234455", "_iamtst01", "_test_123-abc"];
+            const fakeFile = new File(fakeNames, "file.txt", { type: "text/plain" });
             expect(scope.verifyImportFileSize).toBeDefined();
 
             expect(scope.verifyImportFileSize(fakeFile)).toBeTrue();
-            expect(scope.verifyImportFileSize({size: 1000000})).toBeTrue();
-            expect(scope.verifyImportFileSize({size: 5242880})).toBeTrue();
+            expect(scope.verifyImportFileSize({ size: 1000000 })).toBeTrue();
+            expect(scope.verifyImportFileSize({ size: 5242880 })).toBeTrue();
 
-            expect(scope.verifyImportFileSize({size: 5242881})).toBeFalse();
+            expect(scope.verifyImportFileSize({ size: 5242881 })).toBeFalse();
         });
 
         it("should check for file name size to be under 50 characters.", () => {
-            let fakeNames = ["iamtst01","iamtst02","iamtst03","iamtst04","iamtst05","iamtst06","22222222","12345678","bogusname","fakename","_1234455","_iamtst01","_test_123-abc"];
-            const fakeFile = new File(fakeNames, "file.txt", {type: "text/plain"});
+            let fakeNames = ["iamtst01", "iamtst02", "iamtst03", "iamtst04", "iamtst05", "iamtst06", "22222222", "12345678", "bogusname", "fakename", "_1234455", "_iamtst01", "_test_123-abc"];
+            const fakeFile = new File(fakeNames, "file.txt", { type: "text/plain" });
             expect(scope.verifyImportFileSize).toBeDefined();
 
             expect(scope.verifyImportFileNameSize(fakeFile)).toBeTrue();
-            expect(scope.verifyImportFileNameSize({name: "ThisIsALongNameOverFiftyCharactersaaaaaaaaaaaaaaaa.txt"}));
+            expect(scope.verifyImportFileNameSize({ name: "ThisIsALongNameOverFiftyCharactersaaaaaaaaaaaaaaaa.txt" }));
 
-            expect(scope.verifyImportFileNameSize({name: "ThisIsALongNameOverFiftyCharactersaaaaaaaaaaaaaaaa.txt"})).toBeFalse();
+            expect(scope.verifyImportFileNameSize({ name: "ThisIsALongNameOverFiftyCharactersaaaaaaaaaaaaaaaa.txt" })).toBeFalse();
         });
 
-        it("should check for the file name for any illegal characters.",() => {
-            let fakeNames = ["iamtst01","iamtst02","iamtst03","iamtst04","iamtst05","iamtst06","22222222","12345678","bogusname","fakename","_1234455","_iamtst01","_test_123-abc"];
-            const fakeFile = new File(fakeNames, "file.txt", {type: "text/plain"});
+        it("should check for the file name for any illegal characters.", () => {
+            let fakeNames = ["iamtst01", "iamtst02", "iamtst03", "iamtst04", "iamtst05", "iamtst06", "22222222", "12345678", "bogusname", "fakename", "_1234455", "_iamtst01", "_test_123-abc"];
+            const fakeFile = new File(fakeNames, "file.txt", { type: "text/plain" });
             expect(scope.verifyImportFileName).toBeDefined();
 
             expect(scope.verifyImportFileName(fakeFile)).toBeTrue();
-            expect(scope.verifyImportFileName({name: "THISISATEXTFILE.txt"})).toBeTrue();
-            expect(scope.verifyImportFileName({name: "thisisatextfile.txt"})).toBeTrue();
-            expect(scope.verifyImportFileName({name: "this_is_a_text_file.txt"})).toBeTrue();
-            expect(scope.verifyImportFileName({name: "this is a text file.txt"})).toBeTrue();
+            expect(scope.verifyImportFileName({ name: "THISISATEXTFILE.txt" })).toBeTrue();
+            expect(scope.verifyImportFileName({ name: "thisisatextfile.txt" })).toBeTrue();
+            expect(scope.verifyImportFileName({ name: "this_is_a_text_file.txt" })).toBeTrue();
+            expect(scope.verifyImportFileName({ name: "this is a text file.txt" })).toBeTrue();
 
-            expect(scope.verifyImportFileName({name: "badtextfile%.txt"})).toBeFalse();
+            expect(scope.verifyImportFileName({ name: "badtextfile%.txt" })).toBeFalse();
         });
     });
 
@@ -1554,16 +1554,16 @@ describe("GeneralController", () => {
             expect(scope.member).toBe(scope.uhUuid);
         });
     });
-    
-    describe("closeResetNotifModal", () => {
+
+    describe("displaySuccessfulGroupResetModal", () => {
         beforeEach(() => {
-            scope.createResetNotifModal(scope.group);
+            scope.displaySuccessfulGroupResetModal(scope.group);
         });
 
-        it("should close resetNotifModalInstance", () => {
-            spyOn(scope.resetNotifModalInstance, "close").and.callThrough();
-            scope.closeResetNotifModal();
-            expect(scope.resetNotifModalInstance.close).toHaveBeenCalled();
+        it("should close successfulGroupResetModalInstance", () => {
+            spyOn(scope.successfulGroupResetModalInstance, "close").and.callThrough();
+            scope.closeSuccessfulGroupResetModal();
+            expect(scope.successfulGroupResetModalInstance.close).toHaveBeenCalled();
         });
     });
 
@@ -1610,17 +1610,17 @@ describe("GeneralController", () => {
                     uhUuid: "1112",
                     username: "monir"
                 }
-            ]; 
+            ];
             scope.membersInCheckboxList = {
                 1112: true,
-                1111: true,
+                1111: true
             };
         });
         it("should make the members in the checkbox list false", () => {
             scope.transferMembersFromPageToCheckboxObject(currentPage);
             expect(scope.membersInCheckboxList).toEqual({
                 1112: false,
-                1111: false,
+                1111: false
             });
         });
     });
@@ -1635,9 +1635,9 @@ describe("GeneralController", () => {
                         lastName: "iamtst01",
                         name: "iamtst01",
                         uhUuid: "12345678",
-                        username: "monir",
+                        username: "monir"
                     }
-                ],
+                ]
             ];
             scope.membersInCheckboxList = scope.pagedItemsInclude;
         });
@@ -1923,16 +1923,16 @@ describe("GeneralController", () => {
         });
     });
 
-    describe("createResetNotifModal", () => {
+    describe("displaySuccessfulGroupResetModal", () => {
         it("should set group to group that is passed in", () => {
             expect(scope.group).toBe("");
-            scope.createResetNotifModal("admin");
+            scope.displaySuccessfulGroupResetModal("admin");
             expect(scope.group).toBe("admin");
         });
 
         it("should check that the resetNotifModalInstance is launched", () => {
             spyOn(uibModal, "open").and.callThrough();
-            scope.createResetNotifModal();
+            scope.displaySuccessfulGroupResetModal();
             expect(uibModal.open).toHaveBeenCalled();
         });
     });
@@ -2002,7 +2002,10 @@ describe("GeneralController", () => {
             spyOn(scope, "initMemberDisplayName");
             spyOn(uibModal, "open").and.returnValue(mockModal);
 
-            options = { membersToRemove: { name: "iamtst01", username: "iamtst01", uhUuid: "iamtst01" }, listName: "Include" };
+            options = {
+                membersToRemove: { name: "iamtst01", username: "iamtst01", uhUuid: "iamtst01" },
+                listName: "Include"
+            };
             scope.launchRemoveModal(options);
             expect(scope.initMemberDisplayName).toHaveBeenCalled();
             expect(scope.membersToRemove).toEqual(["iamtst01"]);
@@ -2069,8 +2072,11 @@ describe("GeneralController", () => {
             spyOn(uibModal, "open").and.returnValue(mockModal);
             spyOn(gs, "removeOwnerships").and.callThrough();
 
-            options = { membersToRemove: { name: "iamtst05", username: "iamtst05", uhUuid: "iamtst05" }, listName: "owners" };
-            scope.currentUser = {uid: "iamtst05", uhUuid: "iamtst05"};
+            options = {
+                membersToRemove: { name: "iamtst05", username: "iamtst05", uhUuid: "iamtst05" },
+                listName: "owners"
+            };
+            scope.currentUser = { uid: "iamtst05", uhUuid: "iamtst05" };
             scope.launchRemoveModal(options);
             expect(scope.membersToRemove).toEqual(["iamtst05"]);
             expect(scope.isMultiRemove).toBeFalse();
@@ -2179,7 +2185,7 @@ describe("GeneralController", () => {
             expect(uibModal.open).toHaveBeenCalled();
         });
     });
-    
+
     describe("closeRemoveErrorModal", () => {
         beforeEach(() => {
             scope.launchRemoveErrorModal("testString");
@@ -2191,7 +2197,7 @@ describe("GeneralController", () => {
             expect(scope.removeErrorModalInstance.close).toHaveBeenCalled();
         });
     });
-    
+
     describe("returnToGroupingsList", () => {
         it("should call resetGroupingInformation", () => {
             spyOn(scope, "resetGroupingInformation").and.callThrough();
@@ -2231,7 +2237,7 @@ describe("GeneralController", () => {
             expect(scope.resetResults).toEqual([]);
             expect(scope.personProps).toEqual([]);
         });
-        
+
         it("should reset every nonpaginated list pertaining to a grouping", () => {
             scope.resetGroupingInformation();
 
@@ -2275,7 +2281,7 @@ describe("GeneralController", () => {
             expect(scope.personQuery).toEqual("");
         });
     });
-    
+
     describe("createPreferenceInfoModal", () => {
         it("should set preferenceInfo to preferenceInfo that is passed in", () => {
             expect(scope.preferenceInfo).toBeUndefined();
@@ -2309,6 +2315,139 @@ describe("GeneralController", () => {
             expect(gs.setOptOut).toHaveBeenCalled();
         });
     });
+
+    describe("initResetGroup", () => {
+        it("should call handleGroupingReset ", function () {
+            spyOn(scope, "handleGroupingReset");
+            scope.initResetGroup();
+            expect(scope.handleGroupingReset).toHaveBeenCalled();
+        });
+    });
+
+    describe("handleGroupingReset", () => {
+        const groupingPath = "grouping-path";
+        const includeResultSuccess = {
+            "groupPath": groupingPath + ":include",
+            "resultCode": "SUCCESS"
+        };
+        const excludeResultSuccess = {
+            "groupPath": groupingPath + ":exclude",
+            "resultCode": "SUCCESS"
+        };
+        const resultError = {
+            "status": 404
+        };
+        const resultErrorStatusUndef = {
+            "status": "undefined"
+        };
+
+        describe("when both results are successful", function () {
+            it("should call displaySuccessfulGroupResetModal", function () {
+                spyOn(scope, "displaySuccessfulGroupResetModal");
+                scope.handleGroupingReset(groupingPath, includeResultSuccess, excludeResultSuccess);
+                expect(scope.displaySuccessfulGroupResetModal).toHaveBeenCalled();
+            });
+            it("should not call displayUnsuccessfulGroupResetModal", function () {
+                spyOn(scope, "displayUnsuccessfulGroupResetModal");
+                scope.handleGroupingReset(groupingPath, includeResultSuccess, excludeResultSuccess);
+                expect(scope.displayUnsuccessfulGroupResetModal).not.toHaveBeenCalled();
+            });
+        });
+
+        describe("when the Exclude group has been reset, but there was an error preventing the Include list reset.", function () {
+            it("should not call displaySuccessfulGroupResetModal", function () {
+                spyOn(scope, "displaySuccessfulGroupResetModal");
+                scope.handleGroupingReset(groupingPath, includeResultSuccess, resultError);
+                expect(scope.displaySuccessfulGroupResetModal).not.toHaveBeenCalled();
+            });
+            it("should call displayUnsuccessfulGroupResetModal", function () {
+                spyOn(scope, "displayUnsuccessfulGroupResetModal");
+                scope.handleGroupingReset(groupingPath, resultError, excludeResultSuccess);
+                expect(scope.displayUnsuccessfulGroupResetModal).toHaveBeenCalled();
+            });
+
+            let message = "The Exclude group has been reset. There was an error preventing the Include list reset.";
+            let title = "Reset Group Error";
+            it(`should set the reset error modal title to \"${title}\" and message to \"${message}\" `, function () {
+                spyOn(scope, "displayUnsuccessfulGroupResetModal").and.callThrough();
+                scope.handleGroupingReset(groupingPath, resultError, excludeResultSuccess);
+                expect(scope.currentModalBody).toBe(message);
+                expect(scope.currentModalTitle).toBe(title);
+            });
+        });
+
+        describe("when the Include group has been reset, but there was an error preventing the Exclude list reset.", function () {
+            it("should not call displaySuccessfulGroupResetModal", function () {
+                spyOn(scope, "displaySuccessfulGroupResetModal");
+                scope.handleGroupingReset(groupingPath, resultError, excludeResultSuccess);
+                expect(scope.displaySuccessfulGroupResetModal).not.toHaveBeenCalled();
+            });
+            it("should call displayUnsuccessfulGroupResetModal", function () {
+                spyOn(scope, "displayUnsuccessfulGroupResetModal");
+                scope.handleGroupingReset(groupingPath, includeResultSuccess, resultError);
+                expect(scope.displayUnsuccessfulGroupResetModal).toHaveBeenCalled();
+            });
+
+            let message = "The Include group has been reset. There was an error preventing the Exclude list reset.";
+            let title = "Reset Group Error";
+            it(`should set the reset error modal title to \"${title}\" and message to \"${message}\" `, function () {
+                spyOn(scope, "displayUnsuccessfulGroupResetModal").and.callThrough();
+                scope.handleGroupingReset(groupingPath, includeResultSuccess, resultError);
+                expect(scope.currentModalBody).toBe(message);
+                expect(scope.currentModalTitle).toBe(title);
+            });
+        });
+
+        describe("when both results return with an error code", function () {
+            it("should not call displaySuccessfulGroupResetModal", function () {
+                spyOn(scope, "displaySuccessfulGroupResetModal");
+                scope.handleGroupingReset(groupingPath, resultError, excludeResultSuccess);
+                expect(scope.displaySuccessfulGroupResetModal).not.toHaveBeenCalled();
+            });
+            it("should call displayUnsuccessfulGroupResetModal", function () {
+                spyOn(scope, "displayUnsuccessfulGroupResetModal");
+                scope.handleGroupingReset(groupingPath, resultError, resultError);
+                expect(scope.displayUnsuccessfulGroupResetModal).toHaveBeenCalled();
+            });
+
+            let message = "Neither list has been reset due to an error.";
+            let title = "Reset Group Error";
+            it(`should set the reset error modal title to \"${title}\" and message to \"${message}\" `, function () {
+                spyOn(scope, "displayUnsuccessfulGroupResetModal").and.callThrough();
+                scope.handleGroupingReset(groupingPath, resultError, resultError);
+                expect(scope.currentModalBody).toBe(message);
+                expect(scope.currentModalTitle).toBe(title);
+            });
+        });
+
+        describe("when both groups are reset", function () {
+            let message = "include and exclude groups have";
+            it(`should set the dynamic modal message variable (scope.group) to \"${message}\"`, function () {
+                spyOn(scope, "displaySuccessfulGroupResetModal").and.callThrough();
+                scope.handleGroupingReset(groupingPath, includeResultSuccess, excludeResultSuccess);
+                expect(scope.group).toBe(message);
+            });
+        });
+        describe("when only the Include group is reset", function () {
+            let message = "include group has";
+            it(`should set the dynamic modal message variable (scope.group) to \"${message}\"`, function () {
+                spyOn(scope, "displaySuccessfulGroupResetModal").and.callThrough();
+                scope.handleGroupingReset(groupingPath, includeResultSuccess, "undefined");
+                expect(scope.group).toBe(message);
+            });
+        });
+        describe("when only the Exclude group is reset", function () {
+            let message = "exclude group has";
+            it(`should set the dynamic modal message variable (scope.group) to \"${message}\"`, function () {
+                spyOn(scope, "displaySuccessfulGroupResetModal").and.callThrough();
+                scope.handleGroupingReset(groupingPath, "undefined", excludeResultSuccess);
+                expect(scope.group).toBe(message);
+            });
+        });
+
+
+    });
+
 
     describe("createResetGroupModal", () => {
         let options = { user: "testUser", group: "testGroup", listNames: "testList" };
@@ -2775,7 +2914,7 @@ describe("GeneralController", () => {
             expect(uibModal.open).toHaveBeenCalled();
         });
     });
-    
+
     describe("convertListToCsv", () => {
         describe("user exports a list with members", () => {
             it("should start with the correct column headers", () => {
@@ -2797,7 +2936,7 @@ describe("GeneralController", () => {
     describe("showWarningRemovingSelf", () => {
         describe("removing self from a list", () => {
             beforeEach(() => {
-                scope.currentUser = {uid: "iamtst01", uhUuid: "iamtst01"};
+                scope.currentUser = { uid: "iamtst01", uhUuid: "iamtst01" };
                 scope.membersToRemove = ["iamtst01"];
             });
 
@@ -2831,7 +2970,7 @@ describe("GeneralController", () => {
             expect(result).toEqual("");
         });
     });
-    
+
     describe("proceedRedirectApiError", () => {
         let testWindowLocationHref = "/testURL";
         beforeEach(() => {
