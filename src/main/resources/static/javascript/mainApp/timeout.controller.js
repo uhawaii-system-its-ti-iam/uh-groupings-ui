@@ -7,11 +7,10 @@
      * If user clicks or presses any key within the 30 min of inactivity, timer is reset.
      *
      * @param $scope - binding between controller and HTML page
-     * @param $window -
+     * @param $window - browser's window object
      * @param $uibModal - creates modal
      * @param dataProvider - http request
      * @param BASE_URL - base url for api calls
-     * @constructor
      */
     function TimeoutJsController($scope, $window, $uibModal, $controller, dataProvider, BASE_URL) {
 
@@ -36,7 +35,7 @@
         });
 
         /**
-         *  Checks on time of inactivity, if time is meet, log out user.
+         * Checks on time of inactivity, if time is meet, log out user.
          */
         $scope.timerIncrement = function () {
             $scope.idleTime++;
@@ -46,12 +45,33 @@
             }
             if ($scope.idleTime === 30) { // Logout user after 30 min has passed
                 let r = new XMLHttpRequest();
-                r.open("POST", "/uhgroupings/logout", false);
+                const basePath = getBasePath();
+                r.open("POST", `${basePath}/logout`, false);
                 r.setRequestHeader("X-XSRF-TOKEN", $scope.getCookie("XSRF-TOKEN"));
                 r.send();
-                $window.location.href = "/uhgroupings/";
+                $window.location.href = basePath;
             }
         };
+        console.log(getBasePath());
+        /**
+         * Returns a basePath (e.g., /uhgroupings or /its/uhgroupings)
+         */
+        function getBasePath() {
+            let basePath = "";
+            const segments = $window.location.pathname
+                .split("/")
+                .filter(segment => segment); // removes empty strings
+
+            for (const segment of segments) {
+                if (segment === "uhgroupings") {
+                    basePath += `/${segment}`;
+                    break;
+                } else {
+                    basePath += `/${segment}`;
+                }
+            }
+            return basePath;
+        }
 
         /**
          * Creates a countdown timer.
