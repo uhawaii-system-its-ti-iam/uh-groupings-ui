@@ -1,19 +1,19 @@
 package edu.hawaii.its.groupings.type;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class FeedbackTest {
 
     private Feedback feedback;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         feedback = new Feedback();
     }
@@ -33,11 +33,11 @@ public class FeedbackTest {
         feedback.setMessage("Test Message");
         feedback.setExceptionMessage("Exception Message");
 
-        assertThat(feedback.getName(), equalTo("Test User"));
-        assertThat(feedback.getEmail(), equalTo("test@hawaii.edu"));
-        assertThat(feedback.getType(), equalTo("Problem"));
-        assertThat(feedback.getMessage(), equalTo("Test Message"));
-        assertThat(feedback.getExceptionMessage(), equalTo("Exception Message"));
+        assertThat(feedback.getName(), is("Test User"));
+        assertThat(feedback.getEmail(), is("test@hawaii.edu"));
+        assertThat(feedback.getType(), is("Problem"));
+        assertThat(feedback.getMessage(), is("Test Message"));
+        assertThat(feedback.getExceptionMessage(), is("Exception Message"));
 
         assertThat(feedback.toString(), containsString("email=test@hawaii.edu"));
         assertThat(feedback.toString(), containsString("exceptionMessage=Exception Message"));
@@ -52,7 +52,7 @@ public class FeedbackTest {
         assertNull(feedback.getEmail());
         assertNull(feedback.getType());
         assertNull(feedback.getMessage());
-        assertThat(feedback.getExceptionMessage(), equalTo("Test Exception Stack Trace"));
+        assertThat(feedback.getExceptionMessage(), is("Test Exception Stack Trace"));
 
         assertThat(feedback.toString(), containsString("exceptionMessage=Test Exception Stack Trace"));
     }

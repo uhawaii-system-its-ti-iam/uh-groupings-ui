@@ -18,8 +18,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class PatternPropertyCheckerTest {
 
     private PatternPropertyChecker patternPropertyChecker;
-    private Path resourceDir = Paths.get("src", "test", "resources", "pattern-property-checker");
-    private String dirname = resourceDir.toString();
+    private final Path resourceDir = Paths.get("src", "test", "resources", "pattern-property-checker");
+    private final String dirname = resourceDir.toString();
 
     @BeforeEach
     public void setUp() {
@@ -56,7 +56,7 @@ public class PatternPropertyCheckerTest {
         List<String> fileLocations = patternPropertyChecker.getPatternLocation(dirname, ".properties");
         assertEquals(1, fileLocations.size());
         Path path = Paths.get(resourceDir.toString(), "test1", "PatternPropertyCheckerTestFile.properties");
-        assertThat(fileLocations.get(0), endsWith(path.toString() + " on line: 2"));
+        assertThat(fileLocations.get(0), endsWith(path + " on line: 2"));
     }
 
     @Test
@@ -65,8 +65,8 @@ public class PatternPropertyCheckerTest {
         List<String> fileLocations = patternPropertyChecker.getPatternLocation(dirname, ".properties");
         assertEquals(2, fileLocations.size());
         Path path = Paths.get(resourceDir.toString(), "test2", "PatternPropertyCheckerTestFile2.properties");
-        assertThat(fileLocations.get(0), endsWith(path.toString() + " on line: 2"));
-        assertThat(fileLocations.get(1), endsWith(path.toString() + " on line: 5"));
+        assertThat(fileLocations.get(0), endsWith(path + " on line: 2"));
+        assertThat(fileLocations.get(1), endsWith(path + " on line: 5"));
     }
 
     @Test
@@ -77,8 +77,8 @@ public class PatternPropertyCheckerTest {
         Path path1 = Paths.get(resourceDir.toString(), "test1", "PatternPropertyCheckerTwoPatterns.txt");
         Path path2 = Paths.get(resourceDir.toString(), "test1", "PatternPropertyCheckerTwoPatterns2.txt");
 
-        assertThat(fileLocations.get(0), endsWith(path1.toString() + " on line: 1"));
-        assertThat(fileLocations.get(1), endsWith(path2.toString() + " on line: 3"));
+        assertThat(fileLocations.get(0), endsWith(path1 + " on line: 1"));
+        assertThat(fileLocations.get(1), endsWith(path2 + " on line: 3"));
     }
 
     @Test

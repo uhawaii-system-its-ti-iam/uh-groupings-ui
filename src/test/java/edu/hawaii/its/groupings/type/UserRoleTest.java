@@ -1,19 +1,19 @@
 package edu.hawaii.its.groupings.type;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class UserRoleTest {
 
     private UserRole userRole;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         userRole = new UserRole();
     }
@@ -34,9 +34,9 @@ public class UserRoleTest {
         userRole.setId(666);
         userRole.setAuthority("The Beast");
         userRole.setVersion(9);
-        assertThat(userRole.getId(), equalTo(666));
-        assertThat(userRole.getAuthority(), equalTo("The Beast"));
-        assertThat(userRole.getVersion(), equalTo(9));
+        assertThat(userRole.getId(), is(666));
+        assertThat(userRole.getAuthority(), is("The Beast"));
+        assertThat(userRole.getVersion(), is(9));
     }
 
     @Test

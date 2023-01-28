@@ -1,19 +1,18 @@
 package edu.hawaii.its.groupings.type;
-
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class MessageTest {
 
     private Message message;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         message = new Message();
     }
@@ -32,7 +31,7 @@ public class MessageTest {
         assertNull(message.getTypeId());
 
         message.setId(666);
-        assertThat(message.getId(), equalTo(666));
+        assertThat(message.getId(), is(666));
     }
 
     @Test

@@ -1,17 +1,19 @@
 package edu.hawaii.its.groupings.type;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 
 public class OwnerTest {
 
     private Owner owner;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         owner = new Owner();
     }
@@ -19,35 +21,35 @@ public class OwnerTest {
     @Test
     public void construction() {
         owner = new Owner("James T Kirk");
-        assertThat(owner.getPrivilegeName(), equalTo("James T Kirk"));
+        assertThat(owner.getPrivilegeName(), is("James T Kirk"));
     }
 
     @Test
     public void name() {
-        assertThat(owner.getName(), equalTo(null));
+        assertNull(owner.getName());
         owner.setName("frank");
-        assertThat(owner.getName(), equalTo("frank"));
+        assertThat(owner.getName(), is("frank"));
     }
 
     @Test
     public void privilegeName() {
-        assertThat(owner.getPrivilegeName(), equalTo(null));
+        assertNull(owner.getPrivilegeName());
         owner.setPrivilegeName("frd");
-        assertThat(owner.getPrivilegeName(), equalTo("frd"));
+        assertThat(owner.getPrivilegeName(), is("frd"));
     }
 
     @Test
     public void uhUuid() {
-        assertThat(owner.getUhUuid(), equalTo(null));
+        assertNull(owner.getUhUuid());
         owner.setUhUuid("uhUuid");
-        assertThat(owner.getUhUuid(), equalTo("uhUuid"));
+        assertThat(owner.getUhUuid(), is("uhUuid"));
     }
 
     @Test
     public void uid() {
-        assertThat(owner.getUid(), equalTo(null));
+        assertNull(owner.getUid());
         owner.setUid("uid");
-        assertThat(owner.getUid(), equalTo("uid"));
+        assertThat(owner.getUid(), is("uid"));
     }
 
     @Test

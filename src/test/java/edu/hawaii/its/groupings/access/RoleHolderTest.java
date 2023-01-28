@@ -1,27 +1,26 @@
 package edu.hawaii.its.groupings.access;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
-
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 public class RoleHolderTest {
 
     @Test
     public void basics() {
         RoleHolder roleHolder = new RoleHolder();
-        assertThat(roleHolder.size(), equalTo(0));
+        assertThat(roleHolder.size(), is(0));
         roleHolder.add(Role.ANONYMOUS);
-        assertThat(roleHolder.size(), equalTo(1));
+        assertThat(roleHolder.size(), is(1));
         roleHolder.add(Role.UH);
-        assertThat(roleHolder.size(), equalTo(2));
+        assertThat(roleHolder.size(), is(2));
         roleHolder.add(Role.EMPLOYEE);
-        assertThat(roleHolder.size(), equalTo(3));
+        assertThat(roleHolder.size(), is(3));
         roleHolder.add(Role.OWNER);
-        assertThat(roleHolder.size(), equalTo(4));
+        assertThat(roleHolder.size(), is(4));
         roleHolder.add(Role.ADMIN);
-        assertThat(roleHolder.size(), equalTo(5));
+        assertThat(roleHolder.size(), is(5));
 
         assertThat(roleHolder.toString(), containsString("ROLE_ANONYMOUS"));
         assertThat(roleHolder.toString(), containsString("ROLE_UH"));

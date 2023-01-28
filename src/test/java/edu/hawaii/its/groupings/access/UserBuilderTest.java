@@ -1,12 +1,12 @@
 package edu.hawaii.its.groupings.access;
 
+import org.jasig.cas.client.authentication.SimplePrincipal;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import edu.hawaii.its.api.controller.GroupingsRestController;
 import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
 import edu.hawaii.its.groupings.controller.WithMockUhUser;
-import org.jasig.cas.client.authentication.SimplePrincipal;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,7 +14,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.security.Principal;
@@ -23,17 +23,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
-
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = { SpringBootWebApplication.class })
 public class UserBuilderTest {
 
@@ -52,7 +53,7 @@ public class UserBuilderTest {
     @Autowired
     private WebApplicationContext context;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         webAppContextSetup(context)
                 .apply(springSecurity())
@@ -83,7 +84,7 @@ public class UserBuilderTest {
         User user = userBuilder.make(map);
 
         // Check results.
-        assertEquals(4, user.getAuthorities().size());
+        assertThat(user.getAuthorities().size(), is(4));
         assertTrue(user.hasRole(Role.ANONYMOUS));
         assertTrue(user.hasRole(Role.UH));
         assertTrue(user.hasRole(Role.ADMIN));
@@ -101,7 +102,7 @@ public class UserBuilderTest {
             userBuilder.make(map);
             fail("Should not reach here.");
         } catch (Exception e) {
-            assertThat(UsernameNotFoundException.class, equalTo(e.getClass()));
+            assertThat(e.getClass(), is(UsernameNotFoundException.class));
             assertThat(e.getMessage(), containsString("uid is empty"));
         }
     }
@@ -115,13 +116,15 @@ public class UserBuilderTest {
             userBuilder.make(map);
             fail("Should not reach here.");
         } catch (Exception e) {
-            assertThat(UsernameNotFoundException.class, equalTo(e.getClass()));
+            assertThat(e.getClass(), is(UsernameNotFoundException.class));
             assertThat(e.getMessage(), containsString("uid is empty"));
         }
     }
 
-    @Test(expected = UsernameNotFoundException.class)
+    @Test
     public void make() {
-        userBuilder.make(new HashMap<String, String>());
+        UsernameNotFoundException exception =
+            assertThrows(UsernameNotFoundException.class, () -> userBuilder.make(new HashMap<String, String>()));
+        assertNull(exception.getCause());
     }
 }

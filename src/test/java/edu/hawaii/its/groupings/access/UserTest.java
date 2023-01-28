@@ -1,6 +1,6 @@
 package edu.hawaii.its.groupings.access;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
@@ -9,10 +9,11 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class UserTest {
 
@@ -55,9 +56,9 @@ public class UserTest {
         User user = new User("a", authorities);
         user.setAttributes(new UhCasAttributes(map));
 
-        assertThat(user.getAttribute("uid"), equalTo("duckart"));
-        assertThat(user.getName(), equalTo("Frank6"));
-        assertThat(user.getGivenName(), equalTo("Frank"));
+        assertThat(user.getAttribute("uid"), is("duckart"));
+        assertThat(user.getName(), is("Frank6"));
+        assertThat(user.getGivenName(), is("Frank"));
         assertThat(user.toString(), containsString("uid=a"));
         assertThat(user.toString(), containsString("uhUuid=null"));
     }

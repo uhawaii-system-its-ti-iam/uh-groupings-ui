@@ -1,19 +1,19 @@
 package edu.hawaii.its.groupings.type;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class TypeTest {
 
     private Type type;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         type = new Type();
     }
@@ -33,9 +33,9 @@ public class TypeTest {
         type.setId(666);
         type.setDescription("The Beast");
         type.setVersion(9);
-        assertThat(type.getId(), equalTo(666));
-        assertThat(type.getDescription(), equalTo("The Beast"));
-        assertThat(type.getVersion(), equalTo(9));
+        assertThat(type.getId(), is(666));
+        assertThat(type.getDescription(), is("The Beast"));
+        assertThat(type.getVersion(), is(9));
     }
 
     @Test

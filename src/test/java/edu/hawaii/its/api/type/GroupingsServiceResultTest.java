@@ -1,17 +1,17 @@
 package edu.hawaii.its.api.type;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.hamcrest.MatcherAssert.assertThat;
 
-import org.junit.Test;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class GroupingsServiceResultTest {
 
     private GroupingsServiceResult groupingsServiceResult;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         groupingsServiceResult = new GroupingsServiceResult();
     }
@@ -21,7 +21,7 @@ public class GroupingsServiceResultTest {
         assertNotNull(groupingsServiceResult);
         groupingsServiceResult.setResultCode("resultCode");
         groupingsServiceResult.setAction("Action");
-        assertThat(groupingsServiceResult.getResultCode(), equalTo("resultCode"));
-        assertThat(groupingsServiceResult.getAction(), equalTo("Action"));
+        assertThat(groupingsServiceResult.getResultCode(), is("resultCode"));
+        assertThat(groupingsServiceResult.getAction(), is("Action"));
     }
 }

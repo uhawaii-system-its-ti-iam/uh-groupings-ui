@@ -1,12 +1,11 @@
 package edu.hawaii.its.groupings.access;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class RoleTest {
 
@@ -21,9 +20,9 @@ public class RoleTest {
     public void find() {
         Role role = Role.find(Role.ADMIN.name());
         assertNotNull(role);
-        assertThat(role.name(), equalTo(Role.ADMIN.name()));
-        assertThat(role.longName(), equalTo(Role.ADMIN.longName()));
-        assertThat(role.toString(), equalTo("ROLE_ADMIN"));
+        assertThat(role.name(), is(Role.ADMIN.name()));
+        assertThat(role.longName(), is(Role.ADMIN.longName()));
+        assertThat(role.toString(), is("ROLE_ADMIN"));
         role = Role.find("non-existent-role");
         assertNull(role);
     }

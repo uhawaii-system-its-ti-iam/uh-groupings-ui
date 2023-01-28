@@ -1,19 +1,19 @@
 package edu.hawaii.its.api.type;
 
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.hamcrest.MatcherAssert.assertThat;
 
-import org.junit.Test;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class GroupingServiceResultExceptionTest extends GroupingsServiceResult {
 
     private GroupingsServiceResultException groupingsServiceResultException;
 
-    @Before
+    @BeforeEach
     public void setUp(){
         groupingsServiceResultException = new GroupingsServiceResultException();
     }
@@ -26,6 +26,6 @@ public class GroupingServiceResultExceptionTest extends GroupingsServiceResult {
         String test = "GroupingsServiceResult "+
                 "[action=404, resultCode=resultCode0]";
         String expected = test.replaceAll("\\\\","");
-        assertThat(groupingsServiceResultException.getGsr().toString(), equalTo(expected));
+        assertThat(groupingsServiceResultException.getGsr().toString(), is(expected));
     }
 }

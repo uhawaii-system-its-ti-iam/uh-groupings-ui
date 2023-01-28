@@ -1,10 +1,10 @@
 package edu.hawaii.its.groupings.access;
 
 import org.jasig.cas.client.authentication.SimplePrincipal;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import edu.hawaii.its.api.controller.GroupingsRestController;
 import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
 import edu.hawaii.its.groupings.controller.WithMockUhUser;
@@ -14,21 +14,21 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.security.Principal;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {SpringBootWebApplication.class})
 public class AuthorizationServiceTest {
 
@@ -44,7 +44,7 @@ public class AuthorizationServiceTest {
     @Autowired
     private WebApplicationContext context;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         webAppContextSetup(context)
                 .apply(springSecurity())
@@ -74,7 +74,7 @@ public class AuthorizationServiceTest {
         RoleHolder roleHolder = authorizationService.fetchRoles(uhUuid, "test");
 
         // Check results.
-        assertThat(roleHolder.size(), equalTo(2));
+        assertThat(roleHolder.size(), is(2));
         assertTrue(roleHolder.contains(Role.ANONYMOUS));
         assertTrue(roleHolder.contains(Role.UH));
         assertFalse(roleHolder.contains(Role.EMPLOYEE));
@@ -100,32 +100,32 @@ public class AuthorizationServiceTest {
         RoleHolder roleHolder = authorizationService.fetchRoles(uhUuid, "test");
 
         // Check results.
-        assertThat(roleHolder.size(), equalTo(4));
+        assertThat(roleHolder.size(), is(4));
         assertTrue(roleHolder.contains(Role.ANONYMOUS));
         assertTrue(roleHolder.contains(Role.UH));
         assertTrue(roleHolder.contains(Role.OWNER));
         assertTrue(roleHolder.contains(Role.ADMIN));
     }
 
-    @Ignore
+    @Disabled
     @Test
     public void fetch() {
         RoleHolder roleHolder = authorizationService.fetchRoles("10000001", "test");
-        assertThat(roleHolder.size(), equalTo(4));
+        assertThat(roleHolder.size(), is(4));
         assertTrue(roleHolder.contains(Role.ANONYMOUS)); // ???
         assertTrue(roleHolder.contains(Role.UH));
         assertTrue(roleHolder.contains(Role.EMPLOYEE));
         assertTrue(roleHolder.contains(Role.ADMIN));
 
         roleHolder = authorizationService.fetchRoles("10000004", "test");
-        assertThat(roleHolder.size(), equalTo(3));
+        assertThat(roleHolder.size(), is(3));
         assertTrue(roleHolder.contains(Role.ANONYMOUS));
         assertTrue(roleHolder.contains(Role.UH));
         assertTrue(roleHolder.contains(Role.EMPLOYEE));
         assertFalse(roleHolder.contains(Role.ADMIN));
 
         roleHolder = authorizationService.fetchRoles("10000004", "test");
-        assertThat(roleHolder.size(), equalTo(3));
+        assertThat(roleHolder.size(), is(3));
         assertTrue(roleHolder.contains(Role.ANONYMOUS));
         assertTrue(roleHolder.contains(Role.UH));
         assertTrue(roleHolder.contains(Role.EMPLOYEE));
@@ -133,14 +133,14 @@ public class AuthorizationServiceTest {
 
         // 10000005
         roleHolder = authorizationService.fetchRoles("10000005", "test");
-        assertThat(roleHolder.size(), equalTo(2));
+        assertThat(roleHolder.size(), is(2));
         assertTrue(roleHolder.contains(Role.ANONYMOUS));
         assertTrue(roleHolder.contains(Role.UH));
         assertFalse(roleHolder.contains(Role.EMPLOYEE));
         assertFalse(roleHolder.contains(Role.ADMIN));
 
         roleHolder = authorizationService.fetchRoles("90000009", "test");
-        assertThat(roleHolder.size(), equalTo(2));
+        assertThat(roleHolder.size(), is(2));
         assertTrue(roleHolder.contains(Role.ANONYMOUS));
         assertTrue(roleHolder.contains(Role.UH));
         assertFalse(roleHolder.contains(Role.EMPLOYEE));
