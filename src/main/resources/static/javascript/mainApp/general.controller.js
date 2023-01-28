@@ -1593,7 +1593,7 @@
                 $scope.listName = options.listName;
 
                 if (_.isPlainObject(membersToRemove)) {
-                    membersToRemove = [membersToRemove.username];
+                    membersToRemove = [membersToRemove.uhUuid];
                 }
 
                 if (membersToRemove.length === 1) {
