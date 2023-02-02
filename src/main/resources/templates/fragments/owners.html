@@ -3,8 +3,12 @@
     <div id="owners-display" class="tab-pane fade show active">
 
         <div class="row">
-            <div class="col-md-8">
-                <h1 class="font-weight-bold text-dark pt-2 mb-0">Owners ({{groupingOwners.length}})</h1>
+            <div class="col-md-8 d-flex">
+                <h1 class="font-weight-bold text-dark pt-2 mb-0">Owners&nbsp(</h1>
+
+                <h1 ng-if="groupingOwners.length === 1" class="font-weight-bold text-danger pt-2 mb-0">{{groupingOwners.length}}</h1>
+                <h1 ng-if="groupingOwners.length > 1" class="font-weight-bold text-dark pt-2 mb-0">{{groupingOwners.length}}</h1>
+                <h1 class="font-weight-bold text-dark pt-2 mb-0">)</h1>
             </div>
             <div class="col-md-4 py-2">
                 <input placeholder="Filter Members..." type="text" title="Filter Members"
