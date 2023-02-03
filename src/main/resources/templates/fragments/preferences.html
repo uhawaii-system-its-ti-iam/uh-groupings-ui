@@ -1,6 +1,7 @@
 <th:block th:fragment="preferences">
 
-    <h2 class="font-weight-bold text-dark pt-4">Preferences</h2>
+    <h2 class="font-weight-bold text-dark pt-4">Synchronization Destinations</h2>
+    <div th:text="#{screen.message.common.preferences.info}"></div>
     <div id="preferences-display" class="tab-pane fade show active">
         <div class="row pt-4 pb-5">
             <div class="col-md-6 col-12">
@@ -76,7 +77,7 @@
                                 </label>
                                 <span class="fa fa-question-circle" role="button"
                                       data-toggle="tooltip" data-placement="right"
-                                      tabindex="0"
+                                      tabindex="0" onmouseover="$(this).tooltip('toggle')"
                                       title="{{syncDest.tooltip}}"
                                       th:attr="ng-click='createPreferenceInfoModal(syncDest.tooltip)',
                               ng-keypress='$event.keyCode === 13 ? createPreferenceInfoModal(syncDest.tooltip) : null'"></span>
