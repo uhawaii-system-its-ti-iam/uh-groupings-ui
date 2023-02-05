@@ -53,8 +53,8 @@
              * @param {function} callback - the function to perform on a successful request (200)
              * @param {function} callError - Execute if response returns as an error.
              */
-            updateData(url, callback, callError) {
-                $http.post(encodeURI(url))
+            loadDataWithBody(url, data, callback, callError) {
+                $http.post(encodeURI(url), data)
                     .then(function (response) {
                         callback(response.data);
                     }, function (response) {
@@ -63,21 +63,16 @@
             },
 
             /**
-             * POST data to the server, if the response is OK then call the callBack function, if the response is an
-             * error then call the callError function. If the response is not received in n seconds, launch a modal.
-             * @param {string} url - Path to which data is being posted too.
-             * @param {function} modal - Launch a modal using a call back function.
-             * @param {function} callback - Execute if response returns OK
+             * Perform a POST request to the specified URL.
+             * @param {string} url - the URL to perform the request on
+             * @param {function} callback - the function to perform on a successful request (200)
              * @param {function} callError - Execute if response returns as an error.
              */
-            updateDataWithTimeoutModal(url, callback, callError, modal) {
-                let timeoutID = setTimeout(modal, timeLimit);
+            updateData(url, callback, callError) {
                 $http.post(encodeURI(url))
                     .then(function (response) {
-                        clearTimeout(timeoutID);
                         callback(response.data);
                     }, function (response) {
-                        clearTimeout(timeoutID);
                         callError(response);
                     });
             },

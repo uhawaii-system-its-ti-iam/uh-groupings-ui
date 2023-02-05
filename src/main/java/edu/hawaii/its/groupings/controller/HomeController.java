@@ -116,11 +116,6 @@ public class HomeController {
         return "modal/infoModal";
     }
 
-    @GetMapping(value = "/modal/checkModal")
-    public String checkModal() {
-        return "modal/checkModal";
-    }
-
     @GetMapping(value = "/modal/apiError")
     public String apiError() {
         return "modal/apiError";
@@ -129,11 +124,6 @@ public class HomeController {
     @GetMapping(value = "/modal/preferenceErrorModal")
     public String preferenceErrorModal() {
         return "modal/preferenceErrorModal";
-    }
-
-    @GetMapping(value = "/modal/addModal")
-    public String addModal() {
-        return "modal/addModal";
     }
 
     @GetMapping(value = "/modal/removeModal")
@@ -156,9 +146,9 @@ public class HomeController {
         return "modal/emptyGroupModal";
     }
 
-    @GetMapping(value = "/modal/confirmAddModal")
-    public String confirmAddModal() {
-        return "modal/confirmAddModal";
+    @GetMapping(value = "/modal/addModal")
+    public String addModal() {
+        return "modal/addModal";
     }
 
     @GetMapping(value = "/modal/syncDestModal")
@@ -191,11 +181,6 @@ public class HomeController {
         return "modal/optErrorModal";
     }
 
-    @GetMapping(value = "/modal/basisWarningModal")
-    public String basisWarningModal() {
-        return "modal/basisWarningModal";
-    }
-
     @GetMapping(value = "/modal/importModal")
     public String importModal() {
         return "modal/importModal";
@@ -211,9 +196,9 @@ public class HomeController {
         return "modal/dynamicModal";
     }
 
-    @GetMapping(value = "/modal/multiAddResultModal")
-    public String multiAddResultModal() {
-        return "modal/multiAddResultModal";
+    @GetMapping(value = "/modal/multiAddModal")
+    public String multiAddModal() {
+        return "modal/multiAddModal";
     }
 
     @GetMapping(value = "/modal/multiRemoveModal")
@@ -221,8 +206,8 @@ public class HomeController {
         return "modal/multiRemoveModal";
     }
 
-    @GetMapping(value = "/modal/multiRemoveResultModal")
-    public String multiRemoveConfirmationModal() {
-        return "modal/multiRemoveResultModal";
+    @GetMapping(value = "/modal/importConfirmationModal")
+    public String importConfirmationModal() {
+        return "modal/importConfirmationModal";
     }
 }

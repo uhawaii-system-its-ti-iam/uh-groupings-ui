@@ -83,24 +83,15 @@ form.seamless {
 }
 
 /* Modal tables */
-.modal-tables { /* Sets margin for "are you sure". */
-    margin-bottom: 30px;
+.modal-tables {
+    max-height: 25rem;
+    overflow-y: auto;
 }
 
-/* Styling for multi-add modal tables */
-.import-table {
-    &-tbody {
-        display: block;
-        height: 175px;
-        overflow-y: auto;
-    }
-
-    &-thead-tbody-tr {
-        display: table;
-        width: 100%;
-        table-layout: fixed;
-        white-space: nowrap;
-    }
+.thead-sticky {
+    position: sticky;
+    background-color: white;
+    inset-block-start: 0;
 }
 
 .clickable {

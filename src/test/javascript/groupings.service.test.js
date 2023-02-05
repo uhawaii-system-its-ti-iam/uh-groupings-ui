@@ -255,6 +255,20 @@ describe("GroupingsService", function () {
         });
     });
 
+    describe("invalidUhIdentifiers", function () {
+        let uhIdentifiers = "";
+        it("should call dataProvider.loadDataWithBody", function () {
+            spyOn(dp, "loadDataWithBody");
+            gs.invalidUhIdentifiers(uhIdentifiers, onSuccess, onError);
+            expect(dp.loadDataWithBody).toHaveBeenCalled();
+        });
+        it("should use the correct path", function () {
+            gs.invalidUhIdentifiers(uhIdentifiers, onSuccess, onError);
+            httpBackend.expectPOST(BASE_URL + "members/invalid").respond(200);
+            expect(httpBackend.flush).not.toThrow();
+        });
+    });
+
     describe("getMemberAttributes", function () {
         let member = "";
         it("should call dataProvider.loadData", function () {
@@ -265,6 +279,20 @@ describe("GroupingsService", function () {
         it("should use the correct path", function () {
             gs.getMemberAttributes(member, onSuccess, onError);
             httpBackend.expectGET(BASE_URL + "members/" + member).respond(200);
+            expect(httpBackend.flush).not.toThrow();
+        });
+    });
+
+    describe("getMembersAttributes", function () {
+        let member = "";
+        it("should call dataProvider.loadDataWithBody", function () {
+            spyOn(dp, "loadDataWithBody");
+            gs.getMembersAttributes(member, onSuccess, onError);
+            expect(dp.loadDataWithBody).toHaveBeenCalled();
+        });
+        it("should use the correct path", function () {
+            gs.getMembersAttributes(member, onSuccess, onError);
+            httpBackend.expectPOST(BASE_URL + "members").respond(200);
             expect(httpBackend.flush).not.toThrow();
         });
     });

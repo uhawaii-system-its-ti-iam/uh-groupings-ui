@@ -246,7 +246,6 @@ describe("AdminController", function () {
         });
     });
 
-
     describe("removeFromGroups", () => {
         beforeEach(() => {
             scope.personToLookup = "";
@@ -366,7 +365,7 @@ describe("AdminController", function () {
         beforeEach(() => {
             scope.pagedItemsAdmins[0] = {name: "zzz", username: "zzz", uhUuid: "zzz"};
         });
-        it("should call scope.createRemoveModal", () => {
+        it("should call scope.launchRemoveModal", () => {
             scope.adminsList = [
                 {
                     name: "iamtst01",
@@ -384,14 +383,14 @@ describe("AdminController", function () {
                     uhUuid: "iamtst03"
                 }
             ];
-            spyOn(scope, "createRemoveModal").and.callThrough();
+            spyOn(scope, "launchRemoveModal").and.callThrough();
             scope.removeAdmin(0, 0);
-            expect(scope.createRemoveModal).toHaveBeenCalled();
+            expect(scope.launchRemoveModal).toHaveBeenCalled();
         });
-        it("should call scope.createRemoveErrorModal", () => {
-            spyOn(scope, "createRemoveErrorModal").and.callThrough();
+        it("should call scope.launchRemoveErrorModal", () => {
+            spyOn(scope, "launchRemoveErrorModal").and.callThrough();
             scope.removeAdmin(0, 0);
-            expect(scope.createRemoveErrorModal).toHaveBeenCalled();
+            expect(scope.launchRemoveErrorModal).toHaveBeenCalled();
         });
     });
 
@@ -410,11 +409,11 @@ describe("AdminController", function () {
             expect(scope.ownerOfListName).toBe("");
         });
 
-        it("should call showWarningRemovingSelfFromList function", () => {
-            spyOn(scope, "showWarningRemovingSelfFromList").and.callThrough();
+        it("should call showWarningRemovingSelf function", () => {
+            spyOn(scope, "showWarningRemovingSelf").and.callThrough();
             scope.createRemoveFromGroupsModal(options);
 
-            expect(scope.showWarningRemovingSelfFromList).toHaveBeenCalled();
+            expect(scope.showWarningRemovingSelf).toHaveBeenCalled();
         });
 
         it("should call groupingsService", () => {
