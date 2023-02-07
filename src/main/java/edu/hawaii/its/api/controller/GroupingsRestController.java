@@ -458,10 +458,9 @@ public class GroupingsRestController {
         logger.info("Entered REST grouping...");
         Map<String, String> params = mapGroupingParameters(page, size, sortString, isAscending);
         String baseUri = String.format(API_2_1_BASE + "/groupings/%s", path);
-        String uriTemplate = buildUriTemplateWithParams(baseUri, params);
+        String uri = buildUriWithParams(baseUri, params);
 
-        return httpRequestService.makeApiRequestWithParameters(principal.getName(), uriTemplate, params,
-                HttpMethod.GET);
+        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
     }
 
     /**
@@ -580,10 +579,10 @@ public class GroupingsRestController {
         return params;
     }
 
-    public String buildUriTemplateWithParams(String baseUri, Map<String, String> params) {
+    public String buildUriWithParams(String baseUri, Map<String, String> params) {
         UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromHttpUrl(baseUri);
-        for (String key : params.keySet()) {
-            uriComponentsBuilder.queryParam(key, String.format("{%s}", key));
+        for (Map.Entry<String, String> entry : params.entrySet()) {
+            uriComponentsBuilder.queryParam(entry.getKey(), entry.getValue());
         }
         return uriComponentsBuilder.encode().toUriString();
     }
