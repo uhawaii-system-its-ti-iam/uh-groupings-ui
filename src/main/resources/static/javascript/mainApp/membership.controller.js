@@ -81,10 +81,10 @@
          * Handle responses for opting into or out of a grouping.
          */
         function handleSuccessfulOpt(res) {
-            if (res.result === "SUCCESS") {
+            if (res.resultCode === "SUCCESS") {
                 $scope.init();
             } else {
-                $scope.createOptErrorModal(res.status);
+                $scope.createOptErrorModal();
             }
             $scope.clearFilterQueryStrings();
         }
@@ -94,7 +94,7 @@
             $scope.createOptErrorModal(res);
         }
 
-        $scope.createOptErrorModal = function (resStatus) {
+        $scope.createOptErrorModal = function () {
             $scope.loading = false;
             $scope.optErrorModalInstance = $uibModal.open({
                 templateUrl: "modal/optErrorModal",
