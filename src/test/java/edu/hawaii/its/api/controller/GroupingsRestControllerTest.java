@@ -36,6 +36,7 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -190,6 +191,38 @@ public class GroupingsRestControllerTest {
     @WithMockUhUser(username = "admin")
     public void removeFromGroupsTest() throws Exception {
         String uri = REST_CONTROLLER_BASE + GROUPING2 + "/user/removeFromGroups";
+
+        given(httpRequestService.makeApiRequest(eq(ADMIN_USERNAME), anyString(), eq(HttpMethod.DELETE)))
+                .willReturn(new ResponseEntity(HttpStatus.OK));
+
+        assertNotNull(mockMvc.perform(post(uri).with(csrf()))
+                .andExpect(status().isOk())
+                .andReturn());
+
+        verify(httpRequestService, times(1))
+                .makeApiRequest(eq(ADMIN_USERNAME), anyString(), eq(HttpMethod.DELETE));
+    }
+
+    @Test
+    @WithMockUhUser(username = "admin")
+    public void resetIncludeGroup() throws Exception {
+        String uri = REST_CONTROLLER_BASE + GROUPING + "/resetIncludeGroup";
+
+        given(httpRequestService.makeApiRequest(eq(ADMIN_USERNAME), anyString(), eq(HttpMethod.DELETE)))
+                .willReturn(new ResponseEntity(HttpStatus.OK));
+
+        assertNotNull(mockMvc.perform(post(uri).with(csrf()))
+                .andExpect(status().isOk())
+                .andReturn());
+
+        verify(httpRequestService, times(1))
+                .makeApiRequest(eq(ADMIN_USERNAME), anyString(), eq(HttpMethod.DELETE));
+    }
+
+    @Test
+    @WithMockUhUser(username = "admin")
+    public void resetExcludeGroup() throws Exception {
+        String uri = REST_CONTROLLER_BASE + GROUPING + "/resetExcludeGroup";
 
         given(httpRequestService.makeApiRequest(eq(ADMIN_USERNAME), anyString(), eq(HttpMethod.DELETE)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
@@ -566,7 +599,8 @@ public class GroupingsRestControllerTest {
     public void updateDescriptionTest() throws Exception {
         String uri = REST_CONTROLLER_BASE + "groupings/path/description";
 
-        given(httpRequestService.makeApiRequestWithBody(eq(USERNAME), anyString(), nullable(String.class), eq(HttpMethod.PUT)))
+        given(httpRequestService.makeApiRequestWithBody(eq(USERNAME), anyString(), nullable(String.class),
+                eq(HttpMethod.PUT)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
 
         assertNotNull(mockMvc.perform(put(uri).with(csrf()))

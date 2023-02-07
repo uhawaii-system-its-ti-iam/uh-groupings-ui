@@ -136,9 +136,9 @@ public class HomeController {
         return "modal/resetModal";
     }
 
-    @GetMapping(value = "/modal/resetNotifModal")
-    public String resetNotifModal() {
-        return "modal/resetNotifModal";
+    @GetMapping(value = "/modal/successfulGroupResetModal")
+    public String successfulGroupResetModal() {
+        return "modal/successfulGroupResetModal";
     }
 
     @GetMapping(value = "/modal/emptyGroupModal")

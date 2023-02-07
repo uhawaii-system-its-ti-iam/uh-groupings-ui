@@ -193,6 +193,28 @@ public class GroupingsRestController {
     }
 
     /**
+     * Remove all members from the include group.
+     */
+    @PostMapping(value = "{groupingPath}/resetIncludeGroup")
+    public ResponseEntity<String> resetIncludeGroup(Principal principal, @PathVariable String groupingPath) {
+        logger.info("Entered REST resetIncludeGroup");
+        String safeGroupingPath = policy.sanitize(groupingPath);
+        String uri = String.format(API_2_1_BASE + "/groupings/%s/include", safeGroupingPath);
+        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.DELETE);
+    }
+
+    /**
+     * Remove all members from the exclude group.
+     */
+    @PostMapping(value = "{groupingPath}/resetExcludeGroup")
+    public ResponseEntity<String> resetExcludeGroup(Principal principal, @PathVariable String groupingPath) {
+        logger.info("Entered REST resetExcludeGroup");
+        String safeGroupingPath = policy.sanitize(groupingPath);
+        String uri = String.format(API_2_1_BASE + "/groupings/%s/exclude", safeGroupingPath);
+        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.DELETE);
+    }
+
+    /**
      * Get a member's attributes based off username.
      */
     @GetMapping(value = "/members/{uhIdentifier}")
@@ -333,7 +355,8 @@ public class GroupingsRestController {
         List<String> safeUsersToDelete = sanitizeList(usersToDelete);
         String uri =
                 String.format(API_2_1_BASE + "/groupings/%s/include-members", safeGroupingPath);
-        return httpRequestService.makeApiRequestWithBody(principal.getName(), uri, safeUsersToDelete, HttpMethod.DELETE);
+        return httpRequestService.makeApiRequestWithBody(principal.getName(), uri, safeUsersToDelete,
+                HttpMethod.DELETE);
     }
 
     /**
@@ -348,7 +371,8 @@ public class GroupingsRestController {
         List<String> safeUsersToDelete = sanitizeList(usersToDelete);
         String uri =
                 String.format(API_2_1_BASE + "/groupings/%s/exclude-members", safeGroupingPath);
-        return httpRequestService.makeApiRequestWithBody(principal.getName(), uri, safeUsersToDelete, HttpMethod.DELETE);
+        return httpRequestService.makeApiRequestWithBody(principal.getName(), uri, safeUsersToDelete,
+                HttpMethod.DELETE);
     }
 
     /**
@@ -564,7 +588,8 @@ public class GroupingsRestController {
         return uriComponentsBuilder.encode().toUriString();
     }
 
-    private ResponseEntity<String> changePreference(String grouping, String uhIdentifier, String preference, Boolean isOn) {
+    private ResponseEntity<String> changePreference(String grouping, String uhIdentifier, String preference,
+            Boolean isOn) {
         String ending = "disable";
         if (isOn) {
             ending = "enable";
