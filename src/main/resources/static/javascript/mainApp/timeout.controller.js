@@ -174,11 +174,23 @@
         };
 
         /**
+         * Returns the correct basePath (/uhgroupings or /its/uhgroupings)
+         */
+        function getBasePath() {
+            const segments = $window.location.pathname.split("/");
+
+            if (segments.includes("its")) {
+                return "/its/uhgroupings";
+            }
+            return "/uhgroupings";
+        }
+
+        /**
          * Logout method used only when user is idle for too long. The other logout method is implemented in the html.
          */
         $scope.logoutOnIdle = () => {
             let request = new XMLHttpRequest();
-            request.open("POST", "/uhgroupings/logout", true);
+            request.open("POST", `${getBasePath()}/logout`, true);
             request.setRequestHeader("X-XSRF-TOKEN", $scope.getCookie("XSRF-TOKEN"));
             // Attach event handler when POST request is successful.
             request.onreadystatechange = () => {
