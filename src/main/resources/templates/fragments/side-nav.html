@@ -5,21 +5,21 @@
         <li class="pr-0 pl-0 mt-1 mx-auto" data-toggle="tooltip" data-placement="right"
             th:title="#{screen.message.common.tooltip.nav.members}">
             <a data-toggle="tab" href="#all" class="nav-link rounded-circle d-flex align-items-center justify-content-center active"
-               aria-label="All Members" ng-click="resetFields('All')">
+               aria-label="All Members" ng-click="reloadGrouping();resetFields()">
                 <i class="fa fa-users" aria-hidden="true"></i>
             </a>
         </li>
         <li class="pr-0 pl-0 mt-1 mx-auto pt-0" data-toggle="tooltip" data-placement="right"
             th:title="#{screen.message.common.tooltip.nav.basis}">
             <a data-toggle="tab" href="#basis" class="nav-link rounded-circle d-flex align-items-center justify-content-center"
-               aria-label="Basis Members" ng-click="resetFields('Basis')">
+               aria-label="Basis Members" ng-click="resetFields()">
                 <i class="far fa-id-card" aria-hidden="true"></i>
             </a>
         </li>
         <li class="pr-0 pl-0 mt-1 mx-auto pt-0" data-toggle="tooltip" data-placement="right"
             th:title="#{screen.message.common.tooltip.nav.include}">
             <a data-toggle="tab" href="#include" class="nav-link rounded-circle d-flex align-items-center justify-content-center"
-               aria-label="Include Members" ng-click="resetFields('Include');
+               aria-label="Include Members" ng-click="resetFields();
                  transferMembersFromPageToCheckboxObject(groupingInclude)">
                 <i class="fas fa-user-plus" aria-hidden="false"></i>
             </a>
@@ -27,7 +27,7 @@
         <li class="pr-0 pl-0 mt-1 mx-auto pt-0" data-toggle="tooltip" data-placement="right"
             th:title="#{screen.message.common.tooltip.nav.exclude}">
             <a data-toggle="tab" href="#exclude" class="nav-link rounded-circle d-flex align-items-center justify-content-center"
-               aria-label="Exclude Members" ng-click="resetFields('Exclude');
+               aria-label="Exclude Members" ng-click="resetFields();
                  transferMembersFromPageToCheckboxObject(groupingExclude)">
                 <i class="fas fa-user-minus" aria-hidden="true"></i>
             </a>
@@ -35,7 +35,7 @@
         <li class="pr-0 pl-0 mt-1 mx-auto pt-0" data-toggle="tooltip" data-placement="right"
             th:title="#{screen.message.common.tooltip.nav.owners}">
             <a data-toggle="tab" href="#owners" class="nav-link rounded-circle d-flex align-items-center justify-content-center"
-               aria-label="Grouping Owners" ng-click="resetFields('Owner')">
+               aria-label="Grouping Owners" ng-click="resetFields()">
                 <i class="fa fa-crown fa-fw" aria-hidden="true"></i>
             </a>
         </li>
