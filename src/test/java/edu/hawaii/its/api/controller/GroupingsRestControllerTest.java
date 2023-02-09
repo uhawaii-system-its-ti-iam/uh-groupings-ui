@@ -583,7 +583,7 @@ public class GroupingsRestControllerTest {
         String uri =
                 REST_CONTROLLER_BASE + "groupings/" + GROUPING + "?page=2&size=700&sortString=name&isAscending=true";
 
-        given(httpRequestService.makeApiRequestWithParameters(eq(USERNAME), anyString(), anyMap(), eq(HttpMethod.GET)))
+        given(httpRequestService.makeApiRequest(eq(USERNAME), anyString(), eq(HttpMethod.GET)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
 
         assertNotNull(mockMvc.perform(get(uri).with(csrf()))
@@ -591,7 +591,7 @@ public class GroupingsRestControllerTest {
                 .andReturn());
 
         verify(httpRequestService, times(1))
-                .makeApiRequestWithParameters(eq(USERNAME), anyString(), anyMap(), eq(HttpMethod.GET));
+                .makeApiRequest(eq(USERNAME), anyString(), eq(HttpMethod.GET));
     }
 
     @Test
@@ -836,12 +836,11 @@ public class GroupingsRestControllerTest {
     }
 
     @Test
-    public void buildUriTemplateWithParamsTest() {
+    public void buildUriWithParamsTest() {
         Map<String, String> params = groupingsRestController.mapGroupingParameters(1, 2, "name", true);
-        String uriTemplate = groupingsRestController.buildUriTemplateWithParams(API_2_1_BASE, params);
+        String uriTemplate = groupingsRestController.buildUriWithParams(API_2_1_BASE, params);
         assertNotNull(uriTemplate);
-        String expectedResult =
-                API_2_1_BASE + "?sortString={sortString}&size={size}&page={page}&isAscending={isAscending}";
+        String expectedResult = API_2_1_BASE + "?sortString=name&size=2&page=1&isAscending=true";
         assertEquals(expectedResult, uriTemplate);
     }
 
