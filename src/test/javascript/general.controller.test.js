@@ -11,18 +11,25 @@ describe("GeneralController", () => {
     let BASE_URL;
     let gs;
     let uibModal;
+    let window;
     let threshold;
 
-    beforeEach(inject(($rootScope, $controller, _BASE_URL_, _$httpBackend_, groupingsService, $uibModal, $window, Threshold) => {
+    beforeEach(inject(($rootScope, $controller, _BASE_URL_, _$httpBackend_, groupingsService, $uibModal, _$window_, Threshold) => {
         scope = $rootScope.$new();
+        window = {
+            location: {
+                pathname: "/uhgroupings/",
+                href: _$window_
+            }
+        };
         controller = $controller("GeneralJsController", {
-            $scope: scope
+            $scope: scope,
+            $window: window
         });
         httpBackend = _$httpBackend_;
         BASE_URL = _BASE_URL_;
         gs = groupingsService;
         uibModal = $uibModal;
-        window = $window;
         threshold = Threshold;
     }));
 
@@ -2971,58 +2978,53 @@ describe("GeneralController", () => {
         });
     });
 
-    describe("proceedRedirectApiError", () => {
-        let testWindowLocationHref = "/testURL";
-        beforeEach(() => {
-            scope.proceedRedirectApiError = {
-                create: scope.createApiErrorModal(),
-                close: () => {
-                    scope.apiErrorModalInstance.close();
-                },
-                setUrl: () => {
-                    testWindowLocationHref = "/uhgroupings/feedback";
-                }
-            };
+    describe("getBasePath", () => {
+        it("should return /uhgroupings", () => {
+            expect(scope.getBasePath()).toBe("/uhgroupings");
+            window.location.pathname = "/uhgroupings/groupings";
+            expect(scope.getBasePath()).toBe("/uhgroupings");
         });
 
-        it("should close apiErrorModalInstance", () => {
-            spyOn(scope.apiErrorModalInstance, "close").and.callThrough();
-            scope.proceedRedirectApiError.close();
-            expect(scope.apiErrorModalInstance.close).toHaveBeenCalled();
+        it("should return /its/uhgroupings", () => {
+            window.location.pathname = "/its/uhgroupings";
+            expect(scope.getBasePath()).toBe("/its/uhgroupings");
+            window.location.pathname = "/its/uhgroupings/groupings";
+            expect(scope.getBasePath()).toBe("/its/uhgroupings");
+        });
+    });
+
+    describe("proceedLogoutUser", () => {
+        it("should call $scope.getBasePath() and set $window.location.href to the home path", () => {
+            spyOn(scope, "getBasePath").and.callThrough();
+            scope.proceedLogoutUser();
+            expect(scope.getBasePath).toHaveBeenCalled();
+            expect(window.location.href).toBe("/uhgroupings");
         });
 
-        it("should set $window.location.href to proper path", () => {
-            expect(testWindowLocationHref).toBe("/testURL");
-            scope.proceedRedirectApiError.setUrl();
-            expect(testWindowLocationHref).toBe("/uhgroupings/feedback");
+        it("should make a POST request to logout the user", () => {
+            spyOn(XMLHttpRequest.prototype, "open").and.callThrough();
+            spyOn(XMLHttpRequest.prototype, "send");
+            scope.proceedLogoutUser();
+
+            expect(XMLHttpRequest.prototype.open).toHaveBeenCalledWith("POST", "/uhgroupings/logout", true);
+        });
+    });
+
+    describe("proceedRedirectFeedback", () => {
+        it("should call $scope.getBasePath() and set $window.location.href to the feedback path", () => {
+            spyOn(scope, "getBasePath").and.callThrough();
+            scope.proceedRedirectFeedback();
+            expect(scope.getBasePath).toHaveBeenCalled();
+            expect(window.location.href).toBe("/uhgroupings/feedback");
         });
     });
 
     describe("proceedRedirect", () => {
-        let testWindowLocationHref = "/testURL";
-        beforeEach(() => {
-            scope.proceedRedirect = {
-                create: scope.createOwnerErrorModal(),
-                close: () => {
-                    scope.OwnerErrorModalInstance.close();
-                },
-                setUrl: () => {
-                    testWindowLocationHref = "/uhgroupings/";
-                }
-            };
-        });
-
-        it("should close OwnerErrorModalInstance", () => {
-            spyOn(scope.OwnerErrorModalInstance, "close").and.callThrough();
-            scope.proceedRedirect.close();
-            expect(scope.OwnerErrorModalInstance.close).toHaveBeenCalled();
-        });
-
-        it("should set $window.location.href to proper path", () => {
-            testWindowLocationHref = "/badURL";
-            expect(testWindowLocationHref).toBe("/badURL");
-            scope.proceedRedirect.setUrl();
-            expect(testWindowLocationHref).toBe("/uhgroupings/");
+        it("should call $scope.getBasePath() and set $window.location.href to the home path", () => {
+            spyOn(scope, "getBasePath").and.callThrough();
+            scope.proceedRedirect();
+            expect(scope.getBasePath).toHaveBeenCalled();
+            expect(window.location.href).toBe("/uhgroupings");
         });
     });
 
