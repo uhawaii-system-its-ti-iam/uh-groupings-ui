@@ -118,3 +118,11 @@ form.seamless button {
         color: white;
     }
 }
+
+.btn-dropdown-split {
+    border-radius: 0.25rem 0 0 0.25rem;
+
+    &:focus {
+        z-index: 10;
+    }
+}
