@@ -1340,14 +1340,14 @@
          */
         function handleOwnerRemove() {
             // Reload the grouping if you are not removing yourself, or if deleting anyone from the admins page
-            if (!$scope.membersToRemove.includes($scope.currentUser) || !_.isUndefined($scope.adminsList)) {
+            if (!$scope.membersToRemove.includes($scope.currentUser.uhUuid) || !_.isUndefined($scope.adminsList)) {
                 handleSuccessfulRemove();
-            } else if ($scope.membersToRemove.includes($scope.currentUser)) {
+            } else if ($scope.membersToRemove.includes($scope.currentUser.uhUuid)) {
                 // Removing self from last grouping owned -> redirect to home page and then logout
                 if ($scope.groupingsList.length === 1) {
-                    $scope.returnHome();
+                    $scope.proceedLogoutUser();
                 } else {
-                    $window.location.href = "groupings";
+                    $window.location.href = `${$scope.getBasePath()}/groupings`;
                 }
             }
         }
@@ -1358,8 +1358,8 @@
         function handleAdminRemove() {
             $scope.waitingForImportResponse = false;
             // Removing self as admin -> redirect to home page and then logout
-            if ($scope.membersToRemove.includes($scope.currentUser)) {
-                $scope.returnHome();
+            if ($scope.membersToRemove.includes($scope.currentUser.uhUuid)) {
+                $scope.proceedLogoutUser();
             } else {
                 $scope.init();
             }
@@ -1451,6 +1451,7 @@
                 membersToRemove: memberToRemove,
                 listName
             });
+            $scope.membersToRemove = [memberToRemove.uhUuid];
         };
 
         /**
@@ -1472,6 +1473,7 @@
                 membersToRemove: ownerToRemove,
                 listName: "owners"
             });
+            $scope.membersToRemove = [ownerToRemove.uhUuid];
         };
 
 
@@ -1538,17 +1540,6 @@
                 backdrop: "static",
                 keyboard: false
             });
-        };
-
-        /**
-         * Log out user and redirect them to Homepage
-         */
-        $scope.returnHome = function () {
-            $window.location.href = "/uhgroupings/";
-            let r = new XMLHttpRequest();
-            r.open("POST", "/uhgroupings/logout", true);
-            r.setRequestHeader("X-XSRF-TOKEN", $scope.getCookie("XSRF-TOKEN"));
-            r.send();
         };
 
         /**
@@ -2105,31 +2096,29 @@
         };
 
         /**
-         * Log out a user and redirects them to the homepage.
+         * Log out the user and redirect them to the home page
          */
-        $scope.proceedLogoutUser = function () {
-            $scope.RoleErrorModalInstance.close();
+        $scope.proceedLogoutUser = () => {
+            const basePath = $scope.getBasePath();
+            $window.location.href = basePath;
             let r = new XMLHttpRequest();
-            r.open("POST", "/uhgroupings/logout", true);
+            r.open("POST", `${basePath}/logout`, true);
             r.setRequestHeader("X-XSRF-TOKEN", $scope.getCookie("XSRF-TOKEN"));
             r.send();
-            $window.location.href = "/uhgroupings/";
         };
 
         /**
          * Redirect the user to the feedback page.
          */
-        $scope.proceedRedirectApiError = function () {
-            $scope.apiErrorModalInstance.close();
-            $window.location.href = "/uhgroupings/feedback";
+        $scope.proceedRedirectFeedback = () => {
+            $window.location.href = `${$scope.getBasePath()}/feedback`;
         };
 
         /**
-         * Redirect the user to the groupings page.
+         * Redirect the user to the home page.
          */
-        $scope.proceedRedirect = function () {
-            $scope.OwnerErrorModalInstance.close();
-            $window.location.href = "/uhgroupings/";
+        $scope.proceedRedirect = () => {
+            $window.location.href = $scope.getBasePath();
         };
 
         /**
@@ -2154,6 +2143,18 @@
             localStorage.setItem("columnDisplaySetting", $scope.columnDisplaySetting);
             localStorage.setItem("showDescriptionColumn", JSON.stringify($scope.showDescriptionColumn));
             localStorage.setItem("showPathColumn", JSON.stringify($scope.showPathColumn));
+        };
+
+        /**
+         * Returns the correct basePath (/uhgroupings or /its/uhgroupings)
+         */
+        $scope.getBasePath = () => {
+            const pathSegments = $window.location.pathname.split("/");
+
+            if (pathSegments.includes("its")) {
+                return "/its/uhgroupings";
+            }
+            return "/uhgroupings";
         };
     }
 

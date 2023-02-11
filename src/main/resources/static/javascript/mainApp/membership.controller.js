@@ -109,14 +109,6 @@
         };
 
         /**
-         * Redirect the user to the groupings page.
-         */
-        $scope.proceedRedirect = function () {
-            $scope.optErrorModalInstance.close();
-            $window.location.href = "/uhgroupings/feedback";
-        };
-
-        /**
          * Add the user to the exclude group of the grouping selected. Sends back an alert saying if it failed.
          * @param {number} currentPage - the current page within the table
          * @param {number} indexClicked - the index of the grouping clicked by the user
