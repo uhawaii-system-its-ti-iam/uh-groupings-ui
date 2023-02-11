@@ -1509,11 +1509,11 @@
             // Otherwise, reload the grouping and display the result modal.
             $scope.displaySuccessfulGroupResetModal((() => {
                 if (results.includeSuccess && results.excludeSuccess) {
-                    return Message.ResetGroup.INCLUDE_AND_EXCLUDE;
+                    return Message.ResetGroupSuccess.INCLUDE_AND_EXCLUDE;
                 } else if (results.includeSuccess) {
-                    return Message.ResetGroup.INCLUDE;
+                    return Message.ResetGroupSuccess.INCLUDE;
                 } else if (results.excludeSuccess) {
-                    return Message.ResetGroup.EXCLUDE;
+                    return Message.ResetGroupSuccess.EXCLUDE;
                 } else {
                     return "ERROR";
                 }
