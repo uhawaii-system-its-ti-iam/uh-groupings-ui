@@ -47,7 +47,7 @@
                                ng-model="membersQuery" class="form-control"
                                ng-change="filter(membershipsList, 'pagedItemsMemberships', 'currentPageMemberships', membersQuery, true)"/>
                         <div class="ml-2 dropdown d-none d-sm-table-cell">
-                            <button class="form-control dropdown-toggle" data-toggle="dropdown"
+                            <button class="form-control" data-toggle="dropdown"
                                     title="Table Settings" aria-label="Table Settings">
                                 <i class="fa fa-sliders-h"></i>
                             </button>
@@ -172,8 +172,8 @@
                                ng-model="optInQuery" class="form-control"
                                ng-change="filter(optInList, 'pagedItemsOptInList', 'currentPageOptIn', optInQuery, true)"
                                id="optIn"/>
-                        <div class="ml-2 dropdown">
-                            <button class="form-control dropdown-toggle d-none d-sm-table-cell" data-toggle="dropdown"
+                        <div class="ml-2 dropdown d-none d-sm-table-cell">
+                            <button class="form-control" data-toggle="dropdown"
                                     title="Table Settings" aria-label="Table Settings">
                                 <i class="fa fa-sliders-h"></i>
                             </button>
