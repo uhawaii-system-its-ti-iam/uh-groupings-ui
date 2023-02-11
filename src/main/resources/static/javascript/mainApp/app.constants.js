@@ -39,19 +39,19 @@ UHGroupingsApp.constant("Message", {
         GROUP_LOADED: "Export entire member list to CSV.",
         EMAIL_SUFFIX: "@hawaii.edu"
     },
-    ResetGroup: {
-        INCLUDE_AND_EXCLUDE: "include and exclude groups have",
-        INCLUDE: "include group has",
-        EXCLUDE: "exclude group has"
+    ResetGroupSuccess: {
+        INCLUDE_AND_EXCLUDE: "include and exclude list have",
+        INCLUDE: "include list has",
+        EXCLUDE: "exclude list has"
     },
     ResetGroupError: {
         ResetGroupErrorMessages: {
-            TITLE: "Reset Group Error",
+            TITLE: "Reset Grouping Error",
             Body: [
                 "Neither list has been reset due to an error.",
-                "The Exclude group has been reset. There was an error preventing the Include list reset.",
+                "The Exclude list has been reset. There was an error preventing the Include list reset.",
                 "There was an error preventing the Include list reset.",
-                "The Include group has been reset. There was an error preventing the Exclude list reset.",
+                "The Include list has been reset. There was an error preventing the Exclude list reset.",
                 "There was an error preventing the Exclude list reset."
             ]
         },
