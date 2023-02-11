@@ -18,7 +18,7 @@
                     <th scope="col">Username</th>
                     <th scope="col">UH Number</th>
                     <th scope="col">Name</th>
-                    <th scope="col" class="text-center"  ng-if="listName !== 'owners'">
+                    <th scope="col" class="text-center" ng-if="listName !== 'owners' && groupingBasis.length > 0">
                         Basis
                         <span class="fa fa-info-circle clickable" ng-if="listName === 'Include'"
                               data-toggle="tooltip" data-boundary="window" onmouseover="$(this).tooltip('toggle')"
@@ -30,7 +30,7 @@
                         </span>
                         <span class="fa fa-info-circle clickable" ng-if="listName === 'Exclude' && allowOptIn"
                               data-toggle="tooltip" data-boundary="window" onmouseover="$(this).tooltip('toggle')"
-                              th:title="#{screen.message.modal.multi.add.tooltip.not.inBasis.exclude}" aria-hidden="true">
+                              th:title="#{screen.message.modal.multi.add.tooltip.inBasis.exclude.optIn}" aria-hidden="true">
                         </span>
                     </th>
                     <th scope="col" class="text-center" ng-if="listName !== 'owners' && listName === 'Exclude'">
@@ -64,7 +64,7 @@
                     </td>
                     <td>{{ person['uhUuid'] }}</td>
                     <td>{{ person['name'] }}</td>
-                    <td class="text-center" ng-if="listName !== 'owners'">
+                    <td class="text-center" ng-if="listName !== 'owners' && groupingBasis.length > 0">
                         {{ person['inBasis'] }}
                     </td>
                     <td class="text-center" ng-if="listName !== 'owners' && listName === 'Exclude'">
