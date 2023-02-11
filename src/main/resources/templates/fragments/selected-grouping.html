@@ -8,13 +8,17 @@
         </button>
         <!-- Export to CSV button -->
         <div class="btn-group"  id="csvButton">
-            <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-disabled="!paginatingComplete"><i class="fa fa-users mr-1"></i>
+            <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown"
+                    ng-disabled="!paginatingComplete" aria-haspopup="true" aria-expanded="false">
+                <i class="fa fa-users mr-1"></i>
                 Export Members
             </button>
             <div class="dropdown-menu dropdown-menu-right">
-                <button class="dropdown-item" ng-click="exportGroupToCsv(groupingMembers, selectedGrouping.name, 'members')" ng-disabled="!paginatingComplete">Export members to CSV</button>
-                <button class="dropdown-item" ng-click="exportGroupToCsv([], selectedGrouping.name, 'include')" ng-disabled="!paginatingComplete">Export include to CSV</button>
-                <button class="dropdown-item" ng-click="exportGroupToCsv([], selectedGrouping.name, 'exclude')" ng-disabled="!paginatingComplete">Export exclude to CSV</button>
+                <span class="ml-1 text-secondary" ng-if="groupingMembers.length === 0 && groupingExclude.length === 0">No members to export</span>
+                <button class="dropdown-item" ng-if="groupingMembers.length > 0" ng-click="exportGroupToCsv(groupingMembers, 'members')">Export Members to CSV</button>
+                <button class="dropdown-item" ng-if="groupingBasis.length > 0" ng-click="exportGroupToCsv(groupingBasis, 'basis')">Export Basis to CSV</button>
+                <button class="dropdown-item" ng-if="groupingInclude.length > 0" ng-click="exportGroupToCsv(groupingInclude, 'include')">Export Include to CSV</button>
+                <button class="dropdown-item" ng-if="groupingExclude.length > 0" ng-click="exportGroupToCsv(groupingExclude, 'exclude')">Export Exclude to CSV</button>
             </div>
         </div>
     </div>
