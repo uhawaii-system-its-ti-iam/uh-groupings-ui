@@ -40,9 +40,9 @@ UHGroupingsApp.constant("Message", {
         EMAIL_SUFFIX: "@hawaii.edu"
     },
     ResetGroupSuccess: {
-        INCLUDE_AND_EXCLUDE: "include and exclude list have",
-        INCLUDE: "include list has",
-        EXCLUDE: "exclude list has"
+        INCLUDE_AND_EXCLUDE: "Include and Exclude lists have",
+        INCLUDE: "Include list has",
+        EXCLUDE: "Exclude list has"
     },
     ResetGroupError: {
         ResetGroupErrorMessages: {
@@ -55,6 +55,7 @@ UHGroupingsApp.constant("Message", {
                 "There was an error preventing the Exclude list reset."
             ]
         },
+        // This is used to match an API result with the proper error messages in RestGroupErrorMessages.Body.
         ResetGroupErrorMessageMap: [
             { includeFailure: true, excludeFailure: true, includeSuccess: false, excludeSuccess: false },
             { includeFailure: true, excludeFailure: false, includeSuccess: false, excludeSuccess: true },
