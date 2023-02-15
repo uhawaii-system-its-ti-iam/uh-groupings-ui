@@ -1485,30 +1485,34 @@
          * If there are error results, render an error modal and return true, otherwise return false.
          */
         $scope.handleGroupingReset = function (groupingPath, resetIncludeResult, resetExcludeResult) {
-            let hasErrors = function (result) {
+            let wasError = function (result) {
                 return (typeof result !== "undefined" && typeof result.status !== "undefined");
             };
-            let checkResetResult = (groupingPath, resetResult) => {
+            let wasSuccess = (groupingPath, resetResult) => {
                 return (typeof resetResult !== "undefined") &&
                     (resetResult.resultCode === "SUCCESS" && resetResult.groupPath.includes(groupingPath));
             };
+            // Create an object to be matched with certainObject ResetGroupErrorMessageMap in app.constants.
             let results = {
-                "includeFailure": hasErrors(resetIncludeResult),
-                "excludeFailure": hasErrors(resetExcludeResult),
-                "includeSuccess": checkResetResult(groupingPath, resetIncludeResult),
-                "excludeSuccess": checkResetResult(groupingPath, resetExcludeResult)
+                "includeFailure": wasError(resetIncludeResult),
+                "excludeFailure": wasError(resetExcludeResult),
+                "includeSuccess": wasSuccess(groupingPath, resetIncludeResult),
+                "excludeSuccess": wasSuccess(groupingPath, resetExcludeResult)
             };
+            // If ether API request failed then display an error modal.
             if (results.includeFailure || results.excludeFailure) {
                 for (let i = 0; i < Message.ResetGroupError.ResetGroupErrorMessageMap.length; i++) {
                     let object = Message.ResetGroupError.ResetGroupErrorMessageMap[parseInt(i, 10)];
+                    // If the object matches a certain ResetGroupErrorMessageMap object.
                     if (Utility.compareObjects(object, results)) {
+                        // Then use the error message in ResetGroupErrorMessages at index i.
                         let message = Message.ResetGroupError.ResetGroupErrorMessages.Body[parseInt(i, 10)];
                         $scope.displayUnsuccessfulGroupResetModal(message);
                         return;
                     }
                 }
             }
-            // Otherwise, reload the grouping and display the result modal.
+            // Otherwise, display the result success modal.
             $scope.displaySuccessfulGroupResetModal((() => {
                 if (results.includeSuccess && results.excludeSuccess) {
                     return Message.ResetGroupSuccess.INCLUDE_AND_EXCLUDE;

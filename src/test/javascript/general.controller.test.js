@@ -2373,8 +2373,8 @@ describe("GeneralController", () => {
                 expect(scope.displayUnsuccessfulGroupResetModal).toHaveBeenCalled();
             });
 
-            let message = "The Exclude group has been reset. There was an error preventing the Include list reset.";
-            let title = "Reset Group Error";
+            let message = "The Exclude list has been reset. There was an error preventing the Include list reset.";
+            let title = "Reset Grouping Error";
             it(`should set the reset error modal title to \"${title}\" and message to \"${message}\" `, function () {
                 spyOn(scope, "displayUnsuccessfulGroupResetModal").and.callThrough();
                 scope.handleGroupingReset(groupingPath, resultError, excludeResultSuccess);
@@ -2395,8 +2395,8 @@ describe("GeneralController", () => {
                 expect(scope.displayUnsuccessfulGroupResetModal).toHaveBeenCalled();
             });
 
-            let message = "The Include group has been reset. There was an error preventing the Exclude list reset.";
-            let title = "Reset Group Error";
+            let message = "The Include list has been reset. There was an error preventing the Exclude list reset.";
+            let title = "Reset Grouping Error";
             it(`should set the reset error modal title to \"${title}\" and message to \"${message}\" `, function () {
                 spyOn(scope, "displayUnsuccessfulGroupResetModal").and.callThrough();
                 scope.handleGroupingReset(groupingPath, includeResultSuccess, resultError);
@@ -2418,7 +2418,7 @@ describe("GeneralController", () => {
             });
 
             let message = "Neither list has been reset due to an error.";
-            let title = "Reset Group Error";
+            let title = "Reset Grouping Error";
             it(`should set the reset error modal title to \"${title}\" and message to \"${message}\" `, function () {
                 spyOn(scope, "displayUnsuccessfulGroupResetModal").and.callThrough();
                 scope.handleGroupingReset(groupingPath, resultError, resultError);
@@ -2428,7 +2428,7 @@ describe("GeneralController", () => {
         });
 
         describe("when both groups are reset", function () {
-            let message = "include and exclude groups have";
+            let message = "include and exclude lists have";
             it(`should set the dynamic modal message variable (scope.group) to \"${message}\"`, function () {
                 spyOn(scope, "displaySuccessfulGroupResetModal").and.callThrough();
                 scope.handleGroupingReset(groupingPath, includeResultSuccess, excludeResultSuccess);
@@ -2436,7 +2436,7 @@ describe("GeneralController", () => {
             });
         });
         describe("when only the Include group is reset", function () {
-            let message = "include group has";
+            let message = "include list has";
             it(`should set the dynamic modal message variable (scope.group) to \"${message}\"`, function () {
                 spyOn(scope, "displaySuccessfulGroupResetModal").and.callThrough();
                 scope.handleGroupingReset(groupingPath, includeResultSuccess, "undefined");
@@ -2444,7 +2444,7 @@ describe("GeneralController", () => {
             });
         });
         describe("when only the Exclude group is reset", function () {
-            let message = "exclude group has";
+            let message = "exclude list has";
             it(`should set the dynamic modal message variable (scope.group) to \"${message}\"`, function () {
                 spyOn(scope, "displaySuccessfulGroupResetModal").and.callThrough();
                 scope.handleGroupingReset(groupingPath, "undefined", excludeResultSuccess);
