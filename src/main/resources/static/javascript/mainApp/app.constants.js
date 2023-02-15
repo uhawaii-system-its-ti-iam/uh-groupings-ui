@@ -40,9 +40,9 @@ UHGroupingsApp.constant("Message", {
         EMAIL_SUFFIX: "@hawaii.edu"
     },
     ResetGroupSuccess: {
-        INCLUDE_AND_EXCLUDE: "include and exclude lists have",
-        INCLUDE: "include list has",
-        EXCLUDE: "exclude list has"
+        INCLUDE_AND_EXCLUDE: "Include and Exclude lists have",
+        INCLUDE: "Include list has",
+        EXCLUDE: "Exclude list has"
     },
     ResetGroupError: {
         ResetGroupErrorMessages: {
