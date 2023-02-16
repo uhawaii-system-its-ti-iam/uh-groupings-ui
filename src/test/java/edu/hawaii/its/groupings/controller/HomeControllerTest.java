@@ -323,10 +323,30 @@ public class HomeControllerTest {
 
     @Test
     @WithMockUhUser(username = "uh")
+    public void requestMultiAddModal() throws Exception {
+        MvcResult mvcResult = mockMvc.perform(get("/modal/multiAddModal"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("modal/multiAddModal"))
+                .andReturn();
+        assertNotNull(mvcResult);
+    }
+
+    @Test
+    @WithMockUhUser(username = "uh")
     public void requestRemoveModal() throws Exception {
         MvcResult mvcResult = mockMvc.perform(get("/modal/removeModal"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("modal/removeModal"))
+                .andReturn();
+        assertNotNull(mvcResult);
+    }
+
+    @Test
+    @WithMockUhUser(username = "uh")
+    public void requestMultiRemoveModal() throws Exception {
+        MvcResult mvcResult = mockMvc.perform(get("/modal/multiRemoveModal"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("modal/multiRemoveModal"))
                 .andReturn();
         assertNotNull(mvcResult);
     }
@@ -343,10 +363,10 @@ public class HomeControllerTest {
 
     @Test
     @WithMockUhUser(username = "uh")
-    public void requestResetNotifModal() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(get("/modal/resetNotifModal"))
+    public void requestSuccessfulGroupResetModal() throws Exception {
+        MvcResult mvcResult = mockMvc.perform(get("/modal/successfulGroupResetModal"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("modal/resetNotifModal"))
+                .andExpect(view().name("modal/successfulGroupResetModal"))
                 .andReturn();
         assertNotNull(mvcResult);
     }
@@ -363,27 +383,7 @@ public class HomeControllerTest {
 
     @Test
     @WithMockUhUser(username = "uh")
-    public void requestCheckModal() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(get("/modal/checkModal"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("modal/checkModal"))
-                .andReturn();
-        assertNotNull(mvcResult);
-    }
-
-    @Test
-    @WithMockUhUser(username = "uh")
-    public void requestConfirmAddModal() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(get("/modal/confirmAddModal"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("modal/confirmAddModal"))
-                .andReturn();
-        assertNotNull(mvcResult);
-    }
-
-    @Test
-    @WithMockUhUser(username = "uh")
-    public void requestsyncDestModal() throws Exception {
+    public void requestSyncDestModal() throws Exception {
         MvcResult mvcResult = mockMvc.perform(get("/modal/syncDestModal"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("modal/syncDestModal"))
@@ -443,20 +443,30 @@ public class HomeControllerTest {
 
     @Test
     @WithMockUhUser(username = "uh")
-    public void requestBasisWarningModal() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(get("/modal/basisWarningModal"))
+    public void requestImportModal() throws Exception {
+        MvcResult mvcResult = mockMvc.perform(get("/modal/importModal"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("modal/basisWarningModal"))
+                .andExpect(view().name("modal/importModal"))
                 .andReturn();
         assertNotNull(mvcResult);
     }
 
     @Test
     @WithMockUhUser(username = "uh")
-    public void requestImportModal() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(get("/modal/importModal"))
+    public void requestImportConfirmationModal() throws Exception {
+        MvcResult mvcResult = mockMvc.perform(get("/modal/importConfirmationModal"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("modal/importModal"))
+                .andExpect(view().name("modal/importConfirmationModal"))
+                .andReturn();
+        assertNotNull(mvcResult);
+    }
+
+    @Test
+    @WithMockUhUser(username = "uh")
+    public void requestImportSuccessModal() throws Exception {
+        MvcResult mvcResult = mockMvc.perform(get("/modal/importSuccessModal"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("modal/importSuccessModal"))
                 .andReturn();
         assertNotNull(mvcResult);
     }
@@ -477,36 +487,6 @@ public class HomeControllerTest {
         MvcResult mvcResult = mockMvc.perform(get("/modal/dynamicModal"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("modal/dynamicModal"))
-                .andReturn();
-        assertNotNull(mvcResult);
-    }
-
-    @Test
-    @WithMockUhUser(username = "uh")
-    public void requestMultiAddResultModal() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(get("/modal/multiAddResultModal"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("modal/multiAddResultModal"))
-                .andReturn();
-        assertNotNull(mvcResult);
-    }
-
-    @Test
-    @WithMockUhUser(username = "uh")
-    public void requestMultiRemoveModal() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(get("/modal/multiRemoveModal"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("modal/multiRemoveModal"))
-                .andReturn();
-        assertNotNull(mvcResult);
-    }
-
-    @Test
-    @WithMockUhUser(username = "uh")
-    public void requestMultiRemoveResultModal() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(get("/modal/multiRemoveResultModal"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("modal/multiRemoveResultModal"))
                 .andReturn();
         assertNotNull(mvcResult);
     }

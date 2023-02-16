@@ -874,14 +874,14 @@
             $scope.waitingForImportResponse = true; // Small spinner on
             groupingsService.invalidUhIdentifiers(uhIdentifiers, (res) => { // Check for invalid uhIdentifiers
                 $scope.waitingForImportResponse = false; // Small spinner off
-                const isBatchImport = uhIdentifiers.length > Threshold.MULTI_ADD;
+                $scope.isBatchImport = uhIdentifiers.length > Threshold.MULTI_ADD;
 
                 // Check if res returned any invalid uhIdentifiers
                 if (!_.isEmpty(res)) {
                     // Display invalid uhIdentifiers in add-error-messages.html or importError modal
                     $scope.invalidMembers = res;
                     $scope.addInputError = true;
-                    if (isBatchImport) {
+                    if ($scope.isBatchImport) {
                         $scope.launchImportErrorModal();
                     }
                     return;
@@ -891,7 +891,7 @@
                 uhIdentifiers = uhIdentifiers.filter((member) => !$scope.membersInList.includes(member));
 
                 // Display the appropriate modal
-                if (isBatchImport) {
+                if ($scope.isBatchImport) {
                     $scope.launchImportConfirmationModal(listName, uhIdentifiers);
                 } else {
                     $scope.launchAddModal({
@@ -914,10 +914,13 @@
                 8000);
         }
 
-        function handleSuccessfulAdd() {
+        function handleSuccessfulAdd(res) {
             $scope.waitingForImportResponse = false; // Small spinner off
             // Display the appropriate result modal
-            if ($scope.isMultiAdd) {
+            if ($scope.isBatchImport) {
+                $scope.batchImportResults = res.addResults.results;
+                $scope.displayImportSuccessModal();
+            } else if ($scope.isMultiAdd) {
                 $scope.launchDynamicModal(
                     Message.Title.ADD_MEMBERS,
                     Message.Body.ADD_MEMBERS.with($scope.listName));
@@ -1055,6 +1058,27 @@
          */
         $scope.proceedImportConfirmationModal = function () {
             $scope.importConfirmationModalInstance.close();
+        };
+
+        /**
+         * Display the import success modal
+         */
+        $scope.displayImportSuccessModal = () => {
+            $scope.importSuccessModalInstance = $uibModal.open({
+                templateUrl: "modal/importSuccessModal",
+                scope: $scope
+            });
+
+            $scope.importSuccessModalInstance.result.finally(() => {
+                $scope.getGroupingInformation();
+            });
+        };
+
+        /**
+         * Close the import success modal
+         */
+        $scope.closeImportSuccessModal = () => {
+            $scope.importSuccessModalInstance.close();
         };
 
         /**

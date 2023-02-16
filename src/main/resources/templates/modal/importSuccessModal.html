@@ -1,14 +1,14 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <div class="modal-header">
-    <h5 class="modal-title" id="modal-title">Reset Grouping</h5>
-    <a class="close" type="button" ng-click="cancelResetGroup()">
+    <h5 class="modal-title" id="modal-title">Import</h5>
+    <a class="close" type="button" ng-click="closeImportSuccessModal()">
         <span aria-hidden="true">&times;</span>
     </a>
 </div>
 <div class="modal-body" id="modal-body">
     <p>
-        <span class="text-dark" th:text="#{screen.message.modal.reset.confirmation}"></span>
-        <span class="text-dark">{{listNames}} in the {{groupReset}} group?</span>
+        <span class="modal-black-text">The following users were successfully added to the </span>
+        <span class="modal-black-text">{{listName}} list.</span>
     </p>
     <div class="container modal-tables">
         <table class="table table-sm table-borderless">
@@ -16,16 +16,16 @@
                 <tr class="text-nowrap">
                     <!-- Display table headings -->
                     <th scope="col">Username</th>
-                    <th scope="col">Uh Number</th>
+                    <th scope="col">UH Number</th>
                     <th scope="col">Name</th>
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="person in resetResults">
+                <tr ng-repeat="person in batchImportResults">
                     <!-- Display table data -->
                     <td>
-                        {{ person['username'] }}
-                        <span class="modal-black-text" ng-if="!person['username']">
+                        {{ person['uid'] }}
+                        <span class="modal-black-text" ng-if="!person['uid']">
                             N/A
                             <span class="fa fa-question-circle clickable" aria-hidden="true"
                                   data-toggle="tooltip" data-boundary="window" onmouseover="$(this).tooltip('toggle')"
@@ -39,13 +39,8 @@
             </tbody>
         </table>
     </div>
-    <p class="alert alert-warning mt-2" role="alert">
-        <span class="text-dark" th:text="#{screen.message.common.membership.info}"></span>
-    </p>
 </div>
 <div class="modal-footer">
-    <button class="btn btn-primary" ng-click="proceedResetGroup()">Yes</button>
-    <button class="btn btn-light" ng-click="cancelResetGroup()" data-dismiss="modal">Cancel</button>
+    <button class="btn btn-primary" ng-click="closeImportSuccessModal()">Ok</button>
 </div>
-
 </html>
