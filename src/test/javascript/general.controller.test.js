@@ -583,6 +583,13 @@ describe("GeneralController", () => {
             expect(scope.launchDynamicModal).toHaveBeenCalled();
         });
 
+        it("should call $scope.existsInList", () => {
+            spyOn(scope, "existsInList");
+            scope.addMembers("Include", "iamtst01");
+
+            expect(scope.existsInList).toHaveBeenCalled();
+        });
+
         it("should call $scope.launchDynamicModal() when ALL the members to add already exist in the list", () => {
             for (let i = 0; i < threshold.MAX_LIST_SIZE + 1; i++) {
                 scope.groupingInclude.push({
@@ -642,16 +649,22 @@ describe("GeneralController", () => {
                     expect(scope.waitingForImportResponse).toBeFalse();
                 });
 
-                it("should call $scope.existsInList and $scope.launchAddModal", () => {
-                    spyOn(scope, "existsInList").and.callThrough();
-                    spyOn(scope, "launchAddModal");
+                it("should set $scope.isBatchImport", () => {
+                    scope.isBatchImport = true;
                     scope.addMembers("Include", uhIdentifier);
-
-                    httpBackend.expectPOST(BASE_URL + "members/invalid", uhIdentifier).respond(200, []);
+                    httpBackend.expectPOST(BASE_URL + "members/invalid", uhIdentifier).respond(200, uhIdentifier);
                     httpBackend.flush();
+                    expect(scope.isBatchImport).toBeFalse();
 
-                    expect(scope.existsInList).toHaveBeenCalled();
-                    expect(scope.launchAddModal).toHaveBeenCalled();
+                    scope.isBatchImport = false;
+                    const arr = [];
+                    for (let i = 0; i < 101; i++) {
+                        arr.push(`iamtst${i}`);
+                    }
+                    scope.addMembers("Include", arr);
+                    httpBackend.expectPOST(BASE_URL + "members/invalid", arr).respond(200, []);
+                    httpBackend.flush();
+                    expect(scope.isBatchImport).toBeTrue();
                 });
 
                 it("should call $scope.launchDynamicModal when all members pre-exist and is a batch import", () => {
@@ -1169,6 +1182,53 @@ describe("GeneralController", () => {
             spyOn(scope.importConfirmationModalInstance, "dismiss").and.callThrough();
             scope.cancelImportConfirmationModal();
             expect(scope.importConfirmationModalInstance.dismiss).toHaveBeenCalled();
+        });
+    });
+
+    describe("displayImportSuccessModal", () => {
+        const mockModal = {
+            result: {
+                finally(confirmCallback) {
+                    this.confirmCallBack = confirmCallback;
+                }
+            },
+            close() {
+                this.result.confirmCallBack();
+            }
+        };
+
+        it("should open $uibModal with modal/importSuccessModal", () => {
+            spyOn(uibModal, "open").and.returnValue(mockModal);
+            scope.displayImportSuccessModal("Include", ["iamtst01", "iamtst02"]);
+            expect(uibModal.open).toHaveBeenCalledWith({
+                templateUrl: "modal/importSuccessModal",
+                scope
+            });
+        });
+
+        it("should call $scope.getGroupingInformation() when the modal is closed", () => {
+            spyOn(uibModal, "open").and.returnValue(mockModal);
+            spyOn(scope, "getGroupingInformation");
+            scope.displayImportSuccessModal("Include", ["iamtst01", "iamtst02"]);
+            scope.closeImportSuccessModal();
+            expect(scope.getGroupingInformation).toHaveBeenCalled();
+
+        });
+    });
+
+    describe("closeImportSuccessModal", () => {
+        beforeEach(() => {
+            scope.importSuccessModalInstance = {
+                close: () => {
+                    // Mock $uib modal close
+                }
+            };
+        });
+
+        it("should close importSuccessModalInstance", () => {
+            spyOn(scope.importSuccessModalInstance, "close").and.callThrough();
+            scope.closeImportSuccessModal();
+            expect(scope.importSuccessModalInstance.close).toHaveBeenCalled();
         });
     });
 

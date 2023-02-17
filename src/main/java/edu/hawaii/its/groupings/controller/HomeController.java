@@ -126,9 +126,24 @@ public class HomeController {
         return "modal/preferenceErrorModal";
     }
 
+    @GetMapping(value = "/modal/addModal")
+    public String addModal() {
+        return "modal/addModal";
+    }
+
+    @GetMapping(value = "/modal/multiAddModal")
+    public String multiAddModal() {
+        return "modal/multiAddModal";
+    }
+
     @GetMapping(value = "/modal/removeModal")
     public String removeModal() {
         return "modal/removeModal";
+    }
+
+    @GetMapping(value = "/modal/multiRemoveModal")
+    public String multiRemoveModal() {
+        return "modal/multiRemoveModal";
     }
 
     @GetMapping(value = "/modal/resetModal")
@@ -144,11 +159,6 @@ public class HomeController {
     @GetMapping(value = "/modal/emptyGroupModal")
     public String emptyGroupModal() {
         return "modal/emptyGroupModal";
-    }
-
-    @GetMapping(value = "/modal/addModal")
-    public String addModal() {
-        return "modal/addModal";
     }
 
     @GetMapping(value = "/modal/syncDestModal")
@@ -186,6 +196,16 @@ public class HomeController {
         return "modal/importModal";
     }
 
+    @GetMapping(value = "/modal/importConfirmationModal")
+    public String importConfirmationModal() {
+        return "modal/importConfirmationModal";
+    }
+
+    @GetMapping(value = "/modal/importSuccessModal")
+    public String importSuccessModal() {
+        return "modal/importSuccessModal";
+    }
+
     @GetMapping(value = "modal/importErrorModal")
     public String importErrorModal() {
         return "modal/importErrorModal";
@@ -194,20 +214,5 @@ public class HomeController {
     @GetMapping(value = "/modal/dynamicModal")
     public String dynamicModal() {
         return "modal/dynamicModal";
-    }
-
-    @GetMapping(value = "/modal/multiAddModal")
-    public String multiAddModal() {
-        return "modal/multiAddModal";
-    }
-
-    @GetMapping(value = "/modal/multiRemoveModal")
-    public String multiRemoveModal() {
-        return "modal/multiRemoveModal";
-    }
-
-    @GetMapping(value = "/modal/importConfirmationModal")
-    public String importConfirmationModal() {
-        return "modal/importConfirmationModal";
     }
 }
