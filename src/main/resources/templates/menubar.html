@@ -18,26 +18,33 @@
         <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
             <ul class="navbar-nav">
                 <li class="nav-item" sec:authorize="hasAuthority('ROLE_ADMIN')">
+                    <div class="dropdown-divider d-block d-lg-none"></div>
                     <a class="nav-link" th:href="@{/admin}">Admin</a>
                 </li>
                 <li class="nav-item" sec:authorize="hasAuthority('ROLE_UH')">
+                    <div class="dropdown-divider d-block d-lg-none"></div>
                     <a class="nav-link" th:href="@{/memberships}">Memberships</a>
                 </li>
                 <li class="nav-item" sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_OWNER')">
+                    <div class="dropdown-divider d-block d-lg-none"></div>
                     <a class="nav-link" th:href="@{/groupings}">Groupings</a>
                 </li>
                 <li class="nav-item">
+                    <div class="dropdown-divider d-block d-lg-none"></div>
                     <a class="nav-link" th:href="@{/info}">Info</a>
                 </li>
                 <li class="nav-item" sec:authorize="hasAuthority('ROLE_UH')">
+                    <div class="dropdown-divider d-block d-lg-none"></div>
                     <a class="nav-link" th:href="@{/feedback}">Feedback</a>
                 </li>
                 <li class="nav-item" sec:authorize="!isAuthenticated()">
+                    <div class="dropdown-divider d-block d-lg-none pb-3"></div>
                     <a class="btn btn-primary login" th:href="@{/login}">Login <i class="fas fa-sign-in-alt"
                                                                                   aria-hidden="false"></i></a>
                 </li>
                 <li class="nav-item" sec:authorize="isAuthenticated()">
                     <form action="/logout" th:action="@{/logout}" method="post">
+                        <div class="dropdown-divider d-block d-lg-none pb-3"></div>
                         <button class="btn btn-outline-secondary text-nowrap" type="submit">Logout (<span
                                 sec:authentication="name" id="name"></span>)
                             <i class="fas fa-sign-out-alt" aria-hidden="true"></i>
