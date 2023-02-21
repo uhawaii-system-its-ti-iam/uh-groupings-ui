@@ -35,7 +35,7 @@
             // Request a list of membership objects from the API.
             groupingsService.getMembershipResults((res) => {
                     // Codacy throws an error regarding the '_' in the uniqBy function. This error will be ignored until a solution is found.
-                    $scope.membershipsList = _.sortBy(_.uniqBy(res, "name"), "name");
+                    $scope.membershipsList = _.sortBy(_.uniqBy(res.currentMemberships, "name"), "name");
                     $scope.pagedItemsMemberships = $scope.objToPageArray($scope.membershipsList, 20);
                     $scope.loading = false;
                 },
@@ -114,7 +114,7 @@
          * @param {number} indexClicked - the index of the grouping clicked by the user
          */
         $scope.optOut = function (currentPage, indexClicked) {
-            const groupingPath = $scope.pagedItemsMemberships[currentPage][indexClicked].path;
+            const groupingPath = $scope.pagedItemsMemberships[currentPage][indexClicked].groupingPath;
             $scope.loading = true;
             groupingsService.optOut(groupingPath, handleSuccessfulOpt, handleUnsuccessfulOpt);
         };
