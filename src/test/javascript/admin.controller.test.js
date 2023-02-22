@@ -365,7 +365,7 @@ describe("AdminController", function () {
         beforeEach(() => {
             scope.pagedItemsAdmins[0] = {name: "zzz", username: "zzz", uhUuid: "zzz"};
         });
-        it("should call scope.launchRemoveModal", () => {
+        it("should call scope.displayRemoveModal", () => {
             scope.adminsList = [
                 {
                     name: "iamtst01",
@@ -383,25 +383,25 @@ describe("AdminController", function () {
                     uhUuid: "iamtst03"
                 }
             ];
-            spyOn(scope, "launchRemoveModal").and.callThrough();
+            spyOn(scope, "displayRemoveModal").and.callThrough();
             scope.removeAdmin(0, 0);
-            expect(scope.launchRemoveModal).toHaveBeenCalled();
+            expect(scope.displayRemoveModal).toHaveBeenCalled();
         });
-        it("should call scope.launchRemoveErrorModal", () => {
-            spyOn(scope, "launchRemoveErrorModal").and.callThrough();
+        it("should call scope.displayRemoveErrorModal", () => {
+            spyOn(scope, "displayRemoveErrorModal").and.callThrough();
             scope.removeAdmin(0, 0);
-            expect(scope.launchRemoveErrorModal).toHaveBeenCalled();
+            expect(scope.displayRemoveErrorModal).toHaveBeenCalled();
         });
     });
 
-    describe("createRemoveFromGroupsModal", () => {
+    describe("displayRemoveFromGroupsModal", () => {
         let options = { member: { uhUuid: "testId" }, groupPaths: "testPath", listName: "testList" };
 
         it("should set scope variables to passed in option's object", () => {
             scope.memberToRemove = {};
             scope.groupPaths = "badPath";
             scope.listName = "badList";
-            scope.createRemoveFromGroupsModal(options);
+            scope.displayRemoveFromGroupsModal(options);
 
             expect(scope.memberToRemove).toEqual({ uhUuid: "testId" });
             expect(scope.groupPaths).toBe("testPath");
@@ -411,14 +411,14 @@ describe("AdminController", function () {
 
         it("should call showWarningRemovingSelf function", () => {
             spyOn(scope, "showWarningRemovingSelf").and.callThrough();
-            scope.createRemoveFromGroupsModal(options);
+            scope.displayRemoveFromGroupsModal(options);
 
             expect(scope.showWarningRemovingSelf).toHaveBeenCalled();
         });
 
         it("should call groupingsService", () => {
             spyOn(gs, "getMemberAttributes").and.callThrough();
-            scope.createRemoveFromGroupsModal(options);
+            scope.displayRemoveFromGroupsModal(options);
 
             expect(gs.getMemberAttributes).toHaveBeenCalled();
         });
