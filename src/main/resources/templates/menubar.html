@@ -39,13 +39,12 @@
                 </li>
                 <li class="nav-item" sec:authorize="!isAuthenticated()">
                     <div class="dropdown-divider d-block d-lg-none pb-3"></div>
-                    <a class="btn btn-primary login" th:href="@{/login}">Login <i class="fas fa-sign-in-alt"
-                                                                                  aria-hidden="false"></i></a>
+                    <a class="btn btn-primary btn-v-align login" th:href="@{/login}">Login <i class="fas fa-sign-in-alt" aria-hidden="false"></i></a>
                 </li>
                 <li class="nav-item" sec:authorize="isAuthenticated()">
                     <form action="/logout" th:action="@{/logout}" method="post">
                         <div class="dropdown-divider d-block d-lg-none pb-3"></div>
-                        <button class="btn btn-outline-secondary text-nowrap" type="submit">Logout (<span
+                        <button class="btn btn-outline-secondary btn-v-align text-nowrap" type="submit">Logout (<span
                                 sec:authentication="name" id="name"></span>)
                             <i class="fas fa-sign-out-alt" aria-hidden="true"></i>
                         </button>
