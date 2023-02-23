@@ -5,8 +5,7 @@ import org.jasig.cas.client.authentication.AttributePrincipalImpl;
 import org.jasig.cas.client.authentication.SimplePrincipal;
 import org.jasig.cas.client.validation.Assertion;
 import org.jasig.cas.client.validation.AssertionImpl;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import edu.hawaii.its.api.controller.GroupingsRestController;
 import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
 
@@ -16,24 +15,23 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-@RunWith(SpringRunner.class)
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.hamcrest.MatcherAssert.assertThat;
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = { SpringBootWebApplication.class })
 public class UserDetailsServiceTest {
 
@@ -84,12 +82,12 @@ public class UserDetailsServiceTest {
         User user = (User) userDetailsService.loadUserDetails(assertion);
 
         // Basics.
-        assertThat(user.getUsername(), equalTo("levia"));
-        assertThat(user.getUid(), equalTo("levia"));
-        assertThat(user.getUhUuid(), equalTo("89999999"));
+        assertThat(user.getUsername(), is("levia"));
+        assertThat(user.getUid(), is("levia"));
+        assertThat(user.getUhUuid(), is("89999999"));
 
         // Granted Authorities.
-        assertThat(user.getAuthorities().size(), equalTo(4));
+        assertThat(user.getAuthorities().size(), is(4));
         assertTrue(user.hasRole(Role.ANONYMOUS));
         assertTrue(user.hasRole(Role.UH));
         assertTrue(user.hasRole(Role.OWNER));
@@ -123,12 +121,12 @@ public class UserDetailsServiceTest {
         User user = (User) userDetailsService.loadUserDetails(assertion);
 
         // Basics.
-        assertThat(user.getUsername(), equalTo("jjcale"));
-        assertThat(user.getUid(), equalTo("jjcale"));
-        assertThat(user.getUhUuid(), equalTo("90000000"));
+       assertThat(user.getUsername(), is("jjcale"));
+       assertThat(user.getUid(), is("jjcale"));
+       assertThat(user.getUhUuid(), is("90000000"));
 
         // Granted Authorities.
-        assertThat(user.getAuthorities().size(), equalTo(3));
+       assertThat(user.getAuthorities().size(), is(3));
         assertTrue(user.hasRole(Role.ANONYMOUS));
         assertTrue(user.hasRole(Role.UH));
         assertTrue(user.hasRole(Role.OWNER));
@@ -148,8 +146,8 @@ public class UserDetailsServiceTest {
             userDetailsService.loadUserDetails(assertion);
             fail("Should not have reached here.");
         } catch (Exception e) {
-            assertThat(UsernameNotFoundException.class, equalTo(e.getClass()));
-            assertThat(e.getMessage(), containsString("principal is null"));
+           assertThat(UsernameNotFoundException.class, is(e.getClass()));
+           assertThat(e.getMessage(), containsString("principal is null"));
         }
     }
 }

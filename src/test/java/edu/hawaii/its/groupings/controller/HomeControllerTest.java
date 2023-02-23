@@ -3,15 +3,15 @@ package edu.hawaii.its.groupings.controller;
 import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
 import edu.hawaii.its.groupings.type.Feedback;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
@@ -19,12 +19,12 @@ import org.springframework.web.context.WebApplicationContext;
 
 import javax.servlet.http.HttpSession;
 
-import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.nullValue;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -38,7 +38,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 @ActiveProfiles("localTest")
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = { SpringBootWebApplication.class })
 public class HomeControllerTest {
 
@@ -56,7 +56,7 @@ public class HomeControllerTest {
 
     private MockMvc mockMvc;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         mockMvc = webAppContextSetup(context)
                 .apply(springSecurity())
@@ -131,7 +131,7 @@ public class HomeControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(status().is(302))
                 .andReturn();
-        assertThat(mvcResult.getResponse().getRedirectedUrl(), equalTo(appUrlHome));
+        assertThat(mvcResult.getResponse().getRedirectedUrl(), is(appUrlHome));
     }
 
     @Test
@@ -229,7 +229,7 @@ public class HomeControllerTest {
     public void requestFeedbackWithoutException() throws Exception {
         MvcResult mvcResult = mockMvc.perform(get("/feedback"))
                 .andExpect(status().isOk())
-                .andExpect(model().attribute("feedback", hasProperty("email", equalTo("user@hawaii.edu"))))
+                .andExpect(model().attribute("feedback", hasProperty("email", is("user@hawaii.edu"))))
                 .andExpect(model().attribute("feedback", hasProperty("exceptionMessage", nullValue())))
                 .andExpect(model().attributeExists("feedback"))
                 .andReturn();
@@ -243,11 +243,13 @@ public class HomeControllerTest {
                 .sessionAttr("feedback", new Feedback("exception")))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("feedback"))
-                .andExpect(model().attribute("feedback", hasProperty("exceptionMessage", equalTo("exception"))))
-                .andExpect(model().attribute("feedback", hasProperty("email", equalTo("user@hawaii.edu"))))
+                .andExpect(model().attribute("feedback", hasProperty("exceptionMessage", is("exception"))))
+                .andExpect(model().attribute("feedback", hasProperty("email", is("user@hawaii.edu"))))
                 .andReturn()
                 .getRequest()
                 .getSession();
+
+        assert session != null;
         assertThat(session.getAttribute("feedback"), notNullValue());
     }
 
@@ -259,7 +261,7 @@ public class HomeControllerTest {
                 .flashAttr("feedback", new Feedback()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/feedback"))
-                .andExpect(flash().attribute("success", equalTo(true)))
+                .andExpect(flash().attribute("success", is(true)))
                 .andReturn();
         assertNotNull(mvcResult);
     }

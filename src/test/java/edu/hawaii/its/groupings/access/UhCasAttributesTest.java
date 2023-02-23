@@ -1,14 +1,15 @@
 package edu.hawaii.its.groupings.access;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class UhCasAttributesTest {
 
@@ -39,7 +40,7 @@ public class UhCasAttributesTest {
     public void loadMapInvalidValueType() {
         Map<Object, Object> map = new HashMap<>();
         map.put("uhUuid", "666666");
-        map.put("uid", new Integer(666));
+        map.put("uid", 666);
         UhCasAttributes attributes = new UhCasAttributes(map);
         assertThat(attributes.getUsername(), is(""));
         assertThat(attributes.getUhUuid(), is("666666"));
@@ -51,7 +52,7 @@ public class UhCasAttributesTest {
     public void loadMapInvalidKeyType() {
         Map<Object, Object> map = new HashMap<>();
         map.put("uhUuid", "666666");
-        map.put(new Integer(666), new Integer(666));
+        map.put(666, 666);
         UhCasAttributes attributes = new UhCasAttributes(map);
         assertThat(attributes.getUsername(), is(""));
         assertThat(attributes.getUhUuid(), is("666666"));
@@ -62,7 +63,7 @@ public class UhCasAttributesTest {
     @Test
     public void loadMapInvalidTypes() {
         Map<Object, Object> map = new HashMap<>();
-        map.put(new Integer(666), new Integer(666));
+        map.put(666, 666);
         UhCasAttributes attributes = new UhCasAttributes(map);
         assertThat(attributes.getUsername(), is(""));
         assertThat(attributes.getUhUuid(), is(""));
@@ -177,7 +178,7 @@ public class UhCasAttributesTest {
         map.put("uhUuid", "666666");
 
         Map<Long, java.util.Date> uidMap = new HashMap<>();
-        uidMap.put(new Long(666), new java.util.Date());
+        uidMap.put(666L, new java.util.Date());
         map.put("uid", uidMap);
 
         UhCasAttributes attributes = new UhCasAttributes(map);
@@ -209,12 +210,12 @@ public class UhCasAttributesTest {
         map.put("eduPersonAffiliation", "aff");
         UhCasAttributes attributes = new UhCasAttributes(map);
 
-        assertThat(attributes.getMap().size(), equalTo(5));
-        assertThat(attributes.getUid(), equalTo("duckart"));
-        assertThat(attributes.getUhUuid(), equalTo("666666"));
-        assertThat(attributes.getName(), equalTo("Frank"));
-        assertThat(attributes.getMail().get(0), equalTo("frank@example.com"));
-        assertThat(attributes.getAffiliation().get(0), equalTo("aff"));
+        assertThat(attributes.getMap().size(), is(5));
+        assertThat(attributes.getUid(), is("duckart"));
+        assertThat(attributes.getUhUuid(), is("666666"));
+        assertThat(attributes.getName(), is("Frank"));
+        assertThat(attributes.getMail().get(0), is("frank@example.com"));
+        assertThat(attributes.getAffiliation().get(0), is("aff"));
 
         assertThat(attributes.toString(), containsString("uid=duckart"));
     }

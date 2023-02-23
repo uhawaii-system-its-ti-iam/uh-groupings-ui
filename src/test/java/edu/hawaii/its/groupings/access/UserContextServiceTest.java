@@ -2,18 +2,19 @@ package edu.hawaii.its.groupings.access;
 
 import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
 import edu.hawaii.its.groupings.controller.WithMockUhUser;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.startsWith;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-
-@RunWith(SpringRunner.class)
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.CoreMatchers.is;
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = { SpringBootWebApplication.class })
 public class UserContextServiceTest {
 
@@ -23,24 +24,24 @@ public class UserContextServiceTest {
     @Test
     @WithMockUhUser(username = "admin", roles = { "ROLE_ADMIN" })
     public void basics() {
-        assertThat(userContextService.getCurrentUhUuid(), equalTo("12345678"));
-        assertThat(userContextService.getCurrentUid(), equalTo("admin"));
-        assertThat(userContextService.toString(), startsWith("UserContextServiceImpl"));
+        assertThat("12345678", is(userContextService.getCurrentUhUuid()));
+        assertThat("admin", is(userContextService.getCurrentUid()));
+        assertTrue(userContextService.toString().startsWith("UserContextServiceImpl"));
 
         User user = userContextService.getCurrentUser();
         assertNotNull(user);
-        assertThat(user.getUhUuid(), equalTo("12345678"));
-        assertThat(user.getUid(), equalTo("admin"));
+        assertThat("12345678", is(user.getUhUuid()));
+        assertThat("admin", is(user.getUid()));
 
         userContextService.setCurrentUhUuid("87654321");
-        assertThat(userContextService.getCurrentUhUuid(), equalTo("87654321"));
+        assertThat("87654321", is(userContextService.getCurrentUhUuid()));
     }
     @Test
     @WithMockUhUser(username = "Owner", roles = { "ROLE_OWNER"})
     public void testOwner(){
         User user = userContextService.getCurrentUser();
-        assertThat(user.hasRole(Role.ADMIN), equalTo(false));
-        assertThat(user.hasRole(Role.OWNER), equalTo(true));
+        assertFalse(user.hasRole(Role.ADMIN));
+        assertTrue(user.hasRole(Role.OWNER));
     }
 }
 
