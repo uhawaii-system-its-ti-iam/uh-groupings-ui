@@ -41,14 +41,23 @@
                 <tr ng-repeat="owner in pagedItemsOwners[currentPageOwners]" class="table table-sm">
                     <td class="overflow-auto py-1 px-3" aria-label="{{owner.name}}">
                         {{owner.name}}
-                        <span class="far fa-trash-alt fa-pull-right pt-1" role="button"
+                        <span ng-if="groupingOwners.length > 1">
+                            <span class="far fa-trash-alt fa-pull-right pt-1" role="button"
                               data-toggle="tooltip" data-placement="top" data-boundary="window"
                               onmouseover="$(this).tooltip('show')" onmouseout="$(this).tooltip('dispose')"
                               tabindex="0" aria-label="Remove {{owner.name}} from the Owner members list"
                               th:title="#{screen.message.common.tooltip.remove.owner}"
                               ng-keypress="$event.keyCode === 13 ? removeOwnerWithTrashcan(currentPageOwners, $index) : null"
                               ng-click="removeOwnerWithTrashcan(currentPageOwners, $index)">
-                    </span>
+                            </span>
+                        </span>
+                        <span ng-if="groupingOwners.length === 1">
+                            <span class="fa fa-question-circle fa-pull-right pt-1" role="button"
+                                  data-toggle="tooltip" data-placement="top" data-boundary="window"
+                                  onmouseover="$(this).tooltip('show')" onmouseout="$(this).tooltip('dispose')"
+                                  th:title="#{screen.message.common.tooltip.remove.warning}">
+                            </span>
+                        </span>
                     </td>
                     <td class="overflow-auto py-1 px-3">
                         {{owner.username}}
