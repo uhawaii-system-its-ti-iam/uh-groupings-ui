@@ -174,7 +174,6 @@ describe("AdminController", function () {
             scope.searchForUserGroupingInformation();
             expect(scope.emptyInput).toBeTrue();
             expect(scope.personList).toEqual([]);
-            expect(scope.currentManagePerson).toEqual("");
         });
         it("should call groupingsService.managePersonResults", () => {
             scope.personToLookup = "iamtst01";
@@ -193,13 +192,26 @@ describe("AdminController", function () {
             scope.searchForUserGroupingInformation();
             expect(scope.resStatus).toEqual(500);
             expect(scope.personList).toEqual([]);
-            expect(scope.currentManagePerson).toEqual("");
 
             scope.personToLookup = "*";
             scope.searchForUserGroupingInformation();
             expect(scope.resStatus).toEqual(500);
             expect(scope.personList).toEqual([]);
+        });
+    });
+
+    describe("setCurrentManagePerson", () => {
+        it("should not set currentManagePerson and set resStatus to 500", () => {
+            scope.uhUuid = null;
+            scope.setCurrentManagePerson("");
+            expect(scope.resStatus).toEqual(500);
             expect(scope.currentManagePerson).toEqual("");
+        });
+        it("should set currentManagePerson and not set resStatus", () => {
+            scope.uhUuid = "notnull";
+            scope.setCurrentManagePerson("iamtst");
+            expect(scope.resStatus).toEqual(0);
+            expect(scope.currentManagePerson).not.toEqual("");
         });
     });
 
