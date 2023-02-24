@@ -176,9 +176,9 @@
             $scope.waitingForImportResponse = false;
             $scope.resStatus = res.status;
             if (res.status === 403) {
-                $scope.createOwnerErrorModal();
+                $scope.displayOwnerErrorModal();
             } else {
-                $scope.createApiErrorModal();
+                $scope.displayApiErrorModal();
             }
         }
 
@@ -197,7 +197,7 @@
             return _.sortBy(members, "name");
         }
 
-        /** Remove all nameless members from membersToAdd then create an object of distinct members as a sorted
+        /** Remove all nameless members from membersToAdd then display an object of distinct members as a sorted
          *  concatenation of initialMembers and membersToAdd objects.
          * @param {object[]} initialMembers - initial members in group
          * @param {object[]} membersToAdd - members to add to group
@@ -226,7 +226,7 @@
                 $scope.syncDestMap = res;
             }, function (res) {
                 if (res.statusCode === 403) {
-                    $scope.createOwnerErrorModal();
+                    $scope.displayOwnerErrorModal();
                 }
             });
         };
@@ -373,7 +373,7 @@
                     }
                 }, function (res) {
                     $scope.resStatus = res.status;
-                    $scope.createApiErrorModal();
+                    $scope.displayApiErrorModal();
                 });
                 //Will only decrement threadcount if previous call absolutely finishes
                 asyncThreadCount--;
@@ -447,9 +447,9 @@
                         $scope.paginatingComplete = false;
                         $scope.paginatingProgress = false;
                     } else if (res.statusCode === 403) {
-                        $scope.createOwnerErrorModal();
+                        $scope.displayOwnerErrorModal();
                     } else {
-                        $scope.createApiErrorModal();
+                        $scope.displayApiErrorModal();
                     }
                     //stops while loop and completes promise then returns
                     loadMembersList = false;
@@ -499,7 +499,7 @@
                 }, // close description form when done.
                 (res) => {
                     $scope.resStatus = res.status;
-                    $scope.createApiErrorModal();
+                    $scope.displayApiErrorModal();
                 });
         };
 
@@ -528,9 +528,9 @@
         };
 
         /**
-         * Create a modal for errors in loading data from the API.
+         * Display a modal for errors in loading data from the API.
          */
-        $scope.createApiErrorModal = function () {
+        $scope.displayApiErrorModal = function () {
             $scope.loading = false;
             $scope.apiErrorModalInstance = $uibModal.open({
                 templateUrl: "modal/apiError",
@@ -617,10 +617,10 @@
         };
 
         /**
-         * Launch a modal containing a browse local file system for import button.
+         * Display a modal containing a browse local file system for import button.
          * @param listName - Current list
          */
-        $scope.launchImportModal = function (listName) {
+        $scope.displayImportModal = function (listName) {
             $scope.listName = listName;
 
             $scope.importModalInstance = $uibModal.open({
@@ -657,28 +657,28 @@
          */
         $scope.readTextFile = function (inputFile) {
             if (!$scope.verifyImportFileType(inputFile)) {
-                $scope.launchDynamicModal(
+                $scope.displayDynamicModal(
                     Message.Title.INVALID_FILE,
                     "File must be a .txt file."
                 );
                 return;
             }
             if (!$scope.verifyImportFileSize(inputFile)) {
-                $scope.launchDynamicModal(
+                $scope.displayDynamicModal(
                     Message.Title.INVALID_FILE,
                     "File is too large. Maximum file size: 5MB"
                 );
                 return;
             }
             if (!$scope.verifyImportFileNameSize(inputFile)) {
-                $scope.launchDynamicModal(
+                $scope.displayDynamicModal(
                     Message.Title.INVALID_FILE,
                     "File name has too many characters. Maximum character amount: 50"
                 );
                 return;
             }
             if (!$scope.verifyImportFileName(inputFile)) {
-                $scope.launchDynamicModal(
+                $scope.displayDynamicModal(
                     Message.Title.INVALID_FILE,
                     "File name has illegal characters."
                 );
@@ -764,9 +764,9 @@
         }
 
         /**
-         * Launch the import error modal.
+         * Display the import error modal.
          */
-        $scope.launchImportErrorModal = function () {
+        $scope.displayImportErrorModal = function () {
             $scope.importErrorModalInstance = $uibModal.open({
                 templateUrl: "modal/importErrorModal",
                 scope: $scope
@@ -798,11 +798,11 @@
         };
 
         /**
-         * Launch a modal with a title, and body message. The modal will close in the case of pressing the ok button
+         * Display a modal with a title, and body message. The modal will close in the case of pressing the ok button
          * and will cancel if the timeTillClose is set and time runs out. The modal will not timeout unless the
          * timeTillClose is set.
          */
-        $scope.launchDynamicModal = function (title, body, timeTillClose) {
+        $scope.displayDynamicModal = function (title, body, timeTillClose) {
             $scope.currentModalTitle = title;
             $scope.currentModalBody = body;
 
@@ -836,7 +836,7 @@
 
         /**
          * Add uhIdentifiers to a group. Leave the uhIdentifiers parameter null to take the member input from
-         * $scope.manageMembers. Checks that all uhIdentifiers are valid before launching the
+         * $scope.manageMembers. Checks that all uhIdentifiers are valid before displaying the
          * add/multiAdd/importConfirmation modal.
          * @param {string} listName
          * @param {Object[]|null} uhIdentifiers
@@ -853,7 +853,7 @@
             }
             // Prevent adding more than Threshold.MAX_IMPORT
             if (uhIdentifiers.length > Threshold.MAX_IMPORT) {
-                $scope.launchDynamicModal(
+                $scope.displayDynamicModal(
                     Message.Title.IMPORT_OUT_OF_BOUNDS,
                     Message.Body.IMPORT_OUT_OF_BOUNDS);
                 return;
@@ -862,7 +862,7 @@
             if ($scope.existsInList(listName, uhIdentifiers)) {
                 // Determine whether to display members already in the list in a modal or add-error-messages.html
                 if (uhIdentifiers.length > Threshold.MAX_LIST_SIZE) {
-                    $scope.launchDynamicModal(
+                    $scope.displayDynamicModal(
                         Message.Title.NO_MEMBERS_ADDED,
                         Message.Body.NO_MEMBERS_ADDED.with(listName));
                 } else {
@@ -882,7 +882,7 @@
                     $scope.invalidMembers = res;
                     $scope.addInputError = true;
                     if ($scope.isBatchImport) {
-                        $scope.launchImportErrorModal();
+                        $scope.displayImportErrorModal();
                     }
                     return;
                 }
@@ -892,9 +892,9 @@
 
                 // Display the appropriate modal
                 if ($scope.isBatchImport) {
-                    $scope.launchImportConfirmationModal(listName, uhIdentifiers);
+                    $scope.displayImportConfirmationModal(listName, uhIdentifiers);
                 } else {
-                    $scope.launchAddModal({
+                    $scope.displayAddModal({
                         membersToAdd: uhIdentifiers,
                         listName
                     });
@@ -903,12 +903,12 @@
                 // Display API error modal
                 $scope.waitingForImportResponse = false;
                 $scope.resStatus = res.status;
-                $scope.createApiErrorModal();
+                $scope.displayApiErrorModal();
             });
         };
 
         function timeoutModal() {
-            return $scope.launchDynamicModal(
+            return $scope.displayDynamicModal(
                 Message.Title.SLOW_IMPORT,
                 Message.Body.SLOW_IMPORT,
                 8000);
@@ -921,11 +921,11 @@
                 $scope.batchImportResults = res.addResults.results;
                 $scope.displayImportSuccessModal();
             } else if ($scope.isMultiAdd) {
-                $scope.launchDynamicModal(
+                $scope.displayDynamicModal(
                     Message.Title.ADD_MEMBERS,
                     Message.Body.ADD_MEMBERS.with($scope.listName));
             } else {
-                $scope.launchDynamicModal(
+                $scope.displayDynamicModal(
                     Message.Title.ADD_MEMBER,
                     Message.Body.ADD_MEMBER.with($scope.member, $scope.listName));
             }
@@ -946,18 +946,18 @@
         }
 
         /**
-         * Launch a modal that prompts the user whether they want to add the member(s) or not. If 'Yes' is pressed, then
+         * Display a modal that prompts the user whether they want to add the member(s) or not. If 'Yes' is pressed, then
          * a request is made to add the member(s).
          * @param {object} options - the options object
          * @param {string|object[]} options.membersToAdd - the member object or array of member(s) to add
          * @param {string} options.listName - the grouping list the member(s) is/are being added to
          */
-        $scope.launchAddModal = function (options) {
+        $scope.displayAddModal = function (options) {
             const membersToAdd = [].concat(options.membersToAdd); // Allows either string or array to be passed in
             $scope.listName = options.listName;
             $scope.isMultiAdd = membersToAdd.length > 1;
 
-            // Prevent launching add/multiAdd modal with 0 members
+            // Prevent displaying add/multiAdd modal with 0 members
             if (_.isEmpty(membersToAdd)) {
                 $scope.containsInput = true;
                 return;
@@ -998,7 +998,7 @@
                 // Display API error modal
                 $scope.waitingForImportResponse = false;
                 $scope.resStatus = res.status;
-                $scope.createApiErrorModal();
+                $scope.displayApiErrorModal();
             });
         };
 
@@ -1017,11 +1017,11 @@
         };
 
         /**
-         * Launch a modal to confirm/cancel the import
+         * Display a modal to confirm/cancel the import
          * @param listName - current list
          * @param membersToAdd - the members to add
          */
-        $scope.launchImportConfirmationModal = function (listName, membersToAdd) {
+        $scope.displayImportConfirmationModal = function (listName, membersToAdd) {
             // Set information to be displayed in the modal
             $scope.importSize = membersToAdd.length;
             $scope.listName = listName;
@@ -1146,10 +1146,10 @@
         };
 
         /**
-         * Create a modal telling the user that they do not have access to perform this action and that they
+         * Display a modal telling the user that they do not have access to perform this action and that they
          * will be logged out and redirected to the homepage.
          */
-        $scope.createRoleErrorModal = function () {
+        $scope.displayRoleErrorModal = function () {
             $scope.loading = false;
             $scope.RoleErrorModalInstance = $uibModal.open({
                 templateUrl: "modal/roleErrorModal",
@@ -1221,7 +1221,7 @@
         };
 
         /**
-         * Helper - createRemoveModal, fetchMemberProperties
+         * Helper - displayRemoveModal, fetchMemberProperties
          * Returns the member object that contains either the provided username or UH number.
          * @param memberIdentifier - The username or UH ID number of the member object to return.
          * @param listName - The name of the list to search.
@@ -1260,7 +1260,7 @@
         /**
          * Helper - removeMembers
          * Searches an array of member objects, and checks if the members are in the groupings list.
-         * If a member does not exist, it creates a comma-seperated string of their identifiers and
+         * If a member does not exist, it displays a comma-seperated string of their identifiers and
          * sets it to $scope.membersNotInList.
          * @param members {Object[]} - An array of members.
          * @returns {boolean} - true if some members exist in the grouping list, false if none.
@@ -1310,12 +1310,12 @@
             }
             // Check if members to remove exist in the list
             if (!$scope.fetchMemberProperties(uhIdentifiers, listName)) {
-                $scope.launchDynamicModal(Message.Title.REMOVE_INPUT_ERROR, Message.Body.REMOVE_INPUT_ERROR);
+                $scope.displayDynamicModal(Message.Title.REMOVE_INPUT_ERROR, Message.Body.REMOVE_INPUT_ERROR);
                 return;
             }
             // Prevent removing all owners
             if (listName === "owners" && $scope.multiRemoveResults.length === $scope.groupingOwners.length) {
-                $scope.launchRemoveErrorModal("owner");
+                $scope.displayRemoveErrorModal("owner");
                 clearMemberInput(listName);
                 return;
             }
@@ -1324,7 +1324,7 @@
             uhIdentifiers = uhIdentifiers.filter((member) => !$scope.membersNotInList.includes(member));
 
             // Display the remove/multiRemove modal
-            $scope.launchRemoveModal({
+            $scope.displayRemoveModal({
                 membersToRemove: uhIdentifiers,
                 listName
             });
@@ -1340,12 +1340,12 @@
 
             // Display the appropriate modal
             if ($scope.isMultiRemove) {
-                $scope.launchDynamicModal(
+                $scope.displayDynamicModal(
                     Message.Title.REMOVE_MEMBERS,
                     Message.Body.REMOVE_MEMBERS.with($scope.listName)
                 );
             } else {
-                $scope.launchDynamicModal(
+                $scope.displayDynamicModal(
                     Message.Title.REMOVE_MEMBER,
                     Message.Body.REMOVE_MEMBER.with($scope.member, $scope.listName)
                 );
@@ -1390,13 +1390,13 @@
         }
 
         /**
-         * Launch a modal that prompts the user whether they want to remove the member(s) or not. If 'Yes' is pressed,
+         * Display a modal that prompts the user whether they want to remove the member(s) or not. If 'Yes' is pressed,
          * then a request is made to remove the member(s).
          * @param {object} options - the options object
          * @param {object|object[]} options.membersToRemove - the array of members to remove
          * @param {string} options.listName - the grouping list the member(s) is/are being removed from
          */
-        $scope.launchRemoveModal = function (options) {
+        $scope.displayRemoveModal = function (options) {
             $scope.membersToRemove = options.membersToRemove;
             $scope.listName = options.listName;
 
@@ -1471,7 +1471,7 @@
                 memberToRemove = $scope.pagedItemsExclude[currentPage][index];
             }
 
-            $scope.launchRemoveModal({
+            $scope.displayRemoveModal({
                 membersToRemove: memberToRemove,
                 listName
             });
@@ -1489,11 +1489,11 @@
             $scope.listName = "owners";
 
             if ($scope.groupingOwners.length === 1) {
-                $scope.launchRemoveErrorModal("owner");
+                $scope.displayRemoveErrorModal("owner");
                 return;
             }
 
-            $scope.launchRemoveModal({
+            $scope.displayRemoveModal({
                 membersToRemove: ownerToRemove,
                 listName: "owners"
             });
@@ -1502,7 +1502,7 @@
 
 
         $scope.displayUnsuccessfulGroupResetModal = function (message) {
-            $scope.launchDynamicModal(Message.ResetGroupError.ResetGroupErrorMessages.TITLE, message);
+            $scope.displayDynamicModal(Message.ResetGroupError.ResetGroupErrorMessages.TITLE, message);
         };
         /**
          * Helper-Guard: handleGroupingReset:
@@ -1516,7 +1516,7 @@
                 return (typeof resetResult !== "undefined") &&
                     (resetResult.resultCode === "SUCCESS" && resetResult.groupPath.includes(groupingPath));
             };
-            // Create an object to be matched with certainObject ResetGroupErrorMessageMap in app.constants.
+            // Display an object to be matched with certainObject ResetGroupErrorMessageMap in app.constants.
             let results = {
                 "includeFailure": wasError(resetIncludeResult),
                 "excludeFailure": wasError(resetExcludeResult),
@@ -1550,7 +1550,7 @@
             })());
         };
 
-        $scope.createEmptyGroupModal = function () {
+        $scope.displayEmptyGroupModal = function () {
             $scope.emptyGroupModalInstance = $uibModal.open({
                 templateUrl: "modal/emptyGroupModal",
                 scope: $scope,
@@ -1589,10 +1589,10 @@
         };
 
         /**
-         * Creates a modal stating there was an error removing the user from a group.
+         * Displays a modal stating there was an error removing the user from a group.
          * @param {string} userType - the type of user being removed (either admin or owner)
          */
-        $scope.launchRemoveErrorModal = function (userType) {
+        $scope.displayRemoveErrorModal = function (userType) {
             $scope.userType = userType;
 
             $scope.removeErrorModalInstance = $uibModal.open({
@@ -1679,10 +1679,10 @@
 
 
         /**
-         * Create a modal with a description of the preference selected.
+         * Display a modal with a description of the preference selected.
          * @param {string} desc - the description of the preference
          */
-        $scope.createPreferenceInfoModal = function (desc) {
+        $scope.displayPreferenceInfoModal = function (desc) {
             $scope.preferenceInfo = desc;
 
             $scope.infoModalInstance = $uibModal.open({
@@ -1705,7 +1705,7 @@
          */
         function handleSuccessfulPreferenceToggle(res) {
             if (!_.isUndefined(res.statusCode)) {
-                $scope.createPreferenceErrorModal();
+                $scope.displayPreferenceErrorModal();
             }
         }
 
@@ -1720,13 +1720,13 @@
         };
 
         /**
-         * Creates a modal that prompts the user whether they want to delete the user or not. If 'Yes' is pressed, then
+         * Displays a modal that prompts the user whether they want to delete the user or not. If 'Yes' is pressed, then
          * a request is made to delete the user.
          * @param {object} options - the options object
          * @param {String} options.users - the user being removed
          * @param {string} options.group - groups the user is being removed from
          */
-        $scope.createResetGroupModal = function (options) {
+        $scope.displayResetGroupModal = function (options) {
             $scope.groupReset = options.group;
             $scope.listNames = options.listNames;
 
@@ -1817,7 +1817,7 @@
                 $scope.getPersonProps(Object.keys($scope.resetResults[0]));
             }
 
-            $scope.createResetGroupModal({
+            $scope.displayResetGroupModal({
                 group: $scope.selectedGrouping.name,
                 listNames
             });
@@ -1873,7 +1873,7 @@
         };
 
         /**
-         * Helper - createSyncDestModal
+         * Helper - displaySyncDestModal
          * Toggle the grouping sync destinations according to a given syncDest
          * @param {String} syncDestName Name of the Sync Dest to toggle
          */
@@ -1884,9 +1884,9 @@
         };
 
         /**
-         * Create a modal indicating an error in saving the grouping's preferences.
+         * Display a modal indicating an error in saving the grouping's preferences.
          */
-        $scope.createPreferenceErrorModal = function () {
+        $scope.displayPreferenceErrorModal = function () {
             $scope.preferenceErrorModalInstance = $uibModal.open({
                 templateUrl: "modal/preferenceErrorModal",
                 scope: $scope,
@@ -1953,10 +1953,10 @@
         };
 
         /**
-         * Create sync destination confirmation modal.
-         * @param {String} syncDestName Name of the Sync Dest to create modal for
+         * Display sync destination confirmation modal.
+         * @param {String} syncDestName Name of the Sync Dest to display modal for
          */
-        $scope.createSyncDestModal = function (syncDestName) {
+        $scope.displaySyncDestModal = function (syncDestName) {
             const isSyncDestOn = $scope.getSyncDestValueInArray(syncDestName);
             $scope.setSyncDestInArray(syncDestName, !isSyncDestOn);
             $scope.selectedSyncDest = $scope.getEntireSyncDestInArray(syncDestName);
@@ -1992,11 +1992,11 @@
         };
 
         /**
-         * Create owner error modal when a grouping owner
+         * Display owner error modal when a grouping owner
          * is removed while still trying to access grouping
          * owner actions.
          */
-        $scope.createOwnerErrorModal = function () {
+        $scope.displayOwnerErrorModal = function () {
             $scope.loading = false;
             $scope.OwnerErrorModalInstance = $uibModal.open({
                 templateUrl: "modal/ownerErrorModal",
@@ -2016,7 +2016,7 @@
 
             csv = $scope.convertListToCsv(group);
             if (csv == null) {
-                $scope.createApiErrorModal();
+                $scope.displayApiErrorModal();
                 return;
             }
 

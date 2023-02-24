@@ -45,7 +45,7 @@
          */
         $scope.init = function () {
             $scope.loading = true;
-            groupingsService.getAdminLists($scope.getAdminListsCallbackOnSuccess, $scope.createApiErrorModal);
+            groupingsService.getAdminLists($scope.getAdminListsCallbackOnSuccess, $scope.displayApiErrorModal);
         };
 
         $scope.searchForUserGroupingInformationOnSuccessCallback = function (res) {
@@ -129,7 +129,7 @@
                         if (grouping === $scope.selectedOwnedGroupings[$scope.selectedOwnedGroupings.length - 1]) {
                             $scope.removeFromGroupsCallbackOnSuccess(memberToRemove);
                         }
-                    }, () => $scope.createApiErrorModal());
+                    }, () => $scope.displayApiErrorModal());
                 }
             );
         };
@@ -138,9 +138,9 @@
             if (_.isEmpty($scope.selectedGroupingsPaths)) {
                 $scope.emptySelect = true;
             } else if ($scope.soleOwnerGroupingNames.length >= 1) {
-                $scope.launchRemoveErrorModal("owner");
+                $scope.displayRemoveErrorModal("owner");
             } else {
-                $scope.createRemoveFromGroupsModal({
+                $scope.displayRemoveFromGroupsModal({
                     member: memberToRemove,
                     groupPaths: $scope.selectedGroupingsPaths,
                     listName: $scope.selectedGroupingsNames
@@ -227,7 +227,7 @@
                     $scope.listName = "admins";
                     $scope.containsInput = true;
                 } else {
-                    $scope.launchAddModal({
+                    $scope.displayAddModal({
                         membersToAdd: sanitizedAdmin,
                         listName: "admins"
                     });
@@ -246,13 +246,13 @@
             const adminToRemove = $scope.pagedItemsAdmins[currentPage][index];
 
             if ($scope.adminsList.length > 1) {
-                $scope.launchRemoveModal({
+                $scope.displayRemoveModal({
                     membersToRemove: adminToRemove,
                     listName: "admins"
                 });
             } else {
                 const userType = "admin";
-                $scope.launchRemoveErrorModal(userType);
+                $scope.displayRemoveErrorModal(userType);
             }
         };
 
@@ -273,7 +273,7 @@
          * @param {string} options.groupPaths - groups the user is being removed from
          * @param {string} options.listName - groups the user is being removed from
          */
-        $scope.createRemoveFromGroupsModal = function (options) {
+        $scope.displayRemoveFromGroupsModal = function (options) {
             const memberToRemove = options.member.uhUuid;
             const sanitizedUser = $scope.sanitizer(memberToRemove);
             $scope.memberToRemove = options.member;
