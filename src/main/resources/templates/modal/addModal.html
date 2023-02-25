@@ -24,7 +24,7 @@
                 <span class="modal-black-text" ng-if="!uid">
                     N/A
                     <span class="fa fa-question-circle clickable" aria-hidden="true"
-                          data-toggle="tooltip" data-boundary="window" onmouseover="$(this).tooltip('toggle')"
+                          tooltip
                           th:title="#{screen.message.common.tooltip.username.notApplicable}">
                     </span>
                 </span>
@@ -39,15 +39,15 @@
             <th class="font-weight-normal modal-attributes">
                 {{ inBasis }}
                 <span class="fa fa-info-circle clickable" ng-if="inBasis === 'Yes' && listName === 'Include'"
-                      data-toggle="tooltip" data-boundary="window" onmouseover="$(this).tooltip('toggle')"
+                      tooltip
                       th:title="#{screen.message.modal.add.tooltip.inBasis.include}" aria-hidden="true">
                 </span>
                 <span class="fa fa-info-circle clickable" ng-if="inBasis === 'Yes' && listName === 'Exclude'"
-                      data-toggle="tooltip" data-boundary="window" onmouseover="$(this).tooltip('toggle')"
+                      tooltip
                       th:title="#{screen.message.modal.add.tooltip.inBasis.exclude}" aria-hidden="true">
                 </span>
                 <span class="fa fa-info-circle clickable" ng-if="inBasis === 'No' && listName === 'Exclude' && allowOptIn"
-                      data-toggle="tooltip" data-boundary="window" onmouseover="$(this).tooltip('toggle')"
+                      tooltip
                       th:title="#{screen.message.modal.add.tooltip.inBasis.exclude.optIn}" aria-hidden="true">
                 </span>
             </th>
@@ -57,7 +57,7 @@
             <th class="font-weight-normal modal-attributes">
                 {{ inInclude }}
                 <span class="fa fa-info-circle clickable" ng-if="inInclude === 'Yes'"
-                   data-toggle="tooltip" data-boundary="window" onmouseover="$(this).tooltip('toggle')"
+                   tooltip
                    th:title="#{screen.message.modal.add.tooltip.inInclude}" aria-hidden="true">
                 </span>
             </th>
@@ -67,7 +67,7 @@
             <th class="font-weight-normal modal-attributes">
                 {{ inExclude }}
                 <span class="fa fa-info-circle clickable" ng-if="inExclude === 'Yes'"
-                   data-toggle="tooltip" data-boundary="window" onmouseover="$(this).tooltip('toggle')"
+                   tooltip
                    th:title="#{screen.message.modal.add.tooltip.inExclude}" aria-hidden="true">
                 </span>
             </th>

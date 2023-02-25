@@ -37,3 +37,39 @@ UHGroupingsApp.directive("tooltipOnTruncate", function () {
         }
     };
 });
+
+/**
+ * Directive for tooltips. Applies the described attributes to a tooltip.
+ *
+ * The line- element.attr("data-placement", attrs["tooltipPosition"]); will make the tooltip nonformatted.
+ * Use Bootstrap's data-placement attribute to change placement of tooltip.
+ *
+ * For example:
+ *  Adding the following to an html element will add a tooltip with a top placement that when hovered over, has the text "Click here":
+ *  tooltip="Click here" data-placement="top"
+ *
+ * @param title The text that will display for the tooltip. If no title parameter is given, will default to the element's title.
+ * @param data-placement Determines the placement of the tooltip
+ */
+UHGroupingsApp.directive("tooltip", function () {
+    return {
+        restrict: "A",
+        scope: {
+            title: "@tooltip"
+        },
+        link(scope, element) {
+            element.attr("data-toggle","tooltip");
+            element.attr("data-original-title", scope.title);
+            element.attr("data-boundary", "window");
+            element.attr("data-delay", "{\"show\": 300}");
+
+            element.on("mouseover", function () {
+                $(element).tooltip("toggle");
+            });
+            element.on("mouseout", function () {
+                $(element).tooltip("dispose");
+            });
+
+        }
+    };
+});

@@ -21,29 +21,29 @@
                     <th scope="col" class="text-center" ng-if="listName !== 'owners' && groupingBasis.length > 0">
                         Basis
                         <span class="fa fa-info-circle clickable" ng-if="listName === 'Include'"
-                              data-toggle="tooltip" data-boundary="window" onmouseover="$(this).tooltip('toggle')"
+                              tooltip
                               th:title="#{screen.message.modal.multi.add.tooltip.inBasis.include}" aria-hidden="true">
                         </span>
                         <span class="fa fa-info-circle clickable" ng-if="listName === 'Exclude' && !allowOptIn"
-                              data-toggle="tooltip" data-boundary="window" onmouseover="$(this).tooltip('toggle')"
+                              tooltip
                               th:title="#{screen.message.modal.multi.add.tooltip.inBasis.exclude}" aria-hidden="true">
                         </span>
                         <span class="fa fa-info-circle clickable" ng-if="listName === 'Exclude' && allowOptIn"
-                              data-toggle="tooltip" data-boundary="window" onmouseover="$(this).tooltip('toggle')"
+                              tooltip
                               th:title="#{screen.message.modal.multi.add.tooltip.inBasis.exclude.optIn}" aria-hidden="true">
                         </span>
                     </th>
                     <th scope="col" class="text-center" ng-if="listName !== 'owners' && listName === 'Exclude'">
                         Include
                         <span class="fa fa-info-circle clickable" aria-hidden="true"
-                              data-toggle="tooltip" data-boundary="window" onmouseover="$(this).tooltip('toggle')"
+                              tooltip
                               th:title="#{screen.message.modal.multi.add.tooltip.inInclude}">
                         </span>
                     </th>
                     <th scope="col" class="text-center" ng-if="listName !== 'owners' && listName === 'Include'">
                         Exclude
                         <span class="fa fa-info-circle clickable" aria-hidden="true"
-                              data-toggle="tooltip" data-boundary="window" onmouseover="$(this).tooltip('toggle')"
+                              tooltip
                               th:title="#{screen.message.modal.multi.add.tooltip.inExclude}">
                         </span>
                     </th>
@@ -57,7 +57,7 @@
                         <span class="modal-black-text" ng-if="!person['uid']">
                             N/A
                             <span class="fa fa-question-circle clickable" aria-hidden="true"
-                            data-toggle="tooltip" data-boundary="window" onmouseover="$(this).tooltip('toggle')"
+                            tooltip
                             th:title="#{screen.message.common.tooltip.username.notApplicable}">
                             </span>
                         </span>
