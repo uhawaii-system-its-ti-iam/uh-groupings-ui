@@ -331,8 +331,8 @@
              */
             encodeParameterizedQueryString(params) {
                 let euc = encodeURIComponent;
-                return Object.keys(params)
-                    .map((k) => euc(k) + "=" + euc(params[k]))
+                return Object.entries(params)
+                    .map(([key, value]) => euc(key) + "=" + euc(value))
                     .join("&");
             }
         };
