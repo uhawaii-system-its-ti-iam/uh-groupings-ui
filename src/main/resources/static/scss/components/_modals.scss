@@ -1,6 +1,10 @@
 .modal-open .modal {
     overflow-y: hidden;
     overflow-x: hidden;
+
+    @include media-breakpoint(max-portrait-phone) {
+        overflow-y: auto;
+    }
 }
 
 .modal-dialog {

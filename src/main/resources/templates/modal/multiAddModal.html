@@ -6,8 +6,9 @@
     </a>
 </div>
 <div class="modal-body" id="modal-body">
+    <p class="modal-black-text text-truncate" ng-if="membersInList.length > 0">Already in {{listName}}: {{membersInList}}</p>
     <p>
-        <span class="modal-black-text">Are you sure you want to add the following to the </span>
+        <span class="modal-black-text" th:text="#{screen.message.modal.multi.add.message}"></span>
         <span class="modal-black-text">{{listName}} list?</span>
     </p>
     <div class="container modal-tables">

@@ -749,6 +749,8 @@
                 case "Exclude":
                 case "owners:":
                     $scope.manageMembers = "";
+                    $scope.membersNotInList = "";
+                    $scope.membersInList = "";
                     $scope.personProps = [];
                     $scope.membersInCheckboxList = {};
                     $scope.waitingForImportResponse = false;
@@ -760,6 +762,8 @@
                 default:
                     $scope.manageMembers = "";
                     $scope.adminToAdd = "";
+                    $scope.membersNotInList = "";
+                    $scope.membersInList = "";
             }
         }
 
@@ -1285,7 +1289,7 @@
                 }
             }
             $scope.membersNotInList = membersNotInList.join(", ");
-            $scope.multiRemoveResults = membersInList;
+            $scope.multiRemoveResults = _.uniqBy(membersInList, (member) => member.uhUuid);
 
             return !_.isEmpty($scope.multiRemoveResults);
         };
@@ -1311,6 +1315,7 @@
             // Check if members to remove exist in the list
             if (!$scope.fetchMemberProperties(uhIdentifiers, listName)) {
                 $scope.displayDynamicModal(Message.Title.REMOVE_INPUT_ERROR, Message.Body.REMOVE_INPUT_ERROR);
+                $scope.membersNotInList = "";
                 return;
             }
             // Prevent removing all owners
@@ -1414,13 +1419,11 @@
             // Set information for the remove/multiRemove modal
             const memberObject = $scope.returnMemberObject($scope.membersToRemove[0], $scope.listName);
             $scope.initMemberDisplayName(memberObject);
-            $scope.isMultiRemove = $scope.membersToRemove.length > 1;
+            $scope.isMultiRemove = $scope.multiRemoveResults.length > 1;
 
             // Open remove or multiRemove modal and set modal red when removing yourself (currentUser) from owners
-            const windowClass = $scope.showWarningRemovingSelf() ? "modal-danger" : "";
             const templateUrl = $scope.isMultiRemove ? "modal/multiRemoveModal" : "modal/removeModal";
             $scope.removeModalInstance = $uibModal.open({
-                windowClass,
                 templateUrl,
                 backdrop: "static",
                 scope: $scope

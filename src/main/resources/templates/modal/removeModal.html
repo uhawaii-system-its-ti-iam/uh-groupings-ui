@@ -6,27 +6,15 @@
     </a>
 </div>
 <div class="modal-body" id="modal-body">
+    <p class="modal-black-text text-truncate" ng-if="membersNotInList.length > 0">Not in {{listName}}: {{membersNotInList}}</p>
     <!--Warning message if users try to delete themselves from the admins or owners list -->
-    <div class="modal-danger-message" ng-if="showWarningRemovingSelf()">
-        <p th:utext="#{screen.message.modal.remove.warning}">Warning</p>
-        <div ng-switch="listName">
-            <div ng-switch-when="owners">
-                <!-- Warning message that tells the user what will happen if they remove themselves -->
-                <p th:text="#{screen.message.modal.remove.message}"></p>
-                <p ng-if="adminsList === undefined &amp;&amp; groupingsList.length === 1"
-                   th:text="#{screen.message.modal.remove.redirect.home}"></p>
-                <p ng-if="adminsList === undefined &amp;&amp; groupingsList.length > 1"
-                   th:text="#{screen.message.modal.remove.redirect.groupings}"></p>
-            </div>
-            <div ng-switch-when="admins">
-                <p th:text="#{screen.message.modal.remove.admin}"></p>
-                <p th:text="#{screen.message.modal.remove.redirect.home}"></p>
-            </div>
-        </div>
+    <div class="alert alert-danger" role="alert" ng-if="showWarningRemovingSelf()" ng-switch="listName">
+        <span class="alert-danger" ng-switch-default th:utext="#{screen.message.modal.remove.warning}">Warning</span>
+        <span class="alert-danger" ng-switch-when="admins" th:utext="#{screen.message.modal.remove.warning.admin}">Warning</span>
     </div>
     <p>
-        <span class="text-dark" th:text="#{screen.message.modal.remove.confirmation}"></span>
-        <span class="text-dark">{{listName}} list.</span>
+        <span class="modal-black-text" th:text="#{screen.message.modal.remove.confirmation}"></span>
+        <span class="modal-black-text">{{listName}} list.</span>
     </p>
     <table>
         <tr>
@@ -57,7 +45,7 @@
         <span class="modal-black-text"> from the {{listName}} list?</span>
     </p>
     <p class="alert alert-warning mt-2" role="alert">
-      <span class="text-dark" th:text="#{screen.message.common.membership.info}"></span>
+        <span class="text-dark" th:text="#{screen.message.common.membership.info}"></span>
     </p>
 </div>
 <div class="modal-footer">

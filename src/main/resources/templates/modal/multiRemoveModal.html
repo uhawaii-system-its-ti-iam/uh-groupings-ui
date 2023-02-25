@@ -6,27 +6,14 @@
     </a>
 </div>
 <div class="modal-body" id="modal-body">
+    <p class="modal-black-text text-truncate" ng-if="membersNotInList.length > 0">Not in {{listName}}: {{membersNotInList}}</p>
     <!--Warning message if users try to delete themselves from the admins or owners list -->
-    <div class="modal-danger-message" ng-if="showWarningRemovingSelf()">
-        <p th:utext="#{screen.message.modal.remove.warning}">Warning</p>
-        <div ng-switch="listName">
-            <div ng-switch-when="owners">
-                <!-- Warning message that tells the user what will happen if they remove themselves -->
-                <p th:text="#{screen.message.modal.remove.message}"></p>
-                <p ng-if="adminsList === undefined &amp;&amp; groupingsList.length === 1"
-                   th:text="#{screen.message.modal.remove.redirect.home}"></p>
-                <p ng-if="adminsList === undefined &amp;&amp; groupingsList.length > 1"
-                   th:text="#{screen.message.modal.remove.redirect.groupings}"></p>
-            </div>
-            <div ng-switch-when="admins">
-                <p th:text="#{screen.message.modal.remove.admin}"></p>
-                <p th:text="#{screen.message.modal.remove.redirect.home}"></p>
-            </div>
-        </div>
+    <div class="alert alert-danger" role="alert" ng-if="showWarningRemovingSelf()">
+        <span class="alert-danger" th:utext="#{screen.message.modal.remove.warning}">Warning</span>
     </div>
     <p>
-        <span class="text-dark" th:text="#{screen.message.modal.multi.remove.message}"></span>
-        <span class="text-dark">{{ listName }} list.</span>
+        <span class="modal-black-text" th:text="#{screen.message.modal.multi.remove.message}"></span>
+        <span class="modal-black-text">{{ listName }} list?</span>
     </p>
     <div class="container modal-tables">
         <table class="table table-sm table-borderless">
@@ -60,10 +47,6 @@
     <p class="alert alert-warning mt-2" role="alert">
         <span class="text-dark" th:text="#{screen.message.common.membership.info}"></span>
     </p>
-</div>
-<div ng-if="membersNotInList.length > 0" class="modal-body">
-    <span class="modal-black-text">Invalid Members: </span>
-    <span class="modal-black-text">{{membersNotInList}}</span>
 </div>
 <div class="modal-footer">
     <button class="btn btn-primary" ng-click="proceedRemoveModal()">Yes</button>
