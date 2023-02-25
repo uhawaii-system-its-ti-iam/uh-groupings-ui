@@ -79,9 +79,6 @@
         $scope.paginatingComplete = false;
         $scope.largeGrouping = false;
 
-        $scope.groupingCSV = [];
-        $scope.groupNameCSV = [];
-
         $scope.resetInclude = [];
         $scope.resetExclude = [];
         $scope.includeDisable = false;
@@ -92,8 +89,6 @@
         $scope.resStatus = 0;
         $scope.inGrouper = false;
         $scope.showAdminTab = true;
-        $scope.groupLoaded = "";
-        $scope.groupNotLoaded = "";
 
         // used with ng-view on selected-grouping.html to toggle description editing.
         $scope.descriptionForm = false;
@@ -469,9 +464,13 @@
          * If the grouping hasn't been fetched, return csv group loaded message, otherwise return csv group not loaded message.
          */
         $scope.getCSVToolTipMessage = () => {
-            $scope.groupLoaded = Message.Csv.GROUP_LOADED;
-            $scope.groupNotLoaded = Message.Csv.GROUP_NOT_LOADED;
-            return ($scope.paginatingComplete) ? Message.Csv.GROUP_LOADED : Message.Csv.GROUP_NOT_LOADED;
+            if (!$scope.paginatingComplete) {
+                return Message.Csv.GROUP_NOT_LOADED;
+            }
+            if ($scope.groupingMembers.length === 0) {
+                return Message.Csv.GROUP_EMPTY;
+            }
+            return "";
         };
 
         /**
@@ -1381,7 +1380,9 @@
             // Set information for the remove/multiRemove modal
             const memberObject = $scope.returnMemberObject($scope.membersToRemove[0], $scope.listName);
             $scope.initMemberDisplayName(memberObject);
-            $scope.isMultiRemove = $scope.multiRemoveResults.length > 1;
+            $scope.isMultiRemove = _.isEmpty($scope.multiRemoveResults)
+                ? $scope.membersToRemove.length > 1
+                : $scope.multiRemoveResults.length > 1;
 
             // Open remove or multiRemove modal and set modal red when removing yourself (currentUser) from owners
             const templateUrl = $scope.isMultiRemove ? "modal/multiRemoveModal" : "modal/removeModal";
@@ -1978,20 +1979,20 @@
 
         /**
          * Export data in a grouping to a CSV file
-         * @param {object[]} group - the group array to export ($scope.groupingMembers/Basis/Include/Exclude)
+         * @param {object[]} table - the table to export ($scope.groupingMembers/Basis/Include/Exclude)
          * @param {String} listName - the name of the list
          */
-        $scope.exportGroupToCsv = function (group, listName) {
+        $scope.exportGroupToCsv = (table, listName) => {
             let data, filename, link, csv;
 
-            csv = $scope.convertListToCsv(group);
+            csv = $scope.convertListToCsv(table);
+
             if (csv == null) {
                 $scope.displayApiErrorModal();
                 return;
             }
 
             filename = $scope.selectedGrouping.name + ":" + listName + "_list.csv";
-
             csv = "data:text/csv;charset=utf-8," + csv;
             data = encodeURI(csv);
 
@@ -2009,7 +2010,7 @@
          * @param {object[]} table - the table to convert
          * @returns string table in CSV format
          */
-        $scope.convertListToCsv = function (table) {
+        $scope.convertListToCsv = (table) => {
             let str = "Last,First,Username,UH Number,Email\r\n";
             for (let i = 0; i < table.length; i++) {
                 let line = "";
@@ -2032,7 +2033,7 @@
          * @param {object[]} table - the table to convert
          * @returns the table in CSV format
          */
-        $scope.convertListToCsvGeneric = function (table) {
+        $scope.convertListToCsvGeneric = (table) => {
             let str = "";
             for (let i = 0; i < Object.keys(table[0]).length; i++) {
                 str += Object.keys(table[0])[i] + ",";

@@ -13,8 +13,9 @@ describe("GeneralController", () => {
     let uibModal;
     let window;
     let threshold;
+    let message;
 
-    beforeEach(inject(($rootScope, $controller, _BASE_URL_, _$httpBackend_, groupingsService, $uibModal, _$window_, Threshold) => {
+    beforeEach(inject(($rootScope, $controller, _BASE_URL_, _$httpBackend_, groupingsService, $uibModal, _$window_, Threshold, Message) => {
         scope = $rootScope.$new();
         window = {
             location: {
@@ -31,6 +32,7 @@ describe("GeneralController", () => {
         gs = groupingsService;
         uibModal = $uibModal;
         threshold = Threshold;
+        message = Message;
     }));
 
     it("should define the general controller", () => {
@@ -209,16 +211,19 @@ describe("GeneralController", () => {
         beforeEach(() => {
             scope.pagedItemsGroupings = [["zzzz"]];
         });
+
         it("should set selectedGrouping to 'zzzz'", () => {
             scope.selectedGrouping = 0;
             scope.displayGrouping(0, 0);
             expect(scope.selectedGrouping).toEqual("zzzz");
         });
+
         it("should set showgrouping to true", () => {
             scope.showGrouping = false;
             scope.displayGrouping(0, 0);
             expect(scope.showGrouping).toBeTrue();
         });
+
         it("should call getGroupingInformation", () => {
             spyOn(scope, "getGroupingInformation").and.callThrough();
             scope.displayGrouping(0, 0);
@@ -232,6 +237,7 @@ describe("GeneralController", () => {
             scope.toggleShowAdminTab();
             expect(scope.showAdminTab).toBeTrue();
         });
+
         it("should set showShowAdminTab to false when true", () => {
             scope.showAdminTab = true;
             scope.toggleShowAdminTab();
@@ -263,11 +269,13 @@ describe("GeneralController", () => {
             scope.getGroupingInformation();
             expect(scope.loading).toBeTrue();
         });
+
         it("should call getGrouping when asyncThreadCount is 1", () => {
             spyOn(gs, "getGrouping").and.callThrough();
             scope.getGroupingInformation();
             expect(gs.getGrouping).toHaveBeenCalled();
         });
+
         it("should set descriptionLoaded & paginatingProgress to true & paginatingComplete to false after calling gs.getGrouping", () => {
             spyOn(gs, "getGrouping").and.callThrough();
             scope.getGroupingInformation();
@@ -298,6 +306,7 @@ describe("GeneralController", () => {
         beforeEach(() => {
             scope.modelDescription = "theModelDescription";
         });
+
         it("should check that the modelDescription length doesn't go over the max", () => {
             expect(scope.descriptionLengthWarning()).toBeFalse();
         });
@@ -309,6 +318,7 @@ describe("GeneralController", () => {
             scope.editDescription();
             expect(scope.descriptionForm).toBeFalse();
         });
+
         it("should set descriptionForm to true when false", () => {
             scope.descriptionForm = false;
             scope.editDescription();
@@ -321,6 +331,7 @@ describe("GeneralController", () => {
             scope.cancelDescriptionEdit();
             expect(scope.modelDescription).toBe("");
         });
+
         it("should set descriptionForm to false when true", () => {
             scope.descriptionForm = true;
             scope.cancelDescriptionEdit();
@@ -332,9 +343,11 @@ describe("GeneralController", () => {
         it("should return the cancelDescriptionEdit function when localeCompare is 0", () => {
             expect(scope.saveDescription()).toBe(scope.cancelDescriptionEdit());
         });
+
         beforeEach(() => {
             scope.modelDescription = "descriptionOfAModal";
         });
+
         it("should update the description for a grouping", () => {
             spyOn(gs, "updateDescription").and.callThrough();
             scope.saveDescription();
@@ -344,15 +357,21 @@ describe("GeneralController", () => {
     });
 
     describe("getCSVToolTipMessage", () => {
-        it("should display loaded message when paginatingComplete has loaded", () => {
+        it("should return an empty string when paginatingComplete has loaded", () => {
             scope.paginatingComplete = true;
-            scope.getCSVToolTipMessage();
-            expect(scope.getCSVToolTipMessage()).toBe(scope.groupLoaded);
+            expect(scope.getCSVToolTipMessage()).toBe("");
         });
-        it("should display not loaded message when paginatingComplete has not loaded", () => {
+
+        it("should return a not loaded message when paginatingComplete has not loaded", () => {
             scope.paginatingComplete = false;
-            scope.getCSVToolTipMessage();
-            expect(scope.getCSVToolTipMessage()).toBe(scope.groupNotLoaded);
+            expect(scope.getCSVToolTipMessage()).toBe(message.Csv.GROUP_NOT_LOADED);
+        });
+
+        it("should return a grouping empty message when the entire grouping is empty", () => {
+            scope.groupingMembers = [];
+            scope.groupingExclude = [];
+            scope.paginatingComplete = true;
+            expect(scope.getCSVToolTipMessage()).toBe(message.Csv.GROUP_EMPTY);
         });
     });
 
@@ -361,6 +380,7 @@ describe("GeneralController", () => {
             scope.descriptionLoaded = false;
             expect(scope.descriptionDisplay()).toBe("");
         });
+
         it("should set modelDescription as empty string and display tracker to 0 when " +
             "showGrouping is true and displayTracker is 1", () => {
             scope.showGrouping = true;
@@ -370,11 +390,13 @@ describe("GeneralController", () => {
             expect(scope.modelDescription).toBe(scope.groupingDescription);
             expect(scope.displayTracker).toBe(0);
         });
+
         it("should return groupingDescription if groupingDescription.length > 0,", () => {
             scope.descriptionLoaded = true;
             scope.groupingDescription = "123";
             expect(scope.descriptionDisplay()).toBe(scope.groupingDescription);
         });
+
         it("should return noDescriptionMessage if groupingDescription.length < 0", () => {
             scope.descriptionLoaded = true;
             scope.groupingDescription.length = -1;
@@ -2079,7 +2101,6 @@ describe("GeneralController", () => {
             expect(scope.isMultiRemove).toBeFalse();
             expect(uibModal.open).toHaveBeenCalledWith({
                 templateUrl: "modal/removeModal",
-                windowClass: "",
                 backdrop: "static",
                 scope
             });
@@ -2094,7 +2115,6 @@ describe("GeneralController", () => {
             expect(scope.isMultiRemove).toBeFalse();
             expect(uibModal.open).toHaveBeenCalledWith({
                 templateUrl: "modal/removeModal",
-                windowClass: "",
                 backdrop: "static",
                 scope
             });
@@ -2114,7 +2134,6 @@ describe("GeneralController", () => {
             expect(scope.isMultiRemove).toBeTrue();
             expect(uibModal.open).toHaveBeenCalledWith({
                 templateUrl: "modal/multiRemoveModal",
-                windowClass: "",
                 backdrop: "static",
                 scope
             });
@@ -2127,47 +2146,11 @@ describe("GeneralController", () => {
             expect(scope.isMultiRemove).toBeTrue();
             expect(uibModal.open).toHaveBeenCalledWith({
                 templateUrl: "modal/multiRemoveModal",
-                windowClass: "",
                 backdrop: "static",
                 scope
             });
             scope.proceedRemoveModal();
             expect(gs.removeMembersFromExclude).toHaveBeenCalled();
-        });
-
-        it("should open uibModal with windowClass modal-danger when removing the yourself from owners list", () => {
-            spyOn(uibModal, "open").and.returnValue(mockModal);
-            spyOn(gs, "removeOwnerships").and.callThrough();
-
-            options = {
-                membersToRemove: { name: "iamtst05", username: "iamtst05", uhUuid: "iamtst05" },
-                listName: "owners"
-            };
-            scope.currentUser = { uid: "iamtst05", uhUuid: "iamtst05" };
-            scope.displayRemoveModal(options);
-            expect(scope.membersToRemove).toEqual(["iamtst05"]);
-            expect(scope.isMultiRemove).toBeFalse();
-            expect(uibModal.open).toHaveBeenCalledWith({
-                templateUrl: "modal/removeModal",
-                windowClass: "modal-danger",
-                backdrop: "static",
-                scope
-            });
-            scope.proceedRemoveModal();
-            expect(gs.removeOwnerships).toHaveBeenCalled();
-
-            options = { membersToRemove: ["iamtst05", "iamtst06"], listName: "owners" };
-            scope.displayRemoveModal(options);
-            expect(scope.membersToRemove).toEqual(["iamtst05", "iamtst06"]);
-            expect(scope.isMultiRemove).toBeTrue();
-            expect(uibModal.open).toHaveBeenCalledWith({
-                templateUrl: "modal/multiRemoveModal",
-                windowClass: "modal-danger",
-                backdrop: "static",
-                scope
-            });
-            scope.proceedRemoveModal();
-            expect(gs.removeOwnerships).toHaveBeenCalled();
         });
     });
 
@@ -2990,6 +2973,42 @@ describe("GeneralController", () => {
             spyOn(uibModal, "open").and.callThrough();
             scope.displayOwnerErrorModal();
             expect(uibModal.open).toHaveBeenCalled();
+        });
+    });
+
+    describe("exportGroupToCsv", () => {
+        it("should call $scope.convertListToCsv with the table passed in", () => {
+            spyOn(scope, "convertListToCsv");
+
+            scope.exportGroupToCsv(scope.groupingMembers, "members");
+            expect(scope.convertListToCsv).toHaveBeenCalledWith(scope.groupingMembers);
+
+            scope.exportGroupToCsv(scope.groupingBasis, "basis");
+            expect(scope.convertListToCsv).toHaveBeenCalledWith(scope.groupingBasis);
+
+            scope.exportGroupToCsv(scope.groupingInclude, "include");
+            expect(scope.convertListToCsv).toHaveBeenCalledWith(scope.groupingInclude);
+
+            scope.exportGroupToCsv(scope.groupingExclude, "exclude");
+            expect(scope.convertListToCsv).toHaveBeenCalledWith(scope.groupingExclude);
+        });
+
+        it("should call $scope.displayApiErrorModal", () => {
+            spyOn(scope, "convertListToCsv").and.returnValue(null);
+            spyOn(scope, "displayApiErrorModal");
+            scope.exportGroupToCsv(scope.groupingMembers, "members");
+            expect(scope.displayApiErrorModal).toHaveBeenCalled();
+        });
+
+        it("should download the CSV", () => {
+            const mockElement = document.createElement("a");
+            spyOn(document, "createElement").and.returnValue(mockElement);
+            spyOn(mockElement, "click");
+
+            scope.exportGroupToCsv(scope.groupingMembers, "members");
+
+            expect(mockElement.href).toBe("data:text/csv;charset=utf-8,Last,First,Username,UH%20Number,Email%0D%0AOne,User,user1,00000001,user1@hawaii.edu%0D%0ATwo,User,user2,00000002,user2@hawaii.edu%0D%0AThree,User,user3,00000003,user3@hawaii.edu%0D%0ASeven,User,user7,00000007,user7@hawaii.edu%0D%0A");
+            expect(mockElement.download).toBe("grouping1:members_list.csv");
         });
     });
 
