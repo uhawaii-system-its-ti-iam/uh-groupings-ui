@@ -2772,13 +2772,24 @@ describe("GeneralController", () => {
         });
     });
 
-    describe("resetFields", () => {
+    describe("reloadGrouping", () => {
 
-        it("should call getGroupingInformation", () => {
+        it("should call getGroupingInformation when paginating is complete", () => {
+            scope.paginatingComplete = true;
             spyOn(scope, "getGroupingInformation").and.callThrough();
-            scope.resetFields();
+            scope.reloadGrouping();
             expect(scope.getGroupingInformation).toHaveBeenCalled();
         });
+
+        it("should not call getGroupingInformation when paginating is incomplete", () => {
+            scope.paginatingComplete = false;
+            spyOn(scope, "getGroupingInformation").and.callThrough();
+            scope.reloadGrouping();
+            expect(scope.getGroupingInformation).toHaveBeenCalledTimes(0);
+        });
+    });
+
+    describe("resetFields", () => {
 
         it("should reset membersInCheckboxList array", () => {
             scope.membersInCheckboxList = [1, 2, 3];
