@@ -1,0 +1,24 @@
+<th:block th:fragment="table-settings">
+
+    <div class="ml-2 dropdown d-none d-sm-table-cell">
+        <button class="form-control" data-toggle="dropdown"
+                title="Table Settings" aria-label="Table Settings">
+            <i class="fa fa-sliders-h"></i>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-right dropdown-menu-form form-group">
+            <li><label class="dropdown-item">
+                <input class="ml-n2" type="radio"
+                       ng-model="columnDisplaySetting" value="description"
+                       ng-click="showColumn('description')"> Show Description</label></li>
+            <li><label class="dropdown-item">
+                <input class="ml-n2" type="radio"
+                       ng-model="columnDisplaySetting" value="groupingPath"
+                       ng-click="showColumn('groupingPath')"> Show Grouping Path</label></li>
+            <li><label class="dropdown-item">
+                <input class="ml-n2" type="radio"
+                       ng-model="columnDisplaySetting" value="all"
+                       ng-click="showColumn('all')"> Show All</label></li>
+        </ul>
+    </div>
+
+</th:block>

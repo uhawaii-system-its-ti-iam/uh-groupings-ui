@@ -46,26 +46,7 @@
                                title="Filter Groupings" aria-label="Filter Groupings..."
                                ng-model="membersQuery" class="form-control"
                                ng-change="filter(membershipsList, 'pagedItemsMemberships', 'currentPageMemberships', membersQuery, true)"/>
-                        <div class="ml-2 dropdown d-none d-sm-table-cell">
-                            <button class="form-control" data-toggle="dropdown"
-                                    title="Table Settings" aria-label="Table Settings">
-                                <i class="fa fa-sliders-h"></i>
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-right dropdown-menu-form form-group">
-                                <li><label class="dropdown-item">
-                                    <input class="ml-n2" type="radio"
-                                           ng-model="columnDisplaySetting" value="first"
-                                           ng-click="hideColumn('path')"> Hide Grouping Path</label></li>
-                                <li><label class="dropdown-item">
-                                    <input class="ml-n2" type="radio"
-                                           ng-model="columnDisplaySetting" value="second"
-                                           ng-click="hideColumn('description')"> Hide Description</label></li>
-                                <li><label class="dropdown-item">
-                                    <input class="ml-n2" type="radio"
-                                           ng-model="columnDisplaySetting" value="third"
-                                           ng-click="hideColumn('none')"> Show All</label></li>
-                            </ul>
-                        </div>
+                        <div th:replace="fragments/table-settings"></div>
                     </div>
                 </div>
                 <!-- Current Membership Tab-->
@@ -89,7 +70,7 @@
                                        ng-class="{ reverse: columnSort.membershipsList.reverse }"></i>
                                 </th>
                                 <th ng-click="sortBy('membershipsList', 'pagedItemsMemberships', 'path')"
-                                    ng-show="showPathColumn"
+                                    ng-show="showGroupingPathColumn"
                                     class="d-none d-sm-table-cell" role="button">
                                     Grouping Path
                                     <i class="fa sort-icon" ng-show="columnSort.membershipsList.property === 'path'"
@@ -104,17 +85,15 @@
                                     {{l.name}}
                                 </td>
                                 <td class="mw-0 p-10 align-middle d-none d-sm-table-cell"
-                                    ng-class="{'w-30': showDescriptionColumn && showPathColumn,
-                                               'col-auto': showDescriptionColumn != showPathColumn}"
+                                    ng-class="{'w-35': columnDisplaySetting === 'all', 'col-auto': columnDisplaySetting === 'description'}"
                                     ng-show="showDescriptionColumn">
                                     <div class="text-truncate" tooltip-on-truncate="{{l.description}}">
                                         {{l.description}}
                                     </div>
                                 </td>
                                 <td class="p-10 align-middle d-none d-sm-table-cell"
-                                    ng-class="{'w-27': showDescriptionColumn && showPathColumn,
-                                               'col-auto': showDescriptionColumn != showPathColumn}"
-                                    ng-show="showPathColumn">
+                                    ng-class="{'w-35': columnDisplaySetting === 'all', 'col-auto': columnDisplaySetting === 'groupingPath'}"
+                                    ng-show="showGroupingPathColumn">
                                     <form class="seamless border border-secondary rounded">
                                         <input aria-label="Grouping Path" type="text"
                                                class="text-truncate form-control form-control-sm border-0"
@@ -172,26 +151,7 @@
                                ng-model="optInQuery" class="form-control"
                                ng-change="filter(optInList, 'pagedItemsOptInList', 'currentPageOptIn', optInQuery, true)"
                                id="optIn"/>
-                        <div class="ml-2 dropdown d-none d-sm-table-cell">
-                            <button class="form-control" data-toggle="dropdown"
-                                    title="Table Settings" aria-label="Table Settings">
-                                <i class="fa fa-sliders-h"></i>
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-right dropdown-menu-form form-group">
-                                <li><label class="dropdown-item">
-                                    <input class="ml-n2" type="radio"
-                                           ng-model="columnDisplaySetting" value="first"
-                                           ng-click="hideColumn('path')"> Hide Grouping Path</label></li>
-                                <li><label class="dropdown-item">
-                                    <input class="ml-n2" type="radio"
-                                           ng-model="columnDisplaySetting" value="second"
-                                           ng-click="hideColumn('description')"> Hide Description</label></li>
-                                <li><label class="dropdown-item">
-                                    <input class="ml-n2" type="radio"
-                                           ng-model="columnDisplaySetting" value="third"
-                                           ng-click="hideColumn('none')"> Show All</label></li>
-                            </ul>
-                        </div>
+                        <div th:replace="fragments/table-settings"></div>
                     </div>
 
                 </div>
@@ -215,7 +175,7 @@
                                        ng-class="{ reverse: columnSort.optInList.reverse }"></i>
                                 </th>
                                 <th ng-click="sortBy('optInList', 'pagedItemsOptInList', 'path')"
-                                    ng-show="showPathColumn"
+                                    ng-show="showGroupingPathColumn"
                                     class="d-none d-sm-table-cell" role="button">
                                     Grouping Path
                                     <i class="fa sort-icon" ng-show="columnSort.optInList.property === 'path'"
@@ -230,17 +190,15 @@
                                     {{ o.name }}
                                 </td>
                                 <td class="mw-0 p-10 align-middle d-none d-sm-table-cell"
-                                    ng-class="{'w-30': showDescriptionColumn && showPathColumn,
-                                               'col-auto': showDescriptionColumn != showPathColumn}"
+                                    ng-class="{'w-35': columnDisplaySetting === 'all', 'col-auto': columnDisplaySetting === 'description'}"
                                     ng-show="showDescriptionColumn">
                                     <div class="text-truncate" tooltip-on-truncate="{{o.description}}">
                                         {{o.description}}
                                     </div>
                                 </td>
                                 <td class="p-10 align-middle d-none d-sm-table-cell" id="groupingOptInPath-{{o.name}}"
-                                    ng-class="{'w-27': showDescriptionColumn && showPathColumn,
-                                               'col-auto': showDescriptionColumn != showPathColumn}"
-                                    ng-show="showPathColumn">
+                                    ng-class="{'w-35': columnDisplaySetting === 'all', 'col-auto': columnDisplaySetting === 'groupingPath'}"
+                                    ng-show="showGroupingPathColumn">
                                     <form class="seamless border border-secondary rounded">
                                         <input aria-label="Grouping Path" type="text"
                                                class="text-truncate form-control form-control-sm border-0"
