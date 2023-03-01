@@ -1,7 +1,7 @@
 package edu.hawaii.its.groupings.configuration;
 
-import edu.hawaii.its.groupings.access.UserBuilder;
-import edu.hawaii.its.groupings.access.CasUserDetailsServiceImpl;
+import javax.annotation.PostConstruct;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jasig.cas.client.proxy.ProxyGrantingTicketStorage;
@@ -11,27 +11,28 @@ import org.jasig.cas.client.validation.Saml11TicketValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.security.cas.ServiceProperties;
 import org.springframework.security.cas.authentication.CasAssertionAuthenticationToken;
 import org.springframework.security.cas.authentication.CasAuthenticationProvider;
 import org.springframework.security.cas.web.CasAuthenticationEntryPoint;
 import org.springframework.security.cas.web.CasAuthenticationFilter;
 import org.springframework.security.cas.web.authentication.ServiceAuthenticationDetailsSource;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.AuthenticationUserDetailsService;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.util.Assert;
 
-import javax.annotation.PostConstruct;
+import edu.hawaii.its.groupings.access.CasUserDetailsServiceImpl;
+import edu.hawaii.its.groupings.access.DelegatingAuthenticationFailureHandler;
+import edu.hawaii.its.groupings.access.UserBuilder;
 
-@ComponentScan(basePackages = "edu.hawaii.its")
+@EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final Log logger = LogFactory.getLog(SecurityConfig.class);
@@ -39,7 +40,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Value("${url.base}")
     private String appUrlBase;
 
-    @Value("${app.url.home:/}")
+    @Value("${app.url.home}")
     private String appUrlHome;
 
     @Value("${cas.login.url}")
@@ -107,7 +108,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public LogoutFilter logoutFilter() {
-        return new LogoutFilter(casLogoutUrl, new SecurityContextLogoutHandler());
+        return new LogoutFilter(appUrlHome, new SecurityContextLogoutHandler());
     }
 
     @Bean
@@ -134,16 +135,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         CasAuthenticationFilter filter = new CasAuthenticationFilter();
         filter.setAuthenticationManager(authenticationManager());
 
-        SimpleUrlAuthenticationFailureHandler authenticationFailureHandler =
-                new SimpleUrlAuthenticationFailureHandler();
-        authenticationFailureHandler.setDefaultFailureUrl(appUrlHome);
-        filter.setAuthenticationFailureHandler(authenticationFailureHandler);
+        filter.setProxyAuthenticationFailureHandler(authenticationFailureHandler());
+        filter.setAuthenticationFailureHandler(authenticationFailureHandler());
 
-        SavedRequestAwareAuthenticationSuccessHandler authenticationSuccessHandler =
-                new SavedRequestAwareAuthenticationSuccessHandler();
-        authenticationSuccessHandler.setAlwaysUseDefaultTargetUrl(false);
-        authenticationSuccessHandler.setDefaultTargetUrl(appUrlHome);
-        filter.setAuthenticationSuccessHandler(authenticationSuccessHandler);
+        filter.setAuthenticationSuccessHandler(authenticationSuccessHandler());
 
         ServiceAuthenticationDetailsSource authenticationDetailsSource =
                 new ServiceAuthenticationDetailsSource(serviceProperties());
@@ -156,13 +151,25 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return filter;
     }
 
+    @Bean
+    public AuthenticationSuccessHandler authenticationSuccessHandler() {
+        SavedRequestAwareAuthenticationSuccessHandler authenticationSuccessHandler =
+                new SavedRequestAwareAuthenticationSuccessHandler();
+        authenticationSuccessHandler.setAlwaysUseDefaultTargetUrl(false);
+        authenticationSuccessHandler.setDefaultTargetUrl(appUrlHome);
+        return authenticationSuccessHandler;
+    }
+
+    @Bean
+    public DelegatingAuthenticationFailureHandler authenticationFailureHandler() {
+        return new DelegatingAuthenticationFailureHandler(appUrlBase);
+    }
+    
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.sessionManagement()
                 .sessionFixation().migrateSession();
 
-        http.exceptionHandling()
-                .authenticationEntryPoint(casProcessingFilterEntryPoint());
         http.authorizeRequests()
                 .antMatchers("/").permitAll()
                 .antMatchers("/api/**").hasRole("UH")
@@ -181,9 +188,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/groupings/**").hasAnyRole("ADMIN", "OWNER")
                 .antMatchers("/memberships/**").hasRole("UH")
                 .antMatchers("/modal/apiError").permitAll()
+                .antMatchers("/uhuuid-error").permitAll()
+                .antMatchers("/error").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilter(casAuthenticationFilter())
+                .addFilterBefore(logoutFilter(), LogoutFilter.class)
+                .exceptionHandling().authenticationEntryPoint(casProcessingFilterEntryPoint())
+                .and()
                 .csrf()
                 .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 .and()
@@ -193,10 +205,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutUrl("/logout")
                 .logoutSuccessUrl(appUrlHome);
     }
-
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(casAuthenticationProvider());
-    }
-
 }

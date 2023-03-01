@@ -16,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
@@ -47,6 +48,16 @@ public class HomeController {
     @GetMapping(value = "/404")
     public String invalid() {
         return "redirect:/";
+    }
+
+    @GetMapping(value = "/uhuuid-error")
+    public String uhUuidError(Model model,
+            @SessionAttribute("login.error.message") String errormsg,
+            @SessionAttribute("login.error.exception.message") String exceptionmsg) {
+        logger.info("User at uhuuid-error.");
+        model.addAttribute("loginErrorMessage", errormsg);
+        model.addAttribute("loginErrorExceptionMessage", exceptionmsg);
+        return "uhuuid-error";
     }
 
     @PreAuthorize("hasRole('ADMIN')")
