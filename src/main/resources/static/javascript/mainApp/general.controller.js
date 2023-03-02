@@ -747,9 +747,9 @@
 
         /**
          * Set a style attribute of a html component associated with id.
-         * @param id - id of html component
-         * @param attribute
-         * @param setAs - set attribute too.
+         * @param {string} id - id of html component
+         * @param {string} attribute - the css attribute
+         * @param {string} setAs - set attribute to
          */
         $scope.changeStyleAttribute = function (id, attribute, setAs) {
             document.getElementById(id).style[attribute] = setAs;
@@ -1154,8 +1154,8 @@
                 pageNumber = $scope.currentPageInclude;
             }
 
-            for (let i = 0; i < pageItems[pageNumber].length; i++) {
-                $scope.membersInCheckboxList[((pageItems[pageNumber][i]).uhUuid)] = $scope.allSelected;
+            for (let member of pageItems[pageNumber]) {
+                $scope.membersInCheckboxList[member.uhUuid] = $scope.allSelected;
             }
         };
 
@@ -2012,44 +2012,21 @@
          */
         $scope.convertListToCsv = (table) => {
             let str = "Last,First,Username,UH Number,Email\r\n";
-            for (let i = 0; i < table.length; i++) {
+            for (let data of table) {
                 let line = "";
-                line += table[i].lastName + ",";
-                line += table[i].firstName + ",";
-                line += table[i].username + ",";
-                line += table[i].uhUuid + ",";
-                if (table[i].username === "") {
+                line += data.lastName + ",";
+                line += data.firstName + ",";
+                line += data.username + ",";
+                line += data.uhUuid + ",";
+                if (data.username === "") {
                     line += "";
                 } else {
-                    line += table[i].username + Message.Csv.EMAIL_SUFFIX;
+                    line += data.username + Message.Csv.EMAIL_SUFFIX;
                 }
                 str += line + "\r\n";
             }
             return str;
         };
-
-        /**
-         * Convert the generic data in the table into comma-separated values.
-         * @param {object[]} table - the table to convert
-         * @returns the table in CSV format
-         */
-        $scope.convertListToCsvGeneric = (table) => {
-            let str = "";
-            for (let i = 0; i < Object.keys(table[0]).length; i++) {
-                str += Object.keys(table[0])[i] + ",";
-            }
-            str += "\r\n";
-
-            for (let i = 0; i < table.length; i++) {
-                let line = "";
-                for (let j = 0; j < Object.values(table[i]).length; j++) {
-                    line += Object.values(table[i])[j] + ",";
-                }
-                str += line + "\r\n";
-            }
-            return str;
-        };
-
 
         /**
          * Determine whether a warning message should be displayed when removing yourself from a list.
@@ -2071,8 +2048,7 @@
             let name = cname + "=";
             let decodedCookie = decodeURIComponent(document.cookie);
             let ca = decodedCookie.split(";");
-            for (let i = 0; i < ca.length; i++) {
-                let c = ca[i];
+            for (let c of ca) {
                 while (c.charAt(0) === " ") {
                     c = c.substring(1);
                 }
