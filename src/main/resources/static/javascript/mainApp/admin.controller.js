@@ -66,8 +66,16 @@
             $scope.loading = true;
             const validUser = $scope.sanitizer($scope.personToLookup);
             if (validUser !== "") {
-                $scope.getMemberDetails(validUser);
+                groupingsService.managePersonResults(validUser,
+                    $scope.searchForUserGroupingInformationOnSuccessCallback,
+                    $scope.searchForUserGroupingInformationOnErrorCallback
+                );
+                groupingsService.getMemberAttributes(validUser, function (person) {
+                    $scope.initMemberDisplayName(person);
+                    $scope.setCurrentManagePerson(person);
+                });
             } else {
+                // sets proper error message
                 if (!$scope.personToLookup) {
                     $scope.emptyInput = true;
                 } else {
@@ -84,22 +92,15 @@
 
         /**
          * Helper - searchForUserGroupingInformation
-         * @param validUser
+         * @param person
          */
-        $scope.getMemberDetails = function (validUser) {
-            groupingsService.managePersonResults( $scope.personToLookup,
-                $scope.searchForUserGroupingInformationOnSuccessCallback,
-                $scope.searchForUserGroupingInformationOnErrorCallback
-               );
-            groupingsService.getMemberAttributes(validUser, function (person) {
-                $scope.initMemberDisplayName(person);
-                if ($scope.user != null) {
-                    $scope.currentManagePerson = "(" + $scope.fullName + ", " + $scope.uid + ", " + $scope.uhUuid + ")";
-                } else {
-                    $scope.currentManagePerson = "";
-                    $scope.resStatus = 500;
-                }
-            }, () => {});
+        $scope.setCurrentManagePerson = function(person) {
+            if ($scope.uhUuid != null) {
+                $scope.currentManagePerson = "(" + $scope.fullName + ", " + $scope.uid + ", " + $scope.uhUuid + ")";
+            } else {
+                $scope.currentManagePerson = "";
+                $scope.resStatus = 500;
+            }
         };
 
         /**
