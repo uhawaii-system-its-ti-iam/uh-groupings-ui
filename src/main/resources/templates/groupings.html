@@ -33,26 +33,7 @@
                                    title="Filter Groupings" aria-label="Filter Groupings..."
                                    ng-model="groupingsQuery"
                                    ng-change="filter(groupingsList, 'pagedItemsGroupings', 'currentPageGroupings', groupingsQuery, true)"/>
-                            <div class="ml-2 dropdown d-none d-sm-table-cell">
-                                <button class="form-control" data-toggle="dropdown"
-                                        title="Table Settings" aria-label="Table Settings">
-                                    <i class="fa fa-sliders-h"></i>
-                                </button>
-                                <ul class="dropdown-menu dropdown-menu-right dropdown-menu-form form-group">
-                                    <li><label class="dropdown-item">
-                                        <input class="ml-n2" type="radio"
-                                               ng-model="columnDisplaySetting" value="first"
-                                               ng-click="hideColumn('path')"> Hide Grouping Path</label></li>
-                                    <li><label class="dropdown-item">
-                                        <input class="ml-n2" type="radio"
-                                               ng-model="columnDisplaySetting" value="second"
-                                               ng-click="hideColumn('description')"> Hide Description</label></li>
-                                    <li><label class="dropdown-item">
-                                        <input class="ml-n2" type="radio"
-                                               ng-model="columnDisplaySetting" value="third"
-                                               ng-click="hideColumn('none')"> Show All</label></li>
-                                </ul>
-                            </div>
+                            <div th:replace="fragments/table-settings"></div>
                         </div>
 
                     </div>

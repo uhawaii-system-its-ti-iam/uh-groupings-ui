@@ -3118,8 +3118,8 @@ describe("GeneralController", () => {
         });
     });
 
-    describe("hideColumn", () => {
-        let columnToHide;
+    describe("showColumn", () => {
+        let column;
 
         afterEach(() => {
             localStorage.clear();
@@ -3129,45 +3129,45 @@ describe("GeneralController", () => {
             localStorage.clear();
             expect(localStorage.getItem("columnDisplaySetting")).toBe(null);
             expect(localStorage.getItem("showDescriptionColumn")).toBe(null);
-            expect(localStorage.getItem("showPathColumn")).toBe(null);
+            expect(localStorage.getItem("showGroupingPathColumn")).toBe(null);
 
-            expect(scope.columnDisplaySetting).toBe("first");
+            expect(scope.columnDisplaySetting).toBe("description");
             expect(scope.showDescriptionColumn).toBe(true);
-            expect(scope.showPathColumn).toBe(false);
+            expect(scope.showGroupingPathColumn).toBe(false);
         });
 
-        it("should hide the grouping path column", () => {
-            columnToHide = "path";
-            scope.hideColumn(columnToHide);
-            expect(scope.columnDisplaySetting).toBe("first");
+        it("should show the description column", () => {
+            column = "description";
+            scope.showColumn(column);
+            expect(scope.columnDisplaySetting).toBe("description");
             expect(scope.showDescriptionColumn).toBe(true);
-            expect(scope.showPathColumn).toBe(false);
+            expect(scope.showGroupingPathColumn).toBe(false);
 
-            expect(localStorage.getItem("columnDisplaySetting")).toBe("first");
+            expect(localStorage.getItem("columnDisplaySetting")).toBe("description");
             expect(localStorage.getItem("showDescriptionColumn")).toBe("true");
             expect(localStorage.getItem("showPathColumn")).toBe("false");
         });
 
-        it("should hide the description column", () => {
-            columnToHide = "description";
-            scope.hideColumn(columnToHide);
-            expect(scope.columnDisplaySetting).toBe("second");
+        it("should show the grouping path column", () => {
+            column = "groupingPath";
+            scope.showColumn(column);
+            expect(scope.columnDisplaySetting).toBe("groupingPath");
             expect(scope.showDescriptionColumn).toBe(false);
-            expect(scope.showPathColumn).toBe(true);
+            expect(scope.showGroupingPathColumn).toBe(true);
 
-            expect(localStorage.getItem("columnDisplaySetting")).toBe("second");
+            expect(localStorage.getItem("columnDisplaySetting")).toBe("groupingPath");
             expect(localStorage.getItem("showDescriptionColumn")).toBe("false");
             expect(localStorage.getItem("showPathColumn")).toBe("true");
         });
 
         it("should show both grouping path and description columns", () => {
-            columnToHide = "none";
-            scope.hideColumn(columnToHide);
-            expect(scope.columnDisplaySetting).toBe("third");
+            column = "all";
+            scope.showColumn(column);
+            expect(scope.columnDisplaySetting).toBe("all");
             expect(scope.showDescriptionColumn).toBe(true);
-            expect(scope.showPathColumn).toBe(true);
+            expect(scope.showGroupingPathColumn).toBe(true);
 
-            expect(localStorage.getItem("columnDisplaySetting")).toBe("third");
+            expect(localStorage.getItem("columnDisplaySetting")).toBe("all");
             expect(localStorage.getItem("showDescriptionColumn")).toBe("true");
             expect(localStorage.getItem("showPathColumn")).toBe("true");
         });
