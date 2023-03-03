@@ -155,3 +155,10 @@
         padding: 0 0 2px 0;
     }
 }
+
+/* Moves the button a little bit up in the navbar item listing, to match rest */
+.btn-v-align {
+    position: relative;
+    bottom: 0;
+    margin: 3.5px auto;
+}
