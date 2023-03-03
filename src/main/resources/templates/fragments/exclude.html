@@ -25,6 +25,7 @@
                     <th scope="col">
                         <input class="position-relative ml-0" type="checkbox"
                                ng-model="allSelected"
+                               ng-disabled="groupingExclude.length === 0"
                                ng-click="toggleCheckAllSelection('Exclude')"
                                value="option1" tooltip="Check all" data-placement="top"
                                aria-label="assertive">
