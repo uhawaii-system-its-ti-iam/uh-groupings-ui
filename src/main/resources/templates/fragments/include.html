@@ -28,6 +28,7 @@
                     <th scope="col" class="ml-1 align-top"role="button">
                         <input class="position-relative ml-0" type="checkbox"
                                ng-model="allSelected"
+                               ng-disabled="groupingInclude.length === 0"
                                ng-click="toggleCheckAllSelection('Include')"
                                value="option1" tooltip="Check all" data-placement="top"
                                aria-label="assertive">

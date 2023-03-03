@@ -1160,6 +1160,28 @@
         };
 
         /**
+         * Called in pagination.html.
+         * When changing pages with pagination.html in include.html and exclude.html, this will check if all rows
+         * have been checked already and update the "check all" button to be checked.
+         * @param currentPage {string} - $scope[currentPage]
+         * @param pagedItems {string} - $scope[pagedItems]
+         */
+        $scope.updateCheckAllSelection = (currentPage, pagedItems) => {
+            const sanitize = (key) => {
+                if ($scope.hasOwnProperty(key)) {
+                    return key;
+                }
+            };
+
+            $scope.allSelected = true;
+            for (let member of $scope[sanitize(pagedItems)][$scope[sanitize(currentPage)]]) {
+                if (!$scope.membersInCheckboxList[member.uhUuid]) {
+                    $scope.allSelected = false;
+                }
+            }
+        };
+
+        /**
          * Helper - removeMembers
          * Take in a list of booleans and return a comma separated string containing the identifiers of all true booleans.
          * @param obj: {obj1: true, obj2: false, obj3: true}

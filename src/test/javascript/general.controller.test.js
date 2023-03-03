@@ -1234,7 +1234,6 @@ describe("GeneralController", () => {
             scope.displayImportSuccessModal("Include", ["iamtst01", "iamtst02"]);
             scope.closeImportSuccessModal();
             expect(scope.getGroupingInformation).toHaveBeenCalled();
-
         });
     });
 
@@ -1750,6 +1749,49 @@ describe("GeneralController", () => {
             scope.allSelected = true;
             scope.toggleCheckAllSelection("Include");
             expect(scope.membersInCheckboxList[((scope.pagedItemsInclude[0][0]).uhUuid)]).toEqual(false);
+        });
+    });
+
+    describe("updateCheckAllSelection", () => {
+        beforeEach(() => {
+            scope.pagedItemsInclude = scope.groupToPages(scope.groupingInclude);
+            scope.currentPageInclude = 0;
+        });
+
+        it("should return if on the basis or members page", () => {
+            expect(scope.updateCheckAllSelection("currentPageBasis", "pagedItemsBasis")).toBeUndefined();
+            expect(scope.updateCheckAllSelection("currentPageMembers", "pagedItemsMembers")).toBeUndefined();
+        });
+
+        it("should set scope.allSelected to false", () => {
+            scope.allSelected = true;
+            scope.membersInCheckboxList = {
+                "00000001": false,
+                "00000002": true,
+                "00000003": true
+            };
+            scope.updateCheckAllSelection("currentPageInclude", "pagedItemsInclude");
+            expect(scope.allSelected).toBeFalse();
+
+            scope.allSelected = true;
+            scope.membersInCheckboxList = {
+                "00000001": false,
+                "00000002": false,
+                "00000003": false
+            };
+            scope.updateCheckAllSelection("currentPageInclude", "pagedItemsInclude");
+            expect(scope.allSelected).toBeFalse();
+        });
+
+        it("should set scope.allSelected to true", () => {
+            scope.allSelected = false;
+            scope.membersInCheckboxList = {
+                "00000001": true,
+                "00000002": true,
+                "00000003": true
+            };
+            scope.updateCheckAllSelection("currentPageInclude", "pagedItemsInclude");
+            expect(scope.allSelected).toBeTrue();
         });
     });
 
