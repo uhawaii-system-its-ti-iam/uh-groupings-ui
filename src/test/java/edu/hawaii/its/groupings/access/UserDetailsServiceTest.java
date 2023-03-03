@@ -54,9 +54,12 @@ public class UserDetailsServiceTest {
         AttributePrincipal principal = new AttributePrincipalImpl("j", map);
         Assertion assertion = new AssertionImpl(principal);
         CasUserDetailsServiceImpl userDetailsService = new CasUserDetailsServiceImpl(userBuilder);
-        User user = (User) userDetailsService.loadUserDetails(assertion);
-        assertFalse(user.hasRole(Role.OWNER));
-        assertFalse(user.hasRole(Role.ADMIN));
+        try {
+          userDetailsService.loadUserDetails(assertion);
+          fail("Should throw UsernameNotFoundException");
+        } catch (Exception e) {
+          assertThat(UsernameNotFoundException.class, is(e.getClass()));
+        }
     }
 
     @Test

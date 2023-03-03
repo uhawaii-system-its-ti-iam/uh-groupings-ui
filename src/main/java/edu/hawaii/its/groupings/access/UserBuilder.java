@@ -49,6 +49,10 @@ public final class UserBuilder {
         // Above is what might commonly occur.
         user.setAttributes(attributes);
 
+        if (!roleHolder.contains(Role.UH)) {
+            throw new UsernameNotFoundException(uid);
+        }
+
         return user;
     }
 

@@ -4,19 +4,24 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jasig.cas.client.authentication.SimplePrincipal;
 import edu.hawaii.its.api.controller.GroupingsRestController;
+import edu.hawaii.its.groupings.service.UhUuidCheckerService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
 
 @Service
+@PropertySource("classpath:custom.properties")
 public class AuthorizationServiceImpl implements AuthorizationService {
 
     @Autowired
     GroupingsRestController groupingsRestController;
 
+    @Autowired
+    UhUuidCheckerService uhUuidCheckerService;
     private static final Log logger = LogFactory.getLog(AuthorizationServiceImpl.class);
 
     /**
@@ -27,7 +32,11 @@ public class AuthorizationServiceImpl implements AuthorizationService {
         RoleHolder roleHolder = new RoleHolder();
         Principal principal = new SimplePrincipal(uhUuid);
         roleHolder.add(Role.ANONYMOUS);
-        roleHolder.add(Role.UH);
+
+        //Determine if uhUuid is valid
+        if (uhUuidCheckerService.isValidUhUuid(uhUuid, uid)) {
+            roleHolder.add(Role.UH);
+        }
 
         //Determine if user is an owner.
         if (checkResult(groupingsRestController.hasOwnerPrivs(principal))) {
@@ -38,6 +47,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
         if (checkResult(groupingsRestController.hasAdminPrivs(principal))) {
             roleHolder.add(Role.ADMIN);
         }
+
         logger.info("fetchRoles: username: " + uid + " " + roleHolder.getAuthorities() + ";");
         return roleHolder;
     }

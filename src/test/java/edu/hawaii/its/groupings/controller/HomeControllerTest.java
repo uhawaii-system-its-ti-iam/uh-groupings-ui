@@ -42,7 +42,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 @SpringBootTest(classes = { SpringBootWebApplication.class })
 public class HomeControllerTest {
 
-    @Value("${app.url.home:/}")
+    @Value("${app.url.home}")
     private String appUrlHome;
 
     @Value("${cas.login.url}")
