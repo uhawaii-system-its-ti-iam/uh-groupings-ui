@@ -43,15 +43,15 @@
                         {{owner.name}}
                         <span ng-if="groupingOwners.length > 1">
                             <span class="far fa-trash-alt fa-pull-right pt-1" role="button"
-                              tooltip data-placement="top"
-                              tabindex="0" aria-label="Remove {{owner.name}} from the Owner members list"
-                              th:title="#{screen.message.common.tooltip.remove.owner}"
-                              ng-keypress="$event.keyCode === 13 ? removeOwnerWithTrashcan(currentPageOwners, $index) : null"
-                              ng-click="removeOwnerWithTrashcan(currentPageOwners, $index)">
+                                  tooltip data-placement="top"
+                                  tabindex="0" aria-label="Remove {{owner.name}} from the Owner members list"
+                                  th:title="#{screen.message.common.tooltip.remove.owner}"
+                                  ng-keypress="$event.keyCode === 13 ? removeOwnerWithTrashcan(currentPageOwners, $index) : null"
+                                  ng-click="removeOwnerWithTrashcan(currentPageOwners, $index)">
                             </span>
                         </span>
                         <span ng-if="groupingOwners.length === 1">
-                            <span class="fa fa-question-circle fa-pull-right pt-1" role="button"
+                            <span class="far fa-trash-alt fa-pull-right pt-1 fa-trash-alt-disabled" role="button"
                                   tooltip data-placement="top"
                                   th:title="#{screen.message.common.tooltip.remove.warning}">
                             </span>
