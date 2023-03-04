@@ -38,7 +38,7 @@ public class UserTest {
         assertThat(user.getUhUuid(), is("12345"));
         assertNull(user.getAttributes());
 
-        user.setAttributes(new UhCasAttributes());
+        user.setAttributes(new UhAttributes());
         assertThat(user.getName(), is(""));
     }
 
@@ -54,7 +54,7 @@ public class UserTest {
 
         Set<GrantedAuthority> authorities = new LinkedHashSet<>();
         User user = new User("a", authorities);
-        user.setAttributes(new UhCasAttributes(map));
+        user.setAttributes(new UhAttributes(map));
 
         assertThat(user.getAttribute("uid"), is("duckart"));
         assertThat(user.getName(), is("Frank6"));

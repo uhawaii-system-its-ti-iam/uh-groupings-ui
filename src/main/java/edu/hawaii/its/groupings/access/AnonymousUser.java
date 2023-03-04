@@ -13,7 +13,7 @@ public class AnonymousUser extends User {
 
     public AnonymousUser() {
         super("anonymous", authorities());
-        setAttributes(new UhCasAttributes());
+        setAttributes(new UhAttributes());
     }
 
     private static Collection<GrantedAuthority> authorities() {

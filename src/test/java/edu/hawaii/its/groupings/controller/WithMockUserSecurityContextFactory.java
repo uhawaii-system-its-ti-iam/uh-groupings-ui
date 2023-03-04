@@ -1,7 +1,6 @@
 package edu.hawaii.its.groupings.controller;
 
 import edu.hawaii.its.groupings.access.UhAttributes;
-import edu.hawaii.its.groupings.access.UhCasAttributes;
 import edu.hawaii.its.groupings.access.User;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -30,7 +29,7 @@ public class WithMockUserSecurityContextFactory
         User user = new User(uhUser.username(), uhUser.uhUuid(), authorities);
         Map<String, String> attrsMap = new HashMap<>();
         attrsMap.put("cn", uhUser.name());
-        UhAttributes attributes = new UhCasAttributes(attrsMap);
+        UhAttributes attributes = new UhAttributes(attrsMap);
         user.setAttributes(attributes);
 
         final Authentication auth =
