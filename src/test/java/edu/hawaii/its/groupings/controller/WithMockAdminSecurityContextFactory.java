@@ -14,7 +14,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithSecurityContextFactory;
 
 import edu.hawaii.its.groupings.access.UhAttributes;
-import edu.hawaii.its.groupings.access.UhCasAttributes;
 import edu.hawaii.its.groupings.access.User;
 
 public class WithMockAdminSecurityContextFactory
@@ -31,7 +30,7 @@ public class WithMockAdminSecurityContextFactory
 
         Map<String, String> attrsMap = new HashMap<>();
         attrsMap.put("cn", uhUser.name());
-        UhAttributes attributes = new UhCasAttributes(attrsMap);
+        UhAttributes attributes = new UhAttributes(attrsMap);
         user.setAttributes(attributes);
 
         final Authentication auth =

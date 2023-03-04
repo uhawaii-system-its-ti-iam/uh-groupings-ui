@@ -18,7 +18,7 @@ public final class UserBuilder {
     private AuthorizationService authorizationService;
 
     public final User make(Map<String, ?> map) {
-        return make(new UhCasAttributes(map));
+        return make(new UhAttributes(map));
     }
 
     public final User make(UhAttributes attributes) {

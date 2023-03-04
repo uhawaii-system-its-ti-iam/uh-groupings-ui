@@ -30,7 +30,7 @@ public class CasUserDetailsServiceImpl extends AbstractCasAssertionUserDetailsSe
         Map<String, Object> map = assertion.getPrincipal().getAttributes();
         logger.info("map: " + map);
 
-        return userBuilder.make(new UhCasAttributes(map));
+        return userBuilder.make(new UhAttributes(map));
     }
 
 }
