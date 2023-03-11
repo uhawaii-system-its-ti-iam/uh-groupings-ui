@@ -28,7 +28,9 @@
                                   data-toggle="tooltip" data-placement="right"
                                   tabindex="0"
                                   th:title="#{screen.message.common.tooltip.actions.resetGroup}"
-                            ></span>
+                                  th:attr="ng-click='displayPreferenceInfoModal(\'' + #{screen.message.common.tooltip.actions.resetGroup} + '\')',
+                                  ng-keypress='$event.keyCode === 13 ? displayPreferenceInfoModal(\'' + #{screen.message.common.tooltip.actions.resetGroup} + '\') : null'">
+                            </span>
                         </div>
                     </form>
                 </div>
