@@ -1234,7 +1234,6 @@ describe("GeneralController", () => {
             scope.displayImportSuccessModal("Include", ["iamtst01", "iamtst02"]);
             scope.closeImportSuccessModal();
             expect(scope.getGroupingInformation).toHaveBeenCalled();
-
         });
     });
 
