@@ -695,6 +695,7 @@
          * Small function that resets the checkboxes on the page
          */
         function resetCheckboxes() {
+            $scope.allSelected = false;
             for (let member of Object.values($scope.membersInCheckboxList)) {
                 member = false;
             }
@@ -708,7 +709,7 @@
             switch (listName) {
                 case "Include":
                 case "Exclude":
-                case "owners:":
+                case "owners":
                     $scope.manageMembers = "";
                     $scope.membersNotInList = "";
                     $scope.membersInList = "";
@@ -1419,6 +1420,8 @@
          * Cancels the remove modal instance
          */
         $scope.cancelRemoveModal = function () {
+            $scope.membersNotInList = "";
+            $scope.multiRemoveResults = [];
             $scope.removeModalInstance.dismiss("cancel");
         };
 
@@ -1441,7 +1444,6 @@
                 membersToRemove: memberToRemove,
                 listName
             });
-            $scope.membersToRemove = [memberToRemove.uhUuid];
         };
 
         /**
@@ -1463,7 +1465,6 @@
                 membersToRemove: ownerToRemove,
                 listName: "owners"
             });
-            $scope.membersToRemove = [ownerToRemove.uhUuid];
         };
 
 
