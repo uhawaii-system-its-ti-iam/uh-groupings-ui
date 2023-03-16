@@ -132,7 +132,7 @@
 }
 
 /* Exports to CSV button */
-@media (min-width: 377px) {
+@include media-breakpoint(min-mobile) {
     #csvButton {
         float: right;
 
