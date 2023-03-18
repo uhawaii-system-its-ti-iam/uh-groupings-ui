@@ -29,6 +29,16 @@
     }
 }
 
+.modal-table {
+    max-height: 12rem;
+    overflow-y: auto;
+}
+
+.modal-import-table {
+    max-height: 20rem;
+    overflow-y: auto;
+}
+
 .modal.in .modal-dialog {
     -webkit-transform: none;
     transform: none;
