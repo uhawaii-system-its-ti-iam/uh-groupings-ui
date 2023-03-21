@@ -1,0 +1,29 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<div class="modal-header">
+    <h5 class="modal-title" id="modal-title">Owners</h5>
+</div>
+
+<div class="container modal-table">
+    <table class="table table-sm table-borderless">
+        <thead>
+        <tr class="text-nowrap">
+            <!-- Display table headings -->
+            <th scope="col">Username</th>
+            <th scope="col">UH Number</th>
+            <th scope="col">Name</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="(index, name) in names">
+            <!-- Display table data -->
+            <td>{{ usernames[index] }}</td>
+            <td>{{ uhuids[index] }}</td>
+            <td>{{ names[index] }}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-click="displayGroupingOwnersModalOnClose()">Ok</button>
+</div>
+</html>

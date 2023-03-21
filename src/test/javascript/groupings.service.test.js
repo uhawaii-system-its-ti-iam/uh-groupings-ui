@@ -476,6 +476,21 @@ describe("GroupingsService", function () {
         });
     });
 
+    describe("groupingOwners", function () {
+        it("should call dataProvider.loadData", function () {
+            spyOn(dp, "loadData");
+            gs.groupingOwners("groupingPath", onSuccess, onError);
+            expect(dp.loadData).toHaveBeenCalled();
+        });
+
+        it("should use the correct path", function () {
+            let groupingPath = "some-path";
+            gs.groupingOwners(groupingPath, onSuccess, onError);
+            httpBackend.expectGET(BASE_URL + "grouping/some-path/owners").respond(200);
+            expect(httpBackend.flush).not.toThrow();
+        });
+    });
+
     describe("getGroupingsOwned", function () {
         it("should call dataProvider.loadData", function () {
             spyOn(dp, "loadData");

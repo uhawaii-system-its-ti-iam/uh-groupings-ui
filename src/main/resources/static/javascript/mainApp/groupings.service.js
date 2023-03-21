@@ -303,6 +303,14 @@
             },
 
             /**
+             * Get a list of owners in the current path.
+             */
+            groupingOwners(groupingPath, onSuccess, onError) {
+                let endpoint = BASE_URL + "grouping/" + groupingPath + "/owners";
+                dataProvider.loadData(endpoint, onSuccess, onError);
+            },
+
+            /**
              * Get the groupings a member owns.
              */
             getGroupingsOwned(onSuccess, onError) {

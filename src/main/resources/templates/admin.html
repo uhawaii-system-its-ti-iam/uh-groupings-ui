@@ -216,6 +216,9 @@
                             <tr>
                                 <th ng-click="sortBy('personList', 'pagedItemsPerson', 'name')" class="clickable">
                                     Grouping
+                                    <i class="fa sort-icon"
+                                        ng-show="columnSort.personList.property === 'name' || !columnSort.groupingsList"
+                                        ng-class="{ reverse: columnSort.groupingsList.reverse }"></i>
                                 <th>
                                     Owner?
                                 </th>
@@ -239,6 +242,14 @@
                                     <i class="fa fa-fw fa-external-link-alt clickable" tooltip="Manage grouping"
                                     ng-click="displayGroupingInNewTab(l.name, l.path)"></i>
                                     {{l.name}}
+                                    <i class="fa fa-crown fa-fw fa-pull-right clickable pt-1" role="button"
+                                       tooltip data-placement="right"
+                                       tabindex="0"
+                                       aria-label="Display admin."
+                                       th:title="#{screen.message.admin.tooltip.nav.display.groupings}"
+                                       ng-click="getGroupingOwnersOnClick(l.path)" aria-hidden="false"
+                                       ng-keypress="$event.keyCode === 13 ? getGroupingOwnersOnClick(l.path) : null">
+                                    </i>
                                 </td>
                                 <td class="p-11">
                                     <div ng-if="l.inOwner">
