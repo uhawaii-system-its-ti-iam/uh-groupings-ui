@@ -88,19 +88,19 @@
 * Allows responsive "add", "remove", and "import" buttons
 * with smaller screens in owners, exclude, and include.
 */
-#memSearch {
+.memSearch {
     padding-right: 4px;
     width: 50%;
 }
 @media (max-width: 768px) {
-    #memBtns {
+    .memBtns {
         position: relative;
         top: 50px;
     }
-    #memSearch {
+    .memSearch {
         position: absolute;
     }
-    #pageBtn {
+    .pageBtn {
         position: relative;
         top: 5px;
     }
