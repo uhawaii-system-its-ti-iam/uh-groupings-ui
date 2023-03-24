@@ -75,7 +75,7 @@
             <div class="col-lg-4 pl-0 pr-0 mt-lg-0 mt-2">
                 <form>
                     <div class="input-group long">
-                        <div id = "memSearch">
+                        <div class="memSearch">
                         <input class="form-control" placeholder="UH Username or UH Number" type="search"
                                ng-init="dismissErrors()"  aria-required="true"
                                ng-blur="dismissErrors()"
@@ -84,7 +84,7 @@
                                aria-label="Enter one or more UH members to add to the Owners list"
                                id="owner-input"/>
                         </div>
-                        <div id = "memBtns">
+                        <div class="memBtns">
                             <button class="btn btn-primary add-margin"
                                     ng-click="addOnClick('owners')">
                                 Add
@@ -102,7 +102,7 @@
             </div>
         </div>
         <div th:replace="fragments/add-error-messages :: add-error-messages"></div>
-        <div id = "pageBtn" class="mt-lg-0 mt-2">
+        <div class="pageBtn mt-lg-0 mt-2">
             <div th:replace="fragments/pagination :: pagination (currentPage = 'currentPageOwners', pagedItems='pagedItemsOwners')"></div>
         </div>
     </div>
