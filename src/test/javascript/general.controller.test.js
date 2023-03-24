@@ -56,12 +56,6 @@ describe("GeneralController", () => {
         beforeEach(() => {
             httpBackend.whenGET(BASE_URL + "currentUser")
                 .respond(200, mockUser);
-
-            httpBackend.whenGET(BASE_URL + "members/memberships/count")
-                .respond(200, mockResponse);
-
-            httpBackend.whenGET(BASE_URL + "owners/groupings/count")
-                .respond(200, mockResponse);
         });
 
         it("should make an API call to getCurrentUser", () => {
@@ -75,29 +69,19 @@ describe("GeneralController", () => {
 
             expect(scope.currentUser).toEqual({ uid: "iamtst01", uhUuid: "iamtst01" });
         });
+    });
 
-        it("should make an API call to getNumberOfMemberships", () => {
-            httpBackend.expectGET(BASE_URL + "members/memberships/count").respond(200, mockResponse);
-            expect(httpBackend.flush).not.toThrow();
+    describe("init", () => {
+        it("should call groupingsService.getNumberOfMemberships", () => {
+            spyOn(gs, "getNumberOfMemberships").and.callThrough();
+            scope.init();
+            expect(gs.getNumberOfMemberships).toHaveBeenCalled();
         });
 
-        it("should initialize numberOfMemberships", () => {
-            httpBackend.expectGET(BASE_URL + "members/memberships/count").respond(200, mockResponse);
-            httpBackend.flush();
-
-            expect(scope.numberOfMemberships).toEqual(999);
-        });
-
-        it("should make an API call to getNumberOfGroupings", () => {
-            httpBackend.expectGET(BASE_URL + "owners/groupings/count").respond(200, mockResponse);
-            expect(httpBackend.flush).not.toThrow();
-        });
-
-        it("should initialize numberOfGroupings", () => {
-            httpBackend.expectGET(BASE_URL + "owners/groupings/count").respond(200, mockResponse);
-            httpBackend.flush();
-
-            expect(scope.numberOfGroupings).toEqual(999);
+        it("should call groupingsService.getNumberOfGroupings", () => {
+            spyOn(gs, "getNumberOfGroupings").and.callThrough();
+            scope.init();
+            expect(gs.getNumberOfGroupings).toHaveBeenCalled();
         });
     });
 
@@ -652,8 +636,6 @@ describe("GeneralController", () => {
 
             beforeEach(() => {
                 httpBackend.whenGET(BASE_URL + "currentUser").passThrough();
-                httpBackend.whenGET(BASE_URL + "members/memberships/count").passThrough();
-                httpBackend.whenGET(BASE_URL + "owners/groupings/count").passThrough();
                 httpBackend.whenGET("modal/addModal").passThrough();
                 httpBackend.whenGET("modal/importConfirmationModal").passThrough();
                 httpBackend.whenGET("modal/importErrorModal").passThrough();
@@ -843,8 +825,6 @@ describe("GeneralController", () => {
                 spyOn(gs, "getMembersAttributes").and.callThrough();
 
                 httpBackend.whenGET(BASE_URL + "currentUser").passThrough();
-                httpBackend.whenGET(BASE_URL + "members/memberships/count").passThrough();
-                httpBackend.whenGET(BASE_URL + "owners/groupings/count").passThrough();
                 httpBackend.whenGET("modal/addModal").passThrough();
             });
 

@@ -118,6 +118,7 @@
                 </div>
             </div>
         </div>
+        <div ng-controller="GeneralJsController" data-ng-init="init()">
         <div class="container mt-5 mb-5">
             <div class="row">
                 <div class="col-md-4 mb-5 mb-md-0" sec:authorize="hasRole('ROLE_ADMIN')">
@@ -131,8 +132,7 @@
                         <a class="btn dark-teal-bg btn-bottom" th:href="@{/admin}">Admin</a>
                     </div>
                 </div>
-                <div class="col-md-4 mb-5 mb-md-0" sec:authorize="hasRole('ROLE_UH')"
-                     ng-controller="GeneralJsController" data-ng-init="init()">
+                <div class="col-md-4 mb-5 mb-md-0" sec:authorize="hasRole('ROLE_UH')">
                     <div class="text-primary mb-3">
                         <i class="fa fa-id-card fa-3x mr-4" aria-hidden="true"></i>
                         <span ng-bind="numberOfMemberships" id="memberCount" class="h1"></span>
@@ -143,8 +143,7 @@
                         <a class="btn dark-teal-bg btn-bottom" th:href="@{/memberships}">Memberships</a>
                     </div>
                 </div>
-                <div class="col-md-4" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_OWNER')"
-                     ng-controller="GeneralJsController" data-ng-init="init()">
+                <div class="col-md-4" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_OWNER')">
                     <div class="text-primary mb-3">
                         <i class="fa fa-wrench fa-3x mr-3" aria-hidden="true"></i>
                         <span ng-bind="numberOfGroupings" id="groupCount" class="h1"></span>
@@ -156,6 +155,7 @@
                     </div>
                 </div>
             </div>
+        </div>
         </div>
     </div>
 </main>
