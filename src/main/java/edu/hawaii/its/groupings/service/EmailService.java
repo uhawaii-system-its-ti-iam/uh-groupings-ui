@@ -38,12 +38,25 @@ public class EmailService {
 
     public void send(Feedback feedback) {
         logger.info("Feedback received in EmailService: " + feedback);
+
+        InetAddress ip;
+        String hostname = "Unknown Host";
+
+        try {
+            ip = InetAddress.getLocalHost();
+            hostname = ip.getHostName();
+        } catch (UnknownHostException f) {
+            f.printStackTrace();
+        }
+
         if (isEnabled) {
             SimpleMailMessage msg = new SimpleMailMessage();
             msg.setTo(to);
             msg.setFrom(from);
             String text = "";
             String header = "UH Groupings service feedback [" + feedback.getType() + "]";
+            text += "Host Name: " + hostname + ".\n";
+            text += "----------------------------------------------------" + "\n\n";
             text += "Submitted name: " + feedback.getName() + "\n\n";
             text += "Submitted email: <" + feedback.getEmail() + ">\n\n";
             text += "Feedback type: " + feedback.getType() + "\n\n";
