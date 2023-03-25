@@ -15,17 +15,16 @@ public class HttpRequestService {
     private String CURRENT_USER;
 
     private final WebClient webClient;
-    
+
     public HttpRequestService() {
-        webClient = WebClient.builder().build();
+        webClient = WebClient.builder()
+                .codecs(codecs -> codecs.defaultCodecs().maxInMemorySize(-1))
+                .build();
     }
 
     /*
      * Make a http request to the API with path variables.
-     *
-     * LGTM reporting a possible false positive: Groupings-1001
      */
-
     public ResponseEntity<String> makeApiRequest(String currentUser, String uri, HttpMethod method) {
         return webClient.method(method)
                 .uri(uri)
@@ -36,9 +35,8 @@ public class HttpRequestService {
     }
 
     /*
-     * Make a http request to the API with path variables and description in the body.
+     * Make a http request to the API with path variables and description string in the body.
      */
-
     public ResponseEntity<String> makeApiRequestWithBody(String currentUser, String uri, String data,
                                                          HttpMethod method) {
         return webClient.method(method)
@@ -50,6 +48,9 @@ public class HttpRequestService {
                 .block();
     }
 
+    /*
+     * Make a http request to the API with path variables and description list of strings in the body.
+     */
     public ResponseEntity<String> makeApiRequestWithBody(String currentUser, String uri, List<String> data,
                                                          HttpMethod method) {
         return webClient.method(method)
