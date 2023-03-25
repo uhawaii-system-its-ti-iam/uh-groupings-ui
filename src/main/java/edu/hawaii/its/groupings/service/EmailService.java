@@ -18,9 +18,9 @@ import java.net.UnknownHostException;
 @Service
 public class EmailService {
 
-    @Value("${email.send.to}")
-    private String to;
-
+    @Value("#{'${email.send.recipient.override:}' == '' ? '${email.send.recipient}' : '${email.send.recipient.override:}'}")
+    private String recipient;
+    
     @Value("${email.send.from}")
     private String from;
 
@@ -39,23 +39,25 @@ public class EmailService {
     public void send(Feedback feedback) {
         logger.info("Feedback received in EmailService: " + feedback);
 
-        InetAddress ip;
         String hostname = "Unknown Host";
 
         try {
-            ip = InetAddress.getLocalHost();
+            InetAddress ip = this.getLocalHost();
             hostname = ip.getHostName();
         } catch (UnknownHostException f) {
-            f.printStackTrace();
+            logger.error("Error", f);
         }
 
         if (isEnabled) {
             SimpleMailMessage msg = new SimpleMailMessage();
-            msg.setTo(to);
+            msg.setTo(recipient);
             msg.setFrom(from);
             String text = "";
             String header = "UH Groupings service feedback [" + feedback.getType() + "]";
             text += "Host Name: " + hostname + ".\n";
+            if (!recipient.equals("its-iam-web-app-dev-help-l@lists.hawaii.edu")) {
+                text += "Recipient overridden to: " + recipient + "\n";
+            }
             text += "----------------------------------------------------" + "\n\n";
             text += "Submitted name: " + feedback.getName() + "\n\n";
             text += "Submitted email: <" + feedback.getEmail() + ">\n\n";
@@ -85,21 +87,24 @@ public class EmailService {
         String hostname = "Unknown Host";
 
         try {
-            ip = InetAddress.getLocalHost();
+            ip = this.getLocalHost();
             hostname = ip.getHostName();
         } catch (UnknownHostException f) {
-            f.printStackTrace();
+            logger.error("Error", f);
         }
 
         if (isEnabled) {
             SimpleMailMessage msg = new SimpleMailMessage();
-            msg.setTo(to);
+            msg.setTo(recipient);
             msg.setFrom(from);
             String text = "";
             String header = "UH Groupings UI Error Response";
             text += "Cause of Response: The UI threw an exception that has triggered the ErrorControllerAdvice. \n\n";
             text += "Exception Thrown: ErrorControllerAdvice threw the " + exceptionType + ".\n\n";
             text += "Host Name: " + hostname + ".\n";
+            if (!recipient.equals("its-iam-web-app-dev-help-l@lists.hawaii.edu")) {
+                text += "Recipient overridden to: " + recipient + "\n";
+            }
             text += "----------------------------------------------------" + "\n\n";
             text += "UI Stack Trace: \n\n" + exceptionAsString;
             msg.setText(text);
@@ -114,6 +119,14 @@ public class EmailService {
 
     public void setEnabled(boolean enabled) {
         this.isEnabled = enabled;
+    }
+
+    public void setRecipient(String recipient) {
+        this.recipient = recipient;
+    }
+
+    public InetAddress getLocalHost() throws UnknownHostException {
+        return InetAddress.getLocalHost();
     }
 
     public boolean isEnabled() {

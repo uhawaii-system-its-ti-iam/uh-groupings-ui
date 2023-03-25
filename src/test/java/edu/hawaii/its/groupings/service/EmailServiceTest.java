@@ -5,6 +5,7 @@ import edu.hawaii.its.groupings.type.Feedback;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mail.MailException;
 import org.springframework.mail.MailSendException;
@@ -12,10 +13,13 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.MatcherAssert.assertThat;
+import java.net.UnknownHostException;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.doThrow;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = { SpringBootWebApplication.class })
@@ -26,6 +30,9 @@ public class EmailServiceTest {
     private static SimpleMailMessage messageSent;
 
     public EmailService emailService;
+
+    public EmailService mockEmailService;
+
 
     private Feedback createBaseFeedback() {
         Feedback feedback = new Feedback();
@@ -49,6 +56,9 @@ public class EmailServiceTest {
 
         emailService = new EmailService(sender);
         emailService.setEnabled(true);
+        emailService.setRecipient("address");
+        mockEmailService = spy(new EmailService(sender));
+
 
         wasSent = false;
     }
@@ -58,13 +68,13 @@ public class EmailServiceTest {
         Feedback feedback = createBaseFeedback();
 
         emailService.send(feedback);
-        assertThat(wasSent, is(true));
+        assertTrue(wasSent);
 
-        assertThat(messageSent.getSubject(), containsString("problem"));
-        assertThat(messageSent.getText(), containsString("Test Iwa"));
-        assertThat(messageSent.getText(), containsString("testiwa@hawaii.edu"));
-        assertThat(messageSent.getText(), containsString("Some problem happened."));
-        assertThat(messageSent.getText(), not(containsString("Stack Trace:")));
+        assertTrue(messageSent.getSubject().contains("problem"));
+        assertTrue(messageSent.getText().contains("Test Iwa"));
+        assertTrue(messageSent.getText().contains("testiwa@hawaii.edu"));
+        assertTrue(messageSent.getText().contains("Some problem happened."));
+        assertFalse(messageSent.getText().contains("Stack Trace:"));
     }
 
     @Test
@@ -73,29 +83,14 @@ public class EmailServiceTest {
         feedback.setExceptionMessage("ArrayIndexOutOfBoundsException");
 
         emailService.send(feedback);
-        assertThat(wasSent, is(true));
+        assertTrue(wasSent);
 
-        assertThat(messageSent.getSubject(), containsString("problem"));
-        assertThat(messageSent.getText(), containsString("Test Iwa"));
-        assertThat(messageSent.getText(), containsString("testiwa@hawaii.edu"));
-        assertThat(messageSent.getText(), containsString("Some problem happened."));
-        assertThat(messageSent.getText(), containsString("Stack Trace:"));
-        assertThat(messageSent.getText(), containsString("ArrayIndexOutOfBoundsException"));
-    }
-
-    @Test
-    public void sendFeedbackWithOutExceptionMessage() {
-        Feedback feedback = createBaseFeedback();
-
-        emailService.send(feedback);
-        assertThat(wasSent, is(true));
-
-        assertThat(messageSent.getSubject(), containsString("problem"));
-        assertThat(messageSent.getText(), containsString("Test Iwa"));
-        assertThat(messageSent.getText(), containsString("testiwa@hawaii.edu"));
-        assertThat(messageSent.getText(), containsString("Some problem happened."));
-        assertThat(messageSent.getText(), containsString(""));
-        assertThat(messageSent.getText(), containsString(""));
+        assertTrue(messageSent.getSubject().contains("problem"));
+        assertTrue(messageSent.getText().contains("Test Iwa"));
+        assertTrue(messageSent.getText().contains("testiwa@hawaii.edu"));
+        assertTrue(messageSent.getText().contains("Some problem happened."));
+        assertTrue(messageSent.getText().contains("Stack Trace:"));
+        assertTrue(messageSent.getText().contains("ArrayIndexOutOfBoundsException"));
     }
 
     @Test
@@ -110,20 +105,73 @@ public class EmailServiceTest {
 
         EmailService emailServiceWithException = new EmailService(senderWithException);
         emailServiceWithException.setEnabled(true);
-
+        emailServiceWithException.setRecipient("override@email");
         Feedback feedback = createBaseFeedback();
 
         emailServiceWithException.send(feedback);
-        assertThat(wasSent, is(false));
+        assertFalse(wasSent);
+        emailServiceWithException.sendWithStack(new NullPointerException(), "Null Pointer Exception");
+        assertFalse(wasSent);
     }
 
     @Test
     public void enabled() {
         emailService.setEnabled(false);
-        assertThat(emailService.isEnabled(), is(false));
+        assertFalse(emailService.isEnabled());
+        emailService.sendWithStack(new NullPointerException(), "Null Pointer Exception");
+        assertFalse(wasSent);
+
+        emailService.setEnabled(false);
+        assertFalse(emailService.isEnabled());
+        emailService.send(createBaseFeedback());
+        assertFalse(wasSent);
 
         emailService.setEnabled(true);
-        assertThat(emailService.isEnabled(), is(true));
+        assertTrue(emailService.isEnabled());
+        emailService.sendWithStack(new NullPointerException(), "Null Pointer Exception");
+        assertTrue(wasSent);
+
+        emailService.setEnabled(true);
+        assertTrue(emailService.isEnabled());
+        emailService.send(createBaseFeedback());
+        assertTrue(wasSent);
+    }
+
+    @Test
+    public void overrideRecipient() {
+        Feedback feedback = createBaseFeedback();
+
+        emailService.setRecipient("override@email.com");
+        emailService.send(feedback);
+        assertTrue(messageSent.getText().contains("Recipient overridden"));
+
+        emailService.setRecipient("its-iam-web-app-dev-help-l@lists.hawaii.edu");
+        emailService.send(feedback);
+        assertFalse(messageSent.getText().contains("Recipient overridden"));
+
+        emailService.setRecipient("its-iam-web-app-dev-help-l@lists.hawaii.edu");
+        emailService.sendWithStack(new NullPointerException(), "Null Pointer Exception");
+        assertFalse(messageSent.getText().contains("Recipient overridden"));
+
+
+        emailService.setEnabled(true);
+        emailService.setRecipient("override@email.com");
+        emailService.sendWithStack(new NullPointerException(), "Null Pointer Exception");
+        assertTrue(messageSent.getText().contains("Recipient overridden"));
+    }
+
+    @Test
+    public void unknownHost() throws UnknownHostException {
+        Feedback feedback = createBaseFeedback();
+        mockEmailService.setEnabled(true);
+        mockEmailService.setRecipient("address");
+        doThrow(UnknownHostException.class).when(mockEmailService).getLocalHost();
+
+        mockEmailService.send(feedback);
+        assertTrue(messageSent.getText().contains("Unknown Host"));
+
+        mockEmailService.sendWithStack(new NullPointerException(), "Null Pointer Exception");
+        assertTrue(messageSent.getText().contains("Unknown Host"));
     }
 
 }
