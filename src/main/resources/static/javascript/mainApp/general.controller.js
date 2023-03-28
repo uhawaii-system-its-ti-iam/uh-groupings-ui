@@ -246,6 +246,7 @@
             if (asyncThreadCount === 1) {
                 let currentPage = 1;
                 const groupingPath = $scope.selectedGrouping.path;
+
                 /**
                  * Function to get pages of a grouping asynchronously
                  * @param {String} groupingPath - Path to the grouping to retrieve data from
@@ -1596,7 +1597,6 @@
             $scope.pagedItemsInclude = [];
             $scope.pagedItemsExclude = [];
             $scope.pagedItemsOwners = [];
-            $scope.pagedItemsPerson = [];
 
             $scope.currentPageMembers = 0;
             $scope.currentPageBasis = 0;

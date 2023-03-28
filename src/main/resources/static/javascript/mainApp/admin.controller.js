@@ -20,6 +20,7 @@
         $scope.currentPagePerson = 0;
         $scope.personToLookup = "";
         $scope.currentManagePerson = "";
+        $scope.fromManagePerson = false;
         $scope.selectedGroupingsPaths = [];
         $scope.emptySelect = false;
         $scope.selectedOwnedGroupingsNames = [];
@@ -42,10 +43,17 @@
         };
         /**
          * Complete initialization by fetching a list of admins and list of all groupings.
+         * Load grouping from manage-person if sessionStorage saved item into managePersonGrouping key
+         * from $scope.displayGroupingInNewTab
          */
         $scope.init = function () {
-            $scope.loading = true;
-            groupingsService.getAdminLists($scope.getAdminListsCallbackOnSuccess, $scope.displayApiErrorModal);
+            const managePersonGrouping = JSON.parse(sessionStorage.getItem("managePersonGrouping"));
+            if (!_.isEmpty(managePersonGrouping)) {
+                $scope.initManagePersonGrouping(managePersonGrouping);
+            } else {
+                $scope.loading = true;
+                groupingsService.getAdminLists($scope.getAdminListsCallbackOnSuccess, $scope.displayApiErrorModal);
+            }
         };
 
         $scope.searchForUserGroupingInformationOnSuccessCallback = function (res) {
@@ -218,6 +226,7 @@
          */
         $scope.addAdmin = function () {
             const sanitizedAdmin = $scope.sanitizer($scope.adminToAdd);
+            $scope.user = sanitizedAdmin;
             if (_.isEmpty(sanitizedAdmin)) {
                 $scope.emptyInput = true;
                 return;
@@ -336,6 +345,49 @@
          */
         $scope.hoverCopy = function () {
             $("[data-content='copy']").popover();
+        };
+
+        /**
+         * Saves the needed information managePersonGrouping and personToLookup to sessionStorage for $scope.init()
+         * to display the grouping in a new tab. Opens a new /admin page and removes managePersonGrouping from
+         * sessionStorage to prevent displaying the grouping upon reloading the current page.
+         * @param name {string} - The grouping name
+         * @param path {String} - The grouping path
+         */
+        $scope.displayGroupingInNewTab = (name, path) => {
+            sessionStorage.setItem("managePersonGrouping", JSON.stringify({ name, path }));
+            sessionStorage.setItem("personToLookup", $scope.personToLookup);
+
+            $window.open("admin");
+            sessionStorage.removeItem("managePersonGrouping");
+        };
+
+        /**
+         * Initializes the grouping from manage-person to be displayed.
+         * @param managePersonGrouping {object} - The grouping from manage-person
+         */
+        $scope.initManagePersonGrouping = (managePersonGrouping) => {
+            $scope.fromManagePerson = true;
+            $scope.showGrouping = true;
+            $scope.selectedGrouping = managePersonGrouping;
+            $scope.getGroupingInformation();
+            $scope.toggleShowAdminTab();
+            sessionStorage.removeItem("managePersonGrouping");
+        };
+
+        /**
+         * Returns to manage-person page and reloads the admin lists and the current manage-person being looked up.
+         */
+        $scope.returnToManagePerson = () => {
+            $scope.loading = true;
+            $scope.fromManagePerson = false;
+            $scope.showGrouping = false;
+
+            $("#manage-person-tab").tab("show");
+
+            $scope.personToLookup = sessionStorage.getItem("personToLookup");
+            $scope.searchForUserGroupingInformation();
+            groupingsService.getAdminLists($scope.getAdminListsCallbackOnSuccess, $scope.displayApiErrorModal);
         };
     }
 

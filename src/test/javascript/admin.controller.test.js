@@ -2,48 +2,57 @@
 
 describe("AdminController", function () {
 
-  beforeEach(module("UHGroupingsApp"));
-  beforeEach(module("ngMockE2E"));
+    beforeEach(module("UHGroupingsApp"));
+    beforeEach(module("ngMockE2E"));
 
-  let scope;
-  let controller;
-  let BASE_URL;
-  let gs;
-  let httpBackend;
-  let uibModal;
+    let scope;
+    let controller;
+    let BASE_URL;
+    let gs;
+    let httpBackend;
+    let uibModal;
+    let window;
 
-  let fakeModal = {
-    result: {
-      then: (confirmCallback, cancelCallBack) => {
-        this.confirmCallback = confirmCallback;
-        this.cancelCallBack = cancelCallBack;
-      }
-    },
-    close: (item) => {
-      //the user clicks OK on the modal dialog, call the stored callback w/ the selected item
-      this.result.confirmCallback(item);
-    },
-    dismiss: (type) => {
-      // The user clicked on cancel, call the stored cancel callback
-      this.result.cancelCallBack(type);
-    }
-  };
+    let fakeModal = {
+        result: {
+            then: (confirmCallback, cancelCallBack) => {
+                this.confirmCallback = confirmCallback;
+                this.cancelCallBack = cancelCallBack;
+            }
+        },
+        close: (item) => {
+            //the user clicks OK on the modal dialog, call the stored callback w/ the selected item
+            this.result.confirmCallback(item);
+        },
+        dismiss: (type) => {
+            // The user clicked on cancel, call the stored cancel callback
+            this.result.cancelCallBack(type);
+        }
+    };
 
-  beforeEach(inject(($rootScope, $controller, $uibModal, _BASE_URL_, _$httpBackend_, groupingsService) => {
-    scope = $rootScope.$new();
-    controller = $controller("AdminJsController", {
-      $scope: scope
+    beforeEach(inject(($rootScope, $controller, $uibModal, _BASE_URL_, _$httpBackend_, groupingsService, _$window_) => {
+        scope = $rootScope.$new();
+        window = {
+            location: {
+                pathname: "/uhgroupings/",
+                href: _$window_
+            },
+            open(href) {}
+        };
+        controller = $controller("AdminJsController", {
+            $scope: scope,
+            $window: window
+        });
+        BASE_URL = _BASE_URL_;
+        gs = groupingsService;
+        httpBackend = _$httpBackend_;
+        uibModal = $uibModal;
+        spyOn($uibModal, "open").and.returnValue(fakeModal);
+    }));
+
+    it("should define the admin controller", () => {
+        expect(controller).toBeDefined();
     });
-    BASE_URL = _BASE_URL_;
-    gs = groupingsService;
-    httpBackend = _$httpBackend_;
-    uibModal = $uibModal;
-    spyOn($uibModal, "open").and.returnValue(fakeModal);
-  }));
-
-  it("should define the admin controller", () => {
-    expect(controller).toBeDefined();
-  });
 
     describe("getAdminListsCallbackOnSuccess", () => {
         let res = {};
@@ -107,6 +116,14 @@ describe("AdminController", function () {
             spyOn(gs, "getAdminLists").and.callThrough();
             scope.init();
             expect(gs.getAdminLists).toHaveBeenCalled();
+        });
+
+        it("should call scope.initManagePersonGrouping", () => {
+            const managePersonGrouping = {name: "testName", path: "testPath"};
+            spyOn(scope, "initManagePersonGrouping");
+            sessionStorage.setItem("managePersonGrouping", JSON.stringify(managePersonGrouping));
+            scope.init();
+            expect(scope.initManagePersonGrouping).toHaveBeenCalledWith(managePersonGrouping);
         });
     });
 
@@ -220,7 +237,7 @@ describe("AdminController", function () {
     });
 
     describe("checkSoleOwner", () => {
-        let res = { username: "testUsername", name: "testName", uhUuid: "testId" };
+        let res = {username: "testUsername", name: "testName", uhUuid: "testId"};
         it("should empty soleOwnerGroupingNames", () => {
             scope.soleOwnerGroupingNames = ["test1", "test2"];
             scope.selectedOwnedGroupings = ["test"];
@@ -234,11 +251,11 @@ describe("AdminController", function () {
             scope.checkSoleOwner(res);
             expect(scope.removeFromGroupsCallbackOnSuccess).toHaveBeenCalled();
         });
-        
+
         it("should not call removeFromGroupsCallbackOnSuccess if selectedOwnedGroupings.length === 0", () => {
             scope.selectedOwnedGroupings = ["test"];
             spyOn(scope, "removeFromGroupsCallbackOnSuccess").and.callThrough();
-            
+
             expect(scope.removeFromGroupsCallbackOnSuccess).not.toHaveBeenCalled();
         });
     });
@@ -266,13 +283,13 @@ describe("AdminController", function () {
         beforeEach(() => {
             scope.personToLookup = "";
         });
-      
-    it("should call groupingsService.getMemberAttributes", () => {
-      spyOn(gs, "getMemberAttributes").and.callThrough();
-      scope.removeFromGroups();
-      expect(gs.getMemberAttributes).toHaveBeenCalled();
+
+        it("should call groupingsService.getMemberAttributes", () => {
+            spyOn(gs, "getMemberAttributes").and.callThrough();
+            scope.removeFromGroups();
+            expect(gs.getMemberAttributes).toHaveBeenCalled();
+        });
     });
-   });
 
     describe("createGroupPathsAndNames", () => {
         let selectedGroupingsNames, selectedGroupingsPaths, selectedOwnedGroupings, selectedOwnedGroupingsNames,
@@ -373,6 +390,7 @@ describe("AdminController", function () {
             scope.adminsList = [{username: "iamtst01", uhUuid: "iamtst01"}];
             scope.addAdmin();
 
+            expect(scope.user).toBe(scope.adminToAdd);
             expect(scope.listName).toBe("admins");
             expect(scope.containsInput).toBeTrue();
         });
@@ -384,7 +402,8 @@ describe("AdminController", function () {
 
             httpBackend.expectPOST(BASE_URL + "members/invalid", ["iamtst01"]).respond(200, []);
             httpBackend.flush();
-            
+
+            expect(scope.user).toBe(scope.adminToAdd);
             expect(scope.displayAddModal).toHaveBeenCalled();
         });
     });
@@ -431,7 +450,7 @@ describe("AdminController", function () {
             scope.listName = "badList";
             scope.displayRemoveFromGroupsModal(options);
 
-            expect(scope.memberToRemove).toEqual({ uhUuid: "testId" });
+            expect(scope.memberToRemove).toEqual({uhUuid: "testId"});
             expect(scope.groupPaths).toBe("testPath");
             expect(scope.listName).toBe("testList");
             expect(scope.ownerOfListName).toBe("");
@@ -449,6 +468,106 @@ describe("AdminController", function () {
             scope.displayRemoveFromGroupsModal(options);
 
             expect(gs.getMemberAttributes).toHaveBeenCalled();
+        });
+    });
+
+    describe("displayGroupingInNewTab", () => {
+        afterEach(() => {
+            sessionStorage.clear();
+        });
+
+        it("should set the items managePersonGrouping and personToLookup", () => {
+            spyOn(sessionStorage, "removeItem");
+            scope.personToLookup = "testId";
+            scope.displayGroupingInNewTab("testName", "testPath");
+            expect(JSON.parse(sessionStorage.getItem("managePersonGrouping")))
+                .toEqual({name: "testName", path: "testPath"});
+            expect(sessionStorage.getItem("personToLookup")).toBe(scope.personToLookup);
+        });
+
+        it("should remove the managePersonGrouping item from sessionStorage at the end", () => {
+            scope.personToLookup = "testId";
+            scope.displayGroupingInNewTab("testName", "testPath");
+            expect(sessionStorage.getItem("managePersonGrouping")).toBeNull();
+            expect(sessionStorage.getItem("personToLookup")).toBe(scope.personToLookup);
+        });
+
+        it("should open a new /admin tab", () => {
+            spyOn(window, "open");
+            scope.personToLookup = "testId";
+            scope.displayGroupingInNewTab("testGroupingName", "testGroupingPath");
+            expect(window.open).toHaveBeenCalledWith("admin");
+        });
+    });
+
+    describe("initManagePersonGrouping", () => {
+        const managePersonGrouping = {name: "testName", path: "testPath"};
+
+        beforeEach(() => {
+            spyOn(scope, "getGroupingInformation");
+            spyOn(scope, "toggleShowAdminTab");
+            sessionStorage.setItem("managePersonGrouping", JSON.stringify(managePersonGrouping));
+        });
+
+        it("should set fromManagePerson and showGrouping to true", () => {
+            scope.fromManagePerson = false;
+            scope.showGrouping = false;
+            scope.initManagePersonGrouping(managePersonGrouping);
+            expect(scope.fromManagePerson).toBeTrue();
+            expect(scope.showGrouping).toBeTrue();
+        });
+
+        it("should set scope.selectedGrouping to the managePersonGrouping passed in", () => {
+            scope.initManagePersonGrouping(managePersonGrouping);
+            expect(scope.selectedGrouping).toBe(managePersonGrouping);
+        });
+
+        it("should call scope.getGroupingInformation and scope.toggleShowAdminTab", () => {
+            scope.initManagePersonGrouping(managePersonGrouping);
+            expect(scope.getGroupingInformation).toHaveBeenCalled();
+            expect(scope.toggleShowAdminTab).toHaveBeenCalled();
+        });
+
+        it("should remove the managePersonGrouping item from sessionStorage", () => {
+            scope.initManagePersonGrouping(managePersonGrouping);
+            expect(sessionStorage.getItem("managePersonGrouping")).toBeNull();
+        });
+    });
+
+    describe("returnToManagePerson", () => {
+        const personToLookup = "testId";
+
+        beforeEach(() => {
+            spyOn(scope, "searchForUserGroupingInformation");
+            spyOn(gs, "getAdminLists");
+            sessionStorage.setItem("personToLookup", personToLookup);
+        });
+
+        it("should set fromManagePerson and showGrouping to false", () => {
+            scope.fromManagePerson = true;
+            scope.showGrouping = true;
+            scope.returnToManagePerson();
+            expect(scope.fromManagePerson).toBeFalse();
+            expect(scope.showGrouping).toBeFalse();
+        });
+
+        it("should open the manage-person tab", () => {
+            spyOn($.fn, "tab");
+            spyOn(document, "getElementById");
+            scope.returnToManagePerson();
+            expect($.fn.tab).toHaveBeenCalledWith("show");
+            expect(document.getElementById).toHaveBeenCalledWith("manage-person-tab");
+        });
+
+        it("should set scope.personToLookup to personToLookup from sessionStorage", () => {
+            scope.returnToManagePerson();
+            expect(sessionStorage.getItem("personToLookup")).toBe(personToLookup);
+        });
+
+        it("should call scope.searchForUserGroupingInformation and gs.getAdminLists", () => {
+            scope.returnToManagePerson();
+            expect(scope.searchForUserGroupingInformation).toHaveBeenCalled();
+            expect(gs.getAdminLists).toHaveBeenCalled();
         });
     });
 });
