@@ -55,9 +55,11 @@
             $scope.loading = false;
         };
         $scope.searchForUserGroupingInformationOnErrorCallback = function (res) {
+            $scope.personList = [];
+            $scope.filter($scope.personList, "pagedItemsPerson", "currentPagePerson", $scope.personQuery, true);
+            $scope.user = $scope.personToLookup;
             $scope.loading = false;
             $scope.resStatus = res.status;
-            $scope.user = $scope.personToLookup;
         };
         /**
          * Fetch a list of memberships pertaining to $scope.personToLookUp.
@@ -78,8 +80,6 @@
                 // sets proper error message
                 if (!$scope.personToLookup) {
                     $scope.emptyInput = true;
-                } else {
-                    $scope.resStatus = 500;
                 }
                 $scope.loading = false;
                 $scope.user = $scope.personToLookup;
@@ -99,7 +99,7 @@
                 $scope.currentManagePerson = "(" + $scope.fullName + ", " + $scope.uid + ", " + $scope.uhUuid + ")";
             } else {
                 $scope.currentManagePerson = "";
-                $scope.resStatus = 500;
+                $scope.invalidInput = true;
             }
         };
 
@@ -139,6 +139,7 @@
             if (_.isEmpty($scope.selectedGroupingsPaths)) {
                 $scope.emptySelect = true;
             } else if ($scope.soleOwnerGroupingNames.length >= 1) {
+                $scope.soleOwnerGroupingNames = $scope.soleOwnerGroupingNames.join(", ");
                 $scope.displayRemoveErrorModal("owner");
             } else {
                 $scope.displayRemoveFromGroupsModal({
@@ -216,25 +217,30 @@
          * Adds a user to the admin list.
          */
         $scope.addAdmin = function () {
-            $scope.waitingForImportResponse = true;
             const sanitizedAdmin = $scope.sanitizer($scope.adminToAdd);
+            $scope.user = sanitizedAdmin;
+
             if (_.isEmpty(sanitizedAdmin)) {
-                // Todo : Error message pop up needs implementation.
                 $scope.emptyInput = true;
-            } else {
-                if (inAdminList(sanitizedAdmin)) {
-                    // Todo : Error message pop up needs implementation.
-                    $scope.member = sanitizedAdmin;
-                    $scope.listName = "admins";
-                    $scope.containsInput = true;
-                } else {
-                    $scope.displayAddModal({
-                        membersToAdd: sanitizedAdmin,
-                        listName: "admins"
-                    });
-                }
+                return;
             }
-            $scope.waitingForImportResponse = false;
+            if (inAdminList(sanitizedAdmin)) {
+                $scope.listName = "admins";
+                $scope.containsInput = true;
+                return;
+            }
+
+            groupingsService.invalidUhIdentifiers([sanitizedAdmin], (res) => {
+                if (!_.isEmpty(res)) {
+                    $scope.invalidInput = true;
+                    return;
+                }
+
+                $scope.displayAddModal({
+                    membersToAdd: sanitizedAdmin,
+                    listName: "admins"
+                });
+            });
         };
 
         /**
@@ -272,14 +278,14 @@
          * @param {object} options - the options object
          * @param {object} options.member - the user being removed
          * @param {string} options.groupPaths - groups the user is being removed from
-         * @param {string} options.listName - groups the user is being removed from
+         * @param {object} options.listName - groups the user is being removed from
          */
         $scope.displayRemoveFromGroupsModal = function (options) {
             const memberToRemove = options.member.uhUuid;
             const sanitizedUser = $scope.sanitizer(memberToRemove);
             $scope.memberToRemove = options.member;
             $scope.groupPaths = options.groupPaths;
-            $scope.listName = options.listName;
+            $scope.listName = options.listName.join(", ");
             $scope.ownerOfListName = $scope.selectedOwnedGroupingsNames.join(", ");
 
             const windowClass = $scope.showWarningRemovingSelf() ? "modal-danger" : "";
