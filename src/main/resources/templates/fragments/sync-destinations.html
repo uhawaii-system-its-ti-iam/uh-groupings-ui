@@ -18,6 +18,7 @@
                                 <span class="fa fa-question-circle" role="button"
                                       tooltip="{{syncDest.tooltip}}" data-placement="right"
                                       tabindex="0"
+                                      aria-label="{{syncDest.tooltip}}"
                                       th:attr="ng-click='displayPreferenceInfoModal(syncDest.tooltip)',
                                       ng-keypress='$event.keyCode === 13 ? displayPreferenceInfoModal(syncDest.tooltip) : null'">
                                 </span>

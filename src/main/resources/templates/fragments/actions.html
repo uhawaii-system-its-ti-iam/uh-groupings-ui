@@ -27,6 +27,7 @@
                             <span class="fa fa-question-circle" role="button"
                                   data-toggle="tooltip" data-placement="right"
                                   tabindex="0"
+                                  th:aria-label="#{screen.message.common.tooltip.actions.resetGroup}"
                                   th:title="#{screen.message.common.tooltip.actions.resetGroup}"
                                   th:attr="ng-click='displayPreferenceInfoModal(\'' + #{screen.message.common.tooltip.actions.resetGroup} + '\')',
                                   ng-keypress='$event.keyCode === 13 ? displayPreferenceInfoModal(\'' + #{screen.message.common.tooltip.actions.resetGroup} + '\') : null'">

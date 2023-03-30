@@ -53,6 +53,7 @@
                         <span ng-if="groupingOwners.length === 1">
                             <span class="far fa-trash-alt fa-pull-right pt-1 fa-trash-alt-disabled" role="button"
                                   tooltip data-placement="top"
+                                  aria-label="The last owner cannot be removed from the Owner members list"
                                   th:title="#{screen.message.common.tooltip.remove.warning}">
                             </span>
                         </span>
@@ -75,7 +76,7 @@
             <div class="col-lg-4 pl-0 pr-0 mt-lg-0 mt-2">
                 <form>
                     <div class="input-group long">
-                        <div id = "memSearch">
+                        <div class="memSearch">
                         <input class="form-control" placeholder="UH Username or UH Number" type="search"
                                ng-init="dismissErrors()"  aria-required="true"
                                ng-blur="dismissErrors()"
@@ -84,7 +85,7 @@
                                aria-label="Enter one or more UH members to add to the Owners list"
                                id="owner-input"/>
                         </div>
-                        <div id = "memBtns">
+                        <div class="memBtns">
                             <button class="btn btn-primary add-margin"
                                     ng-click="addOnClick('owners')">
                                 Add
@@ -102,7 +103,7 @@
             </div>
         </div>
         <div th:replace="fragments/add-error-messages :: add-error-messages"></div>
-        <div id = "pageBtn" class="mt-lg-0 mt-2">
+        <div class="pageBtn mt-lg-0 mt-2">
             <div th:replace="fragments/pagination :: pagination (currentPage = 'currentPageOwners', pagedItems='pagedItemsOwners')"></div>
         </div>
     </div>
