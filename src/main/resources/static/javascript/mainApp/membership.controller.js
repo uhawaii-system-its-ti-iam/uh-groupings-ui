@@ -40,7 +40,7 @@
                     $scope.loading = false;
                 },
                 (res) => {
-                    $scope.createApiErrorModal();
+                    $scope.displayApiErrorModal();
                 }
             );
 
@@ -58,7 +58,7 @@
                     $scope.filter($scope.optInList, "pagedItemsOptInList", "currentPageOptIn", $scope.optInQuery, true);
                 },
                 (res) => {
-                    $scope.createApiErrorModal();
+                    $scope.displayApiErrorModal();
                 }
             );
         };
@@ -84,17 +84,17 @@
             if (res.resultCode === "SUCCESS") {
                 $scope.init();
             } else {
-                $scope.createOptErrorModal();
+                $scope.displayOptErrorModal();
             }
             $scope.clearFilterQueryStrings();
         }
 
         function handleUnsuccessfulOpt(res) {
             $scope.clearFilterQueryStrings();
-            $scope.createOptErrorModal(res);
+            $scope.displayOptErrorModal(res);
         }
 
-        $scope.createOptErrorModal = function () {
+        $scope.displayOptErrorModal = function () {
             $scope.loading = false;
             $scope.optErrorModalInstance = $uibModal.open({
                 templateUrl: "modal/optErrorModal",

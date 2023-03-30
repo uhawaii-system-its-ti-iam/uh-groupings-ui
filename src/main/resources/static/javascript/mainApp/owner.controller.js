@@ -24,7 +24,7 @@
 
                 $scope.loading = false;
             }, function (res) {
-                $scope.createApiErrorModal();
+                $scope.displayApiErrorModal();
                 // dataProvider.handleException({ exceptionMessage: JSON.stringify(res, null, 4) }, "feedback/error", "feedback");
             });
         };

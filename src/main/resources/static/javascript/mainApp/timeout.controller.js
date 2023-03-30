@@ -4,13 +4,13 @@
 
     /**
      * Controller for the timeout functionality. When a user is idle for more than 30 min, user will be logged out.
-     * Also creates timeout warning modal when 5 minutes are left in the timer.
+     * Also displays timeout warning modal when 5 minutes are left in the timer.
      *
      * If user clicks or presses any key within the 30 min of inactivity, timer is reset.
      *
      * @param $scope - Binding between controller and HTML page
      * @param $window - A reference to the browser's window object
-     * @param $uibModal - Creates modal
+     * @param $uibModal - Displays modal
      * @param dataProvider - Used for HTTP requests
      * @param BASE_URL - Base url for api calls
      * @param $timeout - AngularJS wrapper for window.setTimeout, used to implement session timeout
@@ -21,7 +21,7 @@
 
         angular.extend(this, $controller("GeneralJsController", { $scope }));
 
-        let createTimeoutModalPromise = {};
+        let displayTimeoutModalPromise = {};
         let countdownTimerPromise = {};
         let isModalOpen = false;
         const MAX_TIME_IDLE = 1000 * 60 * 25; // Time until modal opens - 25 minutes in milliseconds
@@ -43,17 +43,17 @@
         }
 
         /**
-         * Restart createTimeoutModalPromise.
+         * Restart displayTimeoutModalPromise.
          */
         function restartTimeouts() {
-            if (angular.isDefined(createTimeoutModalPromise)) {
-                createTimeoutModalPromise = {};
-                createTimeoutModalPromise = $timeout(() => {
-                    $scope.createTimeoutModal();
+            if (angular.isDefined(displayTimeoutModalPromise)) {
+                displayTimeoutModalPromise = {};
+                displayTimeoutModalPromise = $timeout(() => {
+                    $scope.displayTimeoutModal();
                 }, MAX_TIME_IDLE);
 
-                createTimeoutModalPromise.then(() => {
-                    // timeout ends and modal is created
+                displayTimeoutModalPromise.then(() => {
+                    // timeout ends and modal is displayed
                 }, () => {
                     // User resets timer or function execution fails
                     restartTimeouts();
@@ -63,12 +63,12 @@
 
         angular.element(function () {
             // Start timeouts
-            createTimeoutModalPromise = $timeout(() => {
-                $scope.createTimeoutModal();
+            displayTimeoutModalPromise = $timeout(() => {
+                $scope.displayTimeoutModal();
             }, MAX_TIME_IDLE);
 
-            // Attach callback when the createTimeoutModalPromise is canceled
-            createTimeoutModalPromise.then(() => {
+            // Attach callback when the displayTimeoutModalPromise is canceled
+            displayTimeoutModalPromise.then(() => {
                 // Timeout ends and function is executed
             }, () => {
                 // User resets timer or function execution failed
@@ -78,13 +78,13 @@
             // If user clicks, reset timeout
             $(this).click(function (e) {
                 if (!isModalOpen) {
-                    $timeout.cancel(createTimeoutModalPromise);
+                    $timeout.cancel(displayTimeoutModalPromise);
                 }
             });
             // If user presses a key on the keyboard reset timeout
             $(this).keypress(function (e) {
                 if (!isModalOpen) {
-                    $timeout.cancel(createTimeoutModalPromise);
+                    $timeout.cancel(displayTimeoutModalPromise);
                 }
             });
         });
@@ -93,9 +93,9 @@
          * Clear timeouts and intervals when DOM is destroyed.
          */
         $scope.$on("$destroy", function (event) {
-            if (angular.isDefined(createTimeoutModalPromise)) {
-                $timeout.cancel(createTimeoutModalPromise);
-                createTimeoutModalPromise = {};
+            if (angular.isDefined(displayTimeoutModalPromise)) {
+                $timeout.cancel(displayTimeoutModalPromise);
+                displayTimeoutModalPromise = {};
             }
             if (angular.isDefined(countdownTimerPromise)) {
                 $timeout.cancel(countdownTimerPromise);
@@ -126,9 +126,9 @@
         }
 
         /**
-         * Create timeout modal.
+         * Display a timeout modal.
          */
-        $scope.createTimeoutModal = function () {
+        $scope.displayTimeoutModal = function () {
             $scope.timeoutModalInstance = $uibModal.open({
                 templateUrl: "modal/timeoutModal",
                 scope: $scope,
