@@ -95,10 +95,10 @@
 
             /**
              * PUT data to the server, if the response is OK then call the callBack function, if the response is an
-             * error then call the callError function. If the response is not received in n seconds, launch a modal.
+             * error then call the callError function. If the response is not received in n seconds, display a modal.
              * @param {string} url - Path to which data is being posted too.
              * @param {string} data - data to be updated
-             * @param {function} modal - Launch a modal using a call back function.
+             * @param {function} modal - Display a modal using a call back function.
              * @param {function} callback - Execute if response returns OK
              * @param {function} callError - Execute if response returns as an error.
              */

@@ -267,7 +267,7 @@
         }
 
         /**
-         * Create a modal that prompts the user whether they want to delete the user or not. If 'Yes' is pressed, then
+         * Display a modal that prompts the user whether they want to delete the user or not. If 'Yes' is pressed, then
          * a request is made to delete the user.
          * @param {object} options - the options object
          * @param {object} options.member - the user being removed
