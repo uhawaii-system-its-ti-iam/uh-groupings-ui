@@ -17,10 +17,10 @@
                 </button>
             </div>
             <button type="button" class="btn btn-primary dropdown-toggle-split dropdown-toggle" data-toggle="dropdown"
-                    aria-haspopup="true" aria-expanded="false"
+                    aria-label="More export options" aria-haspopup="true" aria-expanded="false"
                     ng-disabled="!paginatingComplete || (groupingMembers.length === 0 && groupingExclude.length === 0)">
             </button>
-            <div class="dropdown-menu dropdown-menu-right">
+            <ul class="dropdown-menu dropdown-menu-right">
                 <li ng-show="groupingBasis.length > 0">
                     <label class="dropdown-item" ng-click="exportGroupToCsv(groupingBasis, 'basis')">
                         <i class="far fa-id-card mr-1"></i>
@@ -39,7 +39,7 @@
                         Export Exclude list
                     </label>
                 </li>
-            </div>
+            </ul>
         </div>
     </div>
 
@@ -87,7 +87,7 @@
                                            maxlength="{{ maxDescriptionLength }}"
                                            ng-trim="false"/>
                                     <span ng-show="descriptionForm" class="grouping-description-form">
-                                        <button type="button"
+                                        <button type="button" aria-label="Save description"
                                                 class="description-form-button"
                                                 tooltip="Save description" data-placement="top"
                                                 ng-click="saveDescription()">
@@ -95,7 +95,7 @@
                                         </button>
                                     </span>
                                     <span ng-show="descriptionForm" class="grouping-description-form">
-                                        <button type="button"
+                                        <button type="button" aria-label="Cancel changes"
                                                 class="description-form-button rounded-right"
                                                 tooltip="Cancel changes" data-placement="top"
                                                 ng-click="cancelDescriptionEdit()">

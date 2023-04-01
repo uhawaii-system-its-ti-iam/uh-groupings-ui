@@ -27,7 +27,7 @@
             </div>
         </div>
     </div>
-    <input type="file" ng-model="inputFile" file-model="inputFile" accept="text/plain">
+    <input type="file" ng-model="inputFile" aria-label="Choose File" file-model="inputFile" accept="text/plain">
     <button class="btn btn-primary" ng-click="readTextFile(inputFile); cancelImportModal()">
         Import
     </button>
