@@ -142,17 +142,17 @@ describe("MembershipController", function () {
         });
     });
 
-    describe("createOptErrorModal", () => {
-        it("should check that the createOptErrorModal is launched", () => {
+    describe("displayOptErrorModal", () => {
+        it("should check that the displayOptErrorModal is displayed", () => {
             spyOn(uibModal, "open").and.callThrough();
-            scope.createOptErrorModal();
+            scope.displayOptErrorModal();
             expect(uibModal.open).toHaveBeenCalled();
         });
     });
 
     describe("closeOptErrorModal", () => {
         beforeEach(() => {
-            scope.createOptErrorModal();
+            scope.displayOptErrorModal();
         });
 
         it("should close the opt error modal", () => {
