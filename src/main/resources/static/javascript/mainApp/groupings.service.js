@@ -66,7 +66,7 @@
             },
 
             /**
-             * Add a members to the include group of a grouping. A modal is passed in an launched after a certain amount
+             * Add a members to the include group of a grouping. A modal is passed in and displayed after a certain amount
              * of time has elapsed.
              */
             addMembersToInclude(members, path, onSuccess, onError) {
@@ -75,7 +75,7 @@
             },
 
             /**
-             * Add a members to the include group of a grouping. A modal is passed in an launched after a certain amount
+             * Add a members to the include group of a grouping. A modal is passed in and displayed after a certain amount
              * of time has elapsed.
              */
             addMembersToIncludeAsync(members, path, onSuccess, onError, modal) {
@@ -86,7 +86,7 @@
             },
 
             /**
-             * Add a members to the exclude group of a grouping. A modal is passed in an launched after a certain amount
+             * Add a members to the exclude group of a grouping. A modal is passed in and displayed after a certain amount
              * of time has elapsed.
              */
             addMembersToExclude(members, path, onSuccess, onError) {
@@ -94,7 +94,7 @@
                 dataProvider.updateDataWithBody(endpoint, members, onSuccess, onError);
             },
             /**
-             * Add a members to the exclude group of a grouping. A modal is passed in an launched after a certain amount
+             * Add a members to the exclude group of a grouping. A modal is passed in and displayed after a certain amount
              * of time has elapsed.
              */
             addMembersToExcludeAsync(members, path, onSuccess, onError, modal) {
@@ -129,7 +129,7 @@
             },
 
             /**
-             * Remove members from include group of grouping. A modal is passed in an launched after a certain amount
+             * Remove members from include group of grouping. A modal is passed in and displayed after a certain amount
              * of time has elapsed.
              */
             removeMembersFromInclude(path, members, onSuccess, onError) {
@@ -138,7 +138,7 @@
             },
 
             /**
-             * Remove members from exclude group of grouping. A modal is passed in an launched after a certain amount
+             * Remove members from exclude group of grouping. A modal is passed in and displayed after a certain amount
              * of time has elapsed.
              */
             removeMembersFromExclude(path, members, onSuccess, onError) {
