@@ -565,14 +565,13 @@
             compositeGroup.forEach((member) => {
                 const memberUhUuid = member.uhUuid;
                 if (_.some($scope.groupingBasis, { uhUuid: memberUhUuid })) {
-
                     member.whereListed = "Basis";
                 }
 
                 if (_.some($scope.groupingInclude, { uhUuid: memberUhUuid })) {
-                    member.whereListed = _.isUndefined(member.whereListed)
-                        ? "Include"
-                        : "Basis & Include";
+                    member.whereListed = member.hasOwnProperty("whereListed") && member.whereListed === "Basis"
+                        ? "Basis & Include"
+                        : "Include";
                 }
             });
         };

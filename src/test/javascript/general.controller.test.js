@@ -545,6 +545,15 @@ describe("GeneralController", () => {
 
             expect(scope.groupingMembers[0].whereListed).toEqual("Basis & Include");
         });
+
+        it("should keep the same value for the 'whereListed' key when called with addWhereListed again", () => {
+            for (let i = 0; i < 3; i++) {
+                scope.addWhereListed(scope.groupingMembers);
+                expect(scope.groupingMembers[0].whereListed).toEqual("Basis & Include");
+                expect(scope.groupingMembers[1].whereListed).toEqual("Include");
+                expect(scope.groupingMembers[2].whereListed).toEqual("Include");
+            }
+        });
     });
 
     describe("displayImportModal", () => {
