@@ -1891,6 +1891,7 @@
             $scope.emptyInput = false;
             $scope.emptySelect = false;
             $scope.containsInput = false;
+            $scope.invalidInput = false;
             $scope.inGrouper = false;
             $scope.addInputError = false;
             $scope.removeInputError = false;

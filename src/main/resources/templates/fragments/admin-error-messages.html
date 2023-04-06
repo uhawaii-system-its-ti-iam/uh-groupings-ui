@@ -3,22 +3,28 @@
     <div ng-show="!errorDismissed && !loading">
         <!--message for empty input-->
         <div ng-if="emptyInput"
-             class="mt-2 mb-n1 alert alert-danger form-alert fade show"
+             class="float-md-left my-3 px-3 pt-2 rounded alert-danger show"
              role="alert">
             <p th:utext="#{screen.message.modal.search.empty}"></p>
         </div>
         <!--message for invalid input-->
-        <div ng-if="!emptyInput && (resStatus === 404 || resStatus === 500)"
-             class="mt-2 mb-n1 alert alert-danger fade show">
+        <div ng-if="invalidInput"
+             class="float-md-left my-3 px-3 pt-2 rounded alert-danger show"
+             role="alert">
             <p th:text="#{screen.message.modal.search.fail}"></p>
             <p th:text="#{screen.message.modal.search.ensureValid}"></p>
         </div>
+        <!--message for adding an uhIdentifier that is already an admin-->
+        <div ng-if="containsInput"
+             class="float-md-left my-3 px-3 pt-2 rounded alert-danger show"
+             role="alert">
+            <p th:text="#{screen.message.modal.add.preExisting.admin}"></p>
+        </div>
         <!--message for no groupings result-->
-        <div ng-if="!emptyInput && !(resStatus === 404 || resStatus === 500)
-         && personList.length <= 0"
-             class="mt-2 mb-n1 alert alert-danger form-alert fade show">
+        <div ng-if="resStatus && personToLookup.length > 0 && personList.length <= 0"
+             class="float-md-left my-3 px-3 pt-2 rounded alert-danger show">
             <p th:text="#{screen.message.modal.search.noResults}"></p>
         </div>
-
     </div>
+
 </th:block>
