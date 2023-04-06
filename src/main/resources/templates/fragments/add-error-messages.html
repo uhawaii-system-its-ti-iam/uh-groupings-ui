@@ -24,10 +24,7 @@
         <!--message for adding a member already in Include or Exclude or Owner -->
         <div ng-if="containsInput"
              class="float-md-left my-3 px-3 pt-2 h-50 rounded alert-danger show">
-            <p ng-if="listName !== 'admins'"
-               th:text="#{screen.message.modal.add.preExisting}"></p>
-            <p ng-if="listName === 'admins'"
-               th:text="#{screen.message.modal.add.preExisting.admin}"></p>
+            <p th:text="#{screen.message.modal.add.preExisting}"></p>
         </div>
     </div>
 </th:block>
