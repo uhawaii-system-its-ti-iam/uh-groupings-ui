@@ -1333,9 +1333,9 @@
          */
         function handleOwnerRemove() {
             // Reload the grouping if you are not removing yourself, or if deleting anyone from the admins page
-            if (!$scope.membersToRemove.includes($scope.currentUser.uhUuid) || !_.isUndefined($scope.adminsList)) {
+            if (!($scope.membersToRemove.includes($scope.currentUser.uhUuid) || $scope.membersToRemove.includes($scope.currentUser.uid)) || !_.isUndefined($scope.adminsList)) {
                 handleSuccessfulRemove();
-            } else if ($scope.membersToRemove.includes($scope.currentUser.uhUuid)) {
+            } else {
                 // Removing self from last grouping owned -> redirect to home page and then logout
                 if ($scope.groupingsList.length === 1) {
                     $scope.proceedLogoutUser();
