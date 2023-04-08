@@ -7,7 +7,9 @@ describe("AdminController", function () {
 
   let scope;
   let controller;
+  let BASE_URL;
   let gs;
+  let httpBackend;
   let uibModal;
 
   let fakeModal = {
@@ -27,12 +29,14 @@ describe("AdminController", function () {
     }
   };
 
-  beforeEach(inject(($rootScope, $controller, $uibModal, groupingsService) => {
+  beforeEach(inject(($rootScope, $controller, $uibModal, _BASE_URL_, _$httpBackend_, groupingsService) => {
     scope = $rootScope.$new();
     controller = $controller("AdminJsController", {
       $scope: scope
     });
+    BASE_URL = _BASE_URL_;
     gs = groupingsService;
+    httpBackend = _$httpBackend_;
     uibModal = $uibModal;
     spyOn($uibModal, "open").and.returnValue(fakeModal);
   }));
@@ -187,30 +191,30 @@ describe("AdminController", function () {
             scope.searchForUserGroupingInformation();
             expect(gs.getMemberAttributes).toHaveBeenCalled();
         });
-        it("should set the resStatus to 500 and clear table", () => {
+        it("should clear the table", () => {
             scope.personToLookup = "j";
             scope.searchForUserGroupingInformation();
-            expect(scope.resStatus).toEqual(500);
             expect(scope.personList).toEqual([]);
 
             scope.personToLookup = "*";
             scope.searchForUserGroupingInformation();
-            expect(scope.resStatus).toEqual(500);
             expect(scope.personList).toEqual([]);
         });
     });
 
     describe("setCurrentManagePerson", () => {
-        it("should not set currentManagePerson and set resStatus to 500", () => {
+        it("should not set currentManagePerson and set invalidInput to true", () => {
             scope.uhUuid = null;
+            scope.invalidInput = false;
             scope.setCurrentManagePerson("");
-            expect(scope.resStatus).toEqual(500);
+            expect(scope.invalidInput).toBeTrue();
             expect(scope.currentManagePerson).toEqual("");
         });
-        it("should set currentManagePerson and not set resStatus", () => {
+        it("should set currentManagePerson and not set invalidInput", () => {
             scope.uhUuid = "notnull";
+            scope.invalidInput = false;
             scope.setCurrentManagePerson("iamtst");
-            expect(scope.resStatus).toEqual(0);
+            expect(scope.invalidInput).toBeFalse();
             expect(scope.currentManagePerson).not.toEqual("");
         });
     });
@@ -353,10 +357,8 @@ describe("AdminController", function () {
     });
 
     describe("addAdmin", () => {
-        it("should check that the admin to add is in the admin list", () => {
-            scope.adminToAdd = "iamtst01";
-            scope.addAdmin();
-            expect(scope.listName).toBe("admins");
+        beforeEach(() => {
+            httpBackend.whenGET(BASE_URL + "currentUser").passThrough();
         });
 
         it("should check if the admin to add is empty", () => {
@@ -365,11 +367,25 @@ describe("AdminController", function () {
             expect(scope.emptyInput).toBeTrue();
         });
 
-        it("should set waitingForImportResponse to false", () => {
-            scope.waitingForImportResponse = true;
+        it("should check that the admin to add is in the admin list", () => {
+            scope.containsInput = false;
+            scope.adminToAdd = "iamtst01";
+            scope.adminsList = [{username: "iamtst01", uhUuid: "iamtst01"}];
             scope.addAdmin();
-            expect(scope.waitingForImportResponse).toBeFalse();
 
+            expect(scope.listName).toBe("admins");
+            expect(scope.containsInput).toBeTrue();
+        });
+
+        it("should display the add modal", () => {
+            spyOn(scope, "displayAddModal");
+            scope.adminToAdd = "iamtst01";
+            scope.addAdmin();
+
+            httpBackend.expectPOST(BASE_URL + "members/invalid", ["iamtst01"]).respond(200, []);
+            httpBackend.flush();
+            
+            expect(scope.displayAddModal).toHaveBeenCalled();
         });
     });
 
@@ -407,7 +423,7 @@ describe("AdminController", function () {
     });
 
     describe("displayRemoveFromGroupsModal", () => {
-        let options = { member: { uhUuid: "testId" }, groupPaths: "testPath", listName: "testList" };
+        let options = { member: { uhUuid: "testId" }, groupPaths: "testPath", listName: ["testList"] };
 
         it("should set scope variables to passed in option's object", () => {
             scope.memberToRemove = {};
