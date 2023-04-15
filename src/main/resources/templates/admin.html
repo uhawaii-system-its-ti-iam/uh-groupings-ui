@@ -14,15 +14,15 @@
             <p class="lead text-center text-md-left" th:utext="#{screen.message.admin.page.description}"></p>
             <ul class="nav nav-tabs flex-sm-row flex-column" role="tablist" id="adminTab" ng-show="showAdminTab">
                 <li role="presentation" class="nav-item">
-                    <a href="#manage-groupings" data-toggle="tab" class="nav-link active tab-color" role="tab">
+                    <a href="#manage-groupings" id="manage-groupings-tab" data-toggle="tab" class="nav-link active tab-color" role="tab">
                         Manage Groupings
                     </a>
                 <li class="nav-item" role="presentation">
-                    <a href="#manage-admins" data-toggle="tab" class="nav-link tab-color" role="tab">
+                    <a href="#manage-admins" id="manage-admins-tab" data-toggle="tab" class="nav-link tab-color" role="tab">
                         Manage Admins
                     </a>
-                <li class="nav-item" role="presentation" ng-click="displayPerson()">
-                    <a href="#manage-person" data-toggle="tab" class="nav-link tab-color" role="tab">
+                <li class="nav-item" role="presentation">
+                    <a href="#manage-person" id="manage-person-tab" data-toggle="tab" class="nav-link tab-color" role="tab">
                         Manage Person
                     </a>
                 </li>
@@ -211,7 +211,7 @@
                         </div>
                     </div>
                     <div class="table-responsive-sm">
-                        <table class="table manage-admins table-striped table-hover table-md" aria-live="assertive">
+                        <table class="table manage-person table-striped table-hover table-md" aria-live="assertive">
                             <thead>
                             <tr>
                                 <th ng-click="sortBy('personList', 'pagedItemsPerson', 'name')" class="clickable">
@@ -236,6 +236,8 @@
                             <tbody class="table table-borderless">
                             <tr ng-repeat="l in pagedItemsPerson[currentPagePerson]" class="table table-sm">
                                 <td class="p-10">
+                                    <i class="fa fa-fw fa-external-link-alt clickable" tooltip="Manage grouping"
+                                    ng-click="displayGroupingInNewTab(l.name, l.path)"></i>
                                     {{l.name}}
                                 </td>
                                 <td class="p-11">
