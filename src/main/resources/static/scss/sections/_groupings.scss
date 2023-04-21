@@ -92,7 +92,7 @@
     padding-right: 4px;
     width: 50%;
 }
-@media (max-width: 768px) {
+@include media-breakpoint(max-landscape-phone) {
     .memBtns {
         position: relative;
         top: 50px;
