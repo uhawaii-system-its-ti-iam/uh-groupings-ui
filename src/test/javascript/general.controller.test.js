@@ -205,6 +205,9 @@ describe("GeneralController", () => {
         scope.listserv = true;
         scope.allowOptIn = true;
         scope.allowOptOut = true;
+
+        scope.pagedItemsPerson = [];
+        scope.currentPagePerson = 0;
     });
 
     describe("displayGrouping", () => {
@@ -2202,8 +2205,27 @@ describe("GeneralController", () => {
 
         it("should dismiss removeModalInstance", () => {
             spyOn(scope.removeModalInstance, "dismiss").and.callThrough();
+            spyOn(scope, "clearCheckboxes").and.callThrough();
             scope.cancelRemoveModal();
             expect(scope.removeModalInstance.dismiss).toHaveBeenCalled();
+            expect(scope.clearCheckboxes).toHaveBeenCalled();
+        });
+    });
+
+    describe("clearCheckboxes", () => {
+        beforeEach(() => {
+            scope.pagedItemsPerson[scope.currentPagePerson] = {
+                inBasis: false,
+                inExclude: false,
+                inInclude: true,
+                isSelected: true
+            };
+        });
+
+        it("should negate scope.checkAll", () => {
+            let checkAll = scope.checkAll;
+            scope.clearCheckboxes();
+            expect(scope.checkAll).toEqual(false);
         });
     });
 
@@ -2252,8 +2274,10 @@ describe("GeneralController", () => {
 
         it("should close removeErrorModalInstance", () => {
             spyOn(scope.removeErrorModalInstance, "close").and.callThrough();
+            spyOn(scope, "clearCheckboxes").and.callThrough();
             scope.closeRemoveErrorModal();
             expect(scope.removeErrorModalInstance.close).toHaveBeenCalled();
+            expect(scope.clearCheckboxes).toHaveBeenCalled();
         });
     });
 
