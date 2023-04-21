@@ -29,8 +29,8 @@ public class EmailServiceTest {
 
     private Feedback createBaseFeedback() {
         Feedback feedback = new Feedback();
-        feedback.setName("John Doe");
-        feedback.setEmail("jdoe@hawaii.edu");
+        feedback.setName("Test Iwa");
+        feedback.setEmail("testiwa@hawaii.edu");
         feedback.setType("problem");
         feedback.setMessage("Some problem happened.");
         feedback.setExceptionMessage("");
@@ -61,8 +61,8 @@ public class EmailServiceTest {
         assertThat(wasSent, is(true));
 
         assertThat(messageSent.getSubject(), containsString("problem"));
-        assertThat(messageSent.getText(), containsString("John Doe"));
-        assertThat(messageSent.getText(), containsString("jdoe@hawaii.edu"));
+        assertThat(messageSent.getText(), containsString("Test Iwa"));
+        assertThat(messageSent.getText(), containsString("testiwa@hawaii.edu"));
         assertThat(messageSent.getText(), containsString("Some problem happened."));
         assertThat(messageSent.getText(), not(containsString("Stack Trace:")));
     }
@@ -76,8 +76,8 @@ public class EmailServiceTest {
         assertThat(wasSent, is(true));
 
         assertThat(messageSent.getSubject(), containsString("problem"));
-        assertThat(messageSent.getText(), containsString("John Doe"));
-        assertThat(messageSent.getText(), containsString("jdoe@hawaii.edu"));
+        assertThat(messageSent.getText(), containsString("Test Iwa"));
+        assertThat(messageSent.getText(), containsString("testiwa@hawaii.edu"));
         assertThat(messageSent.getText(), containsString("Some problem happened."));
         assertThat(messageSent.getText(), containsString("Stack Trace:"));
         assertThat(messageSent.getText(), containsString("ArrayIndexOutOfBoundsException"));
@@ -91,8 +91,8 @@ public class EmailServiceTest {
         assertThat(wasSent, is(true));
 
         assertThat(messageSent.getSubject(), containsString("problem"));
-        assertThat(messageSent.getText(), containsString("John Doe"));
-        assertThat(messageSent.getText(), containsString("jdoe@hawaii.edu"));
+        assertThat(messageSent.getText(), containsString("Test Iwa"));
+        assertThat(messageSent.getText(), containsString("testiwa@hawaii.edu"));
         assertThat(messageSent.getText(), containsString("Some problem happened."));
         assertThat(messageSent.getText(), containsString(""));
         assertThat(messageSent.getText(), containsString(""));

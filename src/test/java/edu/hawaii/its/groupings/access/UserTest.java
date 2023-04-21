@@ -45,20 +45,20 @@ public class UserTest {
     @Test
     public void accessors() {
         Map<Object, Object> map = new HashMap<>();
-        map.put("uid", "duckart");
+        map.put("uid", "testiwc");
         map.put("uhUuid", "666666");
-        map.put("cn", "Frank6");
-        map.put("givenName", "Frank");
-        map.put("mail", "frank@example.com");
+        map.put("cn", "IamtstC1");
+        map.put("givenName", "IamtstC");
+        map.put("mail", "iamtstc@example.com");
         map.put("eduPersonAffiliation", "aff");
 
         Set<GrantedAuthority> authorities = new LinkedHashSet<>();
         User user = new User("a", authorities);
         user.setAttributes(new UhAttributes(map));
 
-        assertThat(user.getAttribute("uid"), is("duckart"));
-        assertThat(user.getName(), is("Frank6"));
-        assertThat(user.getGivenName(), is("Frank"));
+        assertThat(user.getAttribute("uid"), is("testiwc"));
+        assertThat(user.getName(), is("IamtstC1"));
+        assertThat(user.getGivenName(), is("IamtstC"));
         assertThat(user.toString(), containsString("uid=a"));
         assertThat(user.toString(), containsString("uhUuid=null"));
     }

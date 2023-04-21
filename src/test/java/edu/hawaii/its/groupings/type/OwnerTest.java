@@ -20,22 +20,22 @@ public class OwnerTest {
 
     @Test
     public void construction() {
-        owner = new Owner("James T Kirk");
-        assertThat(owner.getPrivilegeName(), is("James T Kirk"));
+        owner = new Owner("Test I Wa");
+        assertThat(owner.getPrivilegeName(), is("Test I Wa"));
     }
 
     @Test
     public void name() {
         assertNull(owner.getName());
-        owner.setName("frank");
-        assertThat(owner.getName(), is("frank"));
+        owner.setName("imtsta");
+        assertThat(owner.getName(), is("imtsta"));
     }
 
     @Test
     public void privilegeName() {
         assertNull(owner.getPrivilegeName());
-        owner.setPrivilegeName("frd");
-        assertThat(owner.getPrivilegeName(), is("frd"));
+        owner.setPrivilegeName("iwa");
+        assertThat(owner.getPrivilegeName(), is("iwa"));
     }
 
     @Test
@@ -54,7 +54,7 @@ public class OwnerTest {
 
     @Test
     public void testToString() {
-        owner.setPrivilegeName("duke");
-        assertThat(owner.toString(), containsString("Owner [privilegeName=duke,"));
+        owner.setPrivilegeName("tsta");
+        assertThat(owner.toString(), containsString("Owner [privilegeName=tsta,"));
     }
 }

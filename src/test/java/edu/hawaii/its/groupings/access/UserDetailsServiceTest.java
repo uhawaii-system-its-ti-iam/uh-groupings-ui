@@ -68,9 +68,9 @@ public class UserDetailsServiceTest {
 
         // Make up a user.
         Map<String, Object> map = new HashMap<>();
-        map.put("uid", "levia");
+        map.put("uid", "testiwe");
         map.put("uhUuid", uhUuid);
-        AttributePrincipal principal = new AttributePrincipalImpl("levia", map);
+        AttributePrincipal principal = new AttributePrincipalImpl("testiwe", map);
         Assertion assertion = new AssertionImpl(principal);
         CasUserDetailsServiceImpl userDetailsService = new CasUserDetailsServiceImpl(userBuilder);
 
@@ -85,8 +85,8 @@ public class UserDetailsServiceTest {
         User user = (User) userDetailsService.loadUserDetails(assertion);
 
         // Basics.
-        assertThat(user.getUsername(), is("levia"));
-        assertThat(user.getUid(), is("levia"));
+        assertThat(user.getUsername(), is("testiwe"));
+        assertThat(user.getUid(), is("testiwe"));
         assertThat(user.getUhUuid(), is("89999999"));
 
         // Granted Authorities.
@@ -103,13 +103,13 @@ public class UserDetailsServiceTest {
 
     @Test
     public void testOwner() {
-        final String uid = "jjcale";
+        final String uid = "testiwd";
         final String uhUuid = "90000000";
         Map<String, Object> map = new HashMap<>();
         map.put("uid", uid);
         map.put("uhUuid", uhUuid);
 
-        AttributePrincipal principal = new AttributePrincipalImpl("jjcale", map);
+        AttributePrincipal principal = new AttributePrincipalImpl("testiwd", map);
         Assertion assertion = new AssertionImpl(principal);
         CasUserDetailsServiceImpl userDetailsService = new CasUserDetailsServiceImpl(userBuilder);
 
@@ -124,8 +124,8 @@ public class UserDetailsServiceTest {
         User user = (User) userDetailsService.loadUserDetails(assertion);
 
         // Basics.
-       assertThat(user.getUsername(), is("jjcale"));
-       assertThat(user.getUid(), is("jjcale"));
+       assertThat(user.getUsername(), is("testiwd"));
+       assertThat(user.getUid(), is("testiwd"));
        assertThat(user.getUhUuid(), is("90000000"));
 
         // Granted Authorities.
