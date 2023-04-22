@@ -96,62 +96,62 @@ describe("GroupingsService", function () {
     });
 
     describe("addMembersToInclude", function () {
-        let usersToAdd;
-
-        it("should call dataProvider.updateDataWithBody", function () {
-            spyOn(dp, "updateDataWithBody");
-            gs.addMembersToInclude(usersToAdd, groupingPath, onSuccess, onError);
-            expect(dp.updateDataWithBody).toHaveBeenCalled();
+        let usersToAdd = [];
+        let modal;
+        it("should call dataProvider.updateDataWithBodyAndTimeoutModal", function () {
+            spyOn(dp, "updateDataWithBodyAndTimeoutModal");
+            gs.addMembersToInclude(usersToAdd, groupingPath, onSuccess, onError, modal);
+            expect(dp.updateDataWithBodyAndTimeoutModal).toHaveBeenCalled();
         });
 
         it("should use the correct path", function () {
-            gs.addMembersToInclude(usersToAdd, groupingPath, onSuccess, onError);
+            gs.addMembersToInclude(usersToAdd, groupingPath, onSuccess, onError, modal);
             httpBackend.expectPUT(BASE_URL + groupingPath + "/addMembersToIncludeGroup").respond(200);
             expect(httpBackend.flush).not.toThrow();
         });
     });
 
     describe("addMembersToIncludeAsync", function () {
-        let usersToAdd;
+        let usersToAdd = [];
         let modal;
-        it("should call dataProvider.updateDataWithBodyAndTimeoutModal", function () {
-            spyOn(dp, "updateDataWithBodyAndTimeoutModal");
+        it("should call dataProvider.updateDataWithBodyAndTimeoutModalAsync", function () {
+            spyOn(dp, "updateDataWithBodyAndTimeoutModalAsync");
             gs.addMembersToIncludeAsync(usersToAdd, groupingPath, onSuccess, onError, modal);
-            expect(dp.updateDataWithBodyAndTimeoutModal).toHaveBeenCalled();
+            expect(dp.updateDataWithBodyAndTimeoutModalAsync).toHaveBeenCalled();
         });
-
         it("should use the correct path", function () {
-            gs.addMembersToInclude(usersToAdd, groupingPath, onSuccess, onError);
-            httpBackend.expectPUT(BASE_URL + groupingPath + "/addMembersToIncludeGroup").respond(200);
+            gs.addMembersToIncludeAsync(usersToAdd, groupingPath, onSuccess, onError, modal);
+            httpBackend.expectPUT(BASE_URL + groupingPath + "/addMembersToIncludeGroupAsync").respond(200);
             expect(httpBackend.flush).not.toThrow();
         });
     });
 
     describe("addMembersToExclude", function () {
-        let usersToAdd;
-        it("should call dataProvider.updateDataWithBody", function () {
-            spyOn(dp, "updateDataWithBody");
-            gs.addMembersToExclude(usersToAdd, groupingPath, onSuccess, onError);
-            expect(dp.updateDataWithBody).toHaveBeenCalled();
+        let usersToAdd = [];
+        let modal;
+        it("should call dataProvider.updateDataWithBodyAndTimeoutModal", function () {
+            spyOn(dp, "updateDataWithBodyAndTimeoutModal");
+            gs.addMembersToExclude(usersToAdd, groupingPath, onSuccess, onError, modal);
+            expect(dp.updateDataWithBodyAndTimeoutModal).toHaveBeenCalled();
         });
         it("should use the correct path", function () {
-            gs.addMembersToExclude(usersToAdd, groupingPath, onSuccess, onError);
+            gs.addMembersToExclude(usersToAdd, groupingPath, onSuccess, onError, modal);
             httpBackend.expectPUT(BASE_URL + groupingPath + "/addMembersToExcludeGroup").respond(200);
             expect(httpBackend.flush).not.toThrow();
         });
     });
 
     describe("addMembersToExcludeAsync", function () {
-        let usersToAdd;
+        let usersToAdd = [];
         let modal;
-        it("should call dataProvider.updateDataWithBodyAndTimeoutModal", function () {
-            spyOn(dp, "updateDataWithBodyAndTimeoutModal");
+        it("should call dataProvider.updateDataWithBodyAndTimeoutModalAsync", function () {
+            spyOn(dp, "updateDataWithBodyAndTimeoutModalAsync");
             gs.addMembersToExcludeAsync(usersToAdd, groupingPath, onSuccess, onError, modal);
-            expect(dp.updateDataWithBodyAndTimeoutModal).toHaveBeenCalled();
+            expect(dp.updateDataWithBodyAndTimeoutModalAsync).toHaveBeenCalled();
         });
         it("should use the correct path", function () {
-            gs.addMembersToExclude(usersToAdd, groupingPath, onSuccess, onError);
-            httpBackend.expectPUT(BASE_URL + groupingPath + "/addMembersToExcludeGroup").respond(200);
+            gs.addMembersToExcludeAsync(usersToAdd, groupingPath, onSuccess, onError, modal);
+            httpBackend.expectPUT(BASE_URL + groupingPath + "/addMembersToExcludeGroupAsync").respond(200);
             expect(httpBackend.flush).not.toThrow();
         });
     });
@@ -265,6 +265,20 @@ describe("GroupingsService", function () {
         it("should use the correct path", function () {
             gs.invalidUhIdentifiers(uhIdentifiers, onSuccess, onError);
             httpBackend.expectPOST(BASE_URL + "members/invalid").respond(200);
+            expect(httpBackend.flush).not.toThrow();
+        });
+    });
+
+    describe("invalidUhIdentifiersAsync", function () {
+        let uhIdentifiers = "";
+        it("should call dataProvider.loadDataWithBodyAsync", function () {
+            spyOn(dp, "loadDataWithBodyAsync");
+            gs.invalidUhIdentifiersAsync(uhIdentifiers, onSuccess, onError);
+            expect(dp.loadDataWithBodyAsync).toHaveBeenCalled();
+        });
+        it("should use the correct path", function () {
+            gs.invalidUhIdentifiersAsync(uhIdentifiers, onSuccess, onError);
+            httpBackend.expectPOST(BASE_URL + "members/invalidAsync").respond(200);
             expect(httpBackend.flush).not.toThrow();
         });
     });
@@ -436,6 +450,34 @@ describe("GroupingsService", function () {
         it("should use the correct path", function () {
             gs.resetGroup(groupingPath, include, exclude, onSuccess, onError);
             httpBackend.expectPOST(BASE_URL + groupingPath + "/" + include + "/" + exclude + "/resetGroup").respond(200);
+            expect(httpBackend.flush).not.toThrow();
+        });
+    });
+
+    describe("resetIncludeGroupAsync", function () {
+        it("should call dataProvider.updateDataAsync", function () {
+            spyOn(dp, "updateDataAsync");
+            gs.resetIncludeGroupAsync(groupingPath, onSuccess, onError);
+            expect(dp.updateDataAsync).toHaveBeenCalled();
+        });
+
+        it("should use the correct path", function () {
+            gs.resetIncludeGroupAsync(groupingPath, onSuccess, onError);
+            httpBackend.expectPOST(BASE_URL + groupingPath + "/resetIncludeGroupAsync").respond(200);
+            expect(httpBackend.flush).not.toThrow();
+        });
+    });
+
+    describe("resetExcludeGroupAsync", function () {
+        it("should call dataProvider.updateDataAsync", function () {
+            spyOn(dp, "updateDataAsync");
+            gs.resetExcludeGroupAsync(groupingPath, onSuccess, onError);
+            expect(dp.updateDataAsync).toHaveBeenCalled();
+        });
+
+        it("should use the correct path", function () {
+            gs.resetExcludeGroupAsync(groupingPath, onSuccess, onError);
+            httpBackend.expectPOST(BASE_URL + groupingPath + "/resetExcludeGroupAsync").respond(200);
             expect(httpBackend.flush).not.toThrow();
         });
     });

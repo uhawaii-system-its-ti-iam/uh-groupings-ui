@@ -836,10 +836,15 @@
                 return;
             }
 
+            // Call async invalidUhIdentifiers check if batch import
+            $scope.isBatchImport = uhIdentifiers.length > Threshold.MULTI_ADD;
+            const checkInvalidUhIdentifiers = $scope.isBatchImport
+                ? groupingsService.invalidUhIdentifiersAsync
+                : groupingsService.invalidUhIdentifiers;
+
             $scope.waitingForImportResponse = true; // Small spinner on
-            groupingsService.invalidUhIdentifiers(uhIdentifiers, (res) => { // Check for invalid uhIdentifiers
+            checkInvalidUhIdentifiers(uhIdentifiers, (res) => {
                 $scope.waitingForImportResponse = false; // Small spinner off
-                $scope.isBatchImport = uhIdentifiers.length > Threshold.MULTI_ADD;
 
                 // Check if res returned any invalid uhIdentifiers
                 if (!_.isEmpty(res)) {
@@ -950,9 +955,9 @@
                     $scope.waitingForImportResponse = true; // Small spinner on
                     const groupingPath = $scope.selectedGrouping.path;
                     if ($scope.listName === "Include") {
-                        await groupingsService.addMembersToIncludeAsync(membersToAdd, groupingPath, handleSuccessfulAdd, handleUnsuccessfulRequest, timeoutModal);
+                        await groupingsService.addMembersToInclude(membersToAdd, groupingPath, handleSuccessfulAdd, handleUnsuccessfulRequest, timeoutModal);
                     } else if ($scope.listName === "Exclude") {
-                        await groupingsService.addMembersToExcludeAsync(membersToAdd, groupingPath, handleSuccessfulAdd, handleUnsuccessfulRequest, timeoutModal);
+                        await groupingsService.addMembersToExclude(membersToAdd, groupingPath, handleSuccessfulAdd, handleUnsuccessfulRequest, timeoutModal);
                     } else if ($scope.listName === "owners") {
                         await groupingsService.addOwnerships(groupingPath, membersToAdd, handleSuccessfulAdd, handleUnsuccessfulRequest);
                     } else if ($scope.listName === "admins") {
@@ -1740,10 +1745,10 @@
             };
 
             if (resetInclude) {
-                await resetGroup(groupingsService.resetIncludeGroup, groupingPath, resetIncludeResult);
+                await resetGroup(groupingsService.resetIncludeGroupAsync, groupingPath, resetIncludeResult);
             }
             if (resetExclude) {
-                await resetGroup(groupingsService.resetExcludeGroup, groupingPath, resetExcludeResult);
+                await resetGroup(groupingsService.resetExcludeGroupAsync, groupingPath, resetExcludeResult);
             }
             $scope.loading = false;
             $scope.handleGroupingReset(groupingPath, resetIncludeResult.pop(), resetExcludeResult.pop());

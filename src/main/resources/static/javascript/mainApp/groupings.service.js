@@ -69,16 +69,7 @@
              * Add a members to the include group of a grouping. A modal is passed in and displayed after a certain amount
              * of time has elapsed.
              */
-            addMembersToInclude(members, path, onSuccess, onError) {
-                let endpoint = BASE_URL + path + "/addMembersToIncludeGroup";
-                dataProvider.updateDataWithBody(endpoint, members, onSuccess, onError);
-            },
-
-            /**
-             * Add a members to the include group of a grouping. A modal is passed in and displayed after a certain amount
-             * of time has elapsed.
-             */
-            addMembersToIncludeAsync(members, path, onSuccess, onError, modal) {
+            addMembersToInclude(members, path, onSuccess, onError, modal) {
                 let endpoint = BASE_URL + path + "/addMembersToIncludeGroup";
                 return new Promise(() => {
                     dataProvider.updateDataWithBodyAndTimeoutModal(endpoint, members, onSuccess, onError, modal);
@@ -86,21 +77,37 @@
             },
 
             /**
-             * Add a members to the exclude group of a grouping. A modal is passed in and displayed after a certain amount
-             * of time has elapsed.
+             * Add a members to the include group of a grouping asynchronously. A modal is passed in and displayed after
+             * a certain amount of time has elapsed.
              */
-            addMembersToExclude(members, path, onSuccess, onError) {
-                let endpoint = BASE_URL + path + "/addMembersToExcludeGroup";
-                dataProvider.updateDataWithBody(endpoint, members, onSuccess, onError);
+            addMembersToIncludeAsync(members, path, onSuccess, onError, modal) {
+                let endpoint = BASE_URL + path + "/addMembersToIncludeGroupAsync";
+                let initialPoll = members.length * 100;
+                return new Promise(() => {
+                    dataProvider.updateDataWithBodyAndTimeoutModalAsync(endpoint, members, initialPoll, onSuccess, onError, modal);
+                });
             },
+
             /**
              * Add a members to the exclude group of a grouping. A modal is passed in and displayed after a certain amount
              * of time has elapsed.
              */
-            addMembersToExcludeAsync(members, path, onSuccess, onError, modal) {
+            addMembersToExclude(members, path, onSuccess, onError, modal) {
                 let endpoint = BASE_URL + path + "/addMembersToExcludeGroup";
                 return new Promise(() => {
                     dataProvider.updateDataWithBodyAndTimeoutModal(endpoint, members, onSuccess, onError, modal);
+                });
+            },
+
+            /**
+             * Add a members to the exclude group of a grouping asynchronously. A modal is passed in and displayed after
+             * a certain amount of time has elapsed.
+             */
+            addMembersToExcludeAsync(members, path, onSuccess, onError, modal) {
+                let endpoint = BASE_URL + path + "/addMembersToExcludeGroupAsync";
+                let initialPoll = members.length * 100;
+                return new Promise(() => {
+                    dataProvider.updateDataWithBodyAndTimeoutModalAsync(endpoint, members, initialPoll, onSuccess, onError, modal);
                 });
             },
 
@@ -168,6 +175,15 @@
             invalidUhIdentifiers(uhIdentifiers, onSuccess, onError) {
                 let endpoint = BASE_URL + "members/invalid";
                 dataProvider.loadDataWithBody(endpoint, uhIdentifiers, onSuccess, onError);
+            },
+
+            /**
+             * Get a list of invalid given a list of uhIdentifiers asynchronously.
+             */
+            invalidUhIdentifiersAsync(uhIdentifiers, onSuccess, onError) {
+                let endpoint = BASE_URL + "members/invalidAsync";
+                let initialPoll = uhIdentifiers.length;
+                dataProvider.loadDataWithBodyAsync(endpoint, uhIdentifiers, initialPoll, onSuccess, onError);
             },
 
             /**
@@ -269,19 +285,21 @@
             },
 
             /**
-             * Remove all members from the include group.
+             * Remove all members from the include group asynchronously.
              */
-            resetIncludeGroup(groupingPath, onSuccess, onError) {
-                let endpoint = BASE_URL + groupingPath + "/resetIncludeGroup";
-                dataProvider.updateData(endpoint, onSuccess, onError);
+            resetIncludeGroupAsync(groupingPath, onSuccess, onError) {
+                let endpoint = BASE_URL + groupingPath + "/resetIncludeGroupAsync";
+                let initialPoll = 15000;
+                dataProvider.updateDataAsync(endpoint, initialPoll, onSuccess, onError);
             },
 
             /**
-             * Remove all members from the exclude group.
+             * Remove all members from the exclude group asynchronously.
              */
-            resetExcludeGroup(groupingPath, onSuccess, onError) {
-                let endpoint = BASE_URL + groupingPath + "/resetExcludeGroup";
-                dataProvider.updateData(endpoint, onSuccess, onError);
+            resetExcludeGroupAsync(groupingPath, onSuccess, onError) {
+                let endpoint = BASE_URL + groupingPath + "/resetExcludeGroupAsync";
+                let initialPoll = 15000;
+                dataProvider.updateDataAsync(endpoint, initialPoll, onSuccess, onError);
             },
 
             //todo Might not need this as the syncDests come back in getGrouping already

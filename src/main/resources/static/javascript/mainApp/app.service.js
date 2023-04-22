@@ -4,9 +4,43 @@
      * Service function that provides GET and POST requests for getting or updating data
      * @name dataProvider
      */
-    UHGroupingsApp.factory("dataProvider", function ($http, $window) {
+    UHGroupingsApp.factory("dataProvider", function ($http, $window, BASE_URL) {
 
         const timeLimit = 20000;
+        const defaultPollRate = 5000;
+
+        /**
+         * Sets delay in milliseconds. Used with await in async functions.
+         * @param {number} ms - milliseconds of delay
+         * @returns {Promise} setTimeout callback
+         */
+        const delay = (ms = defaultPollRate) => {
+            return new Promise((resolve) => setTimeout(resolve, ms));
+        };
+
+        /**
+         * Polls to getAsyncJobResult API endpoint until the async job has completed with a result
+         * @param {number} jobId - the jobId returned from the response of an async endpoint
+         * @param {function} callback - the function to perform on a successful request (200)
+         * @param {function} callError - execute if response returns as an error
+         * @param {number} timeoutID - the timeoutID created by a setTimeout() call to clear
+         */
+        const pollData = (jobId, callback, callError, timeoutID) => {
+            $http.get(encodeURI(`${BASE_URL}jobs/${jobId}`))
+                .then(async (response) => {
+                    if (response.data.status === "COMPLETED") {
+                        if (typeof timeoutID !== "undefined") {
+                            clearTimeout(timeoutID);
+                        }
+                        callback(response.data.result);
+                    } else {
+                        await delay();
+                        pollData(jobId, callback, callError, timeoutID);
+                    }
+                }, (response) => {
+                    callError(response);
+                });
+        };
 
         return {
 
@@ -50,6 +84,7 @@
             /**
              * Perform a POST request to the specified URL.
              * @param {string} url - the URL to perform the request on
+             * @param {any} data - the data to perform the request with
              * @param {function} callback - the function to perform on a successful request (200)
              * @param {function} callError - Execute if response returns as an error.
              */
@@ -58,6 +93,24 @@
                     .then(function (response) {
                         callback(response.data);
                     }, function (response) {
+                        callError(response);
+                    });
+            },
+
+            /**
+             * Perform a POST request to the specified async URL.
+             * @param {string} url - the URL to perform the request on
+             * @param {any} data - the data to perform the request with
+             * @param {number} initialPoll - the milliseconds to wait before making the first poll
+             * @param {function} callback - the function to perform on a successful request (200)
+             * @param {function} callError - Execute if response returns as an error.
+             */
+            loadDataWithBodyAsync(url, data, initialPoll, callback, callError) {
+                $http.post(encodeURI(url), data)
+                    .then(async (response) => {
+                        await delay(initialPoll);
+                        pollData(response.data, callback, callError);
+                    }, (response) => {
                         callError(response);
                     });
             },
@@ -73,6 +126,23 @@
                     .then(function (response) {
                         callback(response.data);
                     }, function (response) {
+                        callError(response);
+                    });
+            },
+
+            /**
+             * Perform a POST request to the specified async URL.
+             * @param {string} url - the URL to perform the request on
+             * @param {number} initialPoll - the milliseconds to wait before making the first poll
+             * @param {function} callback - the function to perform on a successful request (200)
+             * @param {function} callError - Execute if response returns as an error.
+             */
+            updateDataAsync(url, initialPoll, callback, callError) {
+                $http.post(encodeURI(url))
+                    .then(async (response) => {
+                        await delay(initialPoll);
+                        pollData(response.data, callback, callError);
+                    }, (response) => {
                         callError(response);
                     });
             },
@@ -97,7 +167,7 @@
              * PUT data to the server, if the response is OK then call the callBack function, if the response is an
              * error then call the callError function. If the response is not received in n seconds, display a modal.
              * @param {string} url - Path to which data is being posted too.
-             * @param {string} data - data to be updated
+             * @param {any} data - data to be updated
              * @param {function} modal - Display a modal using a call back function.
              * @param {function} callback - Execute if response returns OK
              * @param {function} callError - Execute if response returns as an error.
@@ -111,6 +181,28 @@
                     }, function (response) {
                         clearTimeout(timeoutID);
                         callError(response);
+                    });
+            },
+
+            /**
+             * PUT data to the server asynchronously, if the response is OK then call the callBack function, if the response is an
+             * error then call the callError function. If the response is not received in n seconds, display a modal.
+             * @param {string} url - Path to which data is being posted too.
+             * @param {any} data - data to be updated
+             * @param {number} initialPoll - the milliseconds to wait before making the first poll
+             * @param {function} modal - Display a modal using a call back function.
+             * @param {function} callback - Execute if response returns OK
+             * @param {function} callError - Execute if response returns as an error.
+             */
+            updateDataWithBodyAndTimeoutModalAsync(url, data, initialPoll, callback, callError, modal) {
+                const timeoutID = setTimeout(modal, timeLimit);
+                $http.put(encodeURI(url), data)
+                    .then(async (response) => {
+                        await delay(initialPoll);
+                        pollData(response.data, callback, callError, timeoutID);
+                    }, (response) => {
+                        callError(response);
+                        clearTimeout(timeoutID);
                     });
             },
 
