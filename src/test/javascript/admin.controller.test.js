@@ -112,6 +112,10 @@ describe("AdminController", function () {
     });
 
     describe("init", () => {
+        beforeEach(() => {
+            sessionStorage.clear();
+        });
+
         it("should call groupingsService.getAdminLists", () => {
             spyOn(gs, "getAdminLists").and.callThrough();
             scope.init();
