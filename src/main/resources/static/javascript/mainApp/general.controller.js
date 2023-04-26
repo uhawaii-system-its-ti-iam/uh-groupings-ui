@@ -1425,6 +1425,20 @@
             $scope.membersNotInList = "";
             $scope.multiRemoveResults = [];
             $scope.removeModalInstance.dismiss("cancel");
+            $scope.clearCheckboxes();
+        };
+
+        /**
+         * Helper - cancelRemoveModal, closeRemoveErrorModal
+         * Clears all selected checkboxes in manage person
+         */
+        $scope.clearCheckboxes = function () {
+            $scope.checkAll = false;
+            _.forEach($scope.pagedItemsPerson[$scope.currentPagePerson], function (grouping) {
+                if (grouping.inOwner || grouping.inInclude || grouping.inExclude) {
+                    grouping.isSelected = $scope.checkAll;
+                }
+            });
         };
 
         /**
@@ -1577,6 +1591,7 @@
          * Close the remove error modal.
          */
         $scope.closeRemoveErrorModal = function () {
+            $scope.clearCheckboxes();
             $scope.removeErrorModalInstance.close();
         };
 
