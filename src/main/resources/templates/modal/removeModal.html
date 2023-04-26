@@ -6,47 +6,56 @@
     </a>
 </div>
 <div class="modal-body" id="modal-body">
-    <p class="modal-black-text text-truncate" ng-if="membersNotInList.length > 0">Not in {{listName}}: {{membersNotInList}}</p>
+    <p class="modal-black-text text-truncate" ng-if="membersNotInList.length > 0">Not in {{listName}}:
+        {{membersNotInList}}</p>
     <!--Warning message if users try to delete themselves from the admins or owners list -->
     <div class="alert alert-danger" role="alert" ng-if="showWarningRemovingSelf()" ng-switch="listName">
         <span class="alert-danger" ng-switch-default th:utext="#{screen.message.modal.remove.warning}">Warning</span>
         <span class="alert-danger" ng-switch-when="admins" th:utext="#{screen.message.modal.remove.warning.admin}">Warning</span>
     </div>
-    <p>
-        <span class="modal-black-text" th:text="#{screen.message.modal.remove.confirmation}"></span>
-        <span class="modal-black-text">{{listName}} list.</span>
-    </p>
-    <table>
-        <tr>
-            <th th:utext="#{screen.message.modal.remove.name}"></th>
-            <th class="font-weight-normal modal-attributes">{{fullName}}</th>
-        </tr>
-        <tr>
-            <th th:utext="#{screen.message.modal.remove.uid}"></th>
-            <th class="font-weight-normal modal-attributes">
-                {{uid}}
-                <span class="modal-black-text" ng-if="!uid">
+    <div class="container modal-table" tabindex="0">
+        <table class="table table-sm table-borderless">
+            <tbody>
+            <tr class="text-nowrap">
+                <p>
+                    <span class="modal-black-text" th:text="#{screen.message.modal.remove.confirmation}"></span>
+                    <span class="modal-black-text">{{listName}} list.</span>
+                </p>
+                <table>
+                    <tr>
+                        <th th:utext="#{screen.message.modal.remove.name}"></th>
+                        <th class="font-weight-normal modal-attributes">{{fullName}}</th>
+                    </tr>
+                    <tr>
+                        <th th:utext="#{screen.message.modal.remove.uid}"></th>
+                        <th class="font-weight-normal modal-attributes">
+                            {{uid}}
+                            <span class="modal-black-text" ng-if="!uid">
                     N/A
                     <span class="fa fa-question-circle clickable" aria-hidden="true"
-                       tooltip
-                       th:title="#{screen.message.common.tooltip.username.notApplicable}">
+                          tooltip
+                          th:title="#{screen.message.common.tooltip.username.notApplicable}">
                     </span>
                 </span>
-            </th>
-        </tr>
-        <tr>
-            <th th:utext="#{screen.message.modal.remove.uhUserId}"></th>
-            <th class="font-weight-normal modal-attributes">{{uhUuid}}</th>
-        </tr>
-    </table>
-    <p>
-        <span class="modal-black-text">Are you sure you want to remove</span>
-        <span class="font-weight-bold">{{member}}</span>
-        <span class="modal-black-text"> from the {{listName}} list?</span>
-    </p>
-    <p class="alert alert-warning mt-2" role="alert">
-        <span class="text-dark" th:text="#{screen.message.common.membership.info}"></span>
-    </p>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th th:utext="#{screen.message.modal.remove.uhUserId}"></th>
+                        <th class="font-weight-normal modal-attributes">{{uhUuid}}</th>
+                    </tr>
+                </table>
+                <p>
+                    <span class="modal-black-text">Are you sure you want to remove</span>
+                    <span class="font-weight-bold">{{member}}</span>
+                    <span class="modal-black-text"> from the {{listName}} list?</span>
+                </p>
+                <p class="alert alert-warning mt-2" role="alert">
+                    <span class="text-dark" th:text="#{screen.message.common.membership.info}"></span>
+                </p>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 <div class="modal-footer">
     <button class="btn btn-primary" ng-click="proceedRemoveModal()">Yes</button>
