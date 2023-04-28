@@ -1246,7 +1246,7 @@ describe("GeneralController", () => {
         let goodFile, badFile, parseFile;
         beforeEach(() => {
             let bad1, bad2, bad3, bad4, bad5, bad6, bad7, bad8, bad9, bad10, bad11;
-            bad1 = "<img src onerror=alert(\"Gavin is testing\")/>\n";
+            bad1 = "<img src onerror=alert(\"testiwta is testing\")/>\n";
             bad2 = "<IMG SRC=\"javascript:alert('XSS');\">\n";
             bad3 = "<IMG SRC=javascript:alert('XSS')>\n";
             bad4 = "<IMG SRC=JaVaScRiPt:alert('XSS')>\n";
@@ -1672,20 +1672,20 @@ describe("GeneralController", () => {
         beforeEach(() => {
             currentPage = [
                 {
-                    firstName: "Monir",
+                    firstName: "test",
                     inBasis: "No",
-                    lastName: "Hodges",
-                    name: "Monir F Hodges",
+                    lastName: "iwa",
+                    name: "test i wa",
                     uhUuid: "1111",
-                    username: "monir"
+                    username: "testiwa"
                 },
                 {
-                    firstName: "Monir",
+                    firstName: "test",
                     inBasis: "No",
-                    lastName: "Hodges",
-                    name: "Monir F Hodges",
+                    lastName: "iwa",
+                    name: "test i wa",
                     uhUuid: "1112",
-                    username: "monir"
+                    username: "testiwa"
                 }
             ];
             scope.membersInCheckboxList = {
@@ -1712,7 +1712,7 @@ describe("GeneralController", () => {
                         lastName: "iamtst01",
                         name: "iamtst01",
                         uhUuid: "12345678",
-                        username: "monir"
+                        username: "testiwa"
                     }
                 ]
             ];

@@ -119,30 +119,30 @@ describe("TableController", function () {
             scope.items = [
                 {
                     $$hashKey: "random",
-                    firstName: "John",
-                    lastName: "Doe",
-                    username: "jdoe",
+                    firstName: "Iwc",
+                    lastName: "Iamtst",
+                    username: "tiwc",
                     uhUuid: "12345678"
                 },
                 {
                     $$hashKey: "random",
-                    firstName: "Jane",
-                    lastName: "Doe",
-                    username: "janed",
+                    firstName: "Iwd",
+                    lastName: "Iamtst",
+                    username: "iamd",
                     uhUuid: "23456789"
                 },
                 {
                     $$hashKey: "something",
-                    firstName: "Dennis",
-                    lastName: "Jefferson",
-                    username: "dj",
+                    firstName: "E",
+                    lastName: "Testiw",
+                    username: "te",
                     uhUuid: "65478912"
                 },
                 {
                     $$hashKey: "another",
-                    firstName: "Dave",
-                    lastName: "Williams",
-                    username: "dave",
+                    firstName: "Iwb",
+                    lastName: "IamtstIW",
+                    username: "iwb",
                     uhUuid: "72897556"
                 }
             ];
@@ -152,7 +152,7 @@ describe("TableController", function () {
         });
 
         it("should return entries where any property value matches the query", function () {
-            scope.filter(scope.items, "pagedItems", "currentPage", "janed", true);
+            scope.filter(scope.items, "pagedItems", "currentPage", "iamd", true);
 
             expect(scope.pagedItems.length).toEqual(1);
 
@@ -177,21 +177,21 @@ describe("TableController", function () {
         it("should call groupToPages so the table is repaginated", function () {
             spyOn(scope, "groupToPages").and.callThrough();
 
-            scope.filter(scope.items, "pagedItems", "currentPage", "janed", true);
+            scope.filter(scope.items, "pagedItems", "currentPage", "iamd", true);
 
             expect(scope.groupToPages).toHaveBeenCalled();
         });
 
         it("should reset the page number to 0", function () {
-            scope.filter(scope.items, "pagedItems", "currentPage", "janed", true);
+            scope.filter(scope.items, "pagedItems", "currentPage", "iamd", true);
 
             expect(scope.currentPage).toEqual(0);
         });
 
         it("should allow matching to be case insensitive", function () {
-            scope.filter(scope.items, "pagedItems", "currentPage", "DOE", true);
+            scope.filter(scope.items, "pagedItems", "currentPage", "IAMTST", true);
 
-            expect(scope.pagedItems.length).toEqual(2);
+            expect(scope.pagedItems.length).toEqual(3);
 
             expect(scope.pagedItems[0][0]).toEqual(scope.items[0]);
             expect(scope.pagedItems[1][0]).toEqual(scope.items[1]);
