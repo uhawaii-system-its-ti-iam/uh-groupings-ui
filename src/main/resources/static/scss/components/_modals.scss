@@ -1,9 +1,5 @@
 .modal-open .modal {
     overflow: hidden;
-
-    @include media-breakpoint(max-portrait-phone) {
-        overflow-y: auto;
-    }
 }
 
 .modal-dialog {
@@ -27,6 +23,11 @@
             height: calc(100vh - (1.75rem * 2));
         }
     }
+}
+
+.modal-body {
+    max-height: 75vh;
+    overflow-y: auto;
 }
 
 .modal-table {
