@@ -186,6 +186,14 @@
                 dataProvider.loadDataWithBody(endpoint, members, onSuccess, onError);
             },
 
+            getMyGrouping(groupPaths, page, size, sortString, isAscending, onSuccess, onError) {
+                let endpoint = BASE_URL + "groupings/group?";
+                let params = { page, size, sortString, isAscending };
+                let query = this.encodeParameterizedQueryString(params);
+                endpoint = endpoint + query;
+                dataProvider.loadDataWithBody(endpoint, groupPaths, onSuccess,onError);
+            },
+
             /**
              * Opt member out of a grouping.
              */
