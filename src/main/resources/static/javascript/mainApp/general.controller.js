@@ -79,6 +79,13 @@
             }
         }
 
+        function removeGroupMembers(membersToRemove, members) {
+            membersToRemove.forEach((memberToRemove) => {
+                _.remove(members, (member) => (member.uhUuid === memberToRemove.uhUuid));
+            });
+            return members;
+        }
+
         /** Remove all nameless members from members and return a sorted object of distinct members.
          * @param {object[]} members - the members of the group
          * @returns {object[]} the members of the group, sorted by name and with blank usernames filtered out
@@ -137,19 +144,22 @@
                             putGroupMembers = setGroupMembers;
                         }
                         $scope.groupingBasis = putGroupMembers(res.basisMembers.groupMembers, $scope.groupingBasis);
-                        $scope.filter($scope.groupingBasis, "pagedItemsBasis", "currentPageBasis", $scope.basisQuery, false);
+                        $scope.filter($scope.groupingBasis, "pagedItemsBasis", "currentPageBasis", $scope.basisQuery, true);
 
                         $scope.groupingInclude = putGroupMembers(res.includeMembers.groupMembers, $scope.groupingInclude);
-                        $scope.filter($scope.groupingInclude, "pagedItemsInclude", "currentPageInclude", $scope.includeQuery, false);
+                        $scope.addInBasis($scope.groupingInclude);
+                        $scope.filter($scope.groupingInclude, "pagedItemsInclude", "currentPageInclude", $scope.includeQuery, true);
 
                         $scope.groupingExclude = putGroupMembers(res.excludeMembers.groupMembers, $scope.groupingExclude);
-                        $scope.filter($scope.groupingExclude, "pagedItemsExclude", "currentPageExclude", $scope.excludeQuery, false);
+                        $scope.addInBasis($scope.groupingExclude);
+                        $scope.filter($scope.groupingExclude, "pagedItemsExclude", "currentPageExclude", $scope.excludeQuery, true);
 
                         $scope.groupingOwners = putGroupMembers(res.ownersMembers.groupMembers, $scope.groupingOwners);
-                        $scope.filter($scope.groupingOwners, "pagedItemsOwners", "currentPageOwners", $scope.ownersQuery, false);
+                        $scope.filter($scope.groupingOwners, "pagedItemsOwners", "currentPageOwners", $scope.ownersQuery, true);
 
                         $scope.groupingMembers = putGroupMembers(res.groupingMembers.groupingMembers, $scope.groupingMembers);
-                        $scope.filter($scope.groupingMembers, "pagedItemsMembers", "currentPageMembers", $scope.membersQuery, false);
+                        $scope.groupingMembers = removeGroupMembers($scope.groupingExclude, $scope.groupingMembers);
+                        $scope.filter($scope.groupingMembers, "pagedItemsMembers", "currentPageMembers", $scope.membersQuery, true);
 
 
                         $scope.groupingDescription = "";
