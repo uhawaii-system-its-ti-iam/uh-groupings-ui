@@ -3,7 +3,8 @@
 
         <div class="row">
             <div class="col-md-8">
-                <h1 class="font-weight-bold text-dark pt-2 mb-0 d-inline-block">Basis Members ({{groupingBasis.length}})</h1>
+                <h1 class="font-weight-bold text-dark pt-2 mb-0 d-inline-block">Basis Members
+                    ({{groupingBasis.length}})</h1>
                 <div class="spinner-border ml-1 d-inline-block"
                      ng-hide="paginatingComplete"
                      role="status">
@@ -49,8 +50,8 @@
                     <td class="p-10">{{b.name}}</td>
                     <td class="p-10">{{b.uhUuid}}</td>
                     <td class="p-10">
-                        {{b.username}}
-                        <div ng-if="b.username === ''">
+                        {{b.uid}}
+                        <div ng-if="b.uid === ''">
                             <span>N/A</span>
                             <i class="fa fa-question-circle" role="button" aria-hidden="true"
                                tooltip data-placement="right"
