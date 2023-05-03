@@ -84,7 +84,6 @@
          * @returns {object[]} the members of the group, sorted by name and with blank usernames filtered out
          */
         function setGroupMembers(members) {
-            console.log(members);
             _.remove(members, function (member) {
                 return _.isEmpty(member.name);
             });
@@ -102,8 +101,6 @@
          * @returns {object[]} the members of both groups in one array, sorted by name with blank usernames filtered out
          */
         function combineGroupMembers(membersToAdd, initialMembers) {
-            console.log(membersToAdd);
-            console.log(initialMembers);
 
             _.remove(membersToAdd, function (member) {
                 return _.isEmpty(member.name);
@@ -139,24 +136,22 @@
                         if (currentPage === 1) {
                             putGroupMembers = setGroupMembers;
                         }
-                        res.groupsMembersList.forEach((group) => {
-                            if(group.groupPath.endsWith("basis")) {
-                                $scope.groupingBasis = putGroupMembers(group.groupMembers, $scope.groupingBasis);
-                                $scope.filter($scope.groupingBasis, "pagedItemsBasis", "currentPageBasis", $scope.basisQuery, false);
-                            }
-                            if(group.groupPath.endsWith("include")) {
-                                $scope.groupingInclude= putGroupMembers(group.groupMembers, $scope.groupingInclude);
-                                $scope.filter($scope.groupingInclude, "pagedItemsInclude", "currentPageInclude", $scope.includeQuery, false);
-                            }
-                            if(group.groupPath.endsWith("exclude")) {
-                                $scope.groupingExclude= putGroupMembers(group.groupMembers, $scope.groupingExclude);
-                                $scope.filter($scope.groupingExclude, "pagedItemsExclude", "currentPageExclude", $scope.excludeQuery, false);
-                            }
-                            if(group.groupPath.endsWith("owners")) {
-                                $scope.groupingOwners= putGroupMembers(group.groupMembers, $scope.groupingOwners);
-                                $scope.filter($scope.groupingOwners, "pagedItemsOwners", "currentPageOwners", $scope.ownersQuery, false);
-                            }
-                        })
+                        $scope.groupingBasis = putGroupMembers(res.basisMembers.groupMembers, $scope.groupingBasis);
+                        $scope.filter($scope.groupingBasis, "pagedItemsBasis", "currentPageBasis", $scope.basisQuery, false);
+
+                        $scope.groupingInclude = putGroupMembers(res.includeMembers.groupMembers, $scope.groupingInclude);
+                        $scope.filter($scope.groupingInclude, "pagedItemsInclude", "currentPageInclude", $scope.includeQuery, false);
+
+                        $scope.groupingExclude = putGroupMembers(res.excludeMembers.groupMembers, $scope.groupingExclude);
+                        $scope.filter($scope.groupingExclude, "pagedItemsExclude", "currentPageExclude", $scope.excludeQuery, false);
+
+                        $scope.groupingOwners = putGroupMembers(res.ownersMembers.groupMembers, $scope.groupingOwners);
+                        $scope.filter($scope.groupingOwners, "pagedItemsOwners", "currentPageOwners", $scope.ownersQuery, false);
+
+                        $scope.groupingMembers = putGroupMembers(res.groupingMembers.groupingMembers, $scope.groupingMembers);
+                        $scope.filter($scope.groupingMembers, "pagedItemsMembers", "currentPageMembers", $scope.membersQuery, false);
+
+
                         $scope.groupingDescription = "";
                         $scope.descriptionLoaded = true;
                         $scope.allowOptIn = true;
@@ -169,7 +164,6 @@
                     resolve();
 
                 }, (res) => {
-                    console.log(res);
                     $scope.paginatingComplete = true;
                     $scope.resStatus = res.status;
                     $scope.paginatingProgress = false;
@@ -183,7 +177,7 @@
          */
         $scope.getGroupingInformation = async function () {
             const groupingPath = $scope.selectedGrouping.path;
-            let groupPaths = [groupingPath +":basis",groupingPath +":include", groupingPath +":exclude", groupingPath +":owners"];
+            let groupPaths = [groupingPath + ":basis", groupingPath + ":include", groupingPath + ":exclude", groupingPath + ":owners"];
             let currentPage = 1;
             $scope.loading = true;
             $scope.paginatingComplete = false;
