@@ -88,6 +88,8 @@
                 // sets proper error message
                 if (!$scope.personToLookup) {
                     $scope.emptyInput = true;
+                } else {
+                    $scope.invalidInput = true;
                 }
                 $scope.loading = false;
                 $scope.user = $scope.personToLookup;
