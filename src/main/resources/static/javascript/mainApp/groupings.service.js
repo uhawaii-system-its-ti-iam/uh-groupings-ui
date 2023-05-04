@@ -77,12 +77,13 @@
             },
 
             /**
-             * Add a members to the include group of a grouping asynchronously. A modal is passed in and displayed after
-             * a certain amount of time has elapsed.
+             * Add a members to the include group of a grouping asynchronously. The initial poll gets as close to the
+             * average time of the non-asyns version of this endpoint based on the number of members being added.
+             * A modal is passed in and displayed after a certain amount of time has elapsed.
              */
             addMembersToIncludeAsync(members, path, onSuccess, onError, modal) {
                 let endpoint = BASE_URL + path + "/addMembersToIncludeGroupAsync";
-                let initialPoll = members.length * 100;
+                let initialPoll = Math.pow(members.length, 1.6);
                 return new Promise(() => {
                     dataProvider.updateDataWithBodyAndTimeoutModalAsync(endpoint, members, initialPoll, onSuccess, onError, modal);
                 });
@@ -100,12 +101,13 @@
             },
 
             /**
-             * Add a members to the exclude group of a grouping asynchronously. A modal is passed in and displayed after
-             * a certain amount of time has elapsed.
+             * Add a members to the exclude group of a grouping asynchronously. The initial poll gets as close to the
+             * average time of the non-asyns version of this endpoint based on the number of members being added.
+             * A modal is passed in and displayed after a certain amount of time has elapsed.
              */
             addMembersToExcludeAsync(members, path, onSuccess, onError, modal) {
                 let endpoint = BASE_URL + path + "/addMembersToExcludeGroupAsync";
-                let initialPoll = members.length * 100;
+                let initialPoll = Math.pow(members.length, 1.6);
                 return new Promise(() => {
                     dataProvider.updateDataWithBodyAndTimeoutModalAsync(endpoint, members, initialPoll, onSuccess, onError, modal);
                 });
@@ -178,11 +180,12 @@
             },
 
             /**
-             * Get a list of invalid given a list of uhIdentifiers asynchronously.
+             * Get a list of invalid given a list of uhIdentifiers asynchronously. The initial poll gets as close to the
+             * average time of the non-asyns version of this endpoint based on the number of uhIdentifiers.
              */
             invalidUhIdentifiersAsync(uhIdentifiers, onSuccess, onError) {
                 let endpoint = BASE_URL + "members/invalidAsync";
-                let initialPoll = uhIdentifiers.length;
+                let initialPoll = Math.pow(uhIdentifiers.length, 1.2);
                 dataProvider.loadDataWithBodyAsync(endpoint, uhIdentifiers, initialPoll, onSuccess, onError);
             },
 
