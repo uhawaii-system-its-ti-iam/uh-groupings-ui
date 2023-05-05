@@ -161,8 +161,7 @@
                         $scope.groupingOwners = putGroupMembers(res.groupingOwners.members, $scope.groupingOwners);
                         $scope.filter($scope.groupingOwners, "pagedItemsOwners", "currentPageOwners", $scope.ownersQuery, true);
 
-                        // Todo rename to allMembers.
-                        $scope.groupingMembers = putGroupMembers(res.allMembers.groupingMembers, $scope.groupingMembers);
+                        $scope.groupingMembers = putGroupMembers(res.allMembers.members, $scope.groupingMembers);
                         $scope.groupingMembers = removeGroupMembers($scope.groupingExclude, $scope.groupingMembers);
                         $scope.filter($scope.groupingMembers, "pagedItemsMembers", "currentPageMembers", $scope.membersQuery, true);
 
