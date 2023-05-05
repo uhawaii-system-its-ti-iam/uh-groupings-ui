@@ -134,30 +134,35 @@
                 }
             });
         };
+
         $scope.fetchGrouping = function (currentPage, groupPaths) {
             return new Promise((resolve) => {
                 groupingsService.getMyGrouping(groupPaths, currentPage, PAGE_SIZE, "name", true, function (res) {
                     console.log(res);
-                    if (res.basis || res.include || res.exclude || res.owners) {
+                    if (res.paginationComplete) {
+                        $scope.paginatingComplete = true;
+                        $scope.paginatingProgress = false;
+                    } else {
                         let putGroupMembers = combineGroupMembers;
                         if (currentPage === 1) {
                             putGroupMembers = setGroupMembers;
                         }
-                        $scope.groupingBasis = putGroupMembers(res.basisMembers.groupMembers, $scope.groupingBasis);
+                        $scope.groupingBasis = putGroupMembers(res.groupingBasis.groupMembers, $scope.groupingBasis);
                         $scope.filter($scope.groupingBasis, "pagedItemsBasis", "currentPageBasis", $scope.basisQuery, true);
 
-                        $scope.groupingInclude = putGroupMembers(res.includeMembers.groupMembers, $scope.groupingInclude);
+                        $scope.groupingInclude = putGroupMembers(res.groupingInclude.groupMembers, $scope.groupingInclude);
                         $scope.addInBasis($scope.groupingInclude);
                         $scope.filter($scope.groupingInclude, "pagedItemsInclude", "currentPageInclude", $scope.includeQuery, true);
 
-                        $scope.groupingExclude = putGroupMembers(res.excludeMembers.groupMembers, $scope.groupingExclude);
+                        $scope.groupingExclude = putGroupMembers(res.groupingExclude.groupMembers, $scope.groupingExclude);
                         $scope.addInBasis($scope.groupingExclude);
                         $scope.filter($scope.groupingExclude, "pagedItemsExclude", "currentPageExclude", $scope.excludeQuery, true);
 
-                        $scope.groupingOwners = putGroupMembers(res.ownersMembers.groupMembers, $scope.groupingOwners);
+                        $scope.groupingOwners = putGroupMembers(res.groupingOwners.groupMembers, $scope.groupingOwners);
                         $scope.filter($scope.groupingOwners, "pagedItemsOwners", "currentPageOwners", $scope.ownersQuery, true);
 
-                        $scope.groupingMembers = putGroupMembers(res.groupingMembers.groupingMembers, $scope.groupingMembers);
+                        // Todo rename to allMembers.
+                        $scope.groupingMembers = putGroupMembers(res.allMembers.groupingMembers, $scope.groupingMembers);
                         $scope.groupingMembers = removeGroupMembers($scope.groupingExclude, $scope.groupingMembers);
                         $scope.filter($scope.groupingMembers, "pagedItemsMembers", "currentPageMembers", $scope.membersQuery, true);
 
@@ -167,9 +172,6 @@
                         $scope.allowOptIn = true;
                         $scope.allowOptOut = true;
                         $scope.syncDestArray = [];
-                    } else {
-                        $scope.paginatingComplete = true;
-                        $scope.paginatingProgress = false;
                     }
                     resolve();
 
@@ -187,13 +189,13 @@
          */
         $scope.getGroupingInformation = async function () {
             const groupingPath = $scope.selectedGrouping.path;
-            let groupPaths = [groupingPath + ":basis", groupingPath + ":include", groupingPath + ":exclude", groupingPath + ":owners"];
+            const paths = [groupingPath + ":basis", groupingPath + ":include", groupingPath + ":exclude", groupingPath + ":owners"];
             let currentPage = 1;
             $scope.loading = true;
             $scope.paginatingComplete = false;
             while (!($scope.paginatingComplete)) {
                 $scope.paginatingProgress = true;
-                await $scope.fetchGrouping(currentPage, groupPaths);
+                await $scope.fetchGrouping(currentPage, paths);
                 currentPage++;
                 $scope.loading = false;
             }
