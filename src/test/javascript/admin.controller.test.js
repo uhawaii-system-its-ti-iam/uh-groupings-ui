@@ -200,6 +200,12 @@ describe("AdminController", function () {
             expect(scope.emptyInput).toBeTrue();
             expect(scope.personList).toEqual([]);
         });
+        it("should set invalidInput to be true", () => {
+            scope.invalidInput = false;
+            scope.personToLookup = "123$";
+            scope.searchForUserGroupingInformation();
+            expect(scope.invalidInput).toBeTrue();
+        });
         it("should call groupingsService.managePersonResults", () => {
             scope.personToLookup = "iamtst01";
             spyOn(gs, "managePersonResults").and.callThrough();
