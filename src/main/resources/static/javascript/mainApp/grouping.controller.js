@@ -1753,6 +1753,16 @@
             }
             return str;
         };
+
+        /**
+         * Check if there are no members in the grouping
+         */
+        $scope.isGroupingEmpty = () => {
+            return $scope.groupingMembers.length === 0
+                && $scope.groupingBasis.length === 0
+                && $scope.groupingInclude.length === 0
+                && $scope.groupingExclude.length === 0;
+        };
     }
 
     UHGroupingsApp.controller("GroupingJsController", GroupingJsController);

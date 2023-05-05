@@ -1,7 +1,5 @@
 package edu.hawaii.its.groupings.service;
 
-import edu.hawaii.its.groupings.exceptions.PasswordFoundException;
-
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -9,6 +7,8 @@ import javax.annotation.PostConstruct;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
+
+import edu.hawaii.its.groupings.exceptions.PasswordFoundException;
 
 @Service
 public class PasswordScanner {
