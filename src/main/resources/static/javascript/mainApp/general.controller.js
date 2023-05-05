@@ -147,18 +147,18 @@
                         if (currentPage === 1) {
                             putGroupMembers = setGroupMembers;
                         }
-                        $scope.groupingBasis = putGroupMembers(res.groupingBasis.groupMembers, $scope.groupingBasis);
+                        $scope.groupingBasis = putGroupMembers(res.groupingBasis.members, $scope.groupingBasis);
                         $scope.filter($scope.groupingBasis, "pagedItemsBasis", "currentPageBasis", $scope.basisQuery, true);
 
-                        $scope.groupingInclude = putGroupMembers(res.groupingInclude.groupMembers, $scope.groupingInclude);
+                        $scope.groupingInclude = putGroupMembers(res.groupingInclude.members, $scope.groupingInclude);
                         $scope.addInBasis($scope.groupingInclude);
                         $scope.filter($scope.groupingInclude, "pagedItemsInclude", "currentPageInclude", $scope.includeQuery, true);
 
-                        $scope.groupingExclude = putGroupMembers(res.groupingExclude.groupMembers, $scope.groupingExclude);
+                        $scope.groupingExclude = putGroupMembers(res.groupingExclude.members, $scope.groupingExclude);
                         $scope.addInBasis($scope.groupingExclude);
                         $scope.filter($scope.groupingExclude, "pagedItemsExclude", "currentPageExclude", $scope.excludeQuery, true);
 
-                        $scope.groupingOwners = putGroupMembers(res.groupingOwners.groupMembers, $scope.groupingOwners);
+                        $scope.groupingOwners = putGroupMembers(res.groupingOwners.members, $scope.groupingOwners);
                         $scope.filter($scope.groupingOwners, "pagedItemsOwners", "currentPageOwners", $scope.ownersQuery, true);
 
                         // Todo rename to allMembers.
