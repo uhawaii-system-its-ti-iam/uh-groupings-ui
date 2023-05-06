@@ -452,18 +452,17 @@ describe("AdminController", function () {
     });
 
     describe("displayRemoveFromGroupsModal", () => {
-        let options = { member: { uhUuid: "testId" }, groupPaths: "testPath", listName: ["testList"] };
+        let options = { member: { uhUuid: "testId" }, groupPaths: "testPath", listNames: ["testList"] };
 
         it("should set scope variables to passed in option's object", () => {
             scope.memberToRemove = {};
             scope.groupPaths = "badPath";
-            scope.listName = "badList";
+            scope.listNames = ["badList"];
             scope.displayRemoveFromGroupsModal(options);
 
             expect(scope.memberToRemove).toEqual({uhUuid: "testId"});
             expect(scope.groupPaths).toBe("testPath");
-            expect(scope.listName).toBe("testList");
-            expect(scope.ownerOfListName).toBe("");
+            expect(scope.listNames).toBe("testList");
         });
 
         it("should call showWarningRemovingSelf function", () => {
@@ -578,6 +577,79 @@ describe("AdminController", function () {
             scope.returnToManagePerson();
             expect(scope.searchForUserGroupingInformation).toHaveBeenCalled();
             expect(gs.getAdminLists).toHaveBeenCalled();
+        });
+    });
+
+    describe("clearManagePersonCheckboxes", () => {
+        beforeEach(() => {
+            scope.pagedItemsPerson[scope.currentPagePerson] = {
+                inBasis: false,
+                inExclude: false,
+                inInclude: true,
+                isSelected: true
+            };
+        });
+
+        it("should negate scope.checkAll", () => {
+            scope.checkAll = true;
+            scope.clearManagePersonCheckboxes();
+            expect(scope.checkAll).toEqual(false);
+        });
+    });
+
+    describe("proceedRemoveFromGroupsModal", () => {
+        beforeEach(() => {
+            scope.removeFromGroupsModalInstance = {
+                close: () => {}
+            };
+        });
+
+        it("should close removeFromGroupsModalInstance", () => {
+            spyOn(scope.removeFromGroupsModalInstance, "close").and.callThrough();
+            scope.proceedRemoveFromGroupsModal();
+            expect(scope.removeFromGroupsModalInstance.close).toHaveBeenCalled();
+        });
+    });
+
+    describe("cancelRemoveFromGroupsModal", () => {
+        beforeEach(() => {
+            scope.removeFromGroupsModalInstance = {
+                dismiss: () => {}
+            };
+        });
+
+        it("should dismiss the removeFromGroupsModal", () => {
+            spyOn(scope.removeFromGroupsModalInstance, "dismiss").and.callThrough();
+            scope.cancelRemoveFromGroupsModal();
+            expect(scope.removeFromGroupsModalInstance.dismiss).toHaveBeenCalled();
+        });
+
+        it("should clear all checkboxes in Manage Person", () => {
+            spyOn(scope, "clearManagePersonCheckboxes");
+            scope.listName = "admins";
+            scope.cancelRemoveFromGroupsModal();
+            expect(scope.clearManagePersonCheckboxes).toHaveBeenCalled();
+        });
+    });
+
+    describe("closeRemoveErrorModal", () => {
+        beforeEach(() => {
+            scope.removeErrorModalInstance = {
+                close: () => {}
+            };
+        });
+
+        it("should close removeErrorModalInstance", () => {
+            spyOn(scope.removeErrorModalInstance, "close").and.callThrough();
+            scope.closeRemoveErrorModal();
+            expect(scope.removeErrorModalInstance.close).toHaveBeenCalled();
+        });
+
+        it("should call clearManagePersonCheckboxes", () => {
+            spyOn(scope, "clearManagePersonCheckboxes").and.callThrough();
+            scope.listName = "admins";
+            scope.closeRemoveErrorModal();
+            expect(scope.clearManagePersonCheckboxes).toHaveBeenCalled();
         });
     });
 });

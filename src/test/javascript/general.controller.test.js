@@ -2145,6 +2145,18 @@ describe("GeneralController", () => {
         });
     });
 
+    describe("proceedResetGroup", () => {
+        beforeEach(() => {
+            scope.displayResetGroupModal(scope.group);
+        });
+
+        it("should close resetModalInstance", () => {
+            spyOn(scope.resetModalInstance, "close").and.callThrough();
+            scope.proceedResetGroup();
+            expect(scope.resetModalInstance.close).toHaveBeenCalled();
+        });
+    });
+
     describe("proceedRemoveModal", () => {
         beforeEach(() => {
             scope.removeModalInstance = {
@@ -2159,17 +2171,11 @@ describe("GeneralController", () => {
             scope.proceedRemoveModal();
             expect(scope.removeModalInstance.close).toHaveBeenCalled();
         });
-    });
 
-    describe("proceedResetGroup", () => {
-        beforeEach(() => {
-            scope.displayResetGroupModal(scope.group);
-        });
-
-        it("should close resetModalInstance", () => {
-            spyOn(scope.resetModalInstance, "close").and.callThrough();
-            scope.proceedResetGroup();
-            expect(scope.resetModalInstance.close).toHaveBeenCalled();
+        it("should clear multiRemoveResults", () => {
+            scope.multiRemoveResults = [{uid: "testiwta", uhUuid: "99997010", name: "Testf-iwt-a TestIAM-staff"}];
+            scope.proceedRemoveModal();
+            expect(scope.multiRemoveResults).toEqual([]);
         });
     });
 
@@ -2184,27 +2190,16 @@ describe("GeneralController", () => {
 
         it("should dismiss removeModalInstance", () => {
             spyOn(scope.removeModalInstance, "dismiss").and.callThrough();
-            spyOn(scope, "clearCheckboxes").and.callThrough();
             scope.cancelRemoveModal();
             expect(scope.removeModalInstance.dismiss).toHaveBeenCalled();
-            expect(scope.clearCheckboxes).toHaveBeenCalled();
-        });
-    });
-
-    describe("clearCheckboxes", () => {
-        beforeEach(() => {
-            scope.pagedItemsPerson[scope.currentPagePerson] = {
-                inBasis: false,
-                inExclude: false,
-                inInclude: true,
-                isSelected: true
-            };
         });
 
-        it("should negate scope.checkAll", () => {
-            let checkAll = scope.checkAll;
-            scope.clearCheckboxes();
-            expect(scope.checkAll).toEqual(false);
+        it("should clear all checkboxes in a grouping", () => {
+            scope.allSelected = true;
+            scope.membersInCheckboxList = {"testiwta": true, "testiwtb": true, "testiwtc": true};
+            scope.cancelRemoveModal();
+            expect(scope.membersInCheckboxList).toEqual({});
+            expect(scope.allSelected).toBeFalse();
         });
     });
 
@@ -2253,10 +2248,8 @@ describe("GeneralController", () => {
 
         it("should close removeErrorModalInstance", () => {
             spyOn(scope.removeErrorModalInstance, "close").and.callThrough();
-            spyOn(scope, "clearCheckboxes").and.callThrough();
             scope.closeRemoveErrorModal();
             expect(scope.removeErrorModalInstance.close).toHaveBeenCalled();
-            expect(scope.clearCheckboxes).toHaveBeenCalled();
         });
     });
 

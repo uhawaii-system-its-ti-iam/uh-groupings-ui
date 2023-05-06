@@ -167,6 +167,11 @@ public class HomeController {
         return "modal/successfulGroupResetModal";
     }
 
+    @GetMapping(value = "/modal/removeFromGroupsModal")
+    public String removeFromGroupsModal() {
+        return "modal/removeFromGroupsModal";
+    }
+
     @GetMapping(value = "/modal/emptyGroupModal")
     public String emptyGroupModal() {
         return "modal/emptyGroupModal";
