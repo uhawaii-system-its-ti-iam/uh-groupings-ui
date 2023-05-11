@@ -520,7 +520,7 @@ describe("GroupingController", () => {
             expect(scope.verifyImportFileType({ type: "TEXT/PLAIN" })).toBeTrue();
 
             expect(scope.verifyImportFileType({ type: null })).toBeFalse();
-            expect(scope.verifyImportFileType({ type: "text/csv" })).toBeFalse();
+            expect(scope.verifyImportFileType({ type: "text/csv" })).toBeTrue();
             expect(scope.verifyImportFileType(null)).toBeFalse();
         });
 

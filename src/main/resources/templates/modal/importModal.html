@@ -1,36 +1,58 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <div class="modal-header">
-    <h5 class="modal-title" id="modal-title">Import</h5>
+    <h5 class="modal-title" id="import-modal" th:utext="#{screen.message.import.modal.importFile}"></h5>
     <a class="close" type="button" ng-click="cancelImportModal()">
         <span aria-hidden="true">&times;</span>
     </a>
 </div>
 <div class="modal-body" id="modal-body">
-    <p th:utext="#{screen.message.import.modal.importFile}"></p>
-    <div th:utext="#{screen.message.import.modal.importFileGuide}"></div>
-    <div class="container">
-        <div class="row justify-content-start">
-            <div class="col-md-6">
-                <ul class="list-styling">
-                    <li>iamtst01</li>
-                    <li>iamtst02</li>
-                    <li>iamtst03</li>
-                </ul>
+    <div class="mb-3">
+        <div class="row justify-content-start container">
+            <input type="file" ng-model="inputFile" aria-label="Choose File" file-model="inputFile" accept="text/plain, .csv">
+            <button class="btn btn-primary ml-1" ng-click="readTextFile(inputFile); cancelImportModal()">
+                Import
+            </button>
+        </div>
+        <div class="row container">
+            <div type="button" role="link" aria-expanded="false" class="collapsed link" data-toggle="collapse" data-target=".instructions">
+                Instructions
+                <i class="fa fa-chevron-up font-weight-bold"></i>
             </div>
         </div>
-        <div class="row mt-2 mb-2 justify-content-start">
-            <div class="col-md-6">or</div>
-        </div>
-        <div class="row mt-2 mb-2 justify-content-start">
-            <div class="col-md-6">
-                iamtst01, iamtst02, iamtst03
+
+        <div class="row mb-3 container collapse instructions">
+            <p th:utext=#{screen.message.import.modal.instruction}></p>
+            <div class="col-md-4 pl-0">
+                <div type="button" role="link" aria-expanded="false" class="card-header collapsed" data-toggle="collapse" data-target=".text-file-example" th:utext="#{screen.message.import.modal.importTextFileGuide}">
+                </div><br>
+                <div class="collapse text-file-example">
+                    <ul class="list-styling">
+                        <li>iamtst01</li>
+                        <li>iamtst02</li>
+                        <li>iamtst03</li>
+                    </ul>
+                    <div class="row mt-2 mb-2 justify-content-start">
+                        <div class="col-md-6">or</div>
+                    </div>
+                    <div class="row mt-2 mb-2 justify-content-start text-nowrap">
+                        <div class="col-md-6">
+                            iamtst01, iamtst02, iamtst03
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 pl-0">
+                <div type="button" role="link" aria-expanded="false" data-toggle="collapse" data-target=".csv-file-example" class="card-header collapsed" th:utext="#{screen.message.import.modal.importCSVFileGuide}">
+                </div><br>
+                <div class="card-body list-styling text-nowrap csv-file-example collapse" role="list">
+                    <li>Last,First,Username,UH Number,Email</li>
+                    <li>TestIAM-staff,Testf-iwt-a,testiwta,99997010,testiwta@hawaii.edu</li>
+                    <li>TestIAM-staff,Testf-iwt-b,testiwtb,99997027,testiwtb@hawaii.edu</li>
+                    <li>TestIAM-staff,Testf-iwt-c,testiwtc,99997033,testiwtc@hawaii.edu</li>
+                </div>
             </div>
         </div>
-    </div>
-    <input type="file" ng-model="inputFile" aria-label="Choose File" file-model="inputFile" accept="text/plain">
-    <button class="btn btn-primary" ng-click="readTextFile(inputFile); cancelImportModal()">
-        Import
-    </button>
+        </div>
 </div>
 <div class="modal-footer">
 </div>

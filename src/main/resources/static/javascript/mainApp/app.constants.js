@@ -39,7 +39,8 @@ UHGroupingsApp.constant("Message", {
     Csv: {
         GROUP_NOT_LOADED: "Export will be available once all members are loaded.",
         GROUP_EMPTY: "No members to export.",
-        EMAIL_SUFFIX: "@hawaii.edu"
+        EMAIL_SUFFIX: "@hawaii.edu",
+        UUID_COLUMN_HEADER: "UH Number",
     },
     ResetGroupSuccess: {
         INCLUDE_AND_EXCLUDE: "Include and Exclude lists have",
