@@ -695,9 +695,7 @@
          */
         function resetCheckboxes() {
             $scope.allSelected = false;
-            for (let member of Object.values($scope.membersInCheckboxList)) {
-                member = false;
-            }
+            $scope.membersInCheckboxList = {};
         }
 
         /**
@@ -712,19 +710,22 @@
                     $scope.manageMembers = "";
                     $scope.membersNotInList = "";
                     $scope.membersInList = "";
-                    $scope.personProps = [];
-                    $scope.membersInCheckboxList = {};
+                    $scope.multiRemoveResults = [];
                     $scope.waitingForImportResponse = false;
                     resetCheckboxes();
                     break;
                 case "admins":
                     $scope.adminToAdd = "";
+                    $scope.clearManagePersonCheckboxes();
                     break;
                 default:
-                    $scope.manageMembers = "";
                     $scope.adminToAdd = "";
+                    $scope.manageMembers = "";
                     $scope.membersNotInList = "";
                     $scope.membersInList = "";
+                    $scope.multiRemoveResults = [];
+                    $scope.waitingForImportResponse = false;
+                    resetCheckboxes();
             }
         }
 
@@ -1417,6 +1418,7 @@
          * Closes the remove modal instance.
          */
         $scope.proceedRemoveModal = function () {
+            clearMemberInput($scope.listName);
             $scope.removeModalInstance.close();
         };
 
@@ -1424,17 +1426,18 @@
          * Cancels the remove modal instance
          */
         $scope.cancelRemoveModal = function () {
-            $scope.membersNotInList = "";
-            $scope.multiRemoveResults = [];
+            if ($scope.listName !== "Include" && $scope.listName !== "Exclude") {
+                $scope.clearManagePersonCheckboxes();
+            }
+            clearMemberInput($scope.listName);
             $scope.removeModalInstance.dismiss("cancel");
-            $scope.clearCheckboxes();
         };
 
         /**
          * Helper - cancelRemoveModal, closeRemoveErrorModal
          * Clears all selected checkboxes in manage person
          */
-        $scope.clearCheckboxes = function () {
+        $scope.clearManagePersonCheckboxes = function () {
             $scope.checkAll = false;
             _.forEach($scope.pagedItemsPerson[$scope.currentPagePerson], function (grouping) {
                 if (grouping.inOwner || grouping.inInclude || grouping.inExclude) {
@@ -1591,7 +1594,9 @@
          * Close the remove error modal.
          */
         $scope.closeRemoveErrorModal = function () {
-            $scope.clearCheckboxes();
+            if ($scope.listName !== "Include" && $scope.listName !== "Exclude") {
+                $scope.clearManagePersonCheckboxes();
+            }
             $scope.removeErrorModalInstance.close();
         };
 
