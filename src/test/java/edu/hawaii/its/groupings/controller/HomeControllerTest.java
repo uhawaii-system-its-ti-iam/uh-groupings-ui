@@ -375,6 +375,16 @@ public class HomeControllerTest {
 
     @Test
     @WithMockUhUser(username = "uh")
+    public void requestRemoveFromGroupsModal() throws Exception {
+        MvcResult mvcResult = mockMvc.perform(get("/modal/removeFromGroupsModal"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("modal/removeFromGroupsModal"))
+                .andReturn();
+        assertNotNull(mvcResult);
+    }
+
+    @Test
+    @WithMockUhUser(username = "uh")
     public void requestEmptyGroupModal() throws Exception {
         MvcResult mvcResult = mockMvc.perform(get("/modal/emptyGroupModal"))
                 .andExpect(status().isOk())

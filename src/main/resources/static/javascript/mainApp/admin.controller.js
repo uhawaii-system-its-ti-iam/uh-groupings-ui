@@ -155,7 +155,7 @@
                 $scope.displayRemoveFromGroupsModal({
                     member: memberToRemove,
                     groupPaths: $scope.selectedGroupingsPaths,
-                    listName: $scope.selectedGroupingsNames
+                    listNames: $scope.selectedGroupingsNames
                 });
             }
         };
@@ -287,15 +287,14 @@
          * @param {object} options - the options object
          * @param {object} options.member - the user being removed
          * @param {string} options.groupPaths - groups the user is being removed from
-         * @param {object} options.listName - groups the user is being removed from
+         * @param {object} options.listNames - groups the user is being removed from
          */
         $scope.displayRemoveFromGroupsModal = function (options) {
             const memberToRemove = options.member.uhUuid;
             const sanitizedUser = $scope.sanitizer(memberToRemove);
             $scope.memberToRemove = options.member;
             $scope.groupPaths = options.groupPaths;
-            $scope.listName = options.listName.join(", ");
-            $scope.ownerOfListName = $scope.selectedOwnedGroupingsNames.join(", ");
+            $scope.listNames = options.listNames.join(", ");
 
             const windowClass = $scope.showWarningRemovingSelf() ? "modal-danger" : "";
 
@@ -305,15 +304,15 @@
                 } else {
                     $scope.initMemberDisplayName(person);
                 }
-                $scope.removeModalInstance = $uibModal.open({
-                    templateUrl: "modal/removeModal",
+                $scope.removeFromGroupsModalInstance = $uibModal.open({
+                    templateUrl: "modal/removeFromGroupsModal",
                     windowClass,
                     scope: $scope,
                     backdrop: "static",
                     keyboard: false
                 });
 
-                $scope.removeModalInstance.result.then(function () {
+                $scope.removeFromGroupsModalInstance.result.then(function () {
                     $scope.loading = true;
                     let memberToRemove = options.member.uhUuid;
                     let groupingPath = $scope.groupPaths;
@@ -323,6 +322,29 @@
                 $scope.user = memberToRemove;
                 $scope.resStatus = res.status;
             });
+        };
+
+        /**
+         * Closes the remove from groups modal instance.
+         */
+        $scope.proceedRemoveFromGroupsModal = () => {
+            $scope.removeFromGroupsModalInstance.close();
+        };
+
+        /**
+         * Cancels the remove from groups modal instance.
+         */
+        $scope.cancelRemoveFromGroupsModal = () => {
+            $scope.clearManagePersonCheckboxes();
+            $scope.removeFromGroupsModalInstance.dismiss("cancel");
+        };
+
+        /**
+         * Closes the remove error modal and clears checkboxes in Manage Person.
+         */
+        $scope.closeRemoveErrorModal = () => {
+            $scope.clearManagePersonCheckboxes();
+            $scope.removeErrorModalInstance.close();
         };
 
         /**
@@ -390,6 +412,19 @@
             $scope.personToLookup = sessionStorage.getItem("personToLookup");
             $scope.searchForUserGroupingInformation();
             groupingsService.getAdminLists($scope.getAdminListsCallbackOnSuccess, $scope.displayApiErrorModal);
+        };
+
+        /**
+         * Helper - cancelRemoveFromGroupsModal, closeRemoveErrorModal
+         * Clears all selected checkboxes in manage person
+         */
+        $scope.clearManagePersonCheckboxes = () => {
+            $scope.checkAll = false;
+            _.forEach($scope.pagedItemsPerson[$scope.currentPagePerson], (grouping) => {
+                if (grouping.inOwner || grouping.inInclude || grouping.inExclude) {
+                    grouping.isSelected = $scope.checkAll;
+                }
+            });
         };
     }
 

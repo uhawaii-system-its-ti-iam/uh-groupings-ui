@@ -698,37 +698,19 @@
          */
         function resetCheckboxes() {
             $scope.allSelected = false;
-            for (let member of Object.values($scope.membersInCheckboxList)) {
-                member = false;
-            }
+            $scope.membersInCheckboxList = {};
         }
 
         /**
          * Clears the user input for adding/deleting a member to/from a list.
-         * @param {string?} listName - Name of the list that the user is being added to or removed from.
          */
-        function clearMemberInput(listName) {
-            switch (listName) {
-                case "Include":
-                case "Exclude":
-                case "owners":
-                    $scope.manageMembers = "";
-                    $scope.membersNotInList = "";
-                    $scope.membersInList = "";
-                    $scope.personProps = [];
-                    $scope.membersInCheckboxList = {};
-                    $scope.waitingForImportResponse = false;
-                    resetCheckboxes();
-                    break;
-                case "admins":
-                    $scope.adminToAdd = "";
-                    break;
-                default:
-                    $scope.manageMembers = "";
-                    $scope.adminToAdd = "";
-                    $scope.membersNotInList = "";
-                    $scope.membersInList = "";
-            }
+        function clearMemberInput() {
+            $scope.manageMembers = "";
+            $scope.membersNotInList = "";
+            $scope.membersInList = "";
+            $scope.multiRemoveResults = [];
+            $scope.waitingForImportResponse = false;
+            resetCheckboxes();
         }
 
         /**
@@ -900,7 +882,7 @@
 
             // On pressing "Ok" in the Dynamic modal, reload the grouping
             $scope.dynamicModal.result.finally(function () {
-                clearMemberInput($scope.listName);
+                clearMemberInput();
                 $scope.loading = true;
                 $scope.waitingForImportResponse = false;
                 if ($scope.listName === "admins") {
@@ -1285,7 +1267,7 @@
             // Prevent removing all owners
             if (listName === "owners" && $scope.multiRemoveResults.length === $scope.groupingOwners.length) {
                 $scope.displayRemoveErrorModal("owner");
-                clearMemberInput(listName);
+                clearMemberInput();
                 return;
             }
 
@@ -1323,7 +1305,7 @@
             // On pressing "Ok" in the Dynamic modal, reload the grouping
             $scope.dynamicModal.result.finally(function () {
                 $scope.loading = true;
-                clearMemberInput($scope.listName);
+                clearMemberInput();
                 $scope.getGroupingInformation();
             });
         }
@@ -1415,6 +1397,7 @@
          * Closes the remove modal instance.
          */
         $scope.proceedRemoveModal = function () {
+            clearMemberInput();
             $scope.removeModalInstance.close();
         };
 
@@ -1422,23 +1405,8 @@
          * Cancels the remove modal instance
          */
         $scope.cancelRemoveModal = function () {
-            $scope.membersNotInList = "";
-            $scope.multiRemoveResults = [];
+            clearMemberInput();
             $scope.removeModalInstance.dismiss("cancel");
-            $scope.clearCheckboxes();
-        };
-
-        /**
-         * Helper - cancelRemoveModal, closeRemoveErrorModal
-         * Clears all selected checkboxes in manage person
-         */
-        $scope.clearCheckboxes = function () {
-            $scope.checkAll = false;
-            _.forEach($scope.pagedItemsPerson[$scope.currentPagePerson], function (grouping) {
-                if (grouping.inOwner || grouping.inInclude || grouping.inExclude) {
-                    grouping.isSelected = $scope.checkAll;
-                }
-            });
         };
 
         /**
@@ -1590,8 +1558,8 @@
         /**
          * Close the remove error modal.
          */
-        $scope.closeRemoveErrorModal = function () {
-            $scope.clearCheckboxes();
+        $scope.closeRemoveErrorModal = () => {
+            clearMemberInput();
             $scope.removeErrorModalInstance.close();
         };
 

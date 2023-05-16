@@ -1,0 +1,52 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<div class="modal-header">
+    <h5 class="modal-title" id="modal-title">Remove Member From Groups</h5>
+    <a class="close" type="button" ng-click="cancelRemoveFromGroupsModal()">
+        <span aria-hidden="true">&times;</span>
+    </a>
+</div>
+<div class="modal-body" id="modal-body">
+    <p>
+        <span class="modal-black-text" th:text="#{screen.message.modal.remove.confirmation}"></span>
+        <span class="modal-black-text">{{listNames}} lists.</span>
+    </p>
+
+    <table>
+        <tr>
+            <th th:utext="#{screen.message.modal.remove.name}"></th>
+            <th class="font-weight-normal modal-attributes">{{fullName}}</th>
+        </tr>
+        <tr>
+            <th th:utext="#{screen.message.modal.remove.uid}"></th>
+            <th class="font-weight-normal modal-attributes">
+                {{uid}}
+                <span class="modal-black-text" ng-if="!uid">
+                    N/A
+                    <span class="fa fa-question-circle clickable" aria-hidden="true"
+                          tooltip
+                          th:title="#{screen.message.common.tooltip.username.notApplicable}">
+                    </span>
+                </span>
+            </th>
+        </tr>
+        <tr>
+            <th th:utext="#{screen.message.modal.remove.uhUserId}"></th>
+            <th class="font-weight-normal modal-attributes">{{uhUuid}}</th>
+        </tr>
+    </table>
+    <p>
+        <span class="modal-black-text">Are you sure you want to remove</span>
+        <span class="font-weight-bold">{{member}}</span>
+        <span class="modal-black-text"> from the {{listNames}} lists?</span>
+    </p>
+    <p class="alert alert-warning mt-2" role="alert">
+        <span class="text-dark" th:text="#{screen.message.common.membership.info}"></span>
+    </p>
+
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-click="proceedRemoveFromGroupsModal()">Yes</button>
+    <button class="btn btn-light" ng-click="cancelRemoveFromGroupsModal()" data-dismiss="modal">Cancel</button>
+</div>
+
+</html>
