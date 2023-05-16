@@ -67,7 +67,7 @@
                         <input class="position-relative ml-0 position-left blank-checkbox" type="checkbox"
 							   tabindex="0"
 							   aria-label="Remove {{i.name}} from the include."
-                               ng-keydown="clickCheckBox(i)"
+                               ng-keydown="clickCheckbox($event, i)"
                                ng-model="membersInCheckboxList[i.uhUuid]"
                                ng-click="$event.stopPropagation()">
                     </td>

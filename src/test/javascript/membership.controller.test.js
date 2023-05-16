@@ -1,5 +1,5 @@
 /* global inject */
-describe("MembershipController", function () {
+describe("MembershipController", () => {
 
     beforeEach(module("UHGroupingsApp"));
     beforeEach(module("ngMockE2E"));
@@ -10,7 +10,7 @@ describe("MembershipController", function () {
     let BASE_URL;
     let uibModal;
 
-    beforeEach(inject(function ($rootScope, $controller, _BASE_URL_, _$httpBackend_, $uibModal) {
+    beforeEach(inject(($rootScope, $controller, _BASE_URL_, _$httpBackend_, $uibModal) => {
         scope = $rootScope.$new();
         controller = $controller("MembershipJsController", {
             $scope: scope
@@ -20,15 +20,15 @@ describe("MembershipController", function () {
         uibModal = $uibModal;
     }));
 
-    it("should define the membership controller", function () {
+    it("should define the membership controller", () => {
         expect(controller).toBeDefined();
     });
 
-    describe("init", function () {
+    describe("init", () => {
 
         let mockResponse;
 
-        beforeEach(function () {
+        beforeEach(() => {
             mockResponse = {
                 groupingsIn: [
                     {
@@ -64,13 +64,13 @@ describe("MembershipController", function () {
             scope.init();
         });
 
-        it("should initialize membershipsList", function () {
+        it("should initialize membershipsList", () => {
             expect(scope.membershipsList).toBeDefined();
         });
     });
 
     // Set up mock data for optIn, optOut, and membershipRequired
-    beforeEach(function () {
+    beforeEach(() => {
         scope.itemsPerPage = 2;
 
         scope.membershipsList = [
@@ -130,12 +130,12 @@ describe("MembershipController", function () {
         });
     });
     describe("memberFilterReset", () => {
-        it("should call $scope.clearFilterQueryStrings", function () {
+        it("should call $scope.clearFilterQueryStrings", () => {
             spyOn(scope, "clearFilterQueryStrings").and.callThrough();
             scope.memberFilterReset();
             expect(scope.clearFilterQueryStrings).toHaveBeenCalled();
         });
-        it("should call $scope.filter", function () {
+        it("should call $scope.filter", () => {
             spyOn(scope, "filter").and.callThrough();
             scope.memberFilterReset();
             expect(scope.filter).toHaveBeenCalled();
@@ -162,10 +162,10 @@ describe("MembershipController", function () {
         });
     });
 
-    describe("optOut", function () {
+    describe("optOut", () => {
         let mockResponse;
 
-        beforeEach(function () {
+        beforeEach(() => {
             mockResponse = [{
                 action: "delete user from path:path2:path3:grouping4:include",
                 resultCode: "SUCCESS"
@@ -178,7 +178,7 @@ describe("MembershipController", function () {
                 .respond(200);
         });
 
-        it("should call init() on success", function () {
+        it("should call init() on success", () => {
 
             // path:path2:path3:grouping4
             scope.optOut(1, 1);
@@ -189,10 +189,10 @@ describe("MembershipController", function () {
 
     });
 
-    describe("optIn", function () {
+    describe("optIn", () => {
         let mockResponse;
 
-        beforeEach(function () {
+        beforeEach(() => {
             mockResponse = [{
                 action: "add users to path1:path4:grouping5:include",
                 resultCode: "SUCCESS"
@@ -205,7 +205,7 @@ describe("MembershipController", function () {
                 .respond(200);
         });
 
-        it("should call init() on success", function () {
+        it("should call init() on success", () => {
 
             // path1:path4:grouping4
             scope.optIn(0, 0);

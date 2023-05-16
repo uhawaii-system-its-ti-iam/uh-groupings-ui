@@ -1,14 +1,14 @@
 /* global UHGroupingsApp */
 
-UHGroupingsApp.directive("fileModel", ["$parse", function ($parse) {
+UHGroupingsApp.directive("fileModel", ["$parse", ($parse) => {
     return {
         restrict: "A",
         link(scope, element, attrs) {
             let model = $parse(attrs.fileModel);
             let modelSetter = model.assign;
 
-            element.bind("change", function () {
-                scope.$apply(function () {
+            element.bind("change", () => {
+                scope.$apply(() => {
                     modelSetter(scope, element[0].files[0]);
                 });
             });
@@ -16,7 +16,7 @@ UHGroupingsApp.directive("fileModel", ["$parse", function ($parse) {
     };
 }]);
 
-UHGroupingsApp.directive("tooltipOnTruncate", function () {
+UHGroupingsApp.directive("tooltipOnTruncate", () => {
     return {
         restrict: "A",
         scope: {
@@ -27,7 +27,7 @@ UHGroupingsApp.directive("tooltipOnTruncate", function () {
             element.attr("data-boundary", "window");
             element.attr("data-delay", "{\"show\": 300}");
 
-            element.on("mouseover", function () {
+            element.on("mouseover", () => {
                 if (element[0].offsetWidth < element[0].scrollWidth) {
                     $(element).tooltip("toggle");
                 } else {
@@ -51,7 +51,7 @@ UHGroupingsApp.directive("tooltipOnTruncate", function () {
  * @param title The text that will display for the tooltip. If no title parameter is given, will default to the element's title.
  * @param data-placement Determines the placement of the tooltip
  */
-UHGroupingsApp.directive("tooltip", function () {
+UHGroupingsApp.directive("tooltip", () => {
     return {
         restrict: "A",
         scope: {
@@ -63,10 +63,10 @@ UHGroupingsApp.directive("tooltip", function () {
             element.attr("data-boundary", "window");
             element.attr("data-delay", "{\"show\": 300}");
 
-            element.on("mouseover", function () {
+            element.on("mouseover", () => {
                 $(element).tooltip("toggle");
             });
-            element.on("mouseout", function () {
+            element.on("mouseout", () => {
                 $(element).tooltip("dispose");
             });
 

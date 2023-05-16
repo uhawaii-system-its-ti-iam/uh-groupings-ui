@@ -1,5 +1,5 @@
 /* global UHGroupingsApp */
-(function () {
+(() => {
     /**
      * Service function that provides GET and POST requests for getting or updating data
      * @name dataProvider
@@ -40,9 +40,9 @@
              */
             loadData(url, callback, callError) {
                 $http.get(encodeURI(url))
-                    .then(function (response) {
+                    .then((response) => {
                         callback(response.data);
-                    }, function (response) {
+                    }, (response) => {
                         callError(response);
                     });
             },
@@ -55,9 +55,9 @@
              */
             loadDataWithBody(url, data, callback, callError) {
                 $http.post(encodeURI(url), data)
-                    .then(function (response) {
+                    .then((response) => {
                         callback(response.data);
-                    }, function (response) {
+                    }, (response) => {
                         callError(response);
                     });
             },
@@ -70,9 +70,9 @@
              */
             updateData(url, callback, callError) {
                 $http.post(encodeURI(url))
-                    .then(function (response) {
+                    .then((response) => {
                         callback(response.data);
-                    }, function (response) {
+                    }, (response) => {
                         callError(response);
                     });
             },
@@ -86,9 +86,9 @@
              */
             updateDataWithBody(url, data, callback, callError) {
                 $http.put(encodeURI(url), data)
-                    .then(function (response) {
+                    .then((response) => {
                         callback(response.data);
-                    }, function (response) {
+                    }, (response) => {
                         callError(response);
                     });
             },
@@ -105,10 +105,10 @@
             updateDataWithBodyAndTimeoutModal(url, data, callback, callError, modal) {
                 let timeoutID = setTimeout(modal, timeLimit);
                 $http.put(encodeURI(url), data)
-                    .then(function (response) {
+                    .then((response) => {
                         clearTimeout(timeoutID);
                         callback(response.data);
-                    }, function (response) {
+                    }, (response) => {
                         clearTimeout(timeoutID);
                         callError(response);
                     });
@@ -126,11 +126,11 @@
                         "Content-Type": "application/json"
                     }
                 })
-                    .then(function () {
+                    .then(() => {
                         $window.location.href = redirectUrl;
                     });
             }
         };
     });
 
-}());
+})();

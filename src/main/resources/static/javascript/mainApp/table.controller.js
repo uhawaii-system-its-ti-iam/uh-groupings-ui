@@ -1,6 +1,6 @@
 /* global _, UHGroupingsApp */
 
-(function () {
+(() => {
 
     /**
      * Controller for handling tables, including pagination, sorting by columns, and filtering.
@@ -17,12 +17,11 @@
         const FILTER_COLUMNS_TO_IGNORE = ["basis", "$$hashKey"];
         const DEFAULT_COLUMN_NAME = "name";
 
-
         /**
          * Chunk an array of objects into an array of paged object arrays.
          * [{},{},{},{}] into [[{},{}],[{},{}]]
          */
-        $scope.objToPageArray = function (obj, size) {
+        $scope.objToPageArray = (obj, size) => {
             let i = 0;
             let arr = [];
             while (i < obj.length) {
@@ -36,7 +35,7 @@
          * @param {object} list The un-paginated list.
          * @returns {array} A paginated list, an array of arrays of objects with each sub array having a maximum of $scope.itemsperpage objects.
          */
-        $scope.groupToPages = function (list) {
+        $scope.groupToPages = (list) => {
             if (!_.isArray(list) || $scope.itemsPerPage < 1) {
                 return [];
             }
@@ -56,9 +55,9 @@
          * @returns {boolean} false if values in this key/column should be ignored when filtering for members/groupings,
          * otherwise returns true.
          */
-        function isFilterableColumn(key) {
+        const isFilterableColumn = (key) => {
             return !_.includes(FILTER_COLUMNS_TO_IGNORE, key);
-        }
+        };
 
         /**
          * Check if a string contains a substring (case insensitive).
@@ -66,12 +65,12 @@
          * @param {string} substr - the substring to find
          * @returns {boolean} true if the string contains the substring. Otherwise returns false.
          */
-        function containsSubstring(str, substr) {
+        const containsSubstring = (str, substr) => {
             if (!substr) {
                 return true;
             }
             return str.toLowerCase().indexOf(substr.toLowerCase()) !== -1;
-        }
+        };
 
         /**
          * Filter through a list given a user's query.
@@ -82,8 +81,8 @@
          * @param {string} query - the user's search query
          * @param resetPage
          */
-        $scope.filter = function (list, pagedListVar, pageVar, query, resetPage) {
-            let filteredItems = $filter("filter")(list, function (item) {
+        $scope.filter = (list, pagedListVar, pageVar, query, resetPage) => {
+            let filteredItems = $filter("filter")(list, (item) => {
                 for (let key in item) {
                     if (_.has(item, key)
                         && isFilterableColumn(key)
@@ -108,7 +107,7 @@
          * @param {number} gap - the max number of pages the user is able to see before and after the current page
          * @returns the page numbers (zero-indexed) that the user is able to see in the pagination control
          */
-        $scope.pageRange = function (currentPage, totalPages, gap) {
+        $scope.pageRange = (currentPage, totalPages, gap) => {
             // Prevent pagination from starting and ending at nonexistent pages
             let start = (currentPage - gap < 0) ? 0 : currentPage - gap;
             let end = (currentPage + gap + 1 > totalPages) ? totalPages : currentPage + gap + 1;
@@ -152,7 +151,7 @@
          * @returns {boolean} true if the First and Prev buttons in the pagination controls should be disabled,
          * otherwise returns false
          */
-        $scope.disableFirstAndPrev = function (currentPage) {
+        $scope.disableFirstAndPrev = (currentPage) => {
             return currentPage === 0;
         };
 
@@ -162,7 +161,7 @@
          * @returns {boolean} true if the Next and Last buttons in the pagination controls should be disabled, otherwise
          * returns false
          */
-        $scope.disableNextAndLast = function (pagedTable, currentPage) {
+        $scope.disableNextAndLast = (pagedTable, currentPage) => {
             return (pagedTable.length === 0) || (currentPage === pagedTable.length - 1);
         };
 
@@ -172,7 +171,7 @@
          * @param {string} pagedTableName - the variable name of the paginated table
          * @param {string} propertyName - the property to sort by
          */
-        $scope.sortBy = function (tableName, pagedTableName, propertyName) {
+        $scope.sortBy = (tableName, pagedTableName, propertyName) => {
             // Table has not been sorted by any column yet
             if (!$scope.columnSort[tableName]) {
                 if (propertyName === DEFAULT_COLUMN_NAME) {
@@ -194,34 +193,26 @@
             let reverse = $scope.columnSort[tableName].reverse;
             $scope[tableName] = $filter("orderBy")($scope[tableName], propertyName, reverse);
 
-            // Filter out the sorted list by the corresponding query
-            if (tableName === "adminsList") {
-                $scope.filter($scope[tableName], "pagedItemsAdmins", "currentPageAdmins", $scope.adminsQuery, false);
-            } else if (tableName === "groupingsList") {
-                $scope.filter($scope[tableName], "pagedItemsGroupings", "currentPageGroupings", $scope.groupingsQuery, false);
-            } else if (tableName === "membershipsList") {
-                $scope.filter($scope[tableName], "pagedItemsMemberships", "currentPageMemberships", $scope.membersQuery, false);
-            } else if (tableName === "optInList") {
-                $scope.filter($scope[tableName], "pagedItemsOptInList", "currentPageOptIn", $scope.optInQuery, false);
-            } else if (tableName === "groupingMembers") {
-                $scope.filter($scope[tableName], "pagedItemsMembers", "currentPageMembers", $scope.membersQuery, false);
-            } else if (tableName === "groupingBasis") {
-                $scope.filter($scope[tableName], "pagedItemsBasis", "currentPageBasis", $scope.basisQuery, false);
-            } else if (tableName === "groupingInclude") {
-                $scope.filter($scope[tableName], "pagedItemsInclude", "currentPageInclude", $scope.includeQuery, false);
-            } else if (tableName === "groupingExclude") {
-                $scope.filter($scope[tableName], "pagedItemsExclude", "currentPageExclude", $scope.excludeQuery, false);
-            } else if (tableName === "groupingOwners") {
-                $scope.filter($scope[tableName], "pagedItemsOwners", "currentPageOwners", $scope.ownersQuery, false);
-            } else {
-                // Paginate the table again
-                $scope[pagedTableName] = $scope.groupToPages($scope[tableName]);
-            }
-        };
+            const tableNames = {
+                adminsList: { pagedListVar: "pagedItemsAdmins", pageVar: "currentPageAdmins" , query: $scope.adminsQuery },
+                groupingsList: { pagedListVar: "pagedItemsGroupings", pageVar: "currentPageGroupings", query: $scope.groupingsQuery },
+                membershipsList: { pagedListVar: "pagedItemsMemberships", pageVar: "currentPageMemberships", query: $scope.membersQuery },
+                optInList: { pagedListVar: "pagedItemsOptInList", pageVar: "currentPageOptIn", query: $scope.optInQuery },
+                groupingMembers: { pagedListVar: "pagedItemsMembers", pageVar: "currentPageMembers", query: $scope.membersQuery },
+                groupingBasis: { pagedListVar: "pagedItemsBasis", pageVar: "currentPageBasis", query: $scope.basisQuery },
+                groupingInclude: { pagedListVar: "pagedItemsInclude", pageVar: "currentPageInclude", query: $scope.includeQuery },
+                groupingExclude: { pagedListVar: "pagedItemsExclude", pageVar: "currentPageExclude", query: $scope.excludeQuery },
+                groupingOwners: { pagedListVar: "pagedItemsOwners", pageVar: "currentPageOwners", query: $scope.ownersQuery }
+            };
 
+            if (!tableNames.hasOwnProperty(tableName)) {
+                $scope[pagedTableName] = $scope.groupToPages($scope[tableName]);
+                return;
+            }
+            const { pagedListVar, pageVar, query } = tableNames[`${tableName}`];
+            $scope.filter($scope[tableName], pagedListVar, pageVar, query, false);
+        };
     }
 
     UHGroupingsApp.controller("TableJsController", TableJsController);
-
-}());
-//})();
+})();

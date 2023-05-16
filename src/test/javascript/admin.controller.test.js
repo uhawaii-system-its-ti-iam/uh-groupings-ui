@@ -655,8 +655,8 @@ describe("AdminController", function () {
     });
 
     describe ("handleGroupingOwnersOnSuccess", () => {
-        const tester = {
-            groupMembers: [
+        const res = {
+            members: [
                 {
                     uid: "testiwta",
                     uhUuid: "99997010",
@@ -674,24 +674,15 @@ describe("AdminController", function () {
                 }]
             };
 
-        beforeEach(() => {
-            scope.handleGroupingOwnersOnSuccess(tester);
+        it("should set scope.owners equal to API response", () => {
+            scope.handleGroupingOwnersOnSuccess(res);
+            expect(scope.owners).toEqual(res.members);
         });
 
-        it("should set scope.names equal to api response names", () => {
-            expect(scope.names[0]).toEqual("testiwta");
-            expect(scope.names[1]).toEqual("testiwtb");
-            expect(scope.names[2]).toEqual("testiwtc");
-        });
-        it("should set scope.usernames equal to api response usernames", () => {
-            expect(scope.usernames[0]).toEqual("testiwta");
-            expect(scope.usernames[1]).toEqual("testiwtb");
-            expect(scope.usernames[2]).toEqual("testiwtc");
-        });
-        it("should set scope.uhuids equal to api response UH ID numbers", () => {
-            expect(scope.uhuids[0]).toEqual("99997010");
-            expect(scope.uhuids[1]).toEqual("99997027");
-            expect(scope.uhuids[2]).toEqual("99997033");
+        it("should call displayGroupingOwnersModal", () => {
+            spyOn(scope, "displayGroupingOwnersModal");
+            scope.handleGroupingOwnersOnSuccess(res);
+            expect(scope.displayGroupingOwnersModal).toHaveBeenCalled();
         });
     });
 

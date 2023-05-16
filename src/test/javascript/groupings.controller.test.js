@@ -1,5 +1,5 @@
 /* global inject */
-describe("OwnerController", function () {
+describe("GroupingController", () => {
 
     beforeEach(module("UHGroupingsApp"));
     beforeEach(module("ngMockE2E"));
@@ -10,9 +10,9 @@ describe("OwnerController", function () {
     let BASE_URL;
     let gs;
 
-    beforeEach(inject(function ($rootScope, $controller, _BASE_URL_, _$httpBackend_, groupingsService) {
+    beforeEach(inject(($rootScope, $controller, _BASE_URL_, _$httpBackend_, groupingsService) => {
         scope = $rootScope.$new();
-        controller = $controller("OwnerJsController", {
+        controller = $controller("GroupingsJsController", {
             $scope: scope
         });
         httpBackend = _$httpBackend_;
@@ -33,15 +33,6 @@ describe("OwnerController", function () {
 
             expect(scope.loading).toBeTrue();
             expect(gs.getGroupingsOwned).toHaveBeenCalled();
-        });
-    });
-
-    describe("hoverCopy", () => {
-        it("should copy popover when clipboard is being hovered", () => {
-            spyOn($.fn, "popover").and.callThrough();
-
-            scope.hoverCopy();
-            expect($.fn.popover).toHaveBeenCalled();
         });
     });
 });

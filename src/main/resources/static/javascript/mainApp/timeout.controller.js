@@ -1,6 +1,6 @@
 /* global angular, UHGroupingsApp */
 
-(function () {
+(() => {
 
     /**
      * Controller for the timeout functionality. When a user is idle for more than 30 min, user will be logged out.
@@ -33,19 +33,19 @@
         /**
          * Convert seconds to minutes and return as a formatted string.
          */
-        function secondsToMinutes(seconds) {
+        const secondsToMinutes = (seconds) => {
             let minutes = Math.round((seconds - 30) / 60);
             let remainingSeconds = seconds % 60;
             if (remainingSeconds < 10) {
                 remainingSeconds = "0" + remainingSeconds;
             }
             return `${minutes}:${remainingSeconds}`;
-        }
+        };
 
         /**
          * Restart displayTimeoutModalPromise.
          */
-        function restartTimeouts() {
+        const restartTimeouts = () => {
             if (angular.isDefined(displayTimeoutModalPromise)) {
                 displayTimeoutModalPromise = {};
                 displayTimeoutModalPromise = $timeout(() => {
@@ -59,7 +59,7 @@
                     restartTimeouts();
                 });
             }
-        }
+        };
 
         angular.element(function () {
             // Start timeouts
@@ -76,13 +76,13 @@
             });
 
             // If user clicks, reset timeout
-            $(this).click(function (e) {
+            $(this).click((e) => {
                 if (!isModalOpen) {
                     $timeout.cancel(displayTimeoutModalPromise);
                 }
             });
             // If user presses a key on the keyboard reset timeout
-            $(this).keypress(function (e) {
+            $(this).keypress((e) => {
                 if (!isModalOpen) {
                     $timeout.cancel(displayTimeoutModalPromise);
                 }
@@ -92,7 +92,7 @@
         /**
          * Clear timeouts and intervals when DOM is destroyed.
          */
-        $scope.$on("$destroy", function (event) {
+        $scope.$on("$destroy", (event) => {
             if (angular.isDefined(displayTimeoutModalPromise)) {
                 $timeout.cancel(displayTimeoutModalPromise);
                 displayTimeoutModalPromise = {};
@@ -106,29 +106,29 @@
         /**
          * Create a countdown timer.
          */
-        function timer() {
+        const timer = () => {
             $scope.timeRemaining = secondsToMinutes($scope.secondsRemaining);
             if ($scope.secondsRemaining <= 0) {
                 $scope.logoutOnIdle();
                 restartTimeouts();
             }
             $scope.secondsRemaining--;
-        }
+        };
 
         /**
          * Restart timer countdown.
          */
-        function restartCountdown() {
+        const restartCountdown = () => {
             $interval.cancel(countdownTimerPromise);
             countdownTimerPromise = {};
             $scope.secondsRemaining = TIME_TO_LOGOUT;
             $scope.timeRemaining = secondsToMinutes(TIME_TO_LOGOUT);
-        }
+        };
 
         /**
          * Display a timeout modal.
          */
-        $scope.displayTimeoutModal = function () {
+        $scope.displayTimeoutModal = () => {
             $scope.timeoutModalInstance = $uibModal.open({
                 templateUrl: "modal/timeoutModal",
                 scope: $scope,
@@ -142,12 +142,12 @@
             });
             // Callback when timeout modal is closed.
             // Execute when user clicks "Stay logged in" button.
-            $scope.timeoutModalInstance.result.then(function () {
+            $scope.timeoutModalInstance.result.then(() => {
                 restartTimeouts();
                 restartCountdown();
                 $scope.pingServer();
                 isModalOpen = false;
-            }, function () {
+            }, () => {
                 // Error catching if modal is not closed properly.
                 restartTimeouts();
                 restartCountdown();
@@ -159,17 +159,17 @@
         /**
          * Close timeout modal.
          */
-        $scope.closeTimeoutModal = function () {
+        $scope.closeTimeoutModal = () => {
             $scope.timeoutModalInstance.close();
         };
 
         /**
          * Ping tomcat server with a GET request to retrieve user info.
          */
-        $scope.pingServer = function () {
+        $scope.pingServer = () => {
             const endpoint = BASE_URL + "members/aaronvil";
-            dataProvider.loadData(function () {
-            }, function () {
+            dataProvider.loadData(() => {
+            }, () => {
             }, endpoint);
         };
 
@@ -193,4 +193,4 @@
     }
 
     UHGroupingsApp.controller("TimeoutJsController", TimeoutJsController);
-}());
+})();

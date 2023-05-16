@@ -1,14 +1,14 @@
 /* global inject */
-describe("AppService", function () {
+describe("AppService", () => {
 
         beforeEach(module("UHGroupingsApp"));
         beforeEach(module("ngMockE2E"));
 
         let dp;
-        beforeEach(inject(function (dataProvider, BASE_URL) {
+        beforeEach(inject((dataProvider, BASE_URL) => {
             dp = dataProvider;
         }));
-        it("should define dataProvider", function () {
+        it("should define dataProvider", () => {
             expect(dp).toBeDefined();
         });
 
