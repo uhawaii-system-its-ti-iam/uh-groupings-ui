@@ -18,7 +18,6 @@
         $scope.invalidMembers = [];
         $scope.membersInList = "";
         $scope.isMultiAdd = false;
-
         // Remove members
         $scope.multiRemoveResults = [];
         $scope.membersToRemove = [];
@@ -913,7 +912,7 @@
                     $scope.getGroupingInformation();
                     $scope.syncDestArray = [];
                 }
-            });
+            }).catch(() => {});
         }
 
         /**
@@ -1328,7 +1327,7 @@
                 $scope.loading = true;
                 clearMemberInput($scope.listName);
                 $scope.getGroupingInformation();
-            });
+            }).catch(() => {});
         }
 
         /**
@@ -1524,6 +1523,7 @@
                     }
                 }
             }
+
             // Otherwise, display the result success modal.
             $scope.displaySuccessfulGroupResetModal((() => {
                 if (results.includeSuccess && results.excludeSuccess) {
@@ -1553,9 +1553,14 @@
             $scope.successfulGroupResetModalInstance = $uibModal.open({
                 templateUrl: "modal/successfulGroupResetModal",
                 scope: $scope,
-                backdrop: "static",
-                keyboard: false
+                backdrop: true,
+                keyboard: true
             });
+
+            $scope.successfulGroupResetModalInstance.result.finally(() => {
+                $scope.loading = true;
+                $scope.getGroupingInformation();
+            }).catch(() => {});
         };
 
         /**
