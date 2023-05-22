@@ -8,11 +8,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = { SpringBootWebApplication.class })
-public class AppConfigRunTest {
+public class AppConfigTest {
 
     @Test
     public void construction() {
-        AppConfigRun appConfig = new AppConfigRun();
+        AppConfig appConfig = new AppConfig();
         assertNotNull(appConfig);
     }
 
