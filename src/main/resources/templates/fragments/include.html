@@ -31,7 +31,8 @@
                                ng-model="allSelected"
                                ng-disabled="groupingInclude.length === 0"
                                ng-click="toggleCheckAllSelection('Include')"
-                               value="option1" tooltip="Check all" data-placement="top">
+                               value="option1" tooltip="Check all" data-placement="top"
+                               ng-keydown="$event.keyCode === 13 ? toggleCheckAllSelection('Include') : null">
                     </th>
                     <th scope="col" role="button"
                         ng-click="sortBy('groupingInclude', 'pagedItemsInclude', 'name')">
@@ -63,8 +64,10 @@
                 <tbody>
                 <tr ng-repeat="i in pagedItemsInclude[currentPageInclude]" class="table table-sm">
                     <td class="overflow-auto py-1 px-3">
-                        <input class="position-relative ml-0 blank-checkbox" type="checkbox"
-                               tabindex="0" aria-label="Select {{i.name}} to remove from the Include list"
+                        <input class="position-relative ml-0 position-left blank-checkbox" type="checkbox"
+							   tabindex="0"
+							   aria-label="Remove {{i.name}} from the include."
+                               ng-keydown="clickCheckBox(i)"
                                ng-model="membersInCheckboxList[i.uhUuid]"
                                ng-click="$event.stopPropagation()">
                     </td>

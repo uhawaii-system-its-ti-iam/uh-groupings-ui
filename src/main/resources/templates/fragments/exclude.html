@@ -28,6 +28,7 @@
                                ng-disabled="groupingExclude.length === 0"
                                ng-click="toggleCheckAllSelection('Exclude')"
                                value="option1" tooltip="Check all" data-placement="top"
+                               ng-keydown="$event.keyCode === 13 ? toggleCheckAllSelection('Exclude') : null"
                                aria-label="assertive">
                     </th>
                     <th scope="col" role="button"
@@ -61,7 +62,7 @@
                 <tr ng-repeat="e in pagedItemsExclude[currentPageExclude]" class="table table-sm">
                     <td class="overflow-auto py-1 px-3">
                         <input class="position-relative ml-0 blank-checkbox" type="checkbox"
-                               tabindex="0" aria-label="Select {{e.name}} to remove from the Exclude list"
+                               ng-keydown="clickCheckBox(e)"
                                ng-model="membersInCheckboxList[e.uhUuid]"
                                ng-click="$event.stopPropagation()">
                     </td>

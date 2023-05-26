@@ -10,14 +10,16 @@
                     <form ng-submit="resetGroup()">
                         <div class="form-check">
                             <input type="checkbox" class="position-relative ml-0" id="resetIncludeCheck"
-                                   ng-click="updateIncludeCheck()"
-                                   ng-model="includeCheck" ng-disabled="includeDisable">
+                                   ng-click="updateIncludeCheck();"
+                                   ng-model="includeCheck" ng-disabled="includeDisable"
+                                   ng-keydown="clickWithEnter($event)"/>
                             <label class="form-check-label" for="resetIncludeCheck">Reset Include</label>
                         </div>
                         <div class="form-check">
                             <input type="checkbox" class="position-relative ml-0" id="resetExcludeCheck"
                                    ng-click="updateExcludeCheck()"
-                                   ng-model="excludeCheck" ng-disabled="excludeDisable">
+                                   ng-model="excludeCheck" ng-disabled="excludeDisable"
+                                   ng-keydown="clickWithEnter($event)"/>
                             <label class="form-check-label" for="resetExcludeCheck">Reset Exclude</label>
                         </div>
                         <div>

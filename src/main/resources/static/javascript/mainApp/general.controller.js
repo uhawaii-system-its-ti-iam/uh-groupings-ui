@@ -1782,7 +1782,7 @@
         };
 
         $scope.updateIncludeCheck = function () {
-            $scope.includeCheck = $scope.includeCheck === false;
+            $scope.includeCheck = !$scope.includeCheck;
         };
 
         $scope.updateExcludeCheck = function () {
@@ -2104,6 +2104,20 @@
             }
             return "/uhgroupings";
         };
+
+        $scope.clickCheckBox = function (i) {
+            if (event.keyCode === 13) {
+                $scope.membersInCheckboxList[i.uhUuid] = !$scope.membersInCheckboxList[i.uhUuid];
+            }
+        };
+
+        $scope.clickWithEnter = function(event) {
+            if (event.keyCode === 13) {
+                event.target.click();
+                event.preventDefault();
+            }
+        };
+
     }
 
 

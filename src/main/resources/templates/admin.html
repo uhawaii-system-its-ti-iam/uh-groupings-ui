@@ -190,7 +190,8 @@
                                     <div class="input-group-append check-remove">
                                         <label class="my-auto">Check All<input class="check-space" type="checkbox"
                                                                                ng-click="updateCheckBoxes()"
-                                                                               ng-model="checkAll"></label>
+                                                                               ng-model="checkAll"
+                                                                               ng-keydown="clickWithEnter($event)"></label>
                                         <button class="btn btn-danger pull-right"
                                                 ng-click="errorDismissed2 = false; resetErrors()"
                                                 ng-blur="errorDismissed2 = true; resetErrors()"
@@ -274,11 +275,11 @@
                                 </td>
                                 <td class="p-10" tabindex="0">
                                     <div ng-if="l.inOwner || l.inInclude || l.inExclude">
-                                        <label aria-label="Remove"><input type="checkbox" ng-model="l.isSelected" ng-change="update(l)"></label>
+                                        <label aria-label="Remove"><input type="checkbox" ng-model="l.isSelected" ng-change="update(l)"  ng-keydown="clickWithEnter($event)"></label>
                                     </div>
                                     <div ng-if="!l.inOwner && !l.inInclude && !l.inExclude">
                                         <label aria-label="Remove"><input type="checkbox"
-                                                                          ng-model="l.isSelected" ng-change="update(l)" disabled></label>
+                                                                          ng-model="l.isSelected" ng-change="update(l)" disabled ng-keydown="clickWithEnter($event)"></label>
                                     </div>
                                 </td>
                             </tr>
