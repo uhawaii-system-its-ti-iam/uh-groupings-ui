@@ -28,16 +28,17 @@
 
 <main>
     <div class="container" data-ng-init="init()" ng-cloak>
-        <div id="overlay" ng-show="loading">
+        <div id="overlay" ng-show="loadingMemberships && loadingOptIn">
             <div class="d-flex justify-content-center">
-                <div class="spinner-border text-light spinner-style"  ng-show="loading"></div>
+                <div class="spinner-border text-light spinner-style"  ng-show="loadingMemberships && loadingOptIn"></div>
             </div>
         </div>
         <div class="tab-content" role="tabpanel">
             <div class="tab-pane fade show active" id="current-memberships">
                 <div class="row m-auto pt-2 pb-2">
                     <div class="col-lg-9 col-md-8 col-12 p-0">
-                        <h2 class="card-title mt-md-1 mt-0 mb-1">Manage Memberships</h2>
+                        <h2 class="card-title mt-md-1 mt-0 mb-1 d-inline-flex">Manage Memberships</h2>
+                        <div class="spinner-border ml-1 d-inline-block" ng-show="loadingMemberships"></div>
                         <p class="card-title-text"
                            th:utext="#{screen.message.memberships.page.currentMembershipsInfo}"></p>
                     </div>
@@ -130,10 +131,9 @@
                         <div th:replace="fragments/pagination :: pagination(currentPage='currentPageMemberships', pagedItems='pagedItemsMemberships')"></div>
                     </div>
                 </div>
-                <div ng-if="membershipsList.length === 0" class="no-memberships-text">
-                    <p class="font-weight-bold" ng-hide="loading"
+                <div ng-if="membershipsList.length === 0 && !loadingMemberships" class="no-memberships-text">
+                    <p class="font-weight-bold" ng-hide="loadingMemberships"
                        th:text="#{screen.message.membership.empty.membershipsList}">
-                        No Groupings Available
                     </p>
                 </div>
             </div>
@@ -141,7 +141,9 @@
             <div class="tab-pane fade" id="membership-opportunities" role="tabpanel">
                 <div class="row m-auto pt-2 pb-2">
                     <div class="col-lg-9 col-md-8 col-12 p-0">
-                        <h2 class="card-title mt-md-1 mt-0 mb-1">Available Memberships</h2>
+                        <h2 class="card-title mt-md-1 mt-0 mb-1 d-inline-flex">Available Memberships
+                        </h2>
+                        <div class="spinner-border ml-1 d-inline-block" ng-show="loadingOptIn"></div>
                         <p class="card-title-text"
                            th:utext="#{screen.message.memberships.page.membershipOpportunitiesInfo}"></p>
                     </div>
@@ -228,10 +230,9 @@
                         <div th:replace="fragments/pagination :: pagination(currentPage='currentPageOptIn', pagedItems='pagedItemsOptInList')"></div>
                     </div>
                 </div>
-                <div ng-if="optInList.length === 0" class="no-memberships-text">
-                    <p class="font-weight-bold" ng-hide="loading"
+                <div ng-if="optInList.length === 0 && !loadingOptIn" class="no-memberships-text">
+                    <p class="font-weight-bold" ng-hide="!loadingOptin"
                        th:text="#{screen.message.membership.empty.optIn}">
-                        No Groupings Available
                     </p>
                 </div>
             </div>
