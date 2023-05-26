@@ -635,7 +635,8 @@ describe("AdminController", function () {
     describe("closeRemoveErrorModal", () => {
         beforeEach(() => {
             scope.removeErrorModalInstance = {
-                close: () => {}
+                close: () => {
+                }
             };
         });
 
@@ -650,6 +651,94 @@ describe("AdminController", function () {
             scope.listName = "admins";
             scope.closeRemoveErrorModal();
             expect(scope.clearManagePersonCheckboxes).toHaveBeenCalled();
+        });
+    });
+
+    describe ("handleGroupingOwnersOnSuccess", () => {
+        const tester = {
+            groupMembers: [
+                {
+                    uid: "testiwta",
+                    uhUuid: "99997010",
+                    name: "testiwta"
+                },
+                {
+                    uid: "testiwtb",
+                    uhUuid: "99997027",
+                    name: "testiwtb"
+                },
+                {
+                    uid: "testiwtc",
+                    uhUuid: "99997033",
+                    name: "testiwtc"
+                }]
+            };
+
+        beforeEach(() => {
+            scope.handleGroupingOwnersOnSuccess(tester);
+        });
+
+        it("should set scope.names equal to api response names", () => {
+            expect(scope.names[0]).toEqual("testiwta");
+            expect(scope.names[1]).toEqual("testiwtb");
+            expect(scope.names[2]).toEqual("testiwtc");
+        });
+        it("should set scope.usernames equal to api response usernames", () => {
+            expect(scope.usernames[0]).toEqual("testiwta");
+            expect(scope.usernames[1]).toEqual("testiwtb");
+            expect(scope.usernames[2]).toEqual("testiwtc");
+        });
+        it("should set scope.uhuids equal to api response UH ID numbers", () => {
+            expect(scope.uhuids[0]).toEqual("99997010");
+            expect(scope.uhuids[1]).toEqual("99997027");
+            expect(scope.uhuids[2]).toEqual("99997033");
+        });
+    });
+
+    describe ("handleGroupingOwnersOnError", () => {
+        it("should set scope.loading to be false", () => {
+            scope.handleGroupingOwnersOnError();
+            expect(scope.loading).toBeFalse();
+        });
+    });
+
+    describe("displayGroupingOwnersModal", () => {
+        it("should open up groupingOwnersModal", () => {
+            scope.displayGroupingOwnersModal();
+            expect(uibModal.open).toHaveBeenCalled();
+        });
+
+        it("should define scope.groupingOwnersModal", () => {
+            scope.displayGroupingOwnersModal();
+            expect(scope.groupingOwnersModal).toBeDefined();
+        });
+
+        it("should define correct modal path", () => {
+            scope.displayGroupingOwnersModal();
+            expect(uibModal.open).toHaveBeenCalledWith({
+                templateUrl: "modal/groupingOwnersModal",
+                scope
+            });
+        });
+
+        it("should define scope.displayGroupingOwnersModalOnClose", () => {
+            scope.displayGroupingOwnersModal();
+            expect(scope.displayGroupingOwnersModalOnClose).toBeDefined();
+        });
+    });
+
+    describe("getGroupingOwnersOnClick", () => {
+        const groupingPath = "grouping-path";
+        it("should assign ownersModalGroupingPath to be grouping-path", () => {
+            scope.getGroupingOwnersOnClick(groupingPath);
+            expect(scope.ownersModalGroupingPath).toBe(groupingPath);
+        });
+
+        it("should send correct onSuccess and onError functions to groupingOwners", () => {
+            spyOn(gs, "groupingOwners");
+            scope.getGroupingOwnersOnClick(groupingPath);
+            expect(gs.groupingOwners).toHaveBeenCalledWith(
+                groupingPath, scope.handleGroupingOwnersOnSuccess, scope.handleGroupingOwnersOnError);
         });
     });
 });

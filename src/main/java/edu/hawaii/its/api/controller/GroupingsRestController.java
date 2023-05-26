@@ -1,19 +1,14 @@
 package edu.hawaii.its.api.controller;
 
-import java.security.Principal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.PostConstruct;
-
-import edu.hawaii.its.api.service.HttpRequestService;
-import edu.hawaii.its.groupings.access.UserContextService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.owasp.html.PolicyFactory;
 import org.owasp.html.Sanitizers;
+import edu.hawaii.its.api.service.HttpRequestService;
+import edu.hawaii.its.groupings.access.User;
+import edu.hawaii.its.groupings.access.UserContextService;
+import edu.hawaii.its.groupings.configuration.Realm;
+import edu.hawaii.its.groupings.exceptions.ApiServerHandshakeException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,9 +27,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import edu.hawaii.its.groupings.access.User;
-import edu.hawaii.its.groupings.configuration.Realm;
-import edu.hawaii.its.groupings.exceptions.ApiServerHandshakeException;
+import javax.annotation.PostConstruct;
+import java.security.Principal;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/groupings")
@@ -416,6 +414,15 @@ public class GroupingsRestController {
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
     }
 
+    /**
+     * Get grouping owners in groupingPath.
+     */
+    @GetMapping(value = "/grouping/{groupingPath}/owners")
+    public ResponseEntity<String> groupingOwners(Principal principal, @PathVariable String groupingPath) {
+        logger.info("Entered REST groupingOwners...");
+        String uri = String.format(API_2_1_BASE + "/grouping/%s/owners", groupingPath);
+        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
+    }
     /**
      * Give ownership of grouping at grouping path to newOwner. A user with owner privileges has
      * read and write privileges
