@@ -70,7 +70,7 @@ UHGroupingsApp.constant("Message", {
 UHGroupingsApp.constant("BASE_URL", "api/groupings/");
 UHGroupingsApp.constant("PAGE_SIZE", 700);
 
-UHGroupingsApp.run(function ($rootScope, Threshold) {
+UHGroupingsApp.run(($rootScope, Threshold) => {
     $rootScope.Threshold = Threshold;
 });
 

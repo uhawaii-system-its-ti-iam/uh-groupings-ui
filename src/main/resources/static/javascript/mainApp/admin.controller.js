@@ -1,6 +1,6 @@
 /* global _, angular, UHGroupingsApp */
 
-(function () {
+(() => {
 
     /**
      * This controller contains functions specific to the admin page.
@@ -29,13 +29,13 @@
 
         let PAGE_SIZE = 20;
 
-        angular.extend(this, $controller("GeneralJsController", { $scope }));
+        angular.extend(this, $controller("GroupingJsController", { $scope }));
 
         /**
          * Callback which takes the admin tab data and moves it into adminList and groupingsList, each of these objects
          * is then paginated.
          */
-        $scope.getAdminListsCallbackOnSuccess = function (res) {
+        $scope.getAdminListsCallbackOnSuccess = (res) => {
             $scope.adminsList = _.sortBy(res.adminGroup.members, "name");
             $scope.pagedItemsAdmins = $scope.objToPageArray($scope.adminsList, PAGE_SIZE);
 
@@ -48,7 +48,7 @@
          * Load grouping from manage-person if sessionStorage saved item into managePersonGrouping key
          * from $scope.displayGroupingInNewTab
          */
-        $scope.init = function () {
+        $scope.init = () => {
             const managePersonGrouping = JSON.parse(sessionStorage.getItem("managePersonGrouping"));
             if (!_.isEmpty(managePersonGrouping)) {
                 $scope.initManagePersonGrouping(managePersonGrouping);
@@ -58,13 +58,13 @@
             }
         };
 
-        $scope.searchForUserGroupingInformationOnSuccessCallback = function (res) {
+        $scope.searchForUserGroupingInformationOnSuccessCallback = (res) => {
             $scope.personList = _.sortBy(res, "name");
             $scope.filter($scope.personList, "pagedItemsPerson", "currentPagePerson", $scope.personQuery, true);
             $scope.user = $scope.personToLookup;
             $scope.loading = false;
         };
-        $scope.searchForUserGroupingInformationOnErrorCallback = function (res) {
+        $scope.searchForUserGroupingInformationOnErrorCallback = (res) => {
             $scope.personList = [];
             $scope.filter($scope.personList, "pagedItemsPerson", "currentPagePerson", $scope.personQuery, true);
             $scope.user = $scope.personToLookup;
@@ -74,7 +74,7 @@
         /**
          * Fetch a list of memberships pertaining to $scope.personToLookUp.
          */
-        $scope.searchForUserGroupingInformation = function () {
+        $scope.searchForUserGroupingInformation = () => {
             $scope.loading = true;
             const validUser = $scope.sanitizer($scope.personToLookup);
             if (validUser !== "") {
@@ -82,7 +82,7 @@
                     $scope.searchForUserGroupingInformationOnSuccessCallback,
                     $scope.searchForUserGroupingInformationOnErrorCallback
                 );
-                groupingsService.getMemberAttributes(validUser, function (person) {
+                groupingsService.getMemberAttributes(validUser, (person) => {
                     $scope.initMemberDisplayName(person);
                     $scope.setCurrentManagePerson(person);
                 });
@@ -106,7 +106,7 @@
          * Helper - searchForUserGroupingInformation
          * @param person
          */
-        $scope.setCurrentManagePerson = function (person) {
+        $scope.setCurrentManagePerson = (person) => {
             if ($scope.uhUuid != null) {
                 $scope.currentManagePerson = "(" + person.name + ", " + person.username + ", " + person.uhUuid + ")";
             } else {
@@ -119,7 +119,7 @@
          * Helper - removeFromGroups
          * Checks if the user being removed is a sole owner of any grouping before proceeding
          */
-        $scope.checkSoleOwner = function (res) {
+        $scope.checkSoleOwner = (res) => {
             if (res === "") {
                 return;
             }
@@ -134,7 +134,7 @@
             if ($scope.selectedOwnedGroupings.length === 0) {
                 $scope.removeFromGroupsCallbackOnSuccess(memberToRemove);
             }
-            _.forEach($scope.selectedOwnedGroupings, function (grouping) {
+            _.forEach($scope.selectedOwnedGroupings, (grouping) => {
                     groupingsService.isSoleOwner(grouping.path, memberToRemove.username, (res) => {
                         if (res) {
                             $scope.soleOwnerGroupingNames.push(grouping.name);
@@ -147,7 +147,7 @@
             );
         };
 
-        $scope.removeFromGroupsCallbackOnSuccess = function (memberToRemove) {
+        $scope.removeFromGroupsCallbackOnSuccess = (memberToRemove) => {
             if (_.isEmpty($scope.selectedGroupingsPaths)) {
                 $scope.emptySelect = true;
             } else if ($scope.soleOwnerGroupingNames.length >= 1) {
@@ -165,7 +165,7 @@
         /**
          * Removes selected user from a list of groupings.
          */
-        $scope.removeFromGroups = function () {
+        $scope.removeFromGroups = () => {
             $scope.selectedGroupingsNames = [];
             $scope.selectedGroupingsPaths = [];
             $scope.selectedOwnedGroupings = [];
@@ -181,8 +181,8 @@
          * Helper - removeFromGroups
          * Pluck selectedGroupingsNames and selectedGroupingsPaths from currentPage
          */
-        $scope.createGroupPathsAndNames = function (currentPage, selectedGroupingsNames, selectedGroupingsPaths, selectedOwnedGroupingsNames, selectedOwnedGroupings) {
-            _.forEach(currentPage, function (grouping) {
+        $scope.createGroupPathsAndNames = (currentPage, selectedGroupingsNames, selectedGroupingsPaths, selectedOwnedGroupingsNames, selectedOwnedGroupings) => {
+            _.forEach(currentPage, (grouping) => {
                 if (grouping.isSelected) {
                     let basePath = grouping.path;
                     let groupName = grouping.name;
@@ -205,9 +205,9 @@
             });
         };
 
-        $scope.updateCheckBoxes = function () {
+        $scope.updateCheckBoxes = () => {
             $scope.checkAll = !$scope.checkAll;
-            _.forEach($scope.pagedItemsPerson[$scope.currentPagePerson], function (grouping) {
+            _.forEach($scope.pagedItemsPerson[$scope.currentPagePerson], (grouping) => {
                 if (grouping.inOwner || grouping.inInclude || grouping.inExclude) {
                     grouping.isSelected = $scope.checkAll;
                 }
@@ -220,15 +220,15 @@
          * @param {string} user - the user you are checking to see if they are already in the list being added to
          * @returns {boolean} true if the user is already in the list being added to, otherwise returns false
          */
-        function inAdminList(user) {
+        const inAdminList = (user) => {
             return _.some($scope.adminsList, { username: user }) ||
                 _.some($scope.adminsList, { uhUuid: user });
-        }
+        };
 
         /**
          * Adds a user to the admin list.
          */
-        $scope.addAdmin = function () {
+        $scope.addAdmin = () => {
             const sanitizedAdmin = $scope.sanitizer($scope.adminToAdd);
             $scope.user = sanitizedAdmin;
             if (_.isEmpty(sanitizedAdmin)) {
@@ -260,7 +260,7 @@
          * @param {number} index - the index of the admin to delete, with the current page and items per page taken into
          * account
          */
-        $scope.removeAdmin = function (currentPage, index) {
+        $scope.removeAdmin = (currentPage, index) => {
             const adminToRemove = $scope.pagedItemsAdmins[currentPage][index];
 
             if ($scope.adminsList.length > 1) {
@@ -274,14 +274,14 @@
             }
         };
 
-        function handleRemoveFromGroupsOnSuccess() {
+        const handleRemoveFromGroupsOnSuccess = () => {
             $scope.loading = false;
             $scope.searchForUserGroupingInformation();
-        }
+        };
 
-        function handleRemoveFromGroupsOnError() {
+        const handleRemoveFromGroupsOnError = () => {
             $scope.loading = false;
-        }
+        };
 
         /**
          * Display a modal that prompts the user whether they want to delete the user or not. If 'Yes' is pressed, then
@@ -291,7 +291,7 @@
          * @param {string} options.groupPaths - groups the user is being removed from
          * @param {object} options.listNames - groups the user is being removed from
          */
-        $scope.displayRemoveFromGroupsModal = function (options) {
+        $scope.displayRemoveFromGroupsModal = (options) => {
             const memberToRemove = options.member.uhUuid;
             const sanitizedUser = $scope.sanitizer(memberToRemove);
             $scope.memberToRemove = options.member;
@@ -300,7 +300,7 @@
 
             const windowClass = $scope.showWarningRemovingSelf() ? "modal-danger" : "";
 
-            groupingsService.getMemberAttributes(sanitizedUser, function (person) {
+            groupingsService.getMemberAttributes(sanitizedUser, (person) => {
                 if (person === "") {
                     return;
                 } else {
@@ -314,13 +314,13 @@
                     keyboard: false
                 });
 
-                $scope.removeFromGroupsModalInstance.result.then(function () {
+                $scope.removeFromGroupsModalInstance.result.then(() => {
                     $scope.loading = true;
                     let memberToRemove = options.member.uhUuid;
                     let groupingPath = $scope.groupPaths;
                     groupingsService.removeFromGroups(groupingPath, memberToRemove, handleRemoveFromGroupsOnSuccess, handleRemoveFromGroupsOnError);
                 });
-            }, function (res) {
+            }, (res) => {
                 $scope.user = memberToRemove;
                 $scope.resStatus = res.status;
             });
@@ -347,30 +347,6 @@
         $scope.closeRemoveErrorModal = () => {
             $scope.clearManagePersonCheckboxes();
             $scope.removeErrorModalInstance.close();
-        };
-
-        /**
-         * Copy the path of a grouping through the clipboard button
-         * @param {Object} grouping - the current selected grouping
-         */
-        $scope.copyPath = function (grouping) {
-            $("[data-content='copy']").popover("hide");
-
-            $("[data-content='copied!']").popover();
-            setTimeout(function () {
-                $("[data-content='copied!']").popover("hide");
-            }, 1000);
-
-            let copyText = document.getElementById(grouping.path);
-            copyText.select();
-            document.execCommand("copy");
-        };
-
-        /**
-         * Toggle 'copy' popover when clipboard is being hovered.
-         */
-        $scope.hoverCopy = function () {
-            $("[data-content='copy']").popover();
         };
 
         /**
@@ -433,27 +409,25 @@
          * Assign the proper values to scope variables referenced in groupingOwnersModal.
          * @param res - the information of the owners from API
          */
-        $scope.handleGroupingOwnersOnSuccess = function (res) {
+        $scope.handleGroupingOwnersOnSuccess = (res) => {
             $scope.loading = false;
-            $scope.names = [];
-            for (let i = 0; i < res.groupMembers.length; i++) {
-                $scope.names[parseInt(i, 10)] = res.groupMembers[parseInt(i, 10)].name;
-            }
-            $scope.usernames = [];
-            for (let i = 0; i < res.groupMembers.length; i++) {
-                $scope.usernames[parseInt(i, 10)] = res.groupMembers[parseInt(i, 10)].uid;
-            }
-            $scope.uhuids = [];
-            for (let i = 0; i < res.groupMembers.length; i++) {
-                $scope.uhuids[parseInt(i, 10)] = res.groupMembers[parseInt(i, 10)].uhUuid;
-            }
+            $scope.owners = [];
+
+            res.members.forEach((member) => {
+                $scope.owners.push({
+                    name: member.name,
+                    uid: member.uid,
+                    uhUuid: member.uhUuid
+                });
+            });
+
             $scope.displayGroupingOwnersModal();
         };
 
         /**
          * Displays error modal for displaying grouping owners.
          */
-        $scope.handleGroupingOwnersOnError = function () {
+        $scope.handleGroupingOwnersOnError = () => {
             $scope.loading = false;
             $scope.displayDynamicModal(Message.Title.DISPLAY_OWNERS_ERROR, Message.Body.DISPLAY_OWNERS_ERROR);
         };
@@ -461,12 +435,12 @@
         /**
          * Displays a modal - groupingOwnersModal.
          */
-        $scope.displayGroupingOwnersModal = function () {
+        $scope.displayGroupingOwnersModal = () => {
             $scope.groupingOwnersModal = $uibModal.open({
                 templateUrl: "modal/groupingOwnersModal",
                 scope: $scope
             });
-            $scope.displayGroupingOwnersModalOnClose = function () {
+            $scope.displayGroupingOwnersModalOnClose = () => {
                 $scope.groupingOwnersModal.close();
                 $scope.ownersModalGroupingPath = "";
             };
@@ -476,11 +450,11 @@
          * Call gs to determine if it should proceed with the handleGroupingOwnersOnSuccess function.
          * @param groupingPath - The path of the grouping to display owners
          */
-        $scope.getGroupingOwnersOnClick = function (groupingPath) {
+        $scope.getGroupingOwnersOnClick = (groupingPath) => {
             $scope.ownersModalGroupingPath = groupingPath;
             groupingsService.groupingOwners($scope.ownersModalGroupingPath, $scope.handleGroupingOwnersOnSuccess, $scope.handleGroupingOwnersOnError);
         };
     }
 
     UHGroupingsApp.controller("AdminJsController", AdminJsController);
-}());
+})();

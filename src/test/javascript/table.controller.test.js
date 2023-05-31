@@ -1,46 +1,46 @@
 /* global _, inject */
 
-describe("TableController", function () {
+describe("TableController", () => {
 
     beforeEach(module("UHGroupingsApp"));
 
     let scope;
     let controller;
 
-    beforeEach(inject(function ($rootScope, $controller) {
+    beforeEach(inject(($rootScope, $controller) => {
         scope = $rootScope.$new();
         controller = $controller("TableJsController", {
             $scope: scope
         });
     }));
 
-    it("should define the table controller", function () {
+    it("should define the table controller", () => {
         expect(controller).toBeDefined();
     });
 
-    describe("objToPageArray", function () {
+    describe("objToPageArray", () => {
         let arr = [];
-        beforeEach(function () {
+        beforeEach(() => {
             for (let i = 100; i < 200; i++) {
                 let str = String.fromCharCode(i);
                 arr.push({ name: str, value: str });
             }
         });
-        it("should paginate the array of 100 abjects into an array of 5 arrays with 20 objects each", function () {
+        it("should paginate the array of 100 abjects into an array of 5 arrays with 20 objects each", () => {
             expect(arr).toBeDefined();
             expect(arr.length).toBe(100);
             arr = scope.objToPageArray(arr, 20);
             expect(arr).toBeDefined();
             expect(arr.length).toBe(5);
-            arr.forEach(function (element) {
+            arr.forEach((element) => {
                 expect(element).toBeDefined();
                 expect(element.length).toBe(20);
             });
         });
     });
-    describe("groupToPages", function () {
+    describe("groupToPages", () => {
 
-        it("should return three pages for a list of fifteen items, given five items per page", function () {
+        it("should return three pages for a list of fifteen items, given five items per page", () => {
             const items = _.range(15);
             scope.itemsPerPage = 5;
 
@@ -58,7 +58,7 @@ describe("TableController", function () {
 
         });
 
-        it("should return zero pages if there are no items", function () {
+        it("should return zero pages if there are no items", () => {
             const items = [];
             scope.itemsPerPage = 5;
 
@@ -66,7 +66,7 @@ describe("TableController", function () {
             expect(paginatedItems.length).toEqual(0);
         });
 
-        it("should return one page for a list of four items, given five items per page", function () {
+        it("should return one page for a list of four items, given five items per page", () => {
             const items = [0, 1, 2, 3];
             scope.itemsPerPage = 5;
 
@@ -79,7 +79,7 @@ describe("TableController", function () {
             expect(paginatedItems[0]).toEqual([0, 1, 2, 3]);
         });
 
-        it("should return two pages for a list of six items, given five items per page", function () {
+        it("should return two pages for a list of six items, given five items per page", () => {
             const items = [0, 1, 2, 3, 4, 5];
             scope.itemsPerPage = 5;
 
@@ -94,7 +94,7 @@ describe("TableController", function () {
             expect(paginatedItems[1]).toEqual([5]);
         });
 
-        it("should return zero pages if a non-list is passed", function () {
+        it("should return zero pages if a non-list is passed", () => {
             const item = "not an array";
 
             const paginatedItems = scope.groupToPages(item);
@@ -102,7 +102,7 @@ describe("TableController", function () {
             expect(paginatedItems.length).toEqual(0);
         });
 
-        it("should return zero pages if items per page is less than one", function () {
+        it("should return zero pages if items per page is less than one", () => {
             const items = [0, 1, 2, 3, 4, 5];
             scope.itemsPerPage = 0;
 
@@ -113,9 +113,9 @@ describe("TableController", function () {
 
     });
 
-    describe("filter", function () {
+    describe("filter", () => {
 
-        beforeEach(function () {
+        beforeEach(() => {
             scope.items = [
                 {
                     $$hashKey: "random",
@@ -151,7 +151,7 @@ describe("TableController", function () {
             scope.currentPage = 1;
         });
 
-        it("should return entries where any property value matches the query", function () {
+        it("should return entries where any property value matches the query", () => {
             scope.filter(scope.items, "pagedItems", "currentPage", "iamd", true);
 
             expect(scope.pagedItems.length).toEqual(1);
@@ -160,13 +160,13 @@ describe("TableController", function () {
             expect(scope.pagedItems[0][0]).toEqual(scope.items[1]);
         });
 
-        it("should ignore the $$hashKey column", function () {
+        it("should ignore the $$hashKey column", () => {
             scope.filter(scope.items, "pagedItems", "currentPage", "random", true);
 
             expect(scope.pagedItems.length).toEqual(0);
         });
 
-        it("should ignore the basis column", function () {
+        it("should ignore the basis column", () => {
             scope.filter(scope.items, "pagedItems", "currentPage", "Exclude", true);
             expect(scope.pagedItems.length).toEqual(0);
 
@@ -174,7 +174,7 @@ describe("TableController", function () {
             expect(scope.pagedItems.length).toEqual(0);
         });
 
-        it("should call groupToPages so the table is repaginated", function () {
+        it("should call groupToPages so the table is repaginated", () => {
             spyOn(scope, "groupToPages").and.callThrough();
 
             scope.filter(scope.items, "pagedItems", "currentPage", "iamd", true);
@@ -182,13 +182,13 @@ describe("TableController", function () {
             expect(scope.groupToPages).toHaveBeenCalled();
         });
 
-        it("should reset the page number to 0", function () {
+        it("should reset the page number to 0", () => {
             scope.filter(scope.items, "pagedItems", "currentPage", "iamd", true);
 
             expect(scope.currentPage).toEqual(0);
         });
 
-        it("should allow matching to be case insensitive", function () {
+        it("should allow matching to be case insensitive", () => {
             scope.filter(scope.items, "pagedItems", "currentPage", "IAMTST", true);
 
             expect(scope.pagedItems.length).toEqual(3);
@@ -197,7 +197,7 @@ describe("TableController", function () {
             expect(scope.pagedItems[1][0]).toEqual(scope.items[1]);
         });
 
-        it("should be equivalent to groupToPages if query is empty", function () {
+        it("should be equivalent to groupToPages if query is empty", () => {
             scope.filter(scope.items, "pagedItems", "currentPage", "", true);
             var pagedItemsUsingGtp = scope.groupToPages(scope.items);
 
@@ -206,8 +206,8 @@ describe("TableController", function () {
 
     });
 
-    describe("setPage", function () {
-        beforeEach(function () {
+    describe("setPage", () => {
+        beforeEach(() => {
             scope.items = _.range(30);
             scope.itemsPerPage = 5;
             scope.pagedItems = scope.groupToPages(scope.items);
@@ -215,22 +215,22 @@ describe("TableController", function () {
         });
 
 
-        describe("First", function () {
-            it("should go back to the first page", function () {
+        describe("First", () => {
+            it("should go back to the first page", () => {
                 scope.setPage("First", "currentPage", "pagedItems");
 
                 expect(scope.currentPage).toEqual(0);
             });
         });
 
-        describe("Prev", function () {
-            it("should go back to the previous page", function () {
+        describe("Prev", () => {
+            it("should go back to the previous page", () => {
                 scope.setPage("Prev", "currentPage", "pagedItems");
 
                 expect(scope.currentPage).toEqual(2);
             });
 
-            it("should not go before the first page", function () {
+            it("should not go before the first page", () => {
                 scope.currentPage = 0;
                 scope.setPage("Prev", "currentPage", "pagedItems");
 
@@ -238,9 +238,9 @@ describe("TableController", function () {
             });
         });
 
-        describe("Set", function () {
+        describe("Set", () => {
 
-            it("should go to page 3 if page 3 is clicked", function () {
+            it("should go to page 3 if page 3 is clicked", () => {
                 scope.n = 2;
 
                 scope.setPage("Set", "currentPage", "pagedItems");
@@ -248,7 +248,7 @@ describe("TableController", function () {
                 expect(scope.currentPage).toEqual(2);
             });
 
-            it("should not go to a negative page number", function () {
+            it("should not go to a negative page number", () => {
                 scope.n = -1;
 
                 scope.setPage("Set", "currentPage", "pagedItems");
@@ -256,7 +256,7 @@ describe("TableController", function () {
                 expect(scope.currentPage).toEqual(3);
             });
 
-            it("should not go past the last page", function () {
+            it("should not go past the last page", () => {
                 scope.n = 6;
 
                 scope.setPage("Set", "currentPage", "pagedItems");
@@ -265,14 +265,14 @@ describe("TableController", function () {
             });
         });
 
-        describe("Next", function () {
-            it("should go to the next page", function () {
+        describe("Next", () => {
+            it("should go to the next page", () => {
                 scope.setPage("Next", "currentPage", "pagedItems");
 
                 expect(scope.currentPage).toEqual(4);
             });
 
-            it("should not go past the last page", function () {
+            it("should not go past the last page", () => {
                 scope.currentPage = 5;
                 scope.setPage("Next", "currentPage", "pagedItems");
 
@@ -280,8 +280,8 @@ describe("TableController", function () {
             });
         });
 
-        describe("Last", function () {
-            it("should go to the last page", function () {
+        describe("Last", () => {
+            it("should go to the last page", () => {
                 scope.setPage("Last", "currentPage", "pagedItems");
 
                 expect(scope.currentPage).toEqual(5);
@@ -290,8 +290,8 @@ describe("TableController", function () {
 
     });
 
-    describe("disableFirstAndPrev", function () {
-        it("should return true if you are on the first page", function () {
+    describe("disableFirstAndPrev", () => {
+        it("should return true if you are on the first page", () => {
             scope.currentPage = 0;
 
             expect(scope.disableFirstAndPrev(scope.currentPage)).toBe(true);
@@ -299,8 +299,8 @@ describe("TableController", function () {
 
     });
 
-    describe("disableNextAndLast", function () {
-        it("should return true if you are on the last page", function () {
+    describe("disableNextAndLast", () => {
+        it("should return true if you are on the last page", () => {
             scope.items = _.range(30);
             scope.itemsPerPage = 5;
             scope.pagedItems = scope.groupToPages(scope.items);
@@ -309,7 +309,7 @@ describe("TableController", function () {
             expect(scope.disableNextAndLast(scope.pagedItems, scope.currentPage)).toBe(true);
         });
 
-        it("should return true if there are no pages in the table", function () {
+        it("should return true if there are no pages in the table", () => {
             scope.pagedItems = [];
             scope.currentPage = 0;
 
@@ -319,8 +319,8 @@ describe("TableController", function () {
     });
 
 
-    describe("sortBy", function () {
-        beforeEach(function () {
+    describe("sortBy", () => {
+        beforeEach(() => {
             scope.items = [
                 {
                     name: "a",
@@ -351,15 +351,15 @@ describe("TableController", function () {
             scope.pagedItems = scope.groupToPages(scope.items);
         });
 
-        it("should call groupToPages so the table is repaginated", function () {
+        it("should call groupToPages so the table is repaginated", () => {
             spyOn(scope, "groupToPages").and.callThrough();
             scope.sortBy("items", "pagedItems", "name");
 
             expect(scope.groupToPages).toHaveBeenCalledWith(scope.items);
         });
 
-        describe("on first load, no columns were clicked yet", function () {
-            it("should sort the items in descending order by name if the name column is clicked", function () {
+        describe("on first load, no columns were clicked yet", () => {
+            it("should sort the items in descending order by name if the name column is clicked", () => {
                 scope.sortBy("items", "pagedItems", "name");
 
                 expect(scope.items[0]).toEqual({ name: "f", id: 17 });
@@ -370,7 +370,7 @@ describe("TableController", function () {
                 expect(scope.items[5]).toEqual({ name: "a", id: 0 });
             });
 
-            it("should sort the items in ascending order by id if the id column is clicked", function () {
+            it("should sort the items in ascending order by id if the id column is clicked", () => {
                 scope.sortBy("items", "pagedItems", "id");
 
                 expect(scope.items[0]).toEqual({ name: "a", id: 0 });
@@ -382,12 +382,12 @@ describe("TableController", function () {
             });
         });
 
-        describe("after the name property has been clicked", function () {
-            beforeEach(function () {
+        describe("after the name property has been clicked", () => {
+            beforeEach(() => {
                 scope.sortBy("items", "pagedItems", "name");
             });
 
-            it("should sort items back in ascending order by name if the name clicked is clicked", function () {
+            it("should sort items back in ascending order by name if the name clicked is clicked", () => {
                 scope.sortBy("items", "pagedItems", "name");
 
                 expect(scope.items[0]).toEqual({ name: "a", id: 0 });
@@ -401,41 +401,41 @@ describe("TableController", function () {
 
     });
 
-    describe("pageRange", function () {
+    describe("pageRange", () => {
         let gap;
         let totalPages;
 
-        describe("given a table with 7 pages and a gap size of 2", function () {
-            beforeEach(function () {
+        describe("given a table with 7 pages and a gap size of 2", () => {
+            beforeEach(() => {
                 gap = 2;
                 totalPages = 7;
             });
 
-            it("should return [0, 1, 2] if you are on the first page", function () {
+            it("should return [0, 1, 2] if you are on the first page", () => {
                 const range = scope.pageRange(0, totalPages, gap);
 
                 expect(range).toEqual([0, 1, 2]);
             });
 
-            it("should return [0, 1, 2, 3] if you are on page 2", function () {
+            it("should return [0, 1, 2, 3] if you are on page 2", () => {
                 const range = scope.pageRange(1, totalPages, gap);
 
                 expect(range).toEqual([0, 1, 2, 3]);
             });
 
-            it("should return [2, 3, 4, 5, 6] if you are on page 5", function () {
+            it("should return [2, 3, 4, 5, 6] if you are on page 5", () => {
                 const range = scope.pageRange(4, totalPages, gap);
 
                 expect(range).toEqual([2, 3, 4, 5, 6]);
             });
 
-            it("should return [3, 4, 5, 6] if you are on page 6", function () {
+            it("should return [3, 4, 5, 6] if you are on page 6", () => {
                 const range = scope.pageRange(5, totalPages, gap);
 
                 expect(range).toEqual([3, 4, 5, 6]);
             });
 
-            it("should return [4, 5, 6] if you are on the last page", function () {
+            it("should return [4, 5, 6] if you are on the last page", () => {
                 const range = scope.pageRange(6, totalPages, gap);
 
                 expect(range).toEqual([4, 5, 6]);

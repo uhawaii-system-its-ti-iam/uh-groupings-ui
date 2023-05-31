@@ -1,6 +1,9 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <div class="modal-header">
     <h5 class="modal-title" id="modal-title">Owners</h5>
+    <a class="close" type="button"  ng-click="displayGroupingOwnersModalOnClose()">
+        <span aria-hidden="true">&times;</span>
+    </a>
 </div>
 
 <div class="container modal-table">
@@ -14,11 +17,11 @@
         </tr>
         </thead>
         <tbody>
-        <tr ng-repeat="(index, name) in names">
+        <tr ng-repeat="owner in owners">
             <!-- Display table data -->
-            <td>{{ usernames[index] }}</td>
-            <td>{{ uhuids[index] }}</td>
-            <td>{{ names[index] }}</td>
+            <td>{{owner.uid}}</td>
+            <td>{{owner.uhUuid}}</td>
+            <td>{{owner.name}}</td>
         </tr>
         </tbody>
     </table>

@@ -1,16 +1,17 @@
 /* global _, angular, UHGroupingsApp */
 
-(function () {
+(() => {
 
     /**
      * Controller for the memberships page.
      * @param $scope - binding between controller and HTML page
-     * @param $window - the browser window object
      * @param $controller - the service for instantiating controllers
+     * @param $window - the browser window object
+     * @param $uibModal - the UI Bootstrap service for creating modals
      * @param dataProvider - service that handles redirection to the feedback page upon error
      * @param groupingsService - service for creating requests to the groupings API
      */
-    function MembershipJsController($scope, $uibModal, $window, $controller, groupingsService, dataProvider) {
+    function MembershipJsController($scope, $controller, $window, $uibModal, groupingsService, dataProvider) {
 
         $scope.membershipsList = [];
         $scope.pagedItemsMemberships = [];
@@ -29,7 +30,7 @@
          *  Load the groups a user is a member in, the groups the user is able to opt in to, and the groups the user
          *  is able to opt out of.
          */
-        $scope.init = function () {
+        $scope.init = () => {
             $scope.loading = true;
 
             // Request a list of membership objects from the API.
@@ -39,7 +40,7 @@
                     $scope.pagedItemsMemberships = $scope.objToPageArray($scope.membershipsList, 20);
                     $scope.loading = false;
                 },
-                (res) => {
+                () => {
                     $scope.displayApiErrorModal();
                 }
             );
@@ -57,13 +58,13 @@
                     $scope.optInList = _.sortBy($scope.optInList, "name");
                     $scope.filter($scope.optInList, "pagedItemsOptInList", "currentPageOptIn", $scope.optInQuery, true);
                 },
-                (res) => {
+                () => {
                     $scope.displayApiErrorModal();
                 }
             );
         };
 
-        $scope.clearFilterQueryStrings = function () {
+        $scope.clearFilterQueryStrings = () => {
             $scope.membersQuery = "";
             $scope.optInQuery = "";
         };
@@ -71,7 +72,7 @@
         /**
          * Filter member list with respect to membersQuery.
          */
-        $scope.memberFilterReset = function () {
+        $scope.memberFilterReset = () => {
             $scope.clearFilterQueryStrings();
             $scope.filter($scope.membershipsList, "pagedItemsMemberships", "currentPageMemberships", $scope.membersQuery, true);
             $scope.filter($scope.optInList, "pagedItemsOptInList", "currentPageOptIn", $scope.optInQuery, true);
@@ -80,21 +81,21 @@
         /**
          * Handle responses for opting into or out of a grouping.
          */
-        function handleSuccessfulOpt(res) {
+        const handleSuccessfulOpt = (res) => {
             if (res.resultCode === "SUCCESS") {
                 $scope.init();
             } else {
                 $scope.displayOptErrorModal();
             }
             $scope.clearFilterQueryStrings();
-        }
+        };
 
-        function handleUnsuccessfulOpt(res) {
+        const handleUnsuccessfulOpt = (res) => {
             $scope.clearFilterQueryStrings();
             $scope.displayOptErrorModal(res);
-        }
+        };
 
-        $scope.displayOptErrorModal = function () {
+        $scope.displayOptErrorModal = () => {
             $scope.loading = false;
             $scope.optErrorModalInstance = $uibModal.open({
                 templateUrl: "modal/optErrorModal",
@@ -104,7 +105,7 @@
             });
         };
 
-        $scope.closeOptErrorModal = function () {
+        $scope.closeOptErrorModal = () => {
             $scope.optErrorModalInstance.close();
         };
 
@@ -113,7 +114,7 @@
          * @param {number} currentPage - the current page within the table
          * @param {number} indexClicked - the index of the grouping clicked by the user
          */
-        $scope.optOut = function (currentPage, indexClicked) {
+        $scope.optOut = (currentPage, indexClicked) => {
             const groupingPath = $scope.pagedItemsMemberships[currentPage][indexClicked].path;
             $scope.loading = true;
             groupingsService.optOut(groupingPath, handleSuccessfulOpt, handleUnsuccessfulOpt);
@@ -124,32 +125,10 @@
          * @param {number} currentPage - the current page within the table
          * @param {number} indexClicked - the index of the grouping clicked by the user
          */
-        $scope.optIn = function (currentPage, indexClicked) {
+        $scope.optIn = (currentPage, indexClicked) => {
             const groupingPath = $scope.pagedItemsOptInList[currentPage][indexClicked].path;
             $scope.loading = true;
             groupingsService.optIn(groupingPath, handleSuccessfulOpt, handleUnsuccessfulOpt);
-        };
-
-        /**
-         * Copy grouping path to clipboard and toggle 'copied!' popover.
-         */
-        $scope.copyPath = function (grouping) {
-            $("[data-content='copy']").popover("hide");
-
-            $("[data-content='copied!']").popover();
-            setTimeout(function () {
-                $("[data-content='copied!']").popover("hide");
-            }, 1000);
-
-            let copyText = document.getElementById(grouping.path);
-            copyText.select();
-            document.execCommand("copy");
-        };
-        /**
-         * Toggle 'copy' popover when clipboard is being hovered.
-         */
-        $scope.hoverCopy = function () {
-            $("[data-content='copy']").popover();
         };
     }
 
@@ -168,5 +147,4 @@
      */
 
     UHGroupingsApp.controller("MembershipJsController", MembershipJsController);
-
-}());
+})();

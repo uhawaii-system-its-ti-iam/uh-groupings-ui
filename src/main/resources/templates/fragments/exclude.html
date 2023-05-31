@@ -62,7 +62,7 @@
                 <tr ng-repeat="e in pagedItemsExclude[currentPageExclude]" class="table table-sm">
                     <td class="overflow-auto py-1 px-3">
                         <input class="position-relative ml-0 blank-checkbox" type="checkbox"
-                               ng-keydown="clickCheckBox(e)"
+                               ng-keydown="clickCheckbox($event, e)"
                                ng-model="membersInCheckboxList[e.uhUuid]"
                                ng-click="$event.stopPropagation()">
                     </td>
