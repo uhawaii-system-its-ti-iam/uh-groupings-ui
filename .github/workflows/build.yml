@@ -1,28 +1,25 @@
-name: build
+name: Build
 
 on:
   push:
     branches: [ main ]
   pull_request:
     branches: [ main ]
-
+#dist:trusty is equivalent to runs on ubuntu
 jobs:
-  - name: Set up JDK 1.8
-    uses: actions/setup-java@v1
-    with:
-      java-version: 1.8
+  build:
+    runs-on: [ ubuntu-latest, windows-latest, macos-latest]
 
-  - name: Build with Maven
-    run: mvn -B -q test -D'logging.level.edu.hawaii.its.groupings=OFF' -D'logging.level.edu.hawaii.its.api=OFF' -D'logging.level.org.springframework=ERROR' -D'spring.main.banner-mode=off' jacoco:report
+    steps:
+      - name: Set up JDK 1.8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
 
+      - name: Build with Maven
+        run: mvn -Denv=dev clean test
 
-#jobs:
-#  job1:
-#    name: first job
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: job1
-#      - name: job2
-#
-#  job2:
-#    name: second job
+      - name: Jacoco report
+        if: success()
+        run: mvn jacoco:report coveralls:report
+        
