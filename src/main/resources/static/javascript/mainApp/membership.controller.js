@@ -22,7 +22,8 @@
         $scope.currentPageOptIn = 0;
         $scope.resStatus = 0;
 
-        $scope.loading = false;
+        $scope.loadingMemberships = false;
+        $scope.loadingOptIn = false;
 
         angular.extend(this, $controller("GeneralJsController", { $scope }));
 
@@ -30,15 +31,16 @@
          *  Load the groups a user is a member in, the groups the user is able to opt in to, and the groups the user
          *  is able to opt out of.
          */
-        $scope.init = () => {
-            $scope.loading = true;
+        $scope.init =  () => {
+            $scope.loadingMemberships = true;
+            $scope.loadingOptIn = true;
 
             // Request a list of membership objects from the API.
             groupingsService.getMembershipResults((res) => {
                     // Codacy throws an error regarding the '_' in the uniqBy function. This error will be ignored until a solution is found.
                     $scope.membershipsList = _.sortBy(_.uniqBy(res, "name"), "name");
                     $scope.pagedItemsMemberships = $scope.objToPageArray($scope.membershipsList, 20);
-                    $scope.loading = false;
+                    $scope.loadingMemberships = false;
                 },
                 () => {
                     $scope.displayApiErrorModal();
@@ -57,6 +59,7 @@
                     });
                     $scope.optInList = _.sortBy($scope.optInList, "name");
                     $scope.filter($scope.optInList, "pagedItemsOptInList", "currentPageOptIn", $scope.optInQuery, true);
+                  $scope.loadingOptIn = false;
                 },
                 () => {
                     $scope.displayApiErrorModal();
@@ -96,7 +99,9 @@
         };
 
         $scope.displayOptErrorModal = () => {
-            $scope.loading = false;
+            $scope.loadingMemberships = false;
+            $scope.loadingOptIn = false;
+            
             $scope.optErrorModalInstance = $uibModal.open({
                 templateUrl: "modal/optErrorModal",
                 scope: $scope,
@@ -116,7 +121,8 @@
          */
         $scope.optOut = (currentPage, indexClicked) => {
             const groupingPath = $scope.pagedItemsMemberships[currentPage][indexClicked].path;
-            $scope.loading = true;
+            $scope.loadingMemberships = true;
+            $scope.loadingOptIn = true;
             groupingsService.optOut(groupingPath, handleSuccessfulOpt, handleUnsuccessfulOpt);
         };
 
@@ -127,7 +133,8 @@
          */
         $scope.optIn = (currentPage, indexClicked) => {
             const groupingPath = $scope.pagedItemsOptInList[currentPage][indexClicked].path;
-            $scope.loading = true;
+            $scope.loadingMemberships = true;
+            $scope.loadingOptIn = true;
             groupingsService.optIn(groupingPath, handleSuccessfulOpt, handleUnsuccessfulOpt);
         };
     }
