@@ -7,7 +7,8 @@ Groupings can be synchronized with one or more of the following: email LISTSERV 
 UH Groupings utilizes the Internet2 Grouper project.  Grouper is an enterprise access management system designed for the highly distributed management environment and heterogeneous information technology environment common to universities.
 
 [![License](https://img.shields.io/hexpm/l/plug.svg)](https://github.com/apereo/cas/blob/master/LICENSE)
-[![Build Status](https://travis-ci.org/uhawaii-system-its-ti-iam/uh-groupings-ui.png?branch=master)](https://travis-ci.org/uhawaii-system-its-ti-iam/uh-groupings-ui)
+[![Build Status](https://github.com/michho8/uh-groupings-ui/actions/workflows/building.yml/badge.svg)](https://github.com/michho8/uh-groupings-ui/actions/workflows/building.yml) 
+[![Test Status](https://github.com/uhawaii-system-its-ti-iam/uh-groupings-ui/actions/workflows/push_pull_testing.yml/badge.svg)](https://github.com/uhawaii-system-its-ti-iam/uh-groupings-ui/actions/workflows/push_pull_testing.yml)
 [![Coverage Status](https://github.com/uhawaii-system-its-ti-iam/uh-groupings-ui/blob/badges/jacoco.svg)](https://github.com/uhawaii-system-its-ti-iam/uh-groupings-ui/actions/workflows/coverage.yml)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/5584742766ed46faa855dafe41a1cdc9)](https://www.codacy.com/gh/uhawaii-system-its-ti-iam/uh-groupings-ui/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=uhawaii-system-its-ti-iam/uh-groupings-ui&amp;utm_campaign=Badge_Grade)
 [![CodeQL](https://github.com/uhawaii-system-its-ti-iam/uh-groupings-api/actions/workflows/codeql.yml/badge.svg)](https://github.com/uhawaii-system-its-ti-iam/uh-groupings-ui/actions/workflows/codeql.yml)

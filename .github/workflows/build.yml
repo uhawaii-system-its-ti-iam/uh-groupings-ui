@@ -5,7 +5,7 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
-#dist:trusty is equivalent to runs on ubuntu
+
 jobs:
   build:
     runs-on: [ ubuntu-latest, windows-latest, macos-latest]
@@ -22,4 +22,21 @@ jobs:
       - name: Jacoco report
         if: success()
         run: mvn jacoco:report coveralls:report
-        
+
+      - name: Email notifications
+        uses: dawidd6/action-send-mail@v3
+        with:
+          # Required mail server address if not connection_url:
+          server_address: smtp.gmail.com
+          # Server port, default 25:
+          server_port: 465
+          # Required mail subject:
+          subject: Testing mail
+          # Required recipients' addresses:
+          to: mh888@hawaii.edu
+          # Required sender full name (address can be skipped):
+          from: Luke Skywalker # <user@example.com>
+          # Optional plain body:
+          body: Build job of ${{github.repository}} completed successfully, or was it?
+          # Optional HTML body read from file:
+          html_body: file://README.html
