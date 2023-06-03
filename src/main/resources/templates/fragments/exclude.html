@@ -24,12 +24,18 @@
                 <tr>
                     <th scope="col" aria-label="Check all checkboxes">
                         <input class="position-relative ml-0" type="checkbox"
-                               ng-model="allSelected"
+                               aria-label="Check all checkboxes"
+                               ng-model="cbPageSelected"
                                ng-disabled="groupingExclude.length === 0"
-                               ng-click="toggleCheckAllSelection('Exclude')"
+                               id="exclude-cb-page"
+                               ng-click="toggleCheckAllSelection('Exclude', 'page')"
                                value="option1" tooltip="Check all" data-placement="top"
-                               ng-keydown="$event.keyCode === 13 ? toggleCheckAllSelection('Exclude') : null"
-                               aria-label="Check all checkboxes">
+                               ng-keydown="$event.keyCode === 13 ? toggleCheckAllSelection('Exclude', 'page') : null">
+                        <i class="fas fa-tools" aria-hidden="true"
+                           tooltip data-placement="right"
+                           ng-show="showToolTip"
+                           title="See Tools tab to remove entire list">
+                        </i>
                     </th>
                     <th scope="col" role="button"
                         ng-click="sortBy('groupingExclude', 'pagedItemsExclude', 'name')">
@@ -62,10 +68,11 @@
                 <tr ng-repeat="e in pagedItemsExclude[currentPageExclude]" class="table table-sm">
                     <td class="overflow-auto py-1 px-3">
                         <input class="position-relative ml-0 blank-checkbox" type="checkbox"
-                               aria-label="Remove {{i.name}} from the exclude."
+                               aria-label="Remove {{e.name}} from the exclude."
                                ng-keydown="clickCheckbox($event, e)"
                                ng-model="membersInCheckboxList[e.uhUuid]"
-                               ng-click="$event.stopPropagation()">
+                               id="{{'exclude-checkbox-' + e.uhUuid}}"
+                               ng-click="$event.stopPropagation();toggleCheckAllSelection('Exclude', 'single')">
                     </td>
                     <td class="overflow-auto py-1 px-3">
                         {{e.name}}

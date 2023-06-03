@@ -1,0 +1,25 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<div class="modal-header">
+    <h5 class="modal-title" id="modal-title">Selection All</h5>
+    <a class="close" type="button" ng-click="closeSelectAllModal()">
+        <span aria-hidden="true">&times;</span>
+    </a>
+</div>
+<div class="modal-body" id="modal-body">
+    <label><input class="position-relative ml-0" type="checkbox"
+                  aria-label="Check all in PAGE"
+                  ng-model="allSelected"
+                  ng-disabled="groupingInclude.length === 0"
+                  ng-click="toggleCheckAllSelection('Include', false)"
+                  value="option1" tooltip="Select Page" data-placement="top">Page Selector</label>
+    <label><input class="position-relative ml-0" type="checkbox"
+                  aria-label="Check all in LIST"
+                  ng-model="allSelectedList"
+                  ng-disabled="groupingInclude.length === 0"
+                  ng-click="toggleCheckAllSelection('Include', true)"
+                  value="option1" tooltip="Select List" data-placement="top">All Selector</label>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-click="closeSelectAllModal()">OK</button>
+</div>
+</html>

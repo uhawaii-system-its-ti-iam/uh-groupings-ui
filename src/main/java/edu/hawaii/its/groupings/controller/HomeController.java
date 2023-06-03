@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -229,5 +230,10 @@ public class HomeController {
     @GetMapping(value = "/modal/groupingOwnersModal")
     public String groupingOwnersModal() {
         return "modal/groupingOwnersModal";
+    }
+
+    @GetMapping(value = "/modal/{modalName}")
+    public String openModalPath(@PathVariable String modalName) {
+        return "modal/" + modalName;
     }
 }

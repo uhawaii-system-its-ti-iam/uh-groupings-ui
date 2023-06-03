@@ -1,8 +1,5 @@
 <th:block th:fragment="include">
-
-
     <div id="include-display" class="tab-pane show active">
-
         <div class="row">
             <div class="col-md-8">
                 <h1 class="font-weight-bold text-dark pt-2 mb-0 d-inline-block">Include ({{groupingInclude.length}})</h1>
@@ -27,12 +24,18 @@
                 <tr>
                     <th scope="col" class="ml-1 align-top" aria-label="Check all checkboxes">
                         <input class="position-relative ml-0" type="checkbox"
-                               aria-label="Check all checkboxes"
-                               ng-model="allSelected"
+                               aria-label="Check all in PAGE"
+                               ng-model="cbPageSelected"
                                ng-disabled="groupingInclude.length === 0"
-                               ng-click="toggleCheckAllSelection('Include')"
-                               value="option1" tooltip="Check all" data-placement="top"
-                               ng-keydown="$event.keyCode === 13 ? toggleCheckAllSelection('Include') : null">
+                               id="include-cb-page"
+                               ng-click="toggleCheckAllSelection('Include', 'page')"
+                               value="option1" tooltip="Select Page" data-placement="top"
+                               ng-keydown="$event.keyCode === 13 ? toggleCheckAllSelection('Include', 'page') : null">
+                        <i class="fas fa-tools" aria-hidden="true"
+                           tooltip data-placement="right"
+                           ng-show="showToolTip"
+                           title="See Tools tab to remove entire list">
+                        </i>
                     </th>
                     <th scope="col" role="button"
                         ng-click="sortBy('groupingInclude', 'pagedItemsInclude', 'name')">
@@ -69,7 +72,8 @@
 							   aria-label="Remove {{i.name}} from the include."
                                ng-keydown="clickCheckbox($event, i)"
                                ng-model="membersInCheckboxList[i.uhUuid]"
-                               ng-click="$event.stopPropagation()">
+                               id="{{'include-checkbox-' + i.uhUuid}}"
+                               ng-click="$event.stopPropagation();toggleCheckAllSelection('Include', 'single')">
                     </td>
                     <td class="overflow-auto py-1 px-3">
                         {{i.name}}
