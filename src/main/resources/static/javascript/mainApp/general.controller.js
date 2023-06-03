@@ -55,7 +55,8 @@
                 templateUrl: "modal/apiError",
                 scope: $scope,
                 backdrop: "static",
-                keyboard: false
+                keyboard: false,
+                ariaLabelledBy: "api-error-modal"
             });
         };
 
@@ -102,11 +103,13 @@
          */
         $scope.displayDynamicModal = (title, body, timeTillClose) => {
             $scope.currentModalTitle = title;
+            $scope.currentModalTitleKebabCase = title.replace(/ /g, "-").toLowerCase();
             $scope.currentModalBody = body;
 
             $scope.dynamicModal = $uibModal.open({
                 templateUrl: "modal/dynamicModal",
-                scope: $scope
+                scope: $scope,
+                ariaLabelledBy: $scope.currentModalTitleKebabCase + "-modal"
             });
             if (!_.isUndefined(timeTillClose)) {
                 let closeOnTimeout = () => {
@@ -129,7 +132,8 @@
                 templateUrl: "modal/roleErrorModal",
                 scope: $scope,
                 backdrop: "static",
-                keyboard: false
+                keyboard: false,
+                ariaLabelledBy: "role-error-modal"
             });
         };
 

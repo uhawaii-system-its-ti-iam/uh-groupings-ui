@@ -133,7 +133,8 @@
                 templateUrl: "modal/timeoutModal",
                 scope: $scope,
                 backdrop: "static",
-                keyboard: false
+                keyboard: false,
+                ariaLabelledBy: "timeout-modal"
             });
             // Callback when timeout modal is opened.
             $scope.timeoutModalInstance.opened.then(() => {

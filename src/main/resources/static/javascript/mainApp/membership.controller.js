@@ -106,7 +106,8 @@
                 templateUrl: "modal/optErrorModal",
                 scope: $scope,
                 backdrop: "static",
-                keyboard: false
+                keyboard: false,
+                ariaLabelledBy: "opt-error-modal"
             });
         };
 

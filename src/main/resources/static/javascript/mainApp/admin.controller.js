@@ -314,7 +314,8 @@
                     windowClass,
                     scope: $scope,
                     backdrop: "static",
-                    keyboard: false
+                    keyboard: false,
+                    ariaLabelledBy: "remove-from-groups-modal"
                 });
 
                 $scope.removeFromGroupsModalInstance.result.then(() => {
@@ -441,7 +442,8 @@
         $scope.displayGroupingOwnersModal = () => {
             $scope.groupingOwnersModal = $uibModal.open({
                 templateUrl: "modal/groupingOwnersModal",
-                scope: $scope
+                scope: $scope,
+                ariaLabelledBy: "grouping-owners-modal"
             });
             $scope.displayGroupingOwnersModalOnClose = () => {
                 $scope.groupingOwnersModal.close();

@@ -708,7 +708,8 @@ describe("AdminController", function () {
             scope.displayGroupingOwnersModal();
             expect(uibModal.open).toHaveBeenCalledWith({
                 templateUrl: "modal/groupingOwnersModal",
-                scope
+                scope,
+                ariaLabelledBy: "grouping-owners-modal"
             });
         });
 
