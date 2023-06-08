@@ -198,33 +198,29 @@ describe("GroupingController", () => {
 
         it("should call getGrouping when asyncThreadCount is 1", () => {
             spyOn(gs, "getGrouping").and.callThrough();
-            scope.getGroupingInformation();
+            scope.fetchGrouping();
             expect(gs.getGrouping).toHaveBeenCalled();
         });
 
         it("should set descriptionLoaded & paginatingProgress to true & paginatingComplete to false after calling gs.getGrouping", () => {
             spyOn(gs, "getGrouping").and.callThrough();
-            scope.getGroupingInformation();
+            scope.fetchGrouping();
             expect(gs.getGrouping).toHaveBeenCalled();
         });
-    });
 
-    describe("getPages", () => {
-        let pagesOfGrouping;
-        beforeEach(() => {
-            pagesOfGrouping = {
-                groupingPath: "somePath",
-                currentPage: 1,
-                PAGE_SIZE: 1,
-                sortString: "name",
-                isAscending: true
-            };
+        it("should call getGroupingDescription", () => {
+            spyOn(gs, "getGroupingDescription").and.callThrough();
+            scope.getGroupingInformation().then((res) => expect(gs.getGroupingDescription).toHaveBeenCalled());
         });
 
-        it("should return a promise", () => {
-            spyOn(gs, "getGrouping").and.returnValue(Promise.resolve(true));
-            scope.getPages(pagesOfGrouping.groupingPath, pagesOfGrouping.currentPage, pagesOfGrouping.PAGE_SIZE, pagesOfGrouping.sortString, pagesOfGrouping.isAscending);
-            expect(gs.getGrouping).toHaveBeenCalled();
+        it("should call getGroupingSyncDest", () => {
+            spyOn(gs, "getGroupingSyncDest").and.callThrough();
+            scope.getGroupingInformation().then((res) => expect(gs.getGroupingSyncDest).toHaveBeenCalled());
+        });
+
+        it("should call getGroupingOptAttributes", () => {
+            spyOn(gs, "getGroupingOptAttributes").and.callThrough();
+            scope.getGroupingInformation().then((res) => expect(gs.getGroupingOptAttributes).toHaveBeenCalled());
         });
     });
 

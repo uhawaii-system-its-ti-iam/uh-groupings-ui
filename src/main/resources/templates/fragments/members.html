@@ -37,10 +37,10 @@
                         <i class="fa sort-icon" ng-show="columnSort.groupingMembers.property === 'uhUuid'"
                            ng-class="{ reverse: columnSort.groupingMembers.reverse }"></i>
                     </th>
-                    <th scope="col" ng-click="sortBy('groupingMembers', 'pagedItemsMembers', 'username')"
+                    <th scope="col" ng-click="sortBy('groupingMembers', 'pagedItemsMembers', 'uid')"
                         role="button">
                         UH Username
-                        <i class="fa sort-icon" ng-show="columnSort.groupingMembers.property === 'username'"
+                        <i class="fa sort-icon" ng-show="columnSort.groupingMembers.property === 'uid'"
                            ng-class="{ reverse: columnSort.groupingMembers.reverse }"></i>
                     </th>
                     <th scope="col" class="basis-column" role="button"
@@ -56,8 +56,8 @@
                     <td class="overflow-auto py-1 px-3">{{g.name}}</td>
                     <td class="overflow-auto py-1 px-3">{{g.uhUuid}}</td>
                     <td class="overflow-auto py-1 px-3">
-                        {{g.username}}
-                        <div ng-if="g.username === ''">
+                        {{g.uid}}
+                        <div ng-if="g.uid === ''">
                             <span>N/A</span>
                             <i class="fa fa-question-circle" role="button" aria-hidden="true"
                                tooltip data-placement="right"
