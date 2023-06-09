@@ -520,6 +520,7 @@
             $scope.importModalInstance = $uibModal.open({
                 templateUrl: "modal/importModal",
                 size: "lg",
+                ariaLabelledBy: "import-modal",
                 scope: $scope
             });
         };
@@ -549,7 +550,7 @@
         };
 
         /**
-         * Read a text file(.txt) from client side. The file should consist of
+         * Read a text file(.txt) or csv file(.csv) from client side. The file should consist of
          * a list of UH usernames or ids separated by newline characters. This
          * function is called implicitly from include.html and exclude.html.
          * The file is retrieved from the html input with id 'upload'.
@@ -558,7 +559,7 @@
             if (!$scope.verifyImportFileType(inputFile)) {
                 $scope.displayDynamicModal(
                     Message.Title.INVALID_FILE,
-                    "File must be a .txt file."
+                    "File must be a .txt or .csv file."
                 );
                 return;
             }
@@ -584,19 +585,37 @@
                 return;
             }
             let reader = new FileReader();
+            reader.readAsText(inputFile);
+
             reader.onload = (e) => {
                 const str = e.target.result;
-                const namesInFile = str.split(/[\r\n,]+/);
-                $scope.addMembers($scope.listName, namesInFile);
+                $scope.resetErrors();
+                $scope.errorDismissed = false;
+                if (inputFile.type === "text/csv") {
+                    const namesInFile = str.split(/[\r\n]+/);
+                    const firstRow = namesInFile[0].split(",");
+                    const indexOfUhNumber = firstRow.findIndex((header) => header.includes(Message.Csv.UUID_COLUMN_HEADER));
+                    if (indexOfUhNumber < 0) {
+                        $scope.displayDynamicModal(
+                          Message.Title.INVALID_FILE,
+                          `CSV file does not contain ${Message.Csv.UUID_COLUMN_HEADER} in the header`,
+                        );
+                        return;
+                    }
+                    const UHNumbersInFile = namesInFile.map((row) => row.split(",")[Number(indexOfUhNumber)]).slice(1, -1);
+                    $scope.addMembers($scope.listName, UHNumbersInFile);
+                } else {
+                    const namesInFile = str.split(/[\r\n,]+/);
+                    $scope.addMembers($scope.listName, namesInFile);
+                }
             };
-            reader.readAsText(inputFile);
         };
 
         $scope.verifyImportFileType = (inputFile) => {
             if (inputFile == null || inputFile.type == null) {
                 return false;
             }
-            return inputFile.type.toLowerCase() === "text/plain";
+            return inputFile.type.toLowerCase() === "text/plain" || inputFile.type.toLowerCase() === "text/csv";
         };
 
         $scope.verifyImportFileSize = (inputFile) => {
@@ -731,7 +750,6 @@
             // If uhIdentifiers parameter is null, get member input from $scope.manageMembers
             uhIdentifiers = $scope.sanitizer(uhIdentifiers ?? $scope.parseAddRemoveInputStr($scope.manageMembers));
             $scope.listName = listName;
-
             // Check if uhIdentifiers/member input is empty
             if (_.isEmpty(uhIdentifiers)) {
                 $scope.emptyInput = true;
@@ -761,7 +779,6 @@
             groupingsService.invalidUhIdentifiers(uhIdentifiers, (res) => { // Check for invalid uhIdentifiers
                 $scope.waitingForImportResponse = false; // Small spinner off
                 $scope.isBatchImport = uhIdentifiers.length > Threshold.MULTI_ADD;
-
                 // Check if res returned any invalid uhIdentifiers
                 if (!_.isEmpty(res)) {
                     // Display invalid uhIdentifiers in add-error-messages.html or importError modal
@@ -769,6 +786,7 @@
                     $scope.addInputError = true;
                     if ($scope.isBatchImport) {
                         $scope.displayImportErrorModal();
+                        $scope.addInputError = false;
                     }
                     return;
                 }
