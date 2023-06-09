@@ -942,7 +942,7 @@ describe("GroupingController", () => {
                         arr.push(`iamtst${i}`);
                     }
                     scope.addMembers("Include", arr);
-                    httpBackend.expectPOST(BASE_URL + "members/invalid", arr).respond(200, []);
+                    httpBackend.expectPOST(BASE_URL + "members/invalidAsync", arr).respond(200, []);
                     httpBackend.flush();
                     expect(scope.isBatchImport).toBeTrue();
                 });
@@ -984,6 +984,7 @@ describe("GroupingController", () => {
                 });
 
                 it("should call $scope.displayImportConfirmationModal when adding more than multi-add threshold", () => {
+                    spyOn(gs, "invalidUhIdentifiersAsync").and.callFake(gs.invalidUhIdentifiers);
                     spyOn(scope, "displayImportConfirmationModal").and.callThrough();
                     let arr = [];
                     for (let i = 0; i < 102; i++) {
@@ -1009,6 +1010,7 @@ describe("GroupingController", () => {
                 });
 
                 it("should set $scope.invalidMembers and call $scope.displayImportErrorModal when res has uhIdentifiers", () => {
+                    spyOn(gs, "invalidUhIdentifiersAsync").and.callFake(gs.invalidUhIdentifiers);
                     spyOn(scope, "displayImportErrorModal").and.callThrough();
                     let arr = [];
                     for (let i = 0; i < 102; i++) {
@@ -1186,8 +1188,8 @@ describe("GroupingController", () => {
                     };
 
                     beforeEach(() => {
-                        spyOn(gs, "addMembersToIncludeAsync").and.callThrough();
-                        spyOn(gs, "addMembersToExcludeAsync").and.callThrough();
+                        spyOn(gs, "addMembersToInclude").and.callThrough();
+                        spyOn(gs, "addMembersToExclude").and.callThrough();
                         spyOn(gs, "addOwnerships").and.callThrough();
                         spyOn(gs, "addAdmin").and.callThrough();
                     });
@@ -1204,8 +1206,8 @@ describe("GroupingController", () => {
 
                         scope.cancelAddModal();
                         expect(scope.waitingForImportResponse).toBeFalse();
-                        expect(gs.addMembersToIncludeAsync).not.toHaveBeenCalled();
-                        expect(gs.addMembersToExcludeAsync).not.toHaveBeenCalled();
+                        expect(gs.addMembersToInclude).not.toHaveBeenCalled();
+                        expect(gs.addMembersToExclude).not.toHaveBeenCalled();
                         expect(gs.addOwnerships).not.toHaveBeenCalled();
                         expect(gs.addAdmin).not.toHaveBeenCalled();
                     });
@@ -1222,13 +1224,13 @@ describe("GroupingController", () => {
 
                         scope.cancelAddModal();
                         expect(scope.waitingForImportResponse).toBeFalse();
-                        expect(gs.addMembersToIncludeAsync).not.toHaveBeenCalled();
-                        expect(gs.addMembersToExcludeAsync).not.toHaveBeenCalled();
+                        expect(gs.addMembersToInclude).not.toHaveBeenCalled();
+                        expect(gs.addMembersToExclude).not.toHaveBeenCalled();
                         expect(gs.addOwnerships).not.toHaveBeenCalled();
                         expect(gs.addAdmin).not.toHaveBeenCalled();
                     });
 
-                    it("should call gs.addMembersToIncludeAsync when the user presses 'add' in addModal.html", () => {
+                    it("should call gs.addMembersToInclude when the user presses 'add' in addModal.html", () => {
                         spyOn(uibModal, "open").and.returnValue(mockModal);
                         scope.displayAddModal({
                             membersToAdd: member,
@@ -1240,10 +1242,10 @@ describe("GroupingController", () => {
 
                         scope.proceedAddModal();
                         expect(scope.waitingForImportResponse).toBeTrue();
-                        expect(gs.addMembersToIncludeAsync).toHaveBeenCalled();
+                        expect(gs.addMembersToInclude).toHaveBeenCalled();
                     });
 
-                    it("should call gs.addMembersToIncludeAsync when the user presses 'add' in multiAddModal.html", () => {
+                    it("should call gs.addMembersToInclude when the user presses 'add' in multiAddModal.html", () => {
                         spyOn(uibModal, "open").and.returnValue(mockModal);
                         scope.displayAddModal({
                             membersToAdd: members,
@@ -1255,10 +1257,10 @@ describe("GroupingController", () => {
 
                         scope.proceedAddModal();
                         expect(scope.waitingForImportResponse).toBeTrue();
-                        expect(gs.addMembersToIncludeAsync).toHaveBeenCalled();
+                        expect(gs.addMembersToInclude).toHaveBeenCalled();
                     });
 
-                    it("should call gs.addMembersToExcludeAsync when the user presses 'add' in addModal.html", () => {
+                    it("should call gs.addMembersToExclude when the user presses 'add' in addModal.html", () => {
                         spyOn(uibModal, "open").and.returnValue(mockModal);
                         scope.displayAddModal({
                             membersToAdd: member,
@@ -1270,10 +1272,10 @@ describe("GroupingController", () => {
 
                         scope.proceedAddModal();
                         expect(scope.waitingForImportResponse).toBeTrue();
-                        expect(gs.addMembersToExcludeAsync).toHaveBeenCalled();
+                        expect(gs.addMembersToExclude).toHaveBeenCalled();
                     });
 
-                    it("should call gs.addMembersToExcludeAsync when the user presses 'add' in multiAddModal.html", () => {
+                    it("should call gs.addMembersToExclude when the user presses 'add' in multiAddModal.html", () => {
                         spyOn(uibModal, "open").and.returnValue(mockModal);
                         scope.displayAddModal({
                             membersToAdd: members,
@@ -1285,7 +1287,7 @@ describe("GroupingController", () => {
 
                         scope.proceedAddModal();
                         expect(scope.waitingForImportResponse).toBeTrue();
-                        expect(gs.addMembersToExcludeAsync).toHaveBeenCalled();
+                        expect(gs.addMembersToExclude).toHaveBeenCalled();
                     });
 
                     it("should call gs.addOwnerships when the user presses 'add' in addModal.html", () => {

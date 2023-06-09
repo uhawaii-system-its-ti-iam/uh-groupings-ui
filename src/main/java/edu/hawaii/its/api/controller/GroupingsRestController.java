@@ -191,13 +191,36 @@ public class GroupingsRestController {
     }
 
     /**
+     * Get a list of invalid uhIdentifiers given a list of uhIdentifiers asynchronously.
+     */
+    @PostMapping(value = "/members/invalidAsync")
+    @ResponseBody
+    public ResponseEntity<String> invalidUhIdentifiersAsync(Principal principal, @RequestBody List<String> uhIdentifiers) {
+        logger.info("Entered REST invalidUhIdentifiersAsync...");
+        List<String> safeInput = sanitizeList(uhIdentifiers);
+        String uri = String.format(API_2_1_BASE + "/members/invalid/async");
+        return httpRequestService.makeApiRequestWithBody(principal.getName(), uri, safeInput, HttpMethod.POST);
+    }
+
+    /**
      * Remove all members from the include group.
      */
     @PostMapping(value = "{groupingPath}/resetIncludeGroup")
     public ResponseEntity<String> resetIncludeGroup(Principal principal, @PathVariable String groupingPath) {
-        logger.info("Entered REST resetIncludeGroup");
+        logger.info("Entered REST resetIncludeGroup...");
         String safeGroupingPath = policy.sanitize(groupingPath);
         String uri = String.format(API_2_1_BASE + "/groupings/%s/include", safeGroupingPath);
+        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.DELETE);
+    }
+
+    /**
+     * Remove all members from the include group asynchronously.
+     */
+    @PostMapping(value = "{groupingPath}/resetIncludeGroupAsync")
+    public ResponseEntity<String> resetIncludeGroupAsync(Principal principal, @PathVariable String groupingPath) {
+        logger.info("Entered REST resetIncludeGroupAsync...");
+        String safeGroupingPath = policy.sanitize(groupingPath);
+        String uri = String.format(API_2_1_BASE + "/groupings/%s/include/async", safeGroupingPath);
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.DELETE);
     }
 
@@ -206,9 +229,20 @@ public class GroupingsRestController {
      */
     @PostMapping(value = "{groupingPath}/resetExcludeGroup")
     public ResponseEntity<String> resetExcludeGroup(Principal principal, @PathVariable String groupingPath) {
-        logger.info("Entered REST resetExcludeGroup");
+        logger.info("Entered REST resetExcludeGroup...");
         String safeGroupingPath = policy.sanitize(groupingPath);
         String uri = String.format(API_2_1_BASE + "/groupings/%s/exclude", safeGroupingPath);
+        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.DELETE);
+    }
+
+    /**
+     * Remove all members from the exclude group asynchronously.
+     */
+    @PostMapping(value = "{groupingPath}/resetExcludeGroupAsync")
+    public ResponseEntity<String> resetExcludeGroupAsync(Principal principal, @PathVariable String groupingPath) {
+        logger.info("Entered REST resetExcludeGroupAsync...");
+        String safeGroupingPath = policy.sanitize(groupingPath);
+        String uri = String.format(API_2_1_BASE + "/groupings/%s/exclude/async", safeGroupingPath);
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.DELETE);
     }
 
@@ -328,6 +362,20 @@ public class GroupingsRestController {
     }
 
     /**
+     * Add a list of usersToAdd to include group of grouping at path asynchronously.
+     */
+    @PutMapping(value = "/{groupingPath}/addMembersToIncludeGroupAsync")
+    public ResponseEntity<String> addMembersToIncludeGroupAsync(Principal principal,
+                                                                @PathVariable String groupingPath,
+                                                                @RequestBody List<String> usersToAdd) {
+        logger.info("Entered REST addMembersToIncludeGroupAsync...");
+        String safeGroupingPath = policy.sanitize(groupingPath);
+        List<String> safeUsersToAdd = sanitizeList(usersToAdd);
+        String uri = String.format(API_2_1_BASE + "/groupings/%s/include-members/async", safeGroupingPath);
+        return httpRequestService.makeApiRequestWithBody(principal.getName(), uri, safeUsersToAdd, HttpMethod.PUT);
+    }
+
+    /**
      * Add a list of usersToAdd to exclude group of grouping at path.
      */
     @PutMapping(value = "/{groupingPath}/addMembersToExcludeGroup")
@@ -338,6 +386,20 @@ public class GroupingsRestController {
         String safeGroupingPath = policy.sanitize(groupingPath);
         List<String> safeUsersToAdd = sanitizeList(usersToAdd);
         String uri = String.format(API_2_1_BASE + "/groupings/%s/exclude-members", safeGroupingPath);
+        return httpRequestService.makeApiRequestWithBody(principal.getName(), uri, safeUsersToAdd, HttpMethod.PUT);
+    }
+
+    /**
+     * Add a list of usersToAdd to exclude group of grouping at path asynchronously.
+     */
+    @PutMapping(value = "/{groupingPath}/addMembersToExcludeGroupAsync")
+    public ResponseEntity<String> addMembersToExcludeGroupAsync(Principal principal,
+                                                                @PathVariable String groupingPath,
+                                                                @RequestBody List<String> usersToAdd) {
+        logger.info("Entered REST addMembersToExcludeGroupAsync...");
+        String safeGroupingPath = policy.sanitize(groupingPath);
+        List<String> safeUsersToAdd = sanitizeList(usersToAdd);
+        String uri = String.format(API_2_1_BASE + "/groupings/%s/exclude-members/async", safeGroupingPath);
         return httpRequestService.makeApiRequestWithBody(principal.getName(), uri, safeUsersToAdd, HttpMethod.PUT);
     }
 
@@ -554,6 +616,17 @@ public class GroupingsRestController {
         logger.info("Entered REST getAllSyncDestinations...");
         String safePath = policy.sanitize(path);
         String uri = String.format(API_2_1_BASE + "/groupings/%s/sync-destinations", safePath);
+        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
+    }
+
+    /**
+     * Get async job result.
+     */
+    @GetMapping(value = "/jobs/{jobId}")
+    public ResponseEntity<String> getAsyncJobResult(Principal principal, @PathVariable String jobId) {
+        logger.debug("Entered REST getAsyncJobResult...");
+        String safeJobId = policy.sanitize(jobId);
+        String uri = String.format(API_2_1_BASE + "/jobs/%s", safeJobId);
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
     }
 
