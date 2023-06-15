@@ -19,8 +19,10 @@
                               tabindex="0"
                               th:aria-label="#{screen.message.common.tooltip.preference.allowOptIn}"
                               th:title="#{screen.message.common.tooltip.preference.allowOptIn}"
-                              th:attr="ng-click='displayPreferenceInfoModal(\'' + #{screen.message.common.tooltip.preference.allowOptIn} + '\')',
-                              ng-keypress='$event.keyCode === 13 ? displayPreferenceInfoModal(\'' + #{screen.message.common.tooltip.preference.allowOptIn} + '\') : null'">
+                              th:attr="ng-click='displayDynamicModal(\'Preferences Information\', \'' +
+                                #{screen.message.common.tooltip.preference.allowOptIn} + '\')',
+                              ng-keypress='$event.keyCode === 13 ? displayDynamicModal(\'Preferences Information\', \'' +
+                                #{screen.message.common.tooltip.preference.allowOptIn} + '\') : null'">
                         </span>
                     </div>
                     <div class="form-check">
@@ -35,8 +37,10 @@
                               tabindex="0"
                               th:aria-label="#{screen.message.common.tooltip.preference.allowOptOut}"
                               th:title="#{screen.message.common.tooltip.preference.allowOptOut}"
-                              th:attr="ng-click='displayPreferenceInfoModal(\'' + #{screen.message.common.tooltip.preference.allowOptOut} + '\')',
-                              ng-keypress='$event.keyCode === 13 ? displayPreferenceInfoModal(\'' + #{screen.message.common.tooltip.preference.allowOptOut} + '\') : null'">
+                              th:attr="ng-click='displayDynamicModal(\'Preferences Information\', \'' +
+                                #{screen.message.common.tooltip.preference.allowOptOut} + '\')',
+                              ng-keypress='$event.keyCode === 13 ? displayDynamicModal(\'Preferences Information\', \'' +
+                                #{screen.message.common.tooltip.preference.allowOptOut} + '\') : null'">
                         </span>
                     </div>
                 </div>
