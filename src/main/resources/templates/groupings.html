@@ -35,9 +35,14 @@
                                    ng-change="filter(groupingsList, 'pagedItemsGroupings', 'currentPageGroupings', groupingsQuery, true)"/>
                             <div th:replace="fragments/table-settings"></div>
                         </div>
-
                     </div>
-                    <div th:replace="fragments/groupings-list :: groupings-list"></div>
+                    <div ng-if="groupingsList.length === 0" class="text-center">
+                        <p class="font-weight-bold" th:text="#{screen.message.grouping.empty.groupingsList}">
+                        </p>
+                    </div>
+                    <div ng-if="groupingsList.length > 0">
+                        <div th:replace="fragments/groupings-list :: groupings-list"></div>
+                    </div>
                 </div>
             </div>
         </div>
