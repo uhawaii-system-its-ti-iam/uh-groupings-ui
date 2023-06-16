@@ -1552,27 +1552,6 @@
         };
 
         /**
-         * Display a modal with a description of the preference selected.
-         * @param {string} desc - the description of the preference
-         */
-        $scope.displayPreferenceInfoModal = (desc) => {
-            $scope.preferenceInfo = desc;
-
-            $scope.infoModalInstance = $uibModal.open({
-                templateUrl: "modal/infoModal",
-                scope: $scope,
-                backdrop: "static"
-            });
-        };
-
-        /**
-         * Closes the preference information modal.
-         */
-        $scope.closePreferenceInfo = () => {
-            $scope.infoModalInstance.close();
-        };
-
-        /**
          * Handler for a successful preference toggle.
          * @param {object} res - the JSON response from toggling the preference
          */

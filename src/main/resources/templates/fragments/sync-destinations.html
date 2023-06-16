@@ -19,8 +19,10 @@
                                 <span class="fa fa-question-circle" role="button"
                                       tooltip="{{syncDest.tooltip}}" data-placement="right"
                                       tabindex="0"
-                                      th:attr="ng-click='createPreferenceInfoModal(syncDest.tooltip)',
-                                      ng-keypress='$event.keyCode === 13 ? createPreferenceInfoModal(syncDest.tooltip) : null'">
+                                      th:attr="ng-click='displayDynamicModal(\'Sync Destinations Information\', ' +
+                                                        'syncDest.tooltip)',
+                                      ng-keypress='$event.keyCode === 13 ? displayDynamicModal(\'Sync Destinations ' +
+                                                  'Information\', syncDest.tooltip) : null'">
                                 </span>
                             </div>
                         </div>

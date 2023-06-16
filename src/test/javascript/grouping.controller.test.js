@@ -2318,32 +2318,6 @@ describe("GroupingController", () => {
         });
     });
 
-    describe("displayPreferenceInfoModal", () => {
-        it("should set preferenceInfo to preferenceInfo that is passed in", () => {
-            expect(scope.preferenceInfo).toBeUndefined();
-            scope.displayPreferenceInfoModal("test");
-            expect(scope.preferenceInfo).toBe("test");
-        });
-
-        it("should check that the infoModalInstance is displayed", () => {
-            spyOn(uibModal, "open").and.callThrough();
-            scope.displayPreferenceInfoModal("test");
-            expect(uibModal.open).toHaveBeenCalled();
-        });
-    });
-
-    describe("closePreferenceInfo", () => {
-        beforeEach(() => {
-            scope.displayPreferenceInfoModal("testString");
-        });
-
-        it("should close infoModalInstance", () => {
-            spyOn(scope.infoModalInstance, "close").and.callThrough();
-            scope.closePreferenceInfo();
-            expect(scope.infoModalInstance.close).toHaveBeenCalled();
-        });
-    });
-
     describe("displayPreferenceErrorModal", () => {
         it("should check that the preferenceErrorModalInstance is displayed", () => {
             spyOn(uibModal, "open").and.callThrough();
