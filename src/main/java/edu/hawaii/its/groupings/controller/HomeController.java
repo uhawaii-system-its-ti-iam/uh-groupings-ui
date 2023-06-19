@@ -121,11 +121,6 @@ public class HomeController {
      * Modal Pages
      */
 
-    @GetMapping(value = "/modal/infoModal")
-    public String infoModal() {
-        return "modal/infoModal";
-    }
-
     @GetMapping(value = "/modal/apiError")
     public String apiError() {
         return "modal/apiError";

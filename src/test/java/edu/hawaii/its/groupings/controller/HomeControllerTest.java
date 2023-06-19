@@ -1,11 +1,11 @@
 package edu.hawaii.its.groupings.controller;
 
-import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
-import edu.hawaii.its.groupings.type.Feedback;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
+import edu.hawaii.its.groupings.type.Feedback;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,9 +21,9 @@ import javax.servlet.http.HttpSession;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.nullValue;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
@@ -279,16 +279,6 @@ public class HomeControllerTest {
     public void requestNonExistentUrl() throws Exception {
         MvcResult mvcResult = mockMvc.perform(get("/not-a-url"))
                 .andExpect(status().is3xxRedirection())
-                .andReturn();
-        assertNotNull(mvcResult);
-    }
-
-    @Test
-    @WithMockUhUser(username = "uh")
-    public void requestInfoModal() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(get("/modal/infoModal"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("modal/infoModal"))
                 .andReturn();
         assertNotNull(mvcResult);
     }
