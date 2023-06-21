@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import java.security.Principal;
 
 @Service
-@PropertySource("classpath:custom.properties")
 public class AuthorizationService {
 
     @Autowired
