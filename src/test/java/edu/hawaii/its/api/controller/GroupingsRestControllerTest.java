@@ -201,7 +201,7 @@ public class GroupingsRestControllerTest {
 
     @Test
     @WithMockUhUser(username = "admin")
-    public void resetIncludeGroup() throws Exception {
+    public void resetIncludeGroupTest() throws Exception {
         String uri = REST_CONTROLLER_BASE + GROUPING + "/resetIncludeGroup";
 
         given(httpRequestService.makeApiRequest(eq(ADMIN_USERNAME), anyString(), eq(HttpMethod.DELETE)))
@@ -217,8 +217,40 @@ public class GroupingsRestControllerTest {
 
     @Test
     @WithMockUhUser(username = "admin")
-    public void resetExcludeGroup() throws Exception {
+    public void resetIncludeGroupAsyncTest() throws Exception {
+        String uri = REST_CONTROLLER_BASE + GROUPING + "/resetIncludeGroupAsync";
+
+        given(httpRequestService.makeApiRequest(eq(ADMIN_USERNAME), anyString(), eq(HttpMethod.DELETE)))
+                .willReturn(new ResponseEntity(HttpStatus.OK));
+
+        assertNotNull(mockMvc.perform(post(uri).with(csrf()))
+                .andExpect(status().isOk())
+                .andReturn());
+
+        verify(httpRequestService, times(1))
+                .makeApiRequest(eq(ADMIN_USERNAME), anyString(), eq(HttpMethod.DELETE));
+    }
+
+    @Test
+    @WithMockUhUser(username = "admin")
+    public void resetExcludeGroupTest() throws Exception {
         String uri = REST_CONTROLLER_BASE + GROUPING + "/resetExcludeGroup";
+
+        given(httpRequestService.makeApiRequest(eq(ADMIN_USERNAME), anyString(), eq(HttpMethod.DELETE)))
+                .willReturn(new ResponseEntity(HttpStatus.OK));
+
+        assertNotNull(mockMvc.perform(post(uri).with(csrf()))
+                .andExpect(status().isOk())
+                .andReturn());
+
+        verify(httpRequestService, times(1))
+                .makeApiRequest(eq(ADMIN_USERNAME), anyString(), eq(HttpMethod.DELETE));
+    }
+
+    @Test
+    @WithMockUhUser(username = "admin")
+    public void resetExcludeGroupAsyncTest() throws Exception {
+        String uri = REST_CONTROLLER_BASE + GROUPING + "/resetExcludeGroupAsync";
 
         given(httpRequestService.makeApiRequest(eq(ADMIN_USERNAME), anyString(), eq(HttpMethod.DELETE)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
@@ -245,6 +277,46 @@ public class GroupingsRestControllerTest {
 
         verify(httpRequestService, times(1))
                 .makeApiRequest(eq(ADMIN_USERNAME), anyString(), eq(HttpMethod.DELETE));
+    }
+
+    @Test
+    @WithMockUhUser
+    public void invalidUhIdentifiersTest() throws Exception {
+        String uri = REST_CONTROLLER_BASE + "members/invalid";
+        List<String> members = new ArrayList<>();
+        members.add(USERNAME);
+
+        given(httpRequestService.makeApiRequestWithBody(eq(USERNAME), anyString(), anyList(), eq(HttpMethod.POST)))
+                .willReturn(new ResponseEntity(HttpStatus.OK));
+
+        assertNotNull(mockMvc.perform(post(uri).with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(JsonUtil.asJson(members)))
+                .andExpect(status().isOk())
+                .andReturn());
+
+        verify(httpRequestService, times(1))
+                .makeApiRequestWithBody(eq(USERNAME), anyString(), anyList(), eq(HttpMethod.POST));
+    }
+
+    @Test
+    @WithMockUhUser
+    public void invalidUhIdentifiersAsyncTest() throws Exception {
+        String uri = REST_CONTROLLER_BASE + "members/invalidAsync";
+        List<String> members = new ArrayList<>();
+        members.add(USERNAME);
+
+        given(httpRequestService.makeApiRequestWithBody(eq(USERNAME), anyString(), anyList(), eq(HttpMethod.POST)))
+                .willReturn(new ResponseEntity(HttpStatus.ACCEPTED));
+
+        assertNotNull(mockMvc.perform(post(uri).with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(JsonUtil.asJson(members)))
+                .andExpect(status().isAccepted())
+                .andReturn());
+
+        verify(httpRequestService, times(1))
+                .makeApiRequestWithBody(eq(USERNAME), anyString(), anyList(), eq(HttpMethod.POST));
     }
 
     @Test
@@ -419,6 +491,27 @@ public class GroupingsRestControllerTest {
 
     @Test
     @WithMockUhUser
+    public void addMembersToIncludeGroupAsyncTest() throws Exception {
+        String uri = REST_CONTROLLER_BASE + GROUPING + "/addMembersToIncludeGroupAsync";
+        List<String> usersToAdd = new ArrayList<>();
+        usersToAdd.add(USERNAME);
+
+        given(httpRequestService.makeApiRequestWithBody(eq(USERNAME), anyString(), anyList(), eq(HttpMethod.PUT)))
+                .willReturn(new ResponseEntity(HttpStatus.ACCEPTED));
+
+        assertNotNull(mockMvc.perform(put(uri).with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(JsonUtil.asJson(usersToAdd)))
+                .andExpect(status().isAccepted())
+                .andReturn());
+
+        verify(httpRequestService, times(1))
+                .makeApiRequestWithBody(eq(USERNAME), anyString(), anyList(), eq(HttpMethod.PUT));
+
+    }
+
+    @Test
+    @WithMockUhUser
     public void addMembersToExcludeGroupTest() throws Exception {
         String uri = REST_CONTROLLER_BASE + GROUPING + "/addMembersToExcludeGroup";
         List<String> usersToAdd = new ArrayList<>();
@@ -431,6 +524,26 @@ public class GroupingsRestControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JsonUtil.asJson(usersToAdd)))
                 .andExpect(status().isOk())
+                .andReturn());
+
+        verify(httpRequestService, times(1))
+                .makeApiRequestWithBody(eq(USERNAME), anyString(), anyList(), eq(HttpMethod.PUT));
+    }
+
+    @Test
+    @WithMockUhUser
+    public void addMembersToExcludeGroupAsyncTest() throws Exception {
+        String uri = REST_CONTROLLER_BASE + GROUPING + "/addMembersToExcludeGroupAsync";
+        List<String> usersToAdd = new ArrayList<>();
+        usersToAdd.add(USERNAME);
+
+        given(httpRequestService.makeApiRequestWithBody(eq(USERNAME), anyString(), anyList(), eq(HttpMethod.PUT)))
+                .willReturn(new ResponseEntity(HttpStatus.ACCEPTED));
+
+        assertNotNull(mockMvc.perform(put(uri).with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(JsonUtil.asJson(usersToAdd)))
+                .andExpect(status().isAccepted())
                 .andReturn());
 
         verify(httpRequestService, times(1))
@@ -729,6 +842,21 @@ public class GroupingsRestControllerTest {
 
         assertNotNull(mockMvc.perform(get(uri).with(csrf()))
                 .andExpect(status().isOk())
+                .andReturn());
+
+        verify(httpRequestService, times(1))
+                .makeApiRequest(eq(USERNAME), anyString(), eq(HttpMethod.GET));
+    }
+
+    @Test
+    @WithMockUhUser
+    public void getAsyncJobResultTest() throws Exception {
+        String uri = REST_CONTROLLER_BASE + "jobs/0";
+        given(httpRequestService.makeApiRequest(eq(USERNAME), anyString(), eq(HttpMethod.GET)))
+                .willReturn(new ResponseEntity(HttpStatus.ACCEPTED));
+
+        assertNotNull(mockMvc.perform(get(uri).with(csrf()))
+                .andExpect(status().isAccepted())
                 .andReturn());
 
         verify(httpRequestService, times(1))
