@@ -243,7 +243,7 @@
                                     <i class="fa fa-fw fa-external-link-alt clickable" tooltip="Manage grouping"
                                     ng-click="displayGroupingInNewTab(l.name, l.path)"></i>
                                     {{l.name}}
-                                    <i class="fa fa-crown fa-fw fa-pull-right clickable pt-1" role="button"
+                                    <i class="fa fa-crown fa-fw fa-pull-right clickable pt-1 text-primary" role="button"
                                        tooltip data-placement="right"
                                        tabindex="0"
                                        aria-label="Display admin."
@@ -254,43 +254,46 @@
                                 </td>
                                 <td class="p-11">
                                     <div ng-if="l.inOwner">
-                                        <p>Yes</p>
+                                        Yes
                                     </div>
                                     <div ng-if="!l.inOwner">
-                                        <p>No</p>
+                                        No
                                     </div>
                                 </td>
                                 <td class="p-11">
                                     <div ng-if="l.inBasis || l.inBasisAndInclude">
-                                        <p>Yes</p>
+                                        Yes
                                     </div>
                                     <div ng-if="!l.inBasis && !l.inBasisAndInclude">
-                                        <p>No</p>
+                                        No
                                     </div>
                                 </td>
                                 <td class="p-12" tabindex="0">
                                     <div ng-if="l.inInclude">
-                                        <p>Yes</p>
+                                        Yes
                                     </div>
                                     <div ng-if="!l.inInclude">
-                                        <p>No</p>
+                                        No
                                     </div>
                                 </td>
                                 <td class="p-12">
                                     <div ng-if="l.inExclude">
-                                        <p>Yes</p>
+                                        Yes
                                     </div>
                                     <div ng-if="!l.inExclude">
-                                        <p>No</p>
+                                        No
                                     </div>
                                 </td>
-                                <td class="p-10" tabindex="0">
+                                <td class="p-12" tabindex="0">
                                     <div ng-if="l.inOwner || l.inInclude || l.inExclude">
-                                        <label aria-label="Remove"><input type="checkbox" ng-model="l.isSelected" ng-change="update(l)"  ng-keydown="clickWithEnter($event)"></label>
+                                        <label class="form-check-label" aria-label="Remove"><input type="checkbox"
+                                               class="form-check-input" ng-model="l.isSelected" ng-change="update(l)"
+                                               ng-keydown="clickWithEnter($event)"></label>
                                     </div>
                                     <div ng-if="!l.inOwner && !l.inInclude && !l.inExclude">
-                                        <label aria-label="Remove"><input type="checkbox"
-                                                                          ng-model="l.isSelected" ng-change="update(l)" disabled ng-keydown="clickWithEnter($event)"></label>
+                                        <label aria-label="Remove"><input type="checkbox" class="form-check-input"
+                                               ng-model="l.isSelected" ng-change="update(l)"
+                                               disabled ng-keydown="clickWithEnter($event)"></label>
                                     </div>
                                 </td>
                             </tr>
