@@ -60,8 +60,8 @@
             /**
              * Get a list of all admins and groupings.
              */
-            getAdminLists(onSuccess, onError) {
-                let endpoint = BASE_URL + "adminLists";
+            getAdminsGroupings(onSuccess, onError) {
+                let endpoint = BASE_URL + "adminsGroupings";
                 dataProvider.loadData(endpoint, onSuccess, onError);
             },
 
@@ -69,8 +69,8 @@
              * Add a members to the include group of a grouping. A modal is passed in and displayed after a certain amount
              * of time has elapsed.
              */
-            addMembersToInclude(members, path, onSuccess, onError, modal) {
-                let endpoint = BASE_URL + path + "/addMembersToIncludeGroup";
+            addIncludeMembers(members, path, onSuccess, onError, modal) {
+                let endpoint = BASE_URL + path + "/addIncludeMembers";
                 return new Promise(() => {
                     dataProvider.updateDataWithBodyAndTimeoutModal(endpoint, members, onSuccess, onError, modal);
                 });
@@ -81,8 +81,8 @@
              * average time of the non-asyns version of this endpoint based on the number of members being added.
              * A modal is passed in and displayed after a certain amount of time has elapsed.
              */
-            addMembersToIncludeAsync(members, path, onSuccess, onError, modal) {
-                let endpoint = BASE_URL + path + "/addMembersToIncludeGroupAsync";
+            addIncludeMembersAsync(members, path, onSuccess, onError, modal) {
+                let endpoint = BASE_URL + path + "/addIncludeMembersAsync";
                 let initialPoll = Math.pow(members.length, 1.6);
                 return new Promise(() => {
                     dataProvider.updateDataWithBodyAndTimeoutModalAsync(endpoint, members, initialPoll, onSuccess, onError, modal);
@@ -93,8 +93,8 @@
              * Add a members to the exclude group of a grouping. A modal is passed in and displayed after a certain amount
              * of time has elapsed.
              */
-            addMembersToExclude(members, path, onSuccess, onError, modal) {
-                let endpoint = BASE_URL + path + "/addMembersToExcludeGroup";
+            addExcludeMembers(members, path, onSuccess, onError, modal) {
+                let endpoint = BASE_URL + path + "/addExcludeMembers";
                 return new Promise(() => {
                     dataProvider.updateDataWithBodyAndTimeoutModal(endpoint, members, onSuccess, onError, modal);
                 });
@@ -105,8 +105,8 @@
              * average time of the non-asyns version of this endpoint based on the number of members being added.
              * A modal is passed in and displayed after a certain amount of time has elapsed.
              */
-            addMembersToExcludeAsync(members, path, onSuccess, onError, modal) {
-                let endpoint = BASE_URL + path + "/addMembersToExcludeGroupAsync";
+            addExcludeMembersAsync(members, path, onSuccess, onError, modal) {
+                let endpoint = BASE_URL + path + "/addExcludeMembersAsync";
                 let initialPoll = Math.pow(members.length, 1.6);
                 return new Promise(() => {
                     dataProvider.updateDataWithBodyAndTimeoutModalAsync(endpoint, members, initialPoll, onSuccess, onError, modal);
@@ -141,8 +141,8 @@
              * Remove members from include group of grouping. A modal is passed in and displayed after a certain amount
              * of time has elapsed.
              */
-            removeMembersFromInclude(path, members, onSuccess, onError) {
-                let endpoint = BASE_URL + path + "/removeMembersFromIncludeGroup";
+            removeIncludeMembers(path, members, onSuccess, onError) {
+                let endpoint = BASE_URL + path + "/removeIncludeMembers";
                 dataProvider.updateDataWithBody(endpoint, members, onSuccess, onError);
             },
 
@@ -150,8 +150,8 @@
              * Remove members from exclude group of grouping. A modal is passed in and displayed after a certain amount
              * of time has elapsed.
              */
-            removeMembersFromExclude(path, members, onSuccess, onError) {
-                let endpoint = BASE_URL + path + "/removeMembersFromExcludeGroup";
+            removeExcludeMembers(path, members, onSuccess, onError) {
+                let endpoint = BASE_URL + path + "/removeExcludeMembers";
                 dataProvider.updateDataWithBody(endpoint, members, onSuccess, onError);
             },
 

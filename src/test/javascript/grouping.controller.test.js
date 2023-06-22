@@ -1188,8 +1188,8 @@ describe("GroupingController", () => {
                     };
 
                     beforeEach(() => {
-                        spyOn(gs, "addMembersToInclude").and.callThrough();
-                        spyOn(gs, "addMembersToExclude").and.callThrough();
+                        spyOn(gs, "addIncludeMembers").and.callThrough();
+                        spyOn(gs, "addExcludeMembers").and.callThrough();
                         spyOn(gs, "addOwnerships").and.callThrough();
                         spyOn(gs, "addAdmin").and.callThrough();
                     });
@@ -1206,8 +1206,8 @@ describe("GroupingController", () => {
 
                         scope.cancelAddModal();
                         expect(scope.waitingForImportResponse).toBeFalse();
-                        expect(gs.addMembersToInclude).not.toHaveBeenCalled();
-                        expect(gs.addMembersToExclude).not.toHaveBeenCalled();
+                        expect(gs.addIncludeMembers).not.toHaveBeenCalled();
+                        expect(gs.addExcludeMembers).not.toHaveBeenCalled();
                         expect(gs.addOwnerships).not.toHaveBeenCalled();
                         expect(gs.addAdmin).not.toHaveBeenCalled();
                     });
@@ -1224,13 +1224,13 @@ describe("GroupingController", () => {
 
                         scope.cancelAddModal();
                         expect(scope.waitingForImportResponse).toBeFalse();
-                        expect(gs.addMembersToInclude).not.toHaveBeenCalled();
-                        expect(gs.addMembersToExclude).not.toHaveBeenCalled();
+                        expect(gs.addIncludeMembers).not.toHaveBeenCalled();
+                        expect(gs.addExcludeMembers).not.toHaveBeenCalled();
                         expect(gs.addOwnerships).not.toHaveBeenCalled();
                         expect(gs.addAdmin).not.toHaveBeenCalled();
                     });
 
-                    it("should call gs.addMembersToInclude when the user presses 'add' in addModal.html", () => {
+                    it("should call gs.addIncludeMembers when the user presses 'add' in addModal.html", () => {
                         spyOn(uibModal, "open").and.returnValue(mockModal);
                         scope.displayAddModal({
                             membersToAdd: member,
@@ -1242,10 +1242,10 @@ describe("GroupingController", () => {
 
                         scope.proceedAddModal();
                         expect(scope.waitingForImportResponse).toBeTrue();
-                        expect(gs.addMembersToInclude).toHaveBeenCalled();
+                        expect(gs.addIncludeMembers).toHaveBeenCalled();
                     });
 
-                    it("should call gs.addMembersToInclude when the user presses 'add' in multiAddModal.html", () => {
+                    it("should call gs.addIncludeMembers when the user presses 'add' in multiAddModal.html", () => {
                         spyOn(uibModal, "open").and.returnValue(mockModal);
                         scope.displayAddModal({
                             membersToAdd: members,
@@ -1257,10 +1257,10 @@ describe("GroupingController", () => {
 
                         scope.proceedAddModal();
                         expect(scope.waitingForImportResponse).toBeTrue();
-                        expect(gs.addMembersToInclude).toHaveBeenCalled();
+                        expect(gs.addIncludeMembers).toHaveBeenCalled();
                     });
 
-                    it("should call gs.addMembersToExclude when the user presses 'add' in addModal.html", () => {
+                    it("should call gs.addExcludeMembers when the user presses 'add' in addModal.html", () => {
                         spyOn(uibModal, "open").and.returnValue(mockModal);
                         scope.displayAddModal({
                             membersToAdd: member,
@@ -1272,10 +1272,10 @@ describe("GroupingController", () => {
 
                         scope.proceedAddModal();
                         expect(scope.waitingForImportResponse).toBeTrue();
-                        expect(gs.addMembersToExclude).toHaveBeenCalled();
+                        expect(gs.addExcludeMembers).toHaveBeenCalled();
                     });
 
-                    it("should call gs.addMembersToExclude when the user presses 'add' in multiAddModal.html", () => {
+                    it("should call gs.addExcludeMembers when the user presses 'add' in multiAddModal.html", () => {
                         spyOn(uibModal, "open").and.returnValue(mockModal);
                         scope.displayAddModal({
                             membersToAdd: members,
@@ -1287,7 +1287,7 @@ describe("GroupingController", () => {
 
                         scope.proceedAddModal();
                         expect(scope.waitingForImportResponse).toBeTrue();
-                        expect(gs.addMembersToExclude).toHaveBeenCalled();
+                        expect(gs.addExcludeMembers).toHaveBeenCalled();
                     });
 
                     it("should call gs.addOwnerships when the user presses 'add' in addModal.html", () => {
@@ -1420,16 +1420,16 @@ describe("GroupingController", () => {
 
         it("should make the correct groupingsService and member to Include/Exclude", () => {
             spyOn(uibModal, "open").and.returnValue(mockModal);
-            spyOn(gs, "addMembersToIncludeAsync").and.callThrough();
-            spyOn(gs, "addMembersToExcludeAsync").and.callThrough();
+            spyOn(gs, "addIncludeMembersAsync").and.callThrough();
+            spyOn(gs, "addExcludeMembersAsync").and.callThrough();
 
             scope.displayImportConfirmationModal("Include", ["iamtst01", "iamtst02"]);
             scope.proceedImportConfirmationModal();
-            expect(gs.addMembersToIncludeAsync).toHaveBeenCalled();
+            expect(gs.addIncludeMembersAsync).toHaveBeenCalled();
 
             scope.displayImportConfirmationModal("Exclude", ["iamtst01", "iamtst02"]);
             scope.proceedImportConfirmationModal();
-            expect(gs.addMembersToExcludeAsync).toHaveBeenCalled();
+            expect(gs.addExcludeMembersAsync).toHaveBeenCalled();
         });
     });
 
@@ -1758,9 +1758,9 @@ describe("GroupingController", () => {
                 backdrop: "static",
                 scope
             });
-            spyOn(gs, "removeMembersFromInclude").and.callThrough();
+            spyOn(gs, "removeIncludeMembers").and.callThrough();
             scope.proceedRemoveModal();
-            expect(gs.removeMembersFromInclude).toHaveBeenCalled();
+            expect(gs.removeIncludeMembers).toHaveBeenCalled();
 
             options = { membersToRemove: ["iamtst03"], listName: "Exclude" };
             scope.displayRemoveModal(options);
@@ -1772,15 +1772,15 @@ describe("GroupingController", () => {
                 backdrop: "static",
                 scope
             });
-            spyOn(gs, "removeMembersFromExclude").and.callThrough();
+            spyOn(gs, "removeExcludeMembers").and.callThrough();
             scope.proceedRemoveModal();
-            expect(gs.removeMembersFromExclude).toHaveBeenCalled();
+            expect(gs.removeExcludeMembers).toHaveBeenCalled();
         });
 
         it("should open uibModal with multiRemoveModal template when removing more than 1 user", () => {
             spyOn(uibModal, "open").and.returnValue(mockModal);
-            spyOn(gs, "removeMembersFromInclude").and.callThrough();
-            spyOn(gs, "removeMembersFromExclude").and.callThrough();
+            spyOn(gs, "removeIncludeMembers").and.callThrough();
+            spyOn(gs, "removeExcludeMembers").and.callThrough();
 
             options = { membersToRemove: ["iamtst01", "iamtst02"], listName: "Include" };
             scope.displayRemoveModal(options);
@@ -1792,7 +1792,7 @@ describe("GroupingController", () => {
                 scope
             });
             scope.proceedRemoveModal();
-            expect(gs.removeMembersFromInclude).toHaveBeenCalled();
+            expect(gs.removeIncludeMembers).toHaveBeenCalled();
 
             options = { membersToRemove: ["iamtst03", "iamtst04"], listName: "Exclude" };
             scope.displayRemoveModal(options);
@@ -1804,7 +1804,7 @@ describe("GroupingController", () => {
                 scope
             });
             scope.proceedRemoveModal();
-            expect(gs.removeMembersFromExclude).toHaveBeenCalled();
+            expect(gs.removeExcludeMembers).toHaveBeenCalled();
         });
     });
 

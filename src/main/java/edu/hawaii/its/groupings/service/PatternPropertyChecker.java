@@ -31,9 +31,9 @@ public class PatternPropertyChecker {
      */
     public List<String> getPatternLocation(String folderLocation, String fileExtension) {
 
-        logger.info("fileLocations;  fileExtension: " + fileExtension);
-        logger.info("fileLocations; folderLocation: " + folderLocation);
-        logger.info("fileLocations;        pattern: " + this.pattern);
+        logger.debug("fileLocations;  fileExtension: " + fileExtension);
+        logger.debug("fileLocations; folderLocation: " + folderLocation);
+        logger.debug("fileLocations;        pattern: " + this.pattern);
 
         List<String> patternLocation = new ArrayList<>();
 
@@ -46,7 +46,7 @@ public class PatternPropertyChecker {
                 Matcher matcher;
 
                 for (File fr : fileResources) {
-                    logger.info("fileLocations; scan file: " + fr);
+                    logger.debug("fileLocations; scan file: " + fr);
 
                     int lineId = 0;
                     List<Integer> lineNumbers = new ArrayList<>();

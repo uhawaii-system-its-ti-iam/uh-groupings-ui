@@ -121,8 +121,8 @@ public class GroupingsRestControllerTest {
 
     @Test
     @WithMockUhUser(username = "admin")
-    public void adminListsTest() throws Exception {
-        String uri = REST_CONTROLLER_BASE + "adminLists";
+    public void adminsGroupingsTest() throws Exception {
+        String uri = REST_CONTROLLER_BASE + "adminsGroupings";
 
         given(httpRequestService.makeApiRequest(eq(ADMIN_USERNAME), anyString(), eq(HttpMethod.GET)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
@@ -389,24 +389,8 @@ public class GroupingsRestControllerTest {
 
     @Test
     @WithMockUhUser
-    public void numberOfMembershipsTest() throws Exception {
+    public void getNumberOfMembershipsTest() throws Exception {
         String uri = REST_CONTROLLER_BASE + "members/memberships/count";
-
-        given(httpRequestService.makeApiRequest(eq(USERNAME), anyString(), eq(HttpMethod.GET)))
-                .willReturn(new ResponseEntity(HttpStatus.OK));
-
-        assertNotNull(mockMvc.perform(get(uri).with(csrf()))
-                .andExpect(status().isOk())
-                .andReturn());
-
-        verify(httpRequestService, times(1))
-                .makeApiRequest(eq(USERNAME), anyString(), eq(HttpMethod.GET));
-    }
-
-    @Test
-    @WithMockUhUser
-    public void membershipAssignmentTest() throws Exception {
-        String uri = REST_CONTROLLER_BASE + "members/0000/groupings";
 
         given(httpRequestService.makeApiRequest(eq(USERNAME), anyString(), eq(HttpMethod.GET)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
@@ -470,8 +454,8 @@ public class GroupingsRestControllerTest {
 
     @Test
     @WithMockUhUser
-    public void addMembersToIncludeGroupTest() throws Exception {
-        String uri = REST_CONTROLLER_BASE + GROUPING + "/addMembersToIncludeGroup";
+    public void addIncludeMembersTest() throws Exception {
+        String uri = REST_CONTROLLER_BASE + GROUPING + "/addIncludeMembers";
         List<String> usersToAdd = new ArrayList<>();
         usersToAdd.add(USERNAME);
 
@@ -491,8 +475,8 @@ public class GroupingsRestControllerTest {
 
     @Test
     @WithMockUhUser
-    public void addMembersToIncludeGroupAsyncTest() throws Exception {
-        String uri = REST_CONTROLLER_BASE + GROUPING + "/addMembersToIncludeGroupAsync";
+    public void addIncludeMembersAsyncTest() throws Exception {
+        String uri = REST_CONTROLLER_BASE + GROUPING + "/addIncludeMembersAsync";
         List<String> usersToAdd = new ArrayList<>();
         usersToAdd.add(USERNAME);
 
@@ -512,8 +496,8 @@ public class GroupingsRestControllerTest {
 
     @Test
     @WithMockUhUser
-    public void addMembersToExcludeGroupTest() throws Exception {
-        String uri = REST_CONTROLLER_BASE + GROUPING + "/addMembersToExcludeGroup";
+    public void addExcludeMembersTest() throws Exception {
+        String uri = REST_CONTROLLER_BASE + GROUPING + "/addExcludeMembers";
         List<String> usersToAdd = new ArrayList<>();
         usersToAdd.add(USERNAME);
 
@@ -532,8 +516,8 @@ public class GroupingsRestControllerTest {
 
     @Test
     @WithMockUhUser
-    public void addMembersToExcludeGroupAsyncTest() throws Exception {
-        String uri = REST_CONTROLLER_BASE + GROUPING + "/addMembersToExcludeGroupAsync";
+    public void addExcludeMembersAsyncTest() throws Exception {
+        String uri = REST_CONTROLLER_BASE + GROUPING + "/addExcludeMembersAsync";
         List<String> usersToAdd = new ArrayList<>();
         usersToAdd.add(USERNAME);
 
@@ -552,8 +536,8 @@ public class GroupingsRestControllerTest {
 
     @Test
     @WithMockUhUser
-    public void removeMembersFromIncludeGroupTest() throws Exception {
-        String uri = REST_CONTROLLER_BASE + GROUPING + "/removeMembersFromIncludeGroup";
+    public void removeIncludeMembersTest() throws Exception {
+        String uri = REST_CONTROLLER_BASE + GROUPING + "/removeIncludeMembers";
         List<String> usersToRemove = new ArrayList<>();
         usersToRemove.add(USERNAME);
 
@@ -572,8 +556,8 @@ public class GroupingsRestControllerTest {
 
     @Test
     @WithMockUhUser
-    public void removeMembersFromExcludeGroupTest() throws Exception {
-        String uri = REST_CONTROLLER_BASE + GROUPING + "/removeMembersFromExcludeGroup";
+    public void removeExcludeMembersTest() throws Exception {
+        String uri = REST_CONTROLLER_BASE + GROUPING + "/removeExcludeMembers";
         List<String> usersToRemove = new ArrayList<>();
         usersToRemove.add(USERNAME);
 
@@ -592,7 +576,7 @@ public class GroupingsRestControllerTest {
 
     @Test
     @WithMockUhUser
-    public void groupingsOwnedTest() throws Exception {
+    public void ownerGroupingsTest() throws Exception {
         String uri = REST_CONTROLLER_BASE + "owners/groupings";
 
         given(httpRequestService.makeApiRequest(eq(USERNAME), anyString(), eq(HttpMethod.GET)))
@@ -640,22 +624,6 @@ public class GroupingsRestControllerTest {
 
     @Test
     @WithMockUhUser
-    public void groupingsOwnedUidTest() throws Exception {
-        String uri = REST_CONTROLLER_BASE + "owners/" + USERNAME + "/groupings";
-
-        given(httpRequestService.makeApiRequest(eq(USERNAME), anyString(), eq(HttpMethod.GET)))
-                .willReturn(new ResponseEntity(HttpStatus.OK));
-
-        assertNotNull(mockMvc.perform(get(uri))
-                .andExpect(status().isOk())
-                .andReturn());
-
-        verify(httpRequestService, times(1))
-                .makeApiRequest(eq(USERNAME), anyString(), eq(HttpMethod.GET));
-    }
-
-    @Test
-    @WithMockUhUser
     public void assignOwnershipTest() throws Exception {
         String uri = REST_CONTROLLER_BASE + GROUPING + "/user/addOwnerships";
 
@@ -688,7 +656,7 @@ public class GroupingsRestControllerTest {
 
     @Test
     @WithMockUhUser
-    public void groupingTest() throws Exception {
+    public void getGroupingTest() throws Exception {
         String uri =
                 REST_CONTROLLER_BASE + "groupings/" + GROUPING + "?page=2&size=700&sortString=name&isAscending=true";
 

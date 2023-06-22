@@ -80,81 +80,81 @@ describe("GroupingsService", () => {
         });
     });
 
-    describe("getAdminLists", () => {
+    describe("getAdminsGroupings", () => {
 
         it("should call dataProvider.loadData", () => {
             spyOn(dp, "loadData");
-            gs.getAdminLists(onSuccess, onError);
+            gs.getAdminsGroupings(onSuccess, onError);
             expect(dp.loadData).toHaveBeenCalled();
         });
 
         it("should use the correct path", () => {
-            gs.getAdminLists(onSuccess, onError);
-            httpBackend.expectGET(BASE_URL + "adminLists").respond(200);
+            gs.getAdminsGroupings(onSuccess, onError);
+            httpBackend.expectGET(BASE_URL + "adminsGroupings").respond(200);
             expect(httpBackend.flush).not.toThrow();
         });
     });
 
-    describe("addMembersToInclude", () => {
+    describe("addIncludeMembers", () => {
         let usersToAdd = [];
         let modal;
 
         it("should call dataProvider.updateDataWithBodyAndTimeoutModal", () => {
             spyOn(dp, "updateDataWithBodyAndTimeoutModal");
-            gs.addMembersToInclude(usersToAdd, groupingPath, onSuccess, onError);
+            gs.addIncludeMembers(usersToAdd, groupingPath, onSuccess, onError);
             expect(dp.updateDataWithBodyAndTimeoutModal).toHaveBeenCalled();
         });
 
         it("should use the correct path", () => {
-            gs.addMembersToInclude(usersToAdd, groupingPath, onSuccess, onError, modal);
-            httpBackend.expectPUT(BASE_URL + groupingPath + "/addMembersToIncludeGroup").respond(200);
+            gs.addIncludeMembers(usersToAdd, groupingPath, onSuccess, onError, modal);
+            httpBackend.expectPUT(BASE_URL + groupingPath + "/addIncludeMembers").respond(200);
             expect(httpBackend.flush).not.toThrow();
         });
     });
 
-    describe("addMembersToIncludeAsync", () => {
+    describe("addIncludeMembersAsync", () => {
         let usersToAdd = [];
         let modal;
         it("should call dataProvider.updateDataWithBodyAndTimeoutModalAsync", () => {
             spyOn(dp, "updateDataWithBodyAndTimeoutModalAsync");
-            gs.addMembersToIncludeAsync(usersToAdd, groupingPath, onSuccess, onError, modal);
+            gs.addIncludeMembersAsync(usersToAdd, groupingPath, onSuccess, onError, modal);
             expect(dp.updateDataWithBodyAndTimeoutModalAsync).toHaveBeenCalled();
         });
 
         it("should use the correct path", () => {
-            gs.addMembersToIncludeAsync(usersToAdd, groupingPath, onSuccess, onError, modal);
-            httpBackend.expectPUT(BASE_URL + groupingPath + "/addMembersToIncludeGroupAsync").respond(200);
+            gs.addIncludeMembersAsync(usersToAdd, groupingPath, onSuccess, onError, modal);
+            httpBackend.expectPUT(BASE_URL + groupingPath + "/addIncludeMembersAsync").respond(200);
             expect(httpBackend.flush).not.toThrow();
         });
     });
 
-    describe("addMembersToExclude", () => {
+    describe("addExcludeMembers", () => {
         let usersToAdd;
         let modal;
 
         it("should call dataProvider.updateDataWithBodyAndTimeoutModal", () => {
             spyOn(dp, "updateDataWithBodyAndTimeoutModal");
-            gs.addMembersToExclude(usersToAdd, groupingPath, onSuccess, onError, modal);
+            gs.addExcludeMembers(usersToAdd, groupingPath, onSuccess, onError, modal);
             expect(dp.updateDataWithBodyAndTimeoutModal).toHaveBeenCalled();
         });
         it("should use the correct path", () => {
-            gs.addMembersToExclude(usersToAdd, groupingPath, onSuccess, onError, modal);
-            httpBackend.expectPUT(BASE_URL + groupingPath + "/addMembersToExcludeGroup").respond(200);
+            gs.addExcludeMembers(usersToAdd, groupingPath, onSuccess, onError, modal);
+            httpBackend.expectPUT(BASE_URL + groupingPath + "/addExcludeMembers").respond(200);
             expect(httpBackend.flush).not.toThrow();
         });
     });
 
-    describe("addMembersToExcludeAsync", () => {
+    describe("addExcludeMembersAsync", () => {
         let usersToAdd = [];
         let modal;
         it("should call dataProvider.updateDataWithBodyAndTimeoutModalAsync", () => {
             spyOn(dp, "updateDataWithBodyAndTimeoutModalAsync");
-            gs.addMembersToExcludeAsync(usersToAdd, groupingPath, onSuccess, onError, modal);
+            gs.addExcludeMembersAsync(usersToAdd, groupingPath, onSuccess, onError, modal);
             expect(dp.updateDataWithBodyAndTimeoutModalAsync).toHaveBeenCalled();
         });
         it("should use the correct path", () => {
-            gs.addMembersToExcludeAsync(usersToAdd, groupingPath, onSuccess, onError, modal);
-            httpBackend.expectPUT(BASE_URL + groupingPath + "/addMembersToExcludeGroupAsync").respond(200);
+            gs.addExcludeMembersAsync(usersToAdd, groupingPath, onSuccess, onError, modal);
+            httpBackend.expectPUT(BASE_URL + groupingPath + "/addExcludeMembersAsync").respond(200);
             expect(httpBackend.flush).not.toThrow();
         });
     });
@@ -202,30 +202,30 @@ describe("GroupingsService", () => {
         });
     });
 
-    describe("removeMembersFromInclude", () => {
+    describe("removeIncludeMembers", () => {
         let members;
         it("should call dataProvider.updateDataWithBody", () => {
             spyOn(dp, "updateDataWithBody");
-            gs.removeMembersFromInclude(groupingPath, members, onSuccess, onError);
+            gs.removeIncludeMembers(groupingPath, members, onSuccess, onError);
             expect(dp.updateDataWithBody).toHaveBeenCalled();
         });
         it("should use the correct path", () => {
-            gs.removeMembersFromInclude(groupingPath, members, onSuccess, onError);
-            httpBackend.expectPUT(BASE_URL + groupingPath + "/removeMembersFromIncludeGroup").respond(200);
+            gs.removeIncludeMembers(groupingPath, members, onSuccess, onError);
+            httpBackend.expectPUT(BASE_URL + groupingPath + "/removeIncludeMembers").respond(200);
             expect(httpBackend.flush).not.toThrow();
         });
     });
 
-    describe("removeMembersFromExclude", () => {
+    describe("removeExcludeMembers", () => {
         let members;
         it("should call dataProvider.updateDataWithBody", () => {
             spyOn(dp, "updateDataWithBody");
-            gs.removeMembersFromExclude(groupingPath, members, onSuccess, onError);
+            gs.removeExcludeMembers(groupingPath, members, onSuccess, onError);
             expect(dp.updateDataWithBody).toHaveBeenCalled();
         });
         it("should use the correct path", () => {
-            gs.removeMembersFromExclude(groupingPath, members, onSuccess, onError);
-            httpBackend.expectPUT(BASE_URL + groupingPath + "/removeMembersFromExcludeGroup").respond(200);
+            gs.removeExcludeMembers(groupingPath, members, onSuccess, onError);
+            httpBackend.expectPUT(BASE_URL + groupingPath + "/removeExcludeMembers").respond(200);
             expect(httpBackend.flush).not.toThrow();
         });
     });
