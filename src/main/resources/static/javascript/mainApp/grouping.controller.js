@@ -916,9 +916,9 @@
                     $scope.waitingForImportResponse = true; // Small spinner on
                     const groupingPath = $scope.selectedGrouping.path;
                     if ($scope.listName === "Include") {
-                        await groupingsService.addMembersToInclude(membersToAdd, groupingPath, handleSuccessfulAdd, handleUnsuccessfulRequest, displaySlowImportModal);
+                        await groupingsService.addIncludeMembers(membersToAdd, groupingPath, handleSuccessfulAdd, handleUnsuccessfulRequest, displaySlowImportModal);
                     } else if ($scope.listName === "Exclude") {
-                        await groupingsService.addMembersToExclude(membersToAdd, groupingPath, handleSuccessfulAdd, handleUnsuccessfulRequest, displaySlowImportModal);
+                        await groupingsService.addExcludeMembers(membersToAdd, groupingPath, handleSuccessfulAdd, handleUnsuccessfulRequest, displaySlowImportModal);
                     } else if ($scope.listName === "owners") {
                         await groupingsService.addOwnerships(groupingPath, membersToAdd, handleSuccessfulAdd, handleUnsuccessfulRequest);
                     } else if ($scope.listName === "admins") {
@@ -970,9 +970,9 @@
             $scope.importConfirmationModalInstance.result.then(async () => {
                 $scope.waitingForImportResponse = true; // Small spinner on
                 if ($scope.listName === "Include") {
-                    await groupingsService.addMembersToIncludeAsync(membersToAdd, groupingPath, handleSuccessfulAdd, handleUnsuccessfulRequest, displaySlowImportModal);
+                    await groupingsService.addIncludeMembersAsync(membersToAdd, groupingPath, handleSuccessfulAdd, handleUnsuccessfulRequest, displaySlowImportModal);
                 } else if ($scope.listName === "Exclude") {
-                    await groupingsService.addMembersToExcludeAsync(membersToAdd, groupingPath, handleSuccessfulAdd, handleUnsuccessfulRequest, displaySlowImportModal);
+                    await groupingsService.addExcludeMembersAsync(membersToAdd, groupingPath, handleSuccessfulAdd, handleUnsuccessfulRequest, displaySlowImportModal);
                 }
             });
         };
@@ -1204,9 +1204,9 @@
                 $scope.waitingForImportResponse = true; // Small spinner on
                 const groupingPath = $scope.selectedGrouping.path;
                 if ($scope.listName === "Include") {
-                    groupingsService.removeMembersFromInclude(groupingPath, $scope.membersToRemove, handleSuccessfulRemove, handleUnsuccessfulRequest);
+                    groupingsService.removeIncludeMembers(groupingPath, $scope.membersToRemove, handleSuccessfulRemove, handleUnsuccessfulRequest);
                 } else if ($scope.listName === "Exclude") {
-                    groupingsService.removeMembersFromExclude(groupingPath, $scope.membersToRemove, handleSuccessfulRemove, handleUnsuccessfulRequest);
+                    groupingsService.removeExcludeMembers(groupingPath, $scope.membersToRemove, handleSuccessfulRemove, handleUnsuccessfulRequest);
                 } else if ($scope.listName === "owners") {
                     groupingsService.removeOwnerships(groupingPath, $scope.membersToRemove, handleOwnerRemove, handleUnsuccessfulRequest);
                 } else if ($scope.listName === "admins") {

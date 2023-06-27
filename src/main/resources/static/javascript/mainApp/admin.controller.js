@@ -35,7 +35,7 @@
          * Callback which takes the admin tab data and moves it into adminList and groupingsList, each of these objects
          * is then paginated.
          */
-        $scope.getAdminListsCallbackOnSuccess = (res) => {
+        $scope.getAdminsGroupingsCallbackOnSuccess = (res) => {
             $scope.adminsList = _.sortBy(res.adminGroup.members, "name");
             $scope.pagedItemsAdmins = $scope.objToPageArray($scope.adminsList, PAGE_SIZE);
 
@@ -43,6 +43,7 @@
             $scope.pagedItemsGroupings = $scope.objToPageArray($scope.groupingsList, PAGE_SIZE);
             $scope.loading = false;
         };
+
         /**
          * Complete initialization by fetching a list of admins and list of all groupings.
          * Load grouping from manage-person if sessionStorage saved item into managePersonGrouping key
@@ -54,7 +55,9 @@
                 $scope.initManagePersonGrouping(managePersonGrouping);
             } else {
                 $scope.loading = true;
-                groupingsService.getAdminLists($scope.getAdminListsCallbackOnSuccess, $scope.displayApiErrorModal);
+                groupingsService.getAdminsGroupings(
+                    $scope.getAdminsGroupingsCallbackOnSuccess,
+                    $scope.displayApiErrorModal);
             }
         };
 
@@ -389,7 +392,7 @@
 
             $scope.personToLookup = sessionStorage.getItem("personToLookup");
             $scope.searchForUserGroupingInformation();
-            groupingsService.getAdminLists($scope.getAdminListsCallbackOnSuccess, $scope.displayApiErrorModal);
+            groupingsService.getAdminsGroupings($scope.getAdminsGroupingsCallbackOnSuccess, $scope.displayApiErrorModal);
         };
 
         /**

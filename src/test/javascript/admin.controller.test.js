@@ -54,7 +54,7 @@ describe("AdminController", function () {
         expect(controller).toBeDefined();
     });
 
-    describe("getAdminListsCallbackOnSuccess", () => {
+    describe("getAdminsGroupingsCallbackOnSuccess", () => {
         let res = {};
         beforeEach(() => {
             res = {
@@ -91,22 +91,22 @@ describe("AdminController", function () {
 
         it("should call objToPageArray", () => {
             spyOn(scope, "objToPageArray").and.callThrough();
-            scope.getAdminListsCallbackOnSuccess(res);
+            scope.getAdminsGroupingsCallbackOnSuccess(res);
             expect(scope.objToPageArray).toHaveBeenCalled();
         });
 
         it("should instantiate scope.pagedItemsAdmins", () => {
-            scope.getAdminListsCallbackOnSuccess(res);
+            scope.getAdminsGroupingsCallbackOnSuccess(res);
             expect(scope.pagedItemsAdmins).toBeDefined();
         });
 
         it("should instantiate scope.groupingsList", () => {
-            scope.getAdminListsCallbackOnSuccess(res);
+            scope.getAdminsGroupingsCallbackOnSuccess(res);
             expect(scope.groupingsList).toBeDefined();
         });
 
         it("should set scope.loading to false", () => {
-            scope.getAdminListsCallbackOnSuccess(res);
+            scope.getAdminsGroupingsCallbackOnSuccess(res);
             expect(scope.loading).toBeFalse();
         });
     });
@@ -116,10 +116,10 @@ describe("AdminController", function () {
             sessionStorage.clear();
         });
 
-        it("should call groupingsService.getAdminLists", () => {
-            spyOn(gs, "getAdminLists").and.callThrough();
+        it("should call groupingsService.getAdminsGroupings", () => {
+            spyOn(gs, "getAdminsGroupings").and.callThrough();
             scope.init();
-            expect(gs.getAdminLists).toHaveBeenCalled();
+            expect(gs.getAdminsGroupings).toHaveBeenCalled();
         });
 
         it("should call scope.initManagePersonGrouping", () => {
@@ -548,7 +548,7 @@ describe("AdminController", function () {
 
         beforeEach(() => {
             spyOn(scope, "searchForUserGroupingInformation");
-            spyOn(gs, "getAdminLists");
+            spyOn(gs, "getAdminsGroupings");
             sessionStorage.setItem("personToLookup", personToLookup);
         });
 
@@ -573,10 +573,10 @@ describe("AdminController", function () {
             expect(sessionStorage.getItem("personToLookup")).toBe(personToLookup);
         });
 
-        it("should call scope.searchForUserGroupingInformation and gs.getAdminLists", () => {
+        it("should call scope.searchForUserGroupingInformation and gs.getAdminsGroupings", () => {
             scope.returnToManagePerson();
             expect(scope.searchForUserGroupingInformation).toHaveBeenCalled();
-            expect(gs.getAdminLists).toHaveBeenCalled();
+            expect(gs.getAdminsGroupings).toHaveBeenCalled();
         });
     });
 
