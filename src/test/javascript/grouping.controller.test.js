@@ -1414,7 +1414,8 @@ describe("GroupingController", () => {
             scope.displayImportConfirmationModal("Include", ["iamtst01", "iamtst02"]);
             expect(uibModal.open).toHaveBeenCalledWith({
                 templateUrl: "modal/importConfirmationModal",
-                scope
+                scope,
+                ariaLabelledBy: "import-confirmation-modal",
             });
         });
 
@@ -1478,7 +1479,8 @@ describe("GroupingController", () => {
             scope.displayImportSuccessModal("Include", ["iamtst01", "iamtst02"]);
             expect(uibModal.open).toHaveBeenCalledWith({
                 templateUrl: "modal/importSuccessModal",
-                scope
+                scope,
+                ariaLabelledBy: "import-success-modal",
             });
         });
 
@@ -1756,7 +1758,8 @@ describe("GroupingController", () => {
             expect(uibModal.open).toHaveBeenCalledWith({
                 templateUrl: "modal/removeModal",
                 backdrop: "static",
-                scope
+                scope,
+                ariaLabelledBy: "remove-modal",
             });
             spyOn(gs, "removeIncludeMembers").and.callThrough();
             scope.proceedRemoveModal();
@@ -1770,7 +1773,8 @@ describe("GroupingController", () => {
             expect(uibModal.open).toHaveBeenCalledWith({
                 templateUrl: "modal/removeModal",
                 backdrop: "static",
-                scope
+                scope,
+                ariaLabelledBy: "remove-modal",
             });
             spyOn(gs, "removeExcludeMembers").and.callThrough();
             scope.proceedRemoveModal();
@@ -1789,7 +1793,8 @@ describe("GroupingController", () => {
             expect(uibModal.open).toHaveBeenCalledWith({
                 templateUrl: "modal/multiRemoveModal",
                 backdrop: "static",
-                scope
+                scope,
+                ariaLabelledBy: "remove-modal",
             });
             scope.proceedRemoveModal();
             expect(gs.removeIncludeMembers).toHaveBeenCalled();
@@ -1801,7 +1806,8 @@ describe("GroupingController", () => {
             expect(uibModal.open).toHaveBeenCalledWith({
                 templateUrl: "modal/multiRemoveModal",
                 backdrop: "static",
-                scope
+                scope,
+                ariaLabelledBy: "remove-modal",
             });
             scope.proceedRemoveModal();
             expect(gs.removeExcludeMembers).toHaveBeenCalled();

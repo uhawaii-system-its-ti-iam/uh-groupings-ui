@@ -538,7 +538,8 @@
         $scope.displayImportErrorModal = () => {
             $scope.importErrorModalInstance = $uibModal.open({
                 templateUrl: "modal/importErrorModal",
-                scope: $scope
+                scope: $scope,
+                ariaLabelledBy: "import-error-modal"
             });
         };
 
@@ -908,7 +909,8 @@
                 $scope.addModalInstance = $uibModal.open({
                     templateUrl,
                     scope: $scope,
-                    backdrop: "static"
+                    backdrop: "static",
+                    ariaLabelledBy: "add-modal"
                 });
 
                 // On pressing "Yes/Add" in the modal, make API call to add members to the group
@@ -962,7 +964,8 @@
             // Open importConfirmation modal
             $scope.importConfirmationModalInstance = $uibModal.open({
                 templateUrl: "modal/importConfirmationModal",
-                scope: $scope
+                scope: $scope,
+                ariaLabelledBy: "import-confirmation-modal"
             });
 
             // On pressing "Add" in the modal, make API call to add members to the group
@@ -997,7 +1000,8 @@
         $scope.displayImportSuccessModal = () => {
             $scope.importSuccessModalInstance = $uibModal.open({
                 templateUrl: "modal/importSuccessModal",
-                scope: $scope
+                scope: $scope,
+                ariaLabelledBy: "import-success-modal"
             });
 
             $scope.importSuccessModalInstance.result.finally(() => {
@@ -1196,7 +1200,8 @@
             $scope.removeModalInstance = $uibModal.open({
                 templateUrl,
                 backdrop: "static",
-                scope: $scope
+                scope: $scope,
+                ariaLabelledBy: "remove-modal"
             });
 
             // On pressing "Yes/Remove" in the modal, make API call to remove members from the group
@@ -1285,7 +1290,8 @@
             $scope.removeErrorModalInstance = $uibModal.open({
                 templateUrl: "modal/removeErrorModal",
                 scope: $scope,
-                backdrop: "static"
+                backdrop: "static",
+                ariaLabelledBy: "remove-error-modal"
             });
         };
 
@@ -1322,7 +1328,8 @@
             $scope.resetModalInstance = $uibModal.open({
                 templateUrl: "modal/resetModal",
                 scope: $scope,
-                backdrop: "static"
+                backdrop: "static",
+                ariaLabelledBy: "reset-modal"
             });
             $scope.resetModalInstance.result.then($scope.initResetGroup);
         };
@@ -1454,7 +1461,8 @@
                 templateUrl: "modal/emptyGroupModal",
                 scope: $scope,
                 backdrop: "static",
-                keyboard: false
+                keyboard: false,
+                ariaLabelledBy: "empty-group-modal"
             });
         };
 
@@ -1464,7 +1472,8 @@
             $scope.successfulGroupResetModalInstance = $uibModal.open({
                 templateUrl: "modal/successfulGroupResetModal",
                 scope: $scope,
-                backdrop: true
+                backdrop: true,
+                ariaLabelledBy: "successful-group-reset-modal"
             });
 
             $scope.successfulGroupResetModalInstance.result.finally(() => {
@@ -1575,7 +1584,8 @@
                 templateUrl: "modal/preferenceErrorModal",
                 scope: $scope,
                 backdrop: "static",
-                keyboard: false
+                keyboard: false,
+                ariaLabelledBy: "preference-error-modal"
             });
         };
 
@@ -1657,7 +1667,8 @@
                 templateUrl: "modal/syncDestModal",
                 scope: $scope,
                 backdrop: "static",
-                keyboard: false
+                keyboard: false,
+                ariaLabelledBy: "sync-dest-modal"
             });
 
             $scope.syncDestInstance.result.then(() => {
@@ -1755,7 +1766,8 @@
                 templateUrl: "modal/ownerErrorModal",
                 scope: $scope,
                 backdrop: "static",
-                keyboard: false
+                keyboard: false,
+                ariaLabelledBy: "owner-error-modal"
             });
         };
 
