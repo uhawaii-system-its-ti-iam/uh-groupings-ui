@@ -36,7 +36,7 @@
                             <div th:replace="fragments/table-settings"></div>
                         </div>
                     </div>
-                    <div ng-if="groupingsList.length === 0" class="text-center">
+                    <div ng-if="groupingsList.length === 0 && !loading" class="text-center">
                         <p class="font-weight-bold" th:text="#{screen.message.grouping.empty.groupingsList}">
                         </p>
                     </div>
@@ -46,7 +46,7 @@
                 </div>
             </div>
         </div>
-        <div ng-show="showGrouping">
+        <div ng-show="showGrouping" ng-cloak>
             <div th:replace="fragments/selected-grouping :: selected-grouping(tabContent=true)"></div>
         </div>
     </div>

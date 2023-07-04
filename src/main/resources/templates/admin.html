@@ -238,7 +238,7 @@
                             </tr>
                             </thead>
                             <tbody class="table table-borderless">
-                            <tr ng-repeat="l in pagedItemsPerson[currentPagePerson]" class="table table-sm">
+                            <tr ng-repeat="l in pagedItemsPerson[currentPagePerson]" class="row-height">
                                 <td class="p-10">
                                     <i class="fa fa-fw fa-external-link-alt clickable" tooltip="Manage grouping"
                                     ng-click="displayGroupingInNewTab(l.name, l.path)"></i>
@@ -309,12 +309,11 @@
                 </div>
             </div>
         </div>
-        <div ng-show="showGrouping">
+        <div ng-show="showGrouping" ng-cloak>
             <div th:replace="fragments/selected-grouping :: selected-grouping(tabContent=true)"></div>
         </div>
     </div>
 </main>
-<script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
 <!-- / Content container. -->
 <div th:replace="footer :: copy"></div>
 </body>

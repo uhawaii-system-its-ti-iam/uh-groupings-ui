@@ -6,7 +6,7 @@
             <div class="col-md-8">
                 <h1 class="font-weight-bold text-dark pt-2 mb-0 d-inline-block">All Members ({{groupingMembers.length}})</h1>
                 <div class="spinner-border ml-1 d-inline-block"
-                     ng-hide="paginatingComplete"
+                     ng-show="paginatingProgress && !loading"
                      role="status">
                     <span class="sr-only">Loading...</span>
                 </div>
