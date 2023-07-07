@@ -140,14 +140,6 @@ public final class Dates {
         return LocalDate.now().getYear();
     }
 
-    public static int yearOfDate(Date date) {
-        return toLocalDate(date).getYear();
-    }
-
-    public static int yearOfDate(LocalDate date) {
-        return date.getYear();
-    }
-
     public static DayOfWeek dayOfWeek(LocalDate date) {
         return date.getDayOfWeek();
     }

@@ -504,15 +504,6 @@ public class DatesTest {
     }
 
     @Test
-    public void yearOfDate() {
-        for (int year = 2000; year < 2050; year++) {
-            assertThat(Dates.yearOfDate(Dates.firstDateOfYear(year)), is(year));
-            assertThat(Dates.yearOfDate(Dates.lastDateOfYear(year)), is(year));
-            assertThat(Dates.yearOfDate(Dates.lastDateOfMonth(Month.FEBRUARY, year)), is(year));
-        }
-    }
-
-    @Test
     public void dayOfWeek() {
         LocalDate lod = Dates.toLocalDate(Dates.toDate(Dates.firstDateOfYear(2012)));
         for (int i = 0; i < 366; i++) {
