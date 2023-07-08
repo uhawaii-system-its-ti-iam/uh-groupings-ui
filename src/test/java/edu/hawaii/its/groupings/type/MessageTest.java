@@ -1,4 +1,5 @@
 package edu.hawaii.its.groupings.type;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
