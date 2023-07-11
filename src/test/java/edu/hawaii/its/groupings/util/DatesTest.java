@@ -18,6 +18,7 @@ import java.util.Date;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import org.springframework.test.util.ReflectionTestUtils;
 
 public class DatesTest {
@@ -379,7 +380,7 @@ public class DatesTest {
         assertThat(cal1.get(Calendar.MONTH), is(Calendar.FEBRUARY));
         assertThat(cal1.get(Calendar.YEAR), is(2011));
         assertThat(cal1.get(Calendar.HOUR), is(0));
-        assertThat( cal1.get(Calendar.MINUTE), is(0));
+        assertThat(cal1.get(Calendar.MINUTE), is(0));
         assertThat(cal1.get(Calendar.SECOND), is(0));
         assertThat(cal1.get(Calendar.MILLISECOND), is(0));
 

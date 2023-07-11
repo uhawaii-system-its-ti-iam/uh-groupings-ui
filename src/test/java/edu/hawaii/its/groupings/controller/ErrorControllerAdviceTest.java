@@ -2,12 +2,10 @@ package edu.hawaii.its.groupings.controller;
 
 import org.junit.jupiter.api.Test;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.is;
 
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.lang.NonNull;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -24,7 +22,6 @@ import java.util.Map;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = { SpringBootWebApplication.class })
 public class ErrorControllerAdviceTest {
 
@@ -170,11 +167,11 @@ public class ErrorControllerAdviceTest {
 
     @Test
     public void runtimeExceptionTest() {
-      RuntimeException re = new RuntimeException();
-      errorControllerAdvice.handleException(re);
-      String runtime = "<500,edu.hawaii.its.api.type.GroupingsHTTPException:"
-          + " Exception,[]>";
-      assertThat(errorControllerAdvice.handleException(re).toString(), is(runtime));
+        RuntimeException re = new RuntimeException();
+        errorControllerAdvice.handleException(re);
+        String runtime = "<500,edu.hawaii.its.api.type.GroupingsHTTPException:"
+                + " Exception,[]>";
+        assertThat(errorControllerAdvice.handleException(re).toString(), is(runtime));
     }
 
     @Test
