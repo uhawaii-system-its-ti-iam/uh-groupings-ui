@@ -37,9 +37,9 @@
                            ng-class="{ reverse: columnSort.groupingBasis.reverse }"></i>
                     </th>
                     <th scope="col" role="button"
-                        ng-click="sortBy('groupingBasis', 'pagedItemsBasis', 'username')">
+                        ng-click="sortBy('groupingBasis', 'pagedItemsBasis', 'uid')">
                         UH Username
-                        <i class="fa sort-icon" ng-show="columnSort.groupingBasis.property === 'username'"
+                        <i class="fa sort-icon" ng-show="columnSort.groupingBasis.property === 'uid'"
                            ng-class="{ reverse: columnSort.groupingBasis.reverse }"></i>
                     </th>
                 </tr>
@@ -49,8 +49,8 @@
                     <td class="p-10">{{b.name}}</td>
                     <td class="p-10">{{b.uhUuid}}</td>
                     <td class="p-10">
-                        {{b.username}}
-                        <div ng-if="b.username === ''">
+                        {{b.uid}}
+                        <div ng-if="b.uid === ''">
                             <span>N/A</span>
                             <i class="fa fa-question-circle" role="button" aria-hidden="true"
                                tooltip data-placement="right"

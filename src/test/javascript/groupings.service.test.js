@@ -50,15 +50,58 @@ describe("GroupingsService", () => {
             isAscending = true;
         });
 
-        it("should call dataProvider.loadData", () => {
-            spyOn(dp, "loadData");
+        it("should call dataProvider.loadDataWithBody", () => {
+            spyOn(dp, "loadDataWithBody");
             gs.getGrouping(groupingPath, page, size, sortString, isAscending, onSuccess, onError);
-            expect(dp.loadData).toHaveBeenCalled();
+            expect(dp.loadDataWithBody).toHaveBeenCalled();
         });
+
         it("should call encodeParameterizedQueryString()", () => {
             spyOn(gs, "encodeParameterizedQueryString");
             gs.getGrouping(groupingPath, page, size, sortString, isAscending, onSuccess, onError);
             expect(gs.encodeParameterizedQueryString).toHaveBeenCalled();
+        });
+    });
+
+    describe("getGroupingDescription", () => {
+        it("should call dataProvider.loadData", () => {
+            spyOn(dp, "loadData");
+            gs.getGroupingDescription(groupingPath, onSuccess, onError);
+            expect(dp.loadData).toHaveBeenCalled();
+        });
+
+        it("should use the correct path", () => {
+            gs.getGroupingDescription(groupingPath, onSuccess, onError);
+            httpBackend.expectGET(BASE_URL + "groupings/" + groupingPath+ "/description").respond(200);
+            expect(httpBackend.flush).not.toThrow();
+        });
+    });
+
+    describe("getGroupingSyncDest", () => {
+        it("should call dataProvider.loadData", () => {
+            spyOn(dp, "loadData");
+            gs.getGroupingSyncDest(groupingPath, onSuccess, onError);
+            expect(dp.loadData).toHaveBeenCalled();
+        });
+
+        it("should use the correct path", () => {
+            gs.getGroupingSyncDest(groupingPath, onSuccess, onError);
+            httpBackend.expectGET(BASE_URL + "groupings/" + groupingPath+ "/groupings-sync-destinations").respond(200);
+            expect(httpBackend.flush).not.toThrow();
+        });
+    });
+
+    describe("getGroupingOptAttributes", () => {
+        it("should call dataProvider.loadData", () => {
+            spyOn(dp, "loadData");
+            gs.getGroupingOptAttributes(groupingPath, onSuccess, onError);
+            expect(dp.loadData).toHaveBeenCalled();
+        });
+
+        it("should use the correct path", () => {
+            gs.getGroupingOptAttributes(groupingPath, onSuccess, onError);
+            httpBackend.expectGET(BASE_URL + "groupings/" + groupingPath+ "/opt-attributes").respond(200);
+            expect(httpBackend.flush).not.toThrow();
         });
     });
 
@@ -67,6 +110,7 @@ describe("GroupingsService", () => {
         beforeAll(() => {
             description = "description";
         });
+
         it("should call dataProvider.updateDataWithBody", () => {
             spyOn(dp, "updateDataWithBody");
             gs.updateDescription(description, groupingPath, onSuccess, onError);

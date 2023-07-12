@@ -114,6 +114,42 @@ public class GroupingsRestController {
         return httpRequestService.makeApiRequest(principalName, uri, HttpMethod.GET);
     }
 
+
+    @PostMapping(value = "/groupings/group")
+    @ResponseBody
+    public ResponseEntity<String> getGrouping(Principal principal, @RequestBody(required = true) List<String> groupPaths,
+                                             @RequestParam(required = true) Integer page,
+                                             @RequestParam(required = true) Integer size,
+                                             @RequestParam(required = true) String sortString,
+                                             @RequestParam(required = true) Boolean isAscending) {
+        logger.info("Entered REST getGrouping...");
+        Map<String, String> params = mapGroupingParameters(page, size, sortString, isAscending);
+        String baseUri = API_2_1_BASE + "/groupings/group";
+        String uri = buildUriWithParams(baseUri, params);
+        return httpRequestService.makeApiRequestWithBody(principal.getName(), uri, groupPaths, HttpMethod.POST);
+    }
+
+    @GetMapping(value = "/groupings/{groupPath}/description")
+    public  ResponseEntity<String> getGroupingDescription(Principal principal, @PathVariable String groupPath) {
+        logger.info("Entered REST getGroupingDescription...");
+        String uri = String.format(API_2_1_BASE + "/groupings/%s/description", policy.sanitize(groupPath));
+        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
+    }
+
+    @GetMapping(value = "/groupings/{groupPath}/groupings-sync-destinations")
+    public  ResponseEntity<String> getGroupingSyncDest(Principal principal, @PathVariable String groupPath) {
+        logger.info("Entered REST getGroupingSyncDest...");
+        String uri = String.format(API_2_1_BASE + "/groupings/%s/groupings-sync-destinations", policy.sanitize(groupPath));
+        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
+    }
+
+    @GetMapping(value = "/groupings/{groupPath}/opt-attributes")
+    public  ResponseEntity<String> getGroupingOptAttributes(Principal principal, @PathVariable String groupPath) {
+        logger.info("Entered REST getGroupingOptAttributes...");
+        String uri = String.format(API_2_1_BASE + "/groupings/%s/opt-attributes", policy.sanitize(groupPath));
+        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
+    }
+
     /**
      * Check if principle is an administrator.
      */

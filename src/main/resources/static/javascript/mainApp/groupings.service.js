@@ -20,8 +20,7 @@
             },
 
             /**
-             * Get page of a grouping.
-             * @param {String} path - The path to the grouping.
+             * @param {String[]} groupPaths - The paths to the grouping.
              * @param {Number} page - The number to fetch.
              * @param {Number} size - The size data chunk to be fetched.
              * @param {String} sortString - String to base sort off of.
@@ -29,11 +28,50 @@
              * @param onSuccess - Function to be called if HTTP request returns as a success.
              * @param onError - Function to be called if HTTP request returns an error.
              */
-            getGrouping(path, page, size, sortString, isAscending, onSuccess, onError) {
-                let endpoint = BASE_URL + "groupings/" + path + "?";
+            getGrouping(groupPaths,
+                        page,
+                        size,
+                        sortString,
+                        isAscending,
+                        onSuccess,
+                        onError) {
+                let endpoint = BASE_URL + "groupings/group?";
                 let params = { page, size, sortString, isAscending };
                 let query = this.encodeParameterizedQueryString(params);
                 endpoint = endpoint + query;
+                dataProvider.loadDataWithBody(endpoint, groupPaths, onSuccess, onError);
+            },
+
+            /**
+             * Get the description of a grouping
+             * @param groupingPath - The path of the grouping
+             * @param onSuccess - Function to be called when HTTP request returns a success
+             * @param onError - Function to be called if HTTP request returns an error.
+             */
+            getGroupingDescription(groupingPath, onSuccess, onError) {
+                let endpoint = BASE_URL + "groupings/" + groupingPath + "/description";
+                dataProvider.loadData(endpoint, onSuccess, onError);
+            },
+
+            /**
+             * Get the sync destinations of a grouping
+             * @param groupingPath - The path of the grouping
+             * @param onSuccess - Function to be called when HTTP request returns a success
+             * @param onError - Function to be called if HTTP request returns an error.
+             */
+            getGroupingSyncDest(groupingPath, onSuccess, onError) {
+                let endpoint = BASE_URL + "groupings/" + groupingPath + "/groupings-sync-destinations";
+                dataProvider.loadData(endpoint, onSuccess, onError);
+            },
+
+            /**
+             * Get the Opt attributes of a grouping
+             * @param groupingPath - The path of the grouping
+             * @param onSuccess - Function to be called when HTTP request returns a success
+             * @param onError - Function to be called if HTTP request returns an error.
+             */
+            getGroupingOptAttributes(groupingPath, onSuccess, onError) {
+                let endpoint = BASE_URL + "groupings/" + groupingPath + "/opt-attributes";
                 dataProvider.loadData(endpoint, onSuccess, onError);
             },
 

@@ -30,9 +30,9 @@
                         ng-class="{ reverse: columnSort.groupingOwners.reverse }"></i>
                     </th>
                     <th scope="col" role="button"
-                        ng-click="sortBy('groupingOwners', 'pagedItemsOwners', 'username')">
+                        ng-click="sortBy('groupingOwners', 'pagedItemsOwners', 'uid')">
                         UH Username
-                        <i class="fa sort-icon" ng-show="columnSort.groupingOwners.property === 'username'"
+                        <i class="fa sort-icon" ng-show="columnSort.groupingOwners.property === 'uid'"
                            ng-class="{ reverse: columnSort.groupingOwners.reverse }"></i>
                     </th>
                 </tr>
@@ -59,8 +59,8 @@
                         </span>
                     </td>
                     <td class="overflow-auto py-1 px-3">
-                        {{owner.username}}
-                        <div ng-if="owner.username === ''">
+                        {{owner.uid}}
+                        <div ng-if="owner.uid === ''">
                             <span>N/A</span>
                             <i class="fa fa-question-circle" aria-hidden="true" role="button"
                                tooltip data-placement="right"

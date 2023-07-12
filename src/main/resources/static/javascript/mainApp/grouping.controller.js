@@ -155,178 +155,61 @@
         };
 
         /**
-         * Gets information about the grouping, such as its members and the preferences set.
-         * Retrieves information asynchronously page by page
+         * Get information about the grouping including members and description.
          */
-        $scope.getGroupingInformation = () => {
-
+        $scope.getGroupingInformation = async () => {
+            loadMembersList = true;
+            const groupingPath = $scope.selectedGrouping.path;
+            const paths = [groupingPath + ":basis", groupingPath + ":include", groupingPath + ":exclude", groupingPath + ":owners"];
+            let currentPage = 1;
             $scope.loading = true;
-
-            //Increments due to being called again
-            asyncThreadCount++;
-            /**
-             * Makes sure only one asyncThreadCount is running to call another grouping
-             * Else it will return a false boolean repeatedly till asyncThreadCount has
-             * decremented to allow another call
-             */
-            if (asyncThreadCount === 1) {
-                let currentPage = 1;
-                const groupingPath = $scope.selectedGrouping.path;
-
-                /**
-                 * Function to get pages of a grouping asynchronously
-                 * @param {String} groupingPath - Path to the grouping to retrieve data from
-                 * @param {Number} currentPage - Page of grouping to retrieve (increments after each async/await call)
-                 * @param {Number} PAGE_SIZE - Size of page to retrieve (Located in app.constants)
-                 * @param {String} sortString - Parameter to sort the grouping database by before retrieving
-                 *     information
-                 * @param {Boolean} isAscending - If true, grouping database is sorted ascending (A-Z), false for
-                 *     descending (Z-A)
-                 */
-
-                groupingsService.getGrouping(groupingPath, currentPage, PAGE_SIZE, "name", true, async (res) => {
-
-                    // Gets the description go the group
-                    if (res.description === null) {
-                        $scope.groupingDescription = "";
-                    } else {
-                        $scope.groupingDescription = res.description;
-                        $scope.displayTracker = 1;
-                    }
-                    $scope.descriptionLoaded = true;
-                    $scope.paginatingProgress = true;
-                    $scope.paginatingComplete = false;
-
-                    // Gets members in the basis group
-                    $scope.groupingBasis = setGroupMembers(res.basis.members);
-                    $scope.filter($scope.groupingBasis, "pagedItemsBasis", "currentPageBasis", $scope.basisQuery, true);
-
-                    //Gets members in the include group
-                    $scope.groupingInclude = setGroupMembers(res.include.members);
-                    $scope.addInBasis($scope.groupingInclude);
-                    $scope.filter($scope.groupingInclude, "pagedItemsInclude", "currentPageInclude", $scope.includeQuery, true);
-
-                    //Gets members in the exclude group
-                    $scope.groupingExclude = setGroupMembers(res.exclude.members);
-                    $scope.addInBasis($scope.groupingExclude);
-                    $scope.filter($scope.groupingExclude, "pagedItemsExclude", "currentPageExclude", $scope.excludeQuery, true);
-
-                    //Gets members in grouping
-                    $scope.groupingMembers = setGroupMembers(res.composite.members);
-                    $scope.addWhereListed($scope.groupingMembers);
-                    $scope.filter($scope.groupingMembers, "pagedItemsMembers", "currentPageMembers", $scope.membersQuery, true);
-
-                    //Gets owners of the grouping
-                    $scope.groupingOwners = setGroupMembers(res.owners.members);
-                    $scope.pagedItemsOwners = $scope.groupToPages($scope.groupingOwners);
-                    $scope.filter($scope.groupingOwners, "pagedItemsOwners", "currentPageMembers", $scope.ownersQuery, true);
-
-                    $scope.allowOptIn = res.optInOn;
-                    $scope.allowOptOut = res.optOutOn;
-
-                    $scope.syncDestArray = res.syncDestinations;
-                    $scope.loading = false;
-                    $scope.paginatingProgress = false;
-
-                    //increments page to load and allows members to iteratively be loaded
-                    currentPage++;
-                    loadMembersList = true;
-
-                    $scope.includeDisable = false;
-                    if (Object.entries($scope.groupingInclude).length === 0) {
-                        $scope.includeCheck = false;
-                        $scope.includeDisable = true;
-                    }
-
-                    $scope.excludeDisable = false;
-                    if (Object.entries($scope.groupingExclude).length === 0) {
-                        $scope.excludeCheck = false;
-                        $scope.excludeDisable = true;
-                    }
-
-                    //While true loop that calls members asynchronously from Grouper based on PAGE_SIZE
-                    while (loadMembersList) {
-                        /**
-                         *Calls getPages function to load the rest of the members,
-                         * but waits till the page before is retrieved before getting another page
-                         */
-                        try {
-                            await $scope.getPages(groupingPath, currentPage, PAGE_SIZE, "name", true);
-                        } catch (error) {
-                            //Catches in both fetch and response
-                        }
-                        currentPage++;
-                    }
-                }, (res) => {
-                    $scope.resStatus = res.status;
-                    $scope.displayApiErrorModal();
-                });
-                //Will only decrement threadcount if previous call absolutely finishes
-                asyncThreadCount--;
-                //If asyncThreadCount is more than one keep returning and keep setting loadMembersList to false
-            } else {
-                return loadMembersList = false;
+            $scope.paginatingComplete = false;
+            await $scope.getGroupingDescription(groupingPath);
+            await $scope.getGroupingSyncDest(groupingPath);
+            await $scope.getGroupingOptAttributes(groupingPath);
+            while (!($scope.paginatingComplete) && loadMembersList) {
+                $scope.paginatingProgress = true;
+                await $scope.fetchGrouping(currentPage, paths);
+                currentPage++;
+                $scope.loading = false;
             }
+            loadMembersList = false;
         };
 
-        /**
-         * Function to get pages of a grouping asynchronously
-         * @param {String} groupingPath - Path to the grouping to retrieve data from
-         * @param {Number} page - Page of grouping to retrieve (Paging starts from 1)
-         * @param {Number} size - Size of page to retrieve
-         * @param {String} sortString - Parameter to sort the grouping database by before retrieving information
-         * @param {Boolean} isAscending - If true, grouping database is sorted ascending (A-Z), false for descending
-         *     (Z-A)
-         */
-        $scope.getPages = (groupingPath, page, size, sortString, isAscending) => {
-
-            /**
-             * Promise returned so that the async/await call can be completed
-             * Which will only complete if resolve is called
-             * Resolve will be called based on 2 accounts:
-             *    1) groupingPath has changed so async call needs to be terminated before starting to load new
-             * groupingPath
-             *    2) All members in a grouping have been loaded
-             */
-            return new Promise((resolve) =>
-                groupingsService.getGrouping(groupingPath, page, size, sortString, isAscending, (res) => {
-
-                    // Keep loading members till there are no members left and resolve promise
-                    if (res.basis.members.length !== 0 || res.include.members.length !== 0 ||
-                        res.exclude.members.length !== 0 || res.composite.members.length !== 0 || res.owners.members.length !== 0) {
-
-                        $scope.groupingBasis = combineGroupMembers($scope.groupingBasis, res.basis.members);
+        $scope.fetchGrouping = (currentPage, groupPaths) => {
+            return new Promise((resolve) => {
+                groupingsService.getGrouping(groupPaths, currentPage, PAGE_SIZE, "name", true, (res) => {
+                    if (res.paginationComplete) {
+                        $scope.paginatingComplete = true;
+                        $scope.paginatingProgress = false;
+                    } else if (res.groupingBasis.groupPath.slice(0, -6) === ($scope.selectedGrouping.path)) {
+                        let putGroupMembers = combineGroupMembers;
+                        if (currentPage === 1) {
+                            putGroupMembers = setGroupMembers;
+                        }
+                        $scope.groupingBasis = putGroupMembers(res.groupingBasis.members, $scope.groupingBasis);
                         $scope.filter($scope.groupingBasis, "pagedItemsBasis", "currentPageBasis", $scope.basisQuery, false);
 
-                        //Gets members in the include group
-                        $scope.groupingInclude = combineGroupMembers($scope.groupingInclude, res.include.members);
+                        $scope.groupingInclude = putGroupMembers(res.groupingInclude.members, $scope.groupingInclude);
                         $scope.addInBasis($scope.groupingInclude);
                         $scope.filter($scope.groupingInclude, "pagedItemsInclude", "currentPageInclude", $scope.includeQuery, false);
 
-                        //Gets members in the exclude group
-                        $scope.groupingExclude = combineGroupMembers($scope.groupingExclude, res.exclude.members);
+                        $scope.groupingExclude = putGroupMembers(res.groupingExclude.members, $scope.groupingExclude);
                         $scope.addInBasis($scope.groupingExclude);
                         $scope.filter($scope.groupingExclude, "pagedItemsExclude", "currentPageExclude", $scope.excludeQuery, false);
 
-                        //Gets members in grouping
-                        $scope.groupingMembers = combineGroupMembers($scope.groupingMembers, res.composite.members);
-                        $scope.addWhereListed($scope.groupingMembers);
-                        $scope.filter($scope.groupingMembers, "pagedItemsMembers", "currentPageMembers", $scope.membersQuery, false);
-
-                        //Gets owners of the grouping
-                        $scope.groupingOwners = combineGroupMembers($scope.groupingOwners, res.owners.members);
-                        $scope.pagedItemsOwners = $scope.groupToPages($scope.groupingOwners);
+                        $scope.groupingOwners = putGroupMembers(res.groupingOwners.members, $scope.groupingOwners);
                         $scope.filter($scope.groupingOwners, "pagedItemsOwners", "currentPageOwners", $scope.ownersQuery, false);
 
-                    } else {
-                        // Stop loading text
-                        $scope.paginatingProgress = false;
-                        $scope.paginatingComplete = true;
-                        loadMembersList = false;
+                        $scope.groupingMembers = putGroupMembers(res.allMembers.members, $scope.groupingMembers);
+                        $scope.filter($scope.groupingMembers, "pagedItemsMembers", "currentPageMembers", $scope.membersQuery, false);
+
+                        $scope.loading = false;
                     }
-                    //Completes the promise and returns
                     resolve();
+
                 }, (res) => {
+                    $scope.paginatingComplete = true;
                     $scope.resStatus = res.status;
                     if (res === null) {
                         $scope.largeGrouping = true;
@@ -337,11 +220,60 @@
                     } else {
                         $scope.displayApiErrorModal();
                     }
-                    //stops while loop and completes promise then returns
                     loadMembersList = false;
                     resolve();
-                })
-            );
+                });
+            });
+        };
+
+
+        /**
+         * Get a grouping's description
+         * @param groupPath
+         * @returns {Promise<unknown>}
+         */
+        $scope.getGroupingDescription = (groupPath) => {
+            return new Promise((resolve) => groupingsService.getGroupingDescription(groupPath, (res) => {
+                $scope.groupingDescription = res.description;
+                $scope.descriptionLoaded = true;
+                resolve();
+            }, (res) => {
+                $scope.groupingDescription = "";
+                $scope.descriptionLoaded = false;
+                $scope.resStatus = res.status;
+                resolve();
+            }));
+        };
+
+        /**
+         * Get a grouping's sync destinations
+         * @param groupPath
+         * @returns {Promise<unknown>}
+         */
+        $scope.getGroupingSyncDest = (groupPath) => {
+            return new Promise((resolve) => groupingsService.getGroupingSyncDest(groupPath, (res) => {
+                $scope.syncDestArray = res.syncDestinations;
+                resolve();
+            }, (res) => {
+                $scope.resStatus = res.status;
+                resolve();
+            }))
+        };
+
+        /**
+         * Get a grouping's opt attributes
+         * @param groupPath
+         * @returns {Promise<unknown>}
+         */
+        $scope.getGroupingOptAttributes = (groupPath) => {
+            return new Promise((resolve) => groupingsService.getGroupingOptAttributes(groupPath, (res) => {
+                $scope.allowOptIn = res.optInOn;
+                $scope.allowOptOut = res.optOutOn;
+                resolve();
+            }, (res) => {
+                $scope.resStatus = res.status;
+                resolve();
+            }))
         };
 
         /**

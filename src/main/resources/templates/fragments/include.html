@@ -48,9 +48,9 @@
                            ng-class="{ reverse: columnSort.groupingInclude.reverse }"></i>
                     </th>
                     <th scope="col" role="button"
-                        ng-click="sortBy('groupingInclude', 'pagedItemsInclude', 'username')">
+                        ng-click="sortBy('groupingInclude', 'pagedItemsInclude', 'uid')">
                         UH Username
-                        <i class="fa sort-icon" ng-show="columnSort.groupingInclude.property === 'username'"
+                        <i class="fa sort-icon" ng-show="columnSort.groupingInclude.property === 'uid'"
                            ng-class="{ reverse: columnSort.groupingInclude.reverse }"></i>
                     </th>
                     <th scope="col" role="button"
@@ -83,8 +83,8 @@
                     </td>
                     <td class="overflow-auto py-1 px-3">{{i.uhUuid}}</td>
                     <td class="overflow-auto py-1 px-3">
-                        {{i.username}}
-                        <div ng-if="i.username === ''">
+                        {{i.uid}}
+                        <div ng-if="i.uid === ''">
                             <span>N/A</span>
                             <i class="fa fa-question-circle" role="button" aria-hidden="true"
                                tooltip data-placement="right"
