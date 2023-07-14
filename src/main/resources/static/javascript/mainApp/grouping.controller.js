@@ -960,7 +960,7 @@
             if (/[0-9]{8}/.test(memberIdentifier)) {
                 memberToReturn = _.find(currentPage, (member) => member.uhUuid === memberIdentifier);
             } else {
-                memberToReturn = _.find(currentPage, (member) => member.username === memberIdentifier);
+                memberToReturn = _.find(currentPage, (member) => member.uid === memberIdentifier);
             }
             return memberToReturn;
         };
@@ -984,7 +984,7 @@
                     membersNotInList.push(member);
                 } else {
                     let person = {
-                        "uid": currentMember.username,
+                        "uid": currentMember.uid,
                         "uhUuid": currentMember.uhUuid,
                         "name": currentMember.name
                     };
