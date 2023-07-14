@@ -1510,25 +1510,25 @@ describe("GroupingController", () => {
             scope.groupingInclude = [{
                 name: "iamtst01",
                 uhUuid: "iamtst01",
-                username: "iamtst01"
+                uid: "iamtst01"
             }];
 
             scope.groupingExclude = [{
                 name: "iamtst02",
                 uhUuid: "iamtst02",
-                username: "iamtst02"
+                uid: "iamtst02"
             }];
 
             scope.groupingOwners = [{
                 name: "iamtst03",
                 uhUuid: "iamtst03",
-                username: "iamtst03"
+                uid: "iamtst03"
             }];
 
             scope.adminsList = [{
                 name: "iamtst04",
                 uhUuid: "iamtst04",
-                username: "iamtst04"
+                uid: "iamtst04"
             }];
         });
 
@@ -1564,12 +1564,12 @@ describe("GroupingController", () => {
                 {
                     name: "iamtst01",
                     uhUuid: "iamtst01",
-                    username: "iamtst01"
+                    uid: "iamtst01"
                 },
                 {
                     name: "iamtst02",
                     uhUuid: "iamtst02",
-                    username: "iamtst02"
+                    uid: "iamtst02"
                 }
             ];
         });
@@ -1639,7 +1639,7 @@ describe("GroupingController", () => {
         it("should call displayRemoveModal", () => {
             scope.groupingInclude = [{
                 name: "iamtst01",
-                username: "iamtst01",
+                uid: "iamtst01",
                 uhUuid: "iamtst01"
             }];
             scope.manageMembers = "iamtst01";
@@ -1653,7 +1653,7 @@ describe("GroupingController", () => {
         it("should call displayDynamicModal when member does not exist in list", () => {
             scope.groupingInclude = [{
                 name: "iamtst01",
-                username: "iamtst01",
+                uid: "iamtst01",
                 uhUuid: "iamtst01"
             }];
             scope.manageMembers = "iamtst02";
@@ -1668,7 +1668,7 @@ describe("GroupingController", () => {
         it("should call displayRemoveErrorModal when the listName is owners", () => {
             scope.groupingOwners = [{
                 name: "iamtst03",
-                username: "iamtst03",
+                uid: "iamtst03",
                 uhUuid: "iamtst03"
             }];
             scope.manageMembers = "iamtst03";
@@ -1695,12 +1695,12 @@ describe("GroupingController", () => {
             scope.groupingInclude = [
                 {
                     name: "iamtst01",
-                    username: "iamtst01",
+                    uid: "iamtst01",
                     uhUuid: "iamtst01"
                 },
                 {
                     name: "iamtst02",
-                    username: "iamtst02",
+                    uid: "iamtst02",
                     uhUuid: "iamtst02"
                 }
             ];
@@ -1708,12 +1708,12 @@ describe("GroupingController", () => {
             scope.groupingExclude = [
                 {
                     name: "iamtst03",
-                    username: "iamtst03",
+                    uid: "iamtst03",
                     uhUuid: "iamtst03"
                 },
                 {
                     name: "iamtst04",
-                    username: "iamtst04",
+                    uid: "iamtst04",
                     uhUuid: "iamtst04"
                 }
             ];
@@ -1721,12 +1721,12 @@ describe("GroupingController", () => {
             scope.groupingOwners = [
                 {
                     name: "iamtst05",
-                    username: "iamtst05",
+                    uid: "iamtst05",
                     uhUuid: "iamtst05"
                 },
                 {
                     name: "iamtst06",
-                    username: "iamtst06",
+                    uid: "iamtst06",
                     uhUuid: "iamtst06"
                 }
             ];
