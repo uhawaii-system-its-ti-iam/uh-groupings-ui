@@ -10,41 +10,44 @@
                 ng-click="returnToManagePerson(); cancelDescriptionEdit(); toggleShowAdminTab();">
             <i class="fas fa-arrow-left mr-1"></i> Return to Manage Person
         </button>
+
         <!-- Export to CSV button -->
-        <div class="btn-group" id="csvButton">
-            <div class="d-flex" tooltip data-original-title="{{ getCSVToolTipMessage() }}">
-                <button type="button" class="btn btn-primary btn-dropdown-split"
-                        ng-disabled="!paginatingComplete || groupingMembers.length === 0"
-                        ng-click="exportGroupToCsv(groupingMembers, 'members')">
-                    <i class="fa fa-users mr-1"></i>
-                    Export Members
-                </button>
-            </div>
-            <button type="button" class="btn btn-primary dropdown-toggle-split dropdown-toggle" data-toggle="dropdown"
-                    aria-label="More export options" aria-haspopup="true" aria-expanded="false"
-                    ng-disabled="!paginatingComplete || (groupingMembers.length === 0 && groupingExclude.length === 0)">
+        <div class="btn-group dropdown" id="csvButton" tooltip data-original-title="{{ getCSVToolTipMessage() }}">
+            <button type="button" class="form-control" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false"
+                    ng-disabled="!paginatingComplete || isGroupingEmpty()">
+                <i class="fa fa-file-export mr-1"></i>
+                Export Grouping
+                <i class="fa fa-caret-down ml-1"></i>
             </button>
-            <ul class="dropdown-menu dropdown-menu-right">
-                <li ng-show="groupingBasis.length > 0">
+            <div class="dropdown-menu dropdown-menu-right">
+                <div ng-show="groupingMembers.length > 0">
+                    <label class="dropdown-item" ng-click="exportGroupToCsv(groupingMembers, 'members')">
+                        <i class="fa fa-users mr-1"></i>
+                        Export All Members
+                    </label>
+                </div>
+                <div ng-show="groupingBasis.length > 0">
                     <label class="dropdown-item" ng-click="exportGroupToCsv(groupingBasis, 'basis')">
                         <i class="far fa-id-card mr-1"></i>
-                        Export Basis list
+                        Export Basis
                     </label>
-                </li>
-                <li ng-show="groupingInclude.length > 0">
+                </div>
+                <div ng-show="groupingInclude.length > 0">
                     <label class="dropdown-item" ng-click="exportGroupToCsv(groupingInclude, 'include')">
                         <i class="fas fa-user-plus mr-1"></i>
-                        Export Include list
+                        Export Include
                     </label>
-                </li>
-                <li ng-show="groupingExclude.length > 0">
+                </div>
+                <div ng-show="groupingExclude.length > 0">
                     <label class="dropdown-item" ng-click="exportGroupToCsv(groupingExclude, 'exclude')">
                         <i class="fas fa-user-minus mr-1"></i>
-                        Export Exclude list
+                        Export Exclude
                     </label>
-                </li>
-            </ul>
+                </div>
+            </div>
         </div>
+
     </div>
 
     <div class="container hide-content" id="sel"

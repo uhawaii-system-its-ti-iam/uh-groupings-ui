@@ -2710,4 +2710,19 @@ describe("GroupingController", () => {
             });
         });
     });
+
+    describe("isGroupingEmpty", () => {
+        it("should return false if there are members in a grouping", () => {
+            expect(scope.isGroupingEmpty()).toBeFalse();
+        });
+
+        it("should return true if there are no members in a grouping", () => {
+            scope.groupingMembers = [];
+            scope.groupingInclude = [];
+            scope.groupingExclude = [];
+            scope.groupingBasis = [];
+
+            expect(scope.isGroupingEmpty()).toBeTrue();
+        });
+    });
 });
