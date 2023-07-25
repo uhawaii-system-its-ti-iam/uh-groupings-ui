@@ -232,7 +232,7 @@ describe("GeneralController", () => {
                 " <%= html_encode(data.to_json) %>\n" +
                 "</div>\n";
 
-            goodFile = "iamtst01\niamtst02\niamtst03\niamtst04\niamtst05\niamtst06\n22222222\n12345678\nbogusname\nfakename\n_1234455\n_iamtst01\n_test_123-abc";
+            goodFile = "iamtst01\niamtst02\niamtst03\niamtst04\niamtst05\niamtst06\n22222222\n12345678\nbogusname\nfakename\n_1234455\n_iamtst01\n_test_123-abc\nab";
             badFile = `${bad1}${bad2}${bad3}${bad4}${bad5}${bad6}${bad7}${bad8}${bad9}${bad10}`;
             parseFile = (file) => {
                 scope.manageMembers = file.split(/[\r\n]+/);
@@ -263,8 +263,8 @@ describe("GeneralController", () => {
 
         it("should return an array of usernames that match the definition of a uhuuid or a uid", () => {
             const arrayOfValidNames = parseFile(goodFile);
-            expect(arrayOfValidNames.length).toEqual(13);
-            expect(arrayOfValidNames.toString()).toEqual("iamtst01,iamtst02,iamtst03,iamtst04,iamtst05,iamtst06,22222222,12345678,bogusname,fakename,_1234455,_iamtst01,_test_123-abc");
+            expect(arrayOfValidNames.length).toEqual(14);
+            expect(arrayOfValidNames.toString()).toEqual("iamtst01,iamtst02,iamtst03,iamtst04,iamtst05,iamtst06,22222222,12345678,bogusname,fakename,_1234455,_iamtst01,_test_123-abc,ab");
         });
     });
 

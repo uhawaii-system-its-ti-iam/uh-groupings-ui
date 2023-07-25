@@ -14,7 +14,7 @@
 
     function GeneralJsController($scope, $controller, $window, $uibModal, groupingsService, dataProvider) {
         // This is a regex Pattern that contains all valid UH Identifiers which consists of uid (Username) and uhUuid (UH Numbers) chars.
-        $scope.uhIdentifierPattern = new RegExp("^[_?a-z-?@?0-9]{3,64}$");
+        $scope.uhIdentifierPattern = new RegExp("^[_?a-z-?@?0-9]{2,64}$");
 
         $scope.currentUser = {};
 
