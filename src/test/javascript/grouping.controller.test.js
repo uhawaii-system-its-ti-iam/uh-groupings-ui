@@ -313,44 +313,6 @@ describe("GroupingController", () => {
         });
     });
 
-    describe("addWhereListed", () => {
-        it("should add a key called 'whereListed' for all members in the grouping", () => {
-            scope.addWhereListed(scope.groupingMembers);
-
-            expect(_.has(scope.groupingMembers[0], "whereListed")).toBe(true);
-            expect(_.has(scope.groupingMembers[1], "whereListed")).toBe(true);
-            expect(_.has(scope.groupingMembers[2], "whereListed")).toBe(true);
-        });
-
-        it("should have a value of 'Basis' for the 'whereListed' key if the member is only in the basis group", () => {
-            scope.addWhereListed(scope.groupingMembers);
-
-            expect(scope.groupingMembers[3].whereListed).toEqual("Basis");
-        });
-
-        it("should have a value of 'Include' for the 'whereListed' key if the member is only in the include group", () => {
-            scope.addWhereListed(scope.groupingMembers);
-
-            expect(scope.groupingMembers[1].whereListed).toEqual("Include");
-            expect(scope.groupingMembers[2].whereListed).toEqual("Include");
-        });
-
-        it("should have a value of 'Basis & Include' for the 'whereListed' key if the member is in both the basis and include group", () => {
-            scope.addWhereListed(scope.groupingMembers);
-
-            expect(scope.groupingMembers[0].whereListed).toEqual("Basis & Include");
-        });
-
-        it("should keep the same value for the 'whereListed' key when called with addWhereListed again", () => {
-            for (let i = 0; i < 3; i++) {
-                scope.addWhereListed(scope.groupingMembers);
-                expect(scope.groupingMembers[0].whereListed).toEqual("Basis & Include");
-                expect(scope.groupingMembers[1].whereListed).toEqual("Include");
-                expect(scope.groupingMembers[2].whereListed).toEqual("Include");
-            }
-        });
-    });
-
     describe("descriptionLengthWarning", () => {
         beforeEach(() => {
             scope.modelDescription = "theModelDescription";

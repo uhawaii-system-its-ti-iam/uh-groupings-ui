@@ -326,25 +326,6 @@
         };
 
         /**
-         * Check what lists a member in a grouping are in.
-         * @param {object[]} compositeGroup - the composite / all members group
-         */
-        $scope.addWhereListed = (compositeGroup) => {
-            compositeGroup.forEach((member) => {
-                const memberUhUuid = member.uhUuid;
-                if (_.some($scope.groupingBasis, { uhUuid: memberUhUuid })) {
-                    member.whereListed = "Basis";
-                }
-
-                if (_.some($scope.groupingInclude, { uhUuid: memberUhUuid })) {
-                    member.whereListed = member.hasOwnProperty("whereListed") && member.whereListed === "Basis"
-                        ? "Basis & Include"
-                        : "Include";
-                }
-            });
-        };
-
-        /**
          * Check the length of the text string entered in the description form box, for error handling of max length
          */
         $scope.descriptionLengthWarning = () => (String($scope.modelDescription).length > $scope.maxDescriptionLength - 1);
