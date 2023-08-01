@@ -1,13 +1,22 @@
 <div th:fragment="copy">
-<nav class="navbar fixed-top navbar-expand-lg navbar-light border-bottom pt-2 pb-2" th:fragment="copy">
+<nav class="navbar fixed-top navbar-expand-lg navbar-light border-bottom pt-2 pb-2" th:fragment="copy"
+     ng-controller="GeneralJsController">
     <div class="container">
         <a class="navbar-brand align-items-center" th:href="@{/}">
             <img class="img-fluid"
                  alt="UH Groupings Logo"
                  th:srcset="@{images/uh-groupings-logo.png 1x, images/uh-groupings-logo-2x.png 2x, images/uh-groupings-logo.svg}"
                  th:src="@{images/uh-groupings-logo.png}">
-            <span class="sr-only">UH Groupings</span>
-        </a>
+            <span class="sr-only">UH Groupings</span></a>
+        <span class="user-role rounded-circle seafoam-bg p-1 ml-5"
+              sec:authorize="hasAnyRole('ROLE_DEPARTMENT')"
+              tooltip data-placement="top"
+              th:title="#{screen.message.home.page.departmentAccount}">
+            <i class="fa fa-user p-2 position-relative" role="button" aria-label="Department Account Indicator"
+               th:attr="ng-click='displayDynamicModal(\'Warning\', \'' +
+                        #{screen.message.home.page.departmentAccount} + '\')'">
+                <i class="rounded-circle blue-bg text-light fa fa-school fa-xs p-1 position-absolute mt-2"></i>
+            </i></span>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Open the Navigation Menu">
             <span class="navbar-toggler-icon"></span>
@@ -37,7 +46,8 @@
                 </li>
                 <li class="nav-item" sec:authorize="!isAuthenticated()">
                     <div class="dropdown-divider d-block d-lg-none pb-3"></div>
-                    <a class="btn btn-primary btn-v-align login" th:href="@{/login}">Login <i class="fas fa-sign-in-alt" aria-hidden="false"></i></a>
+                    <a class="btn btn-primary btn-v-align login" th:href="@{/login}">Login
+                        <i class="fas fa-sign-in-alt" aria-hidden="false"></i></a>
                 </li>
                 <li class="nav-item" sec:authorize="isAuthenticated()">
                     <form action="/logout" th:action="@{/logout}" method="post">
