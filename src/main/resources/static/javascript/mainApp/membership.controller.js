@@ -138,7 +138,25 @@
             $scope.loadingOptIn = true;
             groupingsService.optIn(groupingPath, handleSuccessfulOpt, handleUnsuccessfulOpt);
         };
+
+
     }
+    // dev-jarrenys-1475 start
+    angular.module('memberships', [])
+        .controller('CommandController', ['$scope', '$http', function ($scope, $http) {
+            $scope.executeCommand = function () {
+                const commandName = $scope.command;
+
+                $http.post('/executeCommand', { command: commandName })
+                    .then(function (response) {
+                        $scope.response = response.data;
+                    })
+                    .catch(function (error) {
+                        $scope.response = 'Error: ' + error.data.message;
+                    });
+            };
+        }]);
+    //dev-jarrenys-1475 end
 
     /**
      * Saves the current tab on refresh.

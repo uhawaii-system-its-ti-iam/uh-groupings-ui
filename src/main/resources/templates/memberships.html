@@ -50,13 +50,16 @@
                     </div>
                 </div>
                 <!-- Current Membership Tab-->
-                <div ng-if="membershipsList.length !== 0">
+                //dev-jarrenys-1475 start
+                <div>
                    <form id = "commandForm">
                        <label for="command"> Enter a command name: </label>
                        <input type="text" id="command" required>
                        <button type="submit">Execute Command</button>
                    </form>
                 </div>
+                <div if="response"></div>
+                // dev-jarrenys-1475 end
                 <div ng-if="optInList.length !== 0">
                     <div class="table-responsive">
                         <table class="table manage-groupings table-striped table-hover" aria-live="assertive">
