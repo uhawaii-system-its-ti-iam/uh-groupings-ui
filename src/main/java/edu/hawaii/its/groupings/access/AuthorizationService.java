@@ -7,7 +7,6 @@ import edu.hawaii.its.api.controller.GroupingsRestController;
 import edu.hawaii.its.groupings.service.UhUuidCheckerService;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -37,6 +36,9 @@ public class AuthorizationService {
             roleHolder.add(Role.UH);
         }
 
+        if (uhUuidCheckerService.isDepartmentAccount(uhUuid, uid)) {
+            roleHolder.add(Role.DEPARTMENT);
+        }
         //Determine if user is an owner.
         if (checkResult(groupingsRestController.hasOwnerPrivs(principal))) {
             roleHolder.add(Role.OWNER);

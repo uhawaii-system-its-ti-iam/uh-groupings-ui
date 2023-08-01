@@ -5,7 +5,8 @@ public enum Role {
     UH,
     EMPLOYEE,
     OWNER,
-    ADMIN;
+    ADMIN,
+    DEPARTMENT;
 
     public String longName() {
         return "ROLE_" + name();

@@ -101,6 +101,11 @@ public class AuthorizationServiceTest {
         assertTrue(roleHolder.contains(Role.UH));
         assertTrue(roleHolder.contains(Role.OWNER));
         assertTrue(roleHolder.contains(Role.ADMIN));
+
+        // Reassign uhUuid value
+        uhUuid = "test";
+        roleHolder = authorizationService.fetchRoles(uhUuid, "test");
+        assertTrue(roleHolder.contains(Role.DEPARTMENT));
     }
 
     @Test
@@ -109,6 +114,7 @@ public class AuthorizationServiceTest {
         assertThat(roleHolder.size(), is(2));
         assertTrue(roleHolder.contains(Role.ANONYMOUS));
         assertTrue(roleHolder.contains(Role.UH));
+        assertFalse(roleHolder.contains(Role.DEPARTMENT));
         assertFalse(roleHolder.contains(Role.OWNER));
         assertFalse(roleHolder.contains(Role.ADMIN));
 
@@ -116,13 +122,15 @@ public class AuthorizationServiceTest {
         assertThat(roleHolder.size(), is(1));
         assertTrue(roleHolder.contains(Role.ANONYMOUS));
         assertFalse(roleHolder.contains(Role.UH));
+        assertFalse(roleHolder.contains(Role.DEPARTMENT));
         assertFalse(roleHolder.contains(Role.OWNER));
         assertFalse(roleHolder.contains(Role.ADMIN));
 
         roleHolder = authorizationService.fetchRoles("test", "test");
-        assertThat(roleHolder.size(), is(2));
+        assertThat(roleHolder.size(), is(3));
         assertTrue(roleHolder.contains(Role.ANONYMOUS));
         assertTrue(roleHolder.contains(Role.UH));
+        assertTrue(roleHolder.contains(Role.DEPARTMENT));
         assertFalse(roleHolder.contains(Role.OWNER));
         assertFalse(roleHolder.contains(Role.ADMIN));
     }
@@ -134,6 +142,7 @@ public class AuthorizationServiceTest {
         assertThat(roleHolder.size(), is(4));
         assertTrue(roleHolder.contains(Role.ANONYMOUS)); // ???
         assertTrue(roleHolder.contains(Role.UH));
+        assertFalse(roleHolder.contains(Role.DEPARTMENT));
         assertTrue(roleHolder.contains(Role.EMPLOYEE));
         assertTrue(roleHolder.contains(Role.ADMIN));
 
@@ -141,6 +150,7 @@ public class AuthorizationServiceTest {
         assertThat(roleHolder.size(), is(3));
         assertTrue(roleHolder.contains(Role.ANONYMOUS));
         assertTrue(roleHolder.contains(Role.UH));
+        assertFalse(roleHolder.contains(Role.DEPARTMENT));
         assertTrue(roleHolder.contains(Role.EMPLOYEE));
         assertFalse(roleHolder.contains(Role.ADMIN));
 
@@ -148,6 +158,7 @@ public class AuthorizationServiceTest {
         assertThat(roleHolder.size(), is(3));
         assertTrue(roleHolder.contains(Role.ANONYMOUS));
         assertTrue(roleHolder.contains(Role.UH));
+        assertFalse(roleHolder.contains(Role.DEPARTMENT));
         assertTrue(roleHolder.contains(Role.EMPLOYEE));
         assertFalse(roleHolder.contains(Role.ADMIN));
 
@@ -156,6 +167,7 @@ public class AuthorizationServiceTest {
         assertThat(roleHolder.size(), is(2));
         assertTrue(roleHolder.contains(Role.ANONYMOUS));
         assertTrue(roleHolder.contains(Role.UH));
+        assertFalse(roleHolder.contains(Role.DEPARTMENT));
         assertFalse(roleHolder.contains(Role.EMPLOYEE));
         assertFalse(roleHolder.contains(Role.ADMIN));
 
@@ -163,6 +175,7 @@ public class AuthorizationServiceTest {
         assertThat(roleHolder.size(), is(2));
         assertTrue(roleHolder.contains(Role.ANONYMOUS));
         assertTrue(roleHolder.contains(Role.UH));
+        assertFalse(roleHolder.contains(Role.DEPARTMENT));
         assertFalse(roleHolder.contains(Role.EMPLOYEE));
         assertFalse(roleHolder.contains(Role.ADMIN));
 
