@@ -593,6 +593,19 @@ describe("GroupingsService", () => {
         });
     });
 
+    describe("getOutageMessages", () => {
+        it("should call dataProvider.loadData", () => {
+            spyOn(dp, "loadData");
+            gs.getOutageMessages(onSuccess, onError);
+            expect(dp.loadData).toHaveBeenCalled();
+        });
+        it("should use the correct path", () => {
+            gs.getOutageMessages(onSuccess, onError);
+            httpBackend.expectGET("announcements/active").respond(200);
+            expect(httpBackend.flush).not.toThrow();
+        });
+    });
+
     describe("getNumberOfGroupings", () => {
         it("should call dataProvider.loadData", () => {
             spyOn(dp, "loadData");

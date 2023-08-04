@@ -393,6 +393,10 @@
                 dataProvider.loadData(endpoint, onSuccess, onError);
             },
 
+            getOutageMessages(onSuccess, onError) {
+                let endpoint = "announcements/active";
+                dataProvider.loadData(endpoint, onSuccess, onError);
+            },
             /**
              * Get the number of groupings a member owns.
              */

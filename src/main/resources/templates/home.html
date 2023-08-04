@@ -12,12 +12,24 @@
 <!--  Content container -->
 
 <main>
-    <div class="container mt-5 mb-5">
-        <div class="row">
+    <div class="row">
+        <div class="col-12 p-1" data-ng-controller="OutageMessageJsController" ng-init="init()">
+            <div ng-if="outageMessage.length">
+                <div ng-repeat="message in outageMessage">
+                    <div class="alert alert-warning container alert-dismissible fade show no-space pt-2 pb-2" role="alert">
+                        {{ message }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-5 mb-5 ml-5">
             <div class="col-sm-7 d-inline-flex align-items-center">
-                <div>
+                <div class="ml-2">
                     <h1 class="sr-only">UH Groupings</h1>
-                    <img class="img-fluid align-self-center"
+                    <img class="img-fluid align-self-center mr-5"
                          alt="UH Groupings logotype"
                          th:srcset="@{images/uh-groupings-text.png 1x, images/uh-groupings-text-2x.png 2x, images/uh-groupings-text.svg}"
                          th:src="@{images/uh-groupings-text.png}">
@@ -43,8 +55,6 @@
             </div>
         </div>
     </div>
-
-
     <div sec:authorize="!isAuthenticated()">
         <div class="seafoam-bg pt-5 pb-5">
             <div class="container">
@@ -90,7 +100,6 @@
             </div>
         </div>
     </div>
-
 
     <div sec:authorize="isAuthenticated()">
         <div class="seafoam-bg pt-5 pb-5">

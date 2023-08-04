@@ -115,14 +115,14 @@ public class GroupingsRestController {
         return httpRequestService.makeApiRequest(principalName, uri, HttpMethod.GET);
     }
 
-
     @PostMapping(value = "/groupings/group")
     @ResponseBody
-    public ResponseEntity<String> getGrouping(Principal principal, @RequestBody(required = true) List<String> groupPaths,
-                                             @RequestParam(required = true) Integer page,
-                                             @RequestParam(required = true) Integer size,
-                                             @RequestParam(required = true) String sortString,
-                                             @RequestParam(required = true) Boolean isAscending) {
+    public ResponseEntity<String> getGrouping(Principal principal,
+            @RequestBody(required = true) List<String> groupPaths,
+            @RequestParam(required = true) Integer page,
+            @RequestParam(required = true) Integer size,
+            @RequestParam(required = true) String sortString,
+            @RequestParam(required = true) Boolean isAscending) {
         logger.info("Entered REST getGrouping...");
         Map<String, String> params = mapGroupingParameters(page, size, sortString, isAscending);
         String baseUri = API_2_1_BASE + "/groupings/group";
@@ -131,21 +131,22 @@ public class GroupingsRestController {
     }
 
     @GetMapping(value = "/groupings/{groupPath}/description")
-    public  ResponseEntity<String> getGroupingDescription(Principal principal, @PathVariable String groupPath) {
+    public ResponseEntity<String> getGroupingDescription(Principal principal, @PathVariable String groupPath) {
         logger.info("Entered REST getGroupingDescription...");
         String uri = String.format(API_2_1_BASE + "/groupings/%s/description", policy.sanitize(groupPath));
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
     }
 
     @GetMapping(value = "/groupings/{groupPath}/groupings-sync-destinations")
-    public  ResponseEntity<String> getGroupingSyncDest(Principal principal, @PathVariable String groupPath) {
+    public ResponseEntity<String> getGroupingSyncDest(Principal principal, @PathVariable String groupPath) {
         logger.info("Entered REST getGroupingSyncDest...");
-        String uri = String.format(API_2_1_BASE + "/groupings/%s/groupings-sync-destinations", policy.sanitize(groupPath));
+        String uri =
+                String.format(API_2_1_BASE + "/groupings/%s/groupings-sync-destinations", policy.sanitize(groupPath));
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
     }
 
     @GetMapping(value = "/groupings/{groupPath}/opt-attributes")
-    public  ResponseEntity<String> getGroupingOptAttributes(Principal principal, @PathVariable String groupPath) {
+    public ResponseEntity<String> getGroupingOptAttributes(Principal principal, @PathVariable String groupPath) {
         logger.info("Entered REST getGroupingOptAttributes...");
         String uri = String.format(API_2_1_BASE + "/groupings/%s/opt-attributes", policy.sanitize(groupPath));
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
@@ -232,7 +233,8 @@ public class GroupingsRestController {
      */
     @PostMapping(value = "/members/invalidAsync")
     @ResponseBody
-    public ResponseEntity<String> invalidUhIdentifiersAsync(Principal principal, @RequestBody List<String> uhIdentifiers) {
+    public ResponseEntity<String> invalidUhIdentifiersAsync(Principal principal,
+            @RequestBody List<String> uhIdentifiers) {
         logger.info("Entered REST invalidUhIdentifiersAsync...");
         List<String> safeInput = sanitizeList(uhIdentifiers);
         String uri = String.format(API_2_1_BASE + "/members/invalid/async");
@@ -500,6 +502,7 @@ public class GroupingsRestController {
         String uri = String.format(API_2_1_BASE + "/grouping/%s/owners", groupingPath);
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
     }
+
     /**
      * Give ownership of grouping at grouping path to newOwner. A user with owner privileges has
      * read and write privileges
