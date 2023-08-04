@@ -9,7 +9,6 @@
      * @param groupingsService - service for creating requests to the groupings API
      */
     function HomeJsController($scope, $controller, groupingsService) {
-
         $scope.init = () => {
             /**
              * Get the number of memberships that the current user is associated with.

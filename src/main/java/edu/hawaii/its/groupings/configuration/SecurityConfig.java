@@ -1,13 +1,15 @@
 package edu.hawaii.its.groupings.configuration;
 
-import javax.annotation.PostConstruct;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jasig.cas.client.proxy.ProxyGrantingTicketStorage;
 import org.jasig.cas.client.proxy.ProxyGrantingTicketStorageImpl;
 import org.jasig.cas.client.session.SingleSignOutFilter;
 import org.jasig.cas.client.validation.Saml11TicketValidator;
+import edu.hawaii.its.groupings.access.CasUserDetailsServiceImpl;
+import edu.hawaii.its.groupings.access.DelegatingAuthenticationFailureHandler;
+import edu.hawaii.its.groupings.access.UserBuilder;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -28,9 +30,7 @@ import org.springframework.security.web.authentication.logout.SecurityContextLog
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.util.Assert;
 
-import edu.hawaii.its.groupings.access.CasUserDetailsServiceImpl;
-import edu.hawaii.its.groupings.access.DelegatingAuthenticationFailureHandler;
-import edu.hawaii.its.groupings.access.UserBuilder;
+import javax.annotation.PostConstruct;
 
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -164,7 +164,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public DelegatingAuthenticationFailureHandler authenticationFailureHandler() {
         return new DelegatingAuthenticationFailureHandler(appUrlBase);
     }
-    
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.sessionManagement()
@@ -172,6 +172,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.authorizeRequests()
                 .antMatchers("/").permitAll()
+                .antMatchers("/announcements/active").permitAll()
                 .antMatchers("/api/**").hasRole("UH")
                 .antMatchers("/css/**").permitAll()
                 .antMatchers("/fonts/**").permitAll()
