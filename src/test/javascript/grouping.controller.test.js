@@ -38,21 +38,21 @@ describe("GroupingController", () => {
         scope.groupingBasis = [
             {
                 name: "User One",
-                username: "user1",
+                uid: "user1",
                 uhUuid: "00000001",
                 firstName: "User",
                 lastName: "One"
             },
             {
                 name: "User Four",
-                username: "user4",
+                uid: "user4",
                 uhUuid: "00000004",
                 firstName: "User",
                 lastName: "Four"
             },
             {
                 name: "User Seven",
-                username: "user7",
+                uid: "user7",
                 uhUuid: "00000007",
                 firstName: "User",
                 lastName: "Seven"
@@ -63,21 +63,21 @@ describe("GroupingController", () => {
         scope.groupingInclude = [
             {
                 name: "User One",
-                username: "user1",
+                uid: "user1",
                 uhUuid: "00000001",
                 firstName: "User",
                 lastName: "One"
             },
             {
                 name: "User Two",
-                username: "user2",
+                uid: "user2",
                 uhUuid: "00000002",
                 firstName: "User",
                 lastName: "Two"
             },
             {
                 name: "User Three",
-                username: "user3",
+                uid: "user3",
                 uhUuid: "00000003",
                 firstName: "User",
                 lastName: "Three"
@@ -88,21 +88,21 @@ describe("GroupingController", () => {
         scope.groupingExclude = [
             {
                 name: "User Four",
-                username: "user4",
+                uid: "user4",
                 uhUuid: "00000004",
                 firstName: "User",
                 lastName: "Four"
             },
             {
                 name: "User Five",
-                username: "user5",
+                uid: "user5",
                 uhUuid: "00000005",
                 firstName: "User",
                 lastName: "Five"
             },
             {
                 name: "User Nine",
-                username: "",
+                uid: "",
                 uhUuid: "00000009",
                 firstName: "User",
                 lastName: "Nine"
@@ -113,7 +113,7 @@ describe("GroupingController", () => {
         scope.groupingMembers = _.cloneDeep(scope.groupingInclude);
         scope.groupingMembers.push({
             name: "User Seven",
-            username: "user7",
+            uid: "user7",
             uhUuid: "00000007",
             firstName: "User",
             lastName: "Seven"
@@ -123,7 +123,7 @@ describe("GroupingController", () => {
         scope.groupingOwners = [
             {
                 name: "User Six",
-                username: "user6",
+                uid: "user6",
                 uhUuid: "00000006",
                 firstName: "User",
                 lastName: "Six"
@@ -589,14 +589,14 @@ describe("GroupingController", () => {
                 name: "testName",
                 firstName: "testFirstName",
                 uhUuid: "testuhUuid",
-                username: "testUsername"
+                uid: "testUsername"
             };
 
             scope.initMemberDisplayName(attributes);
             expect(scope.fullName).toBe(attributes.name);
             expect(scope.givenName).toBe(attributes.firstName);
             expect(scope.uhUuid).toBe(attributes.uhUuid);
-            expect(scope.uid).toBe(attributes.username);
+            expect(scope.uid).toBe(attributes.uid);
 
             attributes = {
                 name: "testName",
@@ -617,7 +617,7 @@ describe("GroupingController", () => {
                 name: "testName",
                 firstName: "testFirstName",
                 uhUuid: "testuhUuid",
-                username: "testUsername",
+                uid: "testUsername",
                 inBasis: "Yes",
                 inInclude: "Yes",
                 inExclude: "Yes"
@@ -632,7 +632,7 @@ describe("GroupingController", () => {
                 name: "testName",
                 firstName: "testFirstName",
                 uhUuid: "testuhUuid",
-                username: "testUsername",
+                uid: "testUsername",
                 inBasis: "No",
                 inInclude: "No",
                 inExclude: "No"
@@ -649,7 +649,7 @@ describe("GroupingController", () => {
                 name: "testName",
                 firstName: "testFirstName",
                 uhUuid: "testuhUuid",
-                username: "testUsername"
+                uid: "testUsername"
             };
 
             scope.initMemberDisplayName(attributes);
@@ -661,7 +661,7 @@ describe("GroupingController", () => {
                 name: "",
                 firstName: "testFirstName",
                 uhUuid: "testuhUuid",
-                username: "testUsername"
+                uid: "testUsername"
             };
 
             scope.initMemberDisplayName(attributes);
@@ -673,7 +673,7 @@ describe("GroupingController", () => {
                 name: "",
                 firstName: "testFirstName",
                 uhUuid: "testuhUuid",
-                username: ""
+                uid: ""
             };
 
             scope.initMemberDisplayName(attributes);
@@ -687,12 +687,12 @@ describe("GroupingController", () => {
                 {
                     name: "iamtst01",
                     uhUuid: "iamtst01",
-                    username: "iamtst01"
+                    uid: "iamtst01"
                 },
                 {
                     name: "iamtst02",
                     uhUuid: "iamtst02",
-                    username: "iamtst02"
+                    uid: "iamtst02"
                 }
             ];
 
@@ -700,25 +700,25 @@ describe("GroupingController", () => {
                 {
                     name: "iamtst03",
                     uhUuid: "iamtst03",
-                    username: "iamtst03"
+                    uid: "iamtst03"
                 },
                 {
                     name: "iamtst04",
                     uhUuid: "iamtst04",
-                    username: "iamtst04"
+                    uid: "iamtst04"
                 }
             ];
 
             scope.groupingOwners = [{
                 name: "iamtst05",
                 uhUuid: "iamtst05",
-                username: "iamtst05"
+                uid: "iamtst05"
             }];
 
             scope.adminsList = [{
                 name: "iamtst06",
                 uhUuid: "iamtst06",
-                username: "iamtst06"
+                uid: "iamtst06"
             }];
         });
 
@@ -887,7 +887,7 @@ describe("GroupingController", () => {
             scope.groupingInclude = [{
                 name: "iamtst01",
                 uhUuid: "iamtst01",
-                username: "iamtst01"
+                uid: "iamtst01"
             }];
             scope.addMembers("Include", ["iamtst01"]);
             expect(scope.errorDismissed).toBeFalse();
@@ -963,7 +963,7 @@ describe("GroupingController", () => {
                         {
                             name: "iamtst02",
                             uhUuid: "iamtst02",
-                            username: "iamtst02"
+                            uid: "iamtst02"
                         }
                     ];
 
@@ -1744,7 +1744,7 @@ describe("GroupingController", () => {
             spyOn(uibModal, "open").and.returnValue(mockModal);
 
             options = {
-                membersToRemove: { name: "iamtst01", username: "iamtst01", uhUuid: "iamtst01" },
+                membersToRemove: { name: "iamtst01", uid: "iamtst01", uhUuid: "iamtst01" },
                 listName: "Include"
             };
             scope.displayRemoveModal(options);
@@ -1870,12 +1870,12 @@ describe("GroupingController", () => {
             scope.groupingOwners = [
                 {
                     name: "iamtst01",
-                    username: "iamtst01",
+                    uid: "iamtst01",
                     uhUuid: "iamtst01"
                 },
                 {
                     name: "iamtst02",
-                    username: "iamtst02",
+                    uid: "iamtst02",
                     uhUuid: "iamtst02"
                 }
             ];
@@ -1887,7 +1887,7 @@ describe("GroupingController", () => {
         it("should display the remove error modal if groupingOwners < 1", () => {
             scope.groupingOwners = [{
                 name: "iamtst01",
-                username: "iamtst01",
+                uid: "iamtst01",
                 uhUuid: "iamtst01"
             }];
             spyOn(scope, "displayRemoveErrorModal");
@@ -2551,7 +2551,7 @@ describe("GroupingController", () => {
                     lastName: "iwa",
                     name: "test i wa",
                     uhUuid: "1111",
-                    username: "testiwa"
+                    uid: "testiwa"
                 },
                 {
                     firstName: "test",
@@ -2559,7 +2559,7 @@ describe("GroupingController", () => {
                     lastName: "iwa",
                     name: "test i wa",
                     uhUuid: "1112",
-                    username: "testiwa"
+                    uid: "testiwa"
                 }
             ];
             scope.membersInCheckboxList = {
@@ -2586,7 +2586,7 @@ describe("GroupingController", () => {
                         lastName: "iamtst01",
                         name: "iamtst01",
                         uhUuid: "12345678",
-                        username: "testiwa"
+                        uid: "testiwa"
                     }
                 ]
             ];
