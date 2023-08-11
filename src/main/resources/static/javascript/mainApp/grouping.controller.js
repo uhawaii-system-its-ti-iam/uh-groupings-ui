@@ -1742,12 +1742,12 @@
                 let line = "";
                 line += data.lastName + ",";
                 line += data.firstName + ",";
-                line += data.username + ",";
+                line += data.uid + ",";
                 line += data.uhUuid + ",";
-                if (data.username === "") {
+                if (data.uid === "") {
                     line += "";
                 } else {
-                    line += data.username + Message.Csv.EMAIL_SUFFIX;
+                    line += data.uid + Message.Csv.EMAIL_SUFFIX;
                 }
                 str += line + "\r\n";
             }
