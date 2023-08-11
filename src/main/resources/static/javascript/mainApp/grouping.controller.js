@@ -88,10 +88,10 @@
 
         $scope.resetResults = [];
 
-        $scope.includeDisable = false;
-        $scope.excludeDisable = false;
         $scope.includeCheck = false;
         $scope.excludeCheck = false;
+        $scope.includeDisable = false;
+        $scope.excludeDisable = false;
 
         // Keeps track of async calls made throughout this js controller
         let asyncThreadCount = 0;
@@ -173,6 +173,7 @@
                 currentPage++;
                 $scope.loading = false;
             }
+            $scope.disableResetCheckboxes();
             loadMembersList = false;
         };
 
@@ -1743,6 +1744,24 @@
                 && $scope.groupingBasis.length === 0
                 && $scope.groupingInclude.length === 0
                 && $scope.groupingExclude.length === 0;
+        };
+
+        /**
+         * Helper function. If there are no members in the include
+         * or exclude group, disable the corresponding checkbox on actions.html
+         */
+        $scope.disableResetCheckboxes = () => {
+            $scope.includeDisable = false;
+            if ($scope.groupingInclude.length === 0) {
+                $scope.includeCheck = false;
+                $scope.includeDisable = true;
+            }
+
+            $scope.excludeDisable = false;
+            if ($scope.groupingExclude.length === 0) {
+                $scope.excludeCheck = false;
+                $scope.excludeDisable = true;
+            }
         };
     }
 
