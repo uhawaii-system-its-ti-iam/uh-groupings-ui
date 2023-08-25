@@ -10,7 +10,9 @@
 
 # Test Checklist
 
-- [ ] Unit Tests Passed:
-- [ ] Jasmine Tests Passed:
-- [ ] General Visual Inspection:
+- [ ] Exhibits Clear Code Structure:
+- [ ] Project Unit Tests Passed:
+- [ ] Project Jasmine Tests Passed:
+- [ ] Executes Expected Functionality:
+- [ ] Tested For Incorrect/Unexpected Inputs:
 
