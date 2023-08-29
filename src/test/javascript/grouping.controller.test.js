@@ -222,6 +222,11 @@ describe("GroupingController", () => {
             spyOn(gs, "getGroupingOptAttributes").and.callThrough();
             scope.getGroupingInformation().then((res) => expect(gs.getGroupingOptAttributes).toHaveBeenCalled());
         });
+
+        it("should call disableResetCheckboxes", () => {
+             spyOn(scope, "disableResetCheckboxes").and.callThrough();
+            scope.getGroupingInformation().then((res) => expect(scope.disableResetCheckboxes).toHaveBeenCalled());
+        });
     });
 
     // For reference (in index order):
@@ -2687,4 +2692,22 @@ describe("GroupingController", () => {
             expect(scope.isGroupingEmpty()).toBeTrue();
         });
     });
+
+    describe("disableResetCheckboxes", () => {
+        it("should set includeCheck to false and includeDisable to true when there are no members in the include group", () => {
+            scope.groupingInclude = [];
+            scope.disableResetCheckboxes();
+            expect(scope.includeCheck).toBeFalse();
+            expect(scope.includeDisable).toBeTrue();
+        });
+
+        it("should set excludeCheck to false and excludeDisable to true when there are no members in the exclude group", () => {
+            scope.groupingExclude = [];
+            scope.disableResetCheckboxes();
+            expect(scope.excludeCheck).toBeFalse();
+            expect(scope.excludeDisable).toBeTrue();
+        });
+
+    });
+
 });
