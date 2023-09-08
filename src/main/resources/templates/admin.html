@@ -26,6 +26,9 @@
                         Manage Person
                     </a>
                 </li>
+                <li th:if="${!@realm.isProduction()}" class="nav-item" role="presentation">
+                    <a href="#throw-exception" id="throw-exception-tab2" data-toggle="tab" class="nav-link tab-color" role="tab">For Testing Purposes</a>
+                </li>
             </ul>
         </div>
     </div>
@@ -306,6 +309,15 @@
                             <div th:replace="fragments/pagination :: pagination(currentPage='currentPagePerson', pagedItems='pagedItemsPerson')"></div>
                         </div>
                     </div>
+                </div>
+                <div th:if="${!@realm.isProduction()}" class="tab-pane fade" id="throw-exception" role="tabpanel">
+                    <div class="row m-auto pt-3 pb-3 d-flex">
+                        <div class="col-lg-9 col-md-8 col-12 p-0 text-center text-md-left">
+                            <h2 class="mt-md-1 mt-0 d-inline-block">For Testing Purposes</h2>
+                        </div>
+                    </div>
+                    <div class="alert alert-warning" th:text="#{screen.message.admin.page.exception.tab.description}"></div><br>
+                    <button class="btn btn-primary" role="button" ng-click="throwException()">Throw Exception</button>
                 </div>
             </div>
         </div>

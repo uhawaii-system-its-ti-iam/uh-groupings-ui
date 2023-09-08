@@ -459,6 +459,12 @@
             $scope.ownersModalGroupingPath = groupingPath;
             groupingsService.groupingOwners($scope.ownersModalGroupingPath, $scope.handleGroupingOwnersOnSuccess, $scope.handleGroupingOwnersOnError);
         };
+
+        $scope.throwException = () => {
+            groupingsService.throwException(() => {}, () => {
+                $scope.displayApiErrorModal();
+            });
+        }
     }
 
     UHGroupingsApp.controller("AdminJsController", AdminJsController);

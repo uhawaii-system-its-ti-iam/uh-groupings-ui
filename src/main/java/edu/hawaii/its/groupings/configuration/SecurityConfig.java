@@ -190,6 +190,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/modal/apiError").permitAll()
                 .antMatchers("/uhuuid-error").permitAll()
                 .antMatchers("/error").permitAll()
+                .antMatchers("/testing/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
                 .addFilter(casAuthenticationFilter())
