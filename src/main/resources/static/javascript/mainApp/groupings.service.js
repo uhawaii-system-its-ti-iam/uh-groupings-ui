@@ -277,6 +277,14 @@
 
 
             /**
+             * Run command endpoint
+             */
+
+
+
+
+
+            /**
              * Get the number of memberships that the current user is associated with.
              */
             getNumberOfMemberships(onSuccess, onError) {
