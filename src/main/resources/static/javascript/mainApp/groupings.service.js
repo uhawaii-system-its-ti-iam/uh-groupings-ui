@@ -280,13 +280,17 @@
              * Run command endpoint
              */
 
-
+            runCommands(uhIdentifier, onSuccess, onError) {
+                let endpoint = BASE_URL + "run/" + uhIdentifier + "/commands/";
+                dataProvider.loadData(endpoint, onSuccess, onError);
+            },
 
 
 
             /**
              * Get the number of memberships that the current user is associated with.
              */
+
             getNumberOfMemberships(onSuccess, onError) {
                 let endpoint = BASE_URL + "members/memberships/count";
                 dataProvider.loadData(endpoint, onSuccess, onError);
