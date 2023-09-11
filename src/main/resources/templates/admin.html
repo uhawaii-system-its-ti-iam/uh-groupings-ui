@@ -261,7 +261,7 @@
                                     </div>
                                 </td>
                                 <td class="p-11">
-                                    <div ng-if="l.inBasis || l.inBasisAndInclude" style="color: red;">
+                                    <div ng-if="l.inBasis || l.inBasisAndInclude"  class="text-danger">
                                         Yes
                                     </div>
                                     <div ng-if="!l.inBasis && !l.inBasisAndInclude">
@@ -269,7 +269,7 @@
                                     </div>
                                 </td>
                                 <td class="p-12" tabindex="0">
-                                    <div ng-if="l.inInclude" style="color: red;">
+                                    <div ng-if="l.inInclude" class="text-danger">
                                         Yes
                                     </div>
                                     <div ng-if="!l.inInclude">
@@ -277,7 +277,7 @@
                                     </div>
                                 </td>
                                 <td class="p-12">
-                                    <div ng-if="l.inExclude" style="color: red;">
+                                    <div ng-if="l.inExclude" class="text-danger">
                                         Yes
                                     </div>
                                     <div ng-if="!l.inExclude">
