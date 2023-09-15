@@ -276,14 +276,36 @@
             },
 
 
+
+
+
+
+
+
+
+
+
+
             /**
              * Run command endpoint
+             * Call rest Controller
              */
-
-            runCommands(uhIdentifier, onSuccess, onError) {
-                let endpoint = BASE_URL + "run/" + uhIdentifier + "/commands/";
+            runCommand(commandName, onSuccess, onError) {
+                let endpoint = BASE_URL + "run/command/" + commandName;
                 dataProvider.loadData(endpoint, onSuccess, onError);
             },
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

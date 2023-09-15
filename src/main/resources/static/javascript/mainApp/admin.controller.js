@@ -459,6 +459,40 @@
             $scope.ownersModalGroupingPath = groupingPath;
             groupingsService.groupingOwners($scope.ownersModalGroupingPath, $scope.handleGroupingOwnersOnSuccess, $scope.handleGroupingOwnersOnError);
         };
+
+
+
+
+
+
+
+
+
+
+        /**
+         * 1475 test
+         */
+        $scope.handleRunCommandOnSuccess = (res) => {
+            $scope.displayDynamicModal("runCommand", res);
+        }
+
+        $scope.handleRunCommandOnError = (res) => {
+            $scope.displayApiErrorModal();
+        }
+
+        $scope.runCommand = (commandName) => {
+            //Call rest controller
+            groupingsService.runCommand(commandName, $scope.handleRunCommandOnSuccess, $scope.handleRunCommandOnError);
+        }
+
+
+
+
+
+
+
+
+
     }
 
     UHGroupingsApp.controller("AdminJsController", AdminJsController);

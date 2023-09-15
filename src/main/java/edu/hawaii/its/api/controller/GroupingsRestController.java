@@ -336,16 +336,31 @@ public class GroupingsRestController {
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
     }
 
-    /*     1475 runsCommands start     */
 
-    public ResponseEntity<String> runsCommands(Principal principal,
-            @PathVariable String uhIdentifier) {
-        logger.info("Entered REST managePersonResults...");
-        String uri = String.format(API_2_1_BASE + "run/" + uhIdentifier + "/commands/");
+
+
+
+
+
+
+    /*     1475 runsCommands start     */
+    //Call api
+    public ResponseEntity<String> runCommand(Principal principal,
+            @PathVariable String commandName) {
+        logger.info("Entered REST runCommand...");
+        String uri = String.format(API_2_1_BASE + "run/command" + commandName);
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
     }
-
     /*  1475 runCommands end */
+
+
+
+
+
+
+
+
+
 
 
     /**

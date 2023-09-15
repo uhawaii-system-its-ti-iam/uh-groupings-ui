@@ -6,7 +6,6 @@
 <head th:replace="header :: copy(headingTitle='UH Groupings Admin')"></head>
 <body ng-app="UHGroupingsApp" ng-controller="AdminJsController" data-ng-init="init()">
 <nav th:replace="menubar :: copy"></nav>
-/* commit */
 <main>
     <div class="seafoam-bg pt-4">
         <div class="container">
@@ -14,27 +13,30 @@
             <p class="lead text-center text-md-left" th:utext="#{screen.message.admin.page.description}"></p>
             <ul class="nav nav-tabs flex-sm-row flex-column" role="tablist" id="adminTab" ng-show="showAdminTab">
                 <li role="presentation" class="nav-item">
-                    <a href="#manage-groupings" id="manage-groupings-tab" data-toggle="tab" class="nav-link active tab-color" role="tab">
+                    <a href="#manage-groupings" id="manage-groupings-tab" data-toggle="tab"
+                       class="nav-link active tab-color" role="tab">
                         Manage Groupings
                     </a>
                 <li class="nav-item" role="presentation">
-                    <a href="#manage-admins" id="manage-admins-tab" data-toggle="tab" class="nav-link tab-color" role="tab">
+                    <a href="#manage-admins" id="manage-admins-tab" data-toggle="tab" class="nav-link tab-color"
+                       role="tab">
                         Manage Admins
                     </a>
                 <li class="nav-item" role="presentation">
-                    <a href="#manage-person" id="manage-person-tab" data-toggle="tab" class="nav-link tab-color" role="tab">
+                    <a href="#manage-person" id="manage-person-tab" data-toggle="tab" class="nav-link tab-color"
+                       role="tab">
                         Manage Person
                     </a>
 
 
-                <!-- / dev-1475 test. -->
+                    <!-- / dev-1475 test.-->
                 <li class="nav-item" role="presentation">
-                    <button href="#run-command" id="run-command-tab" data-toggle="tab" class="nav-link tab-color" role="tab" ng-click="" >
-                        Run command
-                    </button>
-
-
+                    <a href="#run-command" id="run-command-tab" data-toggle="tab" class="nav-link tab-color" role="tab">
+                        Run Command
+                    </a>
                 </li>
+
+
             </ul>
         </div>
     </div>
@@ -165,7 +167,9 @@
                     <div class="row m-auto pt-3 pb-3 d-flex">
                         <div class="col-lg-9 col-md-8 col-12 p-0 text-center text-md-left">
                             <h2 class="mt-md-1 mt-0 d-inline-block">Manage Person</h2>
-                            <br class="d-md-none"><h3 class="d-inline-block ml-0 ml-lg-1 mt-n1 mt-lg-0 align-middle">{{currentManagePerson}}</h3>
+                            <br class="d-md-none">
+                            <h3 class="d-inline-block ml-0 ml-lg-1 mt-n1 mt-lg-0 align-middle">
+                                {{currentManagePerson}}</h3>
                         </div>
                         <div class="col-lg-3 col-md-4 col-12 p-0">
                             <input class="form-control" placeholder="Filter Groupings..." type="search"
@@ -227,8 +231,8 @@
                                 <th ng-click="sortBy('personList', 'pagedItemsPerson', 'name')" class="clickable">
                                     Grouping
                                     <i class="fa sort-icon"
-                                        ng-show="columnSort.personList.property === 'name' || !columnSort.groupingsList"
-                                        ng-class="{ reverse: columnSort.groupingsList.reverse }"></i>
+                                       ng-show="columnSort.personList.property === 'name' || !columnSort.groupingsList"
+                                       ng-class="{ reverse: columnSort.groupingsList.reverse }"></i>
                                 <th>
                                     Owner?
                                 </th>
@@ -250,7 +254,7 @@
                             <tr ng-repeat="l in pagedItemsPerson[currentPagePerson]" class="row-height">
                                 <td class="p-10">
                                     <i class="fa fa-fw fa-external-link-alt clickable" tooltip="Manage grouping"
-                                    ng-click="displayGroupingInNewTab(l.name, l.path)"></i>
+                                       ng-click="displayGroupingInNewTab(l.name, l.path)"></i>
                                     {{l.name}}
                                     <i class="fa fa-crown fa-fw fa-pull-right clickable pt-1 text-primary" role="button"
                                        tooltip data-placement="right"
@@ -296,13 +300,15 @@
                                 <td class="p-12" tabindex="0">
                                     <div ng-if="l.inOwner || l.inInclude || l.inExclude">
                                         <label class="form-check-label" aria-label="Remove"><input type="checkbox"
-                                               class="form-check-input" ng-model="l.isSelected" ng-change="update(l)"
-                                               ng-keydown="clickWithEnter($event)"></label>
+                                                                                                   class="form-check-input"
+                                                                                                   ng-model="l.isSelected"
+                                                                                                   ng-change="update(l)"
+                                                                                                   ng-keydown="clickWithEnter($event)"></label>
                                     </div>
                                     <div ng-if="!l.inOwner && !l.inInclude && !l.inExclude">
                                         <label aria-label="Remove"><input type="checkbox" class="form-check-input"
-                                               ng-model="l.isSelected" ng-change="update(l)"
-                                               disabled ng-keydown="clickWithEnter($event)"></label>
+                                                                          ng-model="l.isSelected" ng-change="update(l)"
+                                                                          disabled ng-keydown="clickWithEnter($event)"></label>
                                     </div>
                                 </td>
                             </tr>
@@ -316,6 +322,40 @@
                         </div>
                     </div>
                 </div>
+
+
+                <!-- / dev-1475 test.-->
+                <div class="tab-pane fade show" id="run-command" role="tabpanel">
+                    <div class="row m-auto pt-3 pb-3">
+                        <div class="col-lg-9 col-md-8 col-12 p-0">
+                            <h2 class="card-title mt-md-1 mt-0 mb-1">Run Commands</h2>
+                        </div>
+
+                        <div>
+                            <button class="btn btn-primary" ng-click="runCommand('zCommand')">
+                                Run Command button 1
+                            </button>
+                            <button class="btn btn-primary" ng-click="runCommand('aCommand')">
+                                Run Command button 2
+                            </button>
+                            <button class="btn btn-primary" ng-click="runCommand('bCommand')">
+                                Run Command button 3
+                            </button>
+                            <button class="btn btn-primary" ng-click="runCommand('errorCommand')">
+                                Run Command button 4
+                            </button>
+                            <button class="btn btn-primary" ng-click="runCommand('nullPointerExceptionCommand')">
+                                Run Command button 5
+                            </button>
+                            <button class="btn btn-primary" ng-click="runCommand('arithmeticExceptionCommand')">
+                                Run Command button 6
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+
+
             </div>
         </div>
         <div ng-show="showGrouping" ng-cloak>
