@@ -68,6 +68,7 @@ UHGroupingsApp.directive("tooltip", () => {
             });
             element.on("mouseout", () => {
                 $(element).tooltip("dispose");
+                $(element).removeAttr("aria-describedby");
             });
 
         }
