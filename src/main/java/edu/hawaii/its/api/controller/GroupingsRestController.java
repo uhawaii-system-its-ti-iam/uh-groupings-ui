@@ -345,10 +345,11 @@ public class GroupingsRestController {
 
     /*     1475 runsCommands start     */
     //Call api
+    @GetMapping(value = "/run/command/{commandName}")
     public ResponseEntity<String> runCommand(Principal principal,
             @PathVariable String commandName) {
         logger.info("Entered REST runCommand...");
-        String uri = String.format(API_2_1_BASE + "run/command" + commandName);
+        String uri = String.format(API_2_1_BASE + "/run/command/%s",  commandName);
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
     }
     /*  1475 runCommands end */
