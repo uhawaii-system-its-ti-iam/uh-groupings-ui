@@ -102,6 +102,7 @@ describe("Directives", () => {
             expect($.fn.tooltip).toHaveBeenCalledWith("toggle");
             $(element).triggerSVGEvent("mouseout");
             expect($.fn.tooltip).toHaveBeenCalledWith("dispose");
+            expect(element.attr("aria-describedby")).toBe(undefined);
             $(element).remove();
 
         }));
