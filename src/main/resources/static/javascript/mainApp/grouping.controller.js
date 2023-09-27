@@ -1582,7 +1582,12 @@
                 scope: $scope,
                 backdrop: "static",
                 keyboard: false,
-                ariaLabelledBy: "sync-dest-modal"
+                ariaLabelledBy: "sync-dest-modal",
+                controller: "SyncDestModalController",
+                resolve: {
+                    isSynced: isSyncDestOn,
+                    syncDestDescription: () => $scope.selectedSyncDest.description,
+                },
             });
 
             $scope.syncDestInstance.result.then(() => {
@@ -1594,19 +1599,6 @@
             });
         };
 
-        /**
-         * Proceed with the syncDest confirmation
-         */
-        $scope.proceedSyncDestModal = () => {
-            $scope.syncDestInstance.close();
-        };
-
-        /**
-         * Close the syncDest confirmation modal
-         */
-        $scope.closeSyncDestModal = () => {
-            $scope.syncDestInstance.dismiss();
-        };
 
         /**
          * Copies the members in the current page to an object by UH number
@@ -1765,5 +1757,25 @@
         };
     }
 
+    function SyncDestModalController($scope, $uibModalInstance, isSynced, syncDestDescription, Message) {
+        $scope.syncDestDescription = syncDestDescription;
+        $scope.syncDestConfirmationMessage = Message.SyncDestModal.confirmationMessage(isSynced);
+
+        /**
+         * Proceed with the syncDest confirmation
+         */
+        $scope.proceedSyncDestModal = () => {
+            $uibModalInstance.close();
+        };
+
+        /**
+         * close the syncdest confirmation modal
+         */
+        $scope.closeSyncDestModal = () => {
+            $uibModalInstance.dismiss();
+        };
+    }
+
     UHGroupingsApp.controller("GroupingJsController", GroupingJsController);
+    UHGroupingsApp.controller("SyncDestModalController", SyncDestModalController);
 })();

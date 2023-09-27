@@ -2466,34 +2466,6 @@ describe("GroupingController", () => {
         });
     });
 
-    describe("proceedSyncDestModal", () => {
-        beforeEach(() => {
-            scope.syncDestInstance = {
-                close: () => {}
-            };
-        });
-
-        it("should close syncDestInstance", () => {
-            spyOn(scope.syncDestInstance, "close").and.callThrough();
-            scope.proceedSyncDestModal();
-            expect(scope.syncDestInstance.close).toHaveBeenCalled();
-        });
-    });
-
-    describe("closeSyncDestModal", () => {
-        beforeEach(() => {
-            scope.syncDestInstance = {
-                dismiss: () => {}
-            };
-        });
-
-        it("should dismiss syncDestInstance", () => {
-            spyOn(scope.syncDestInstance, "dismiss").and.callThrough();
-            scope.closeSyncDestModal();
-            expect(scope.syncDestInstance.dismiss).toHaveBeenCalled();
-        });
-    });
-
     describe("displayOwnerErrorModal", () => {
         it("should set loading to false", () => {
             scope.loading = true;
@@ -2710,4 +2682,45 @@ describe("GroupingController", () => {
 
     });
 
+});
+
+describe("SyncDestModalController", () => {
+    beforeEach(module("UHGroupingsApp"));
+    beforeEach(module("ngMockE2E"));
+
+    let scope;
+    let controller;
+    let uibModalInstance;
+
+    beforeEach(inject(($rootScope, $controller, Message) => {
+        scope = $rootScope.$new();
+        uibModalInstance = jasmine.createSpyObj("syncDestInstance", ["dismiss", "close"]);
+        controller = $controller("SyncDestModalController", {
+            $scope: scope,
+            $uibModalInstance: uibModalInstance,
+            isSynced: true,
+            syncDestDescription: "Sync dest description",
+            Message: Message,
+        });
+    }));
+
+    describe("SyncDestModal", () => {
+        it("should close syncDestInstance", () => {
+            scope.closeSyncDestModal();
+            expect(uibModalInstance.dismiss).toHaveBeenCalled();
+        });
+
+        it("should proceed syncDestModal", () => {
+            scope.proceedSyncDestModal();
+            expect(uibModalInstance.close).toHaveBeenCalled();
+        });
+
+        it("should set the sync dest description", () => {
+            expect(scope.syncDestDescription).toBe("Sync dest description");
+        });
+
+        it("should set the confirmation based on sync state", () => {
+            expect(scope.syncDestConfirmationMessage).toContain("enable")
+        });
+    })
 });

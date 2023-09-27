@@ -66,6 +66,9 @@ UHGroupingsApp.constant("Message", {
             { includeFailure: false, excludeFailure: true, includeSuccess: true, excludeSuccess: false },
             { includeFailure: false, excludeFailure: true, includeSuccess: false, excludeSuccess: false }
         ]
+    },
+    SyncDestModal: {
+        confirmationMessage: (isSynced) => `Are you sure you want to ${isSynced ? 'enable' : 'disable'} the synchronization destination?:`
     }
 });
 UHGroupingsApp.constant("BASE_URL", "api/groupings/");
