@@ -17,17 +17,27 @@ public final class Dates {
     public static final String DATE_FORMAT = "MMMM dd, yyyy";
     public static final String DATE_SORT_FORMAT = "yyyy-MM-dd";
 
+    // Private constructor to prevent instantiation.
     private Dates() {
+        // Empty.
     }
 
     public static LocalDate newLocalDate(int year, Month month, int day) {
         return LocalDate.of(year, month, day);
     }
 
+    public static LocalDateTime newLocalDateTime() {
+        return LocalDateTime.now();
+    }
+
     public static LocalDateTime newLocalDateTime(int year, Month month, int day) {
         LocalTime time = LocalTime.now();
         LocalDate date = LocalDate.of(year, month, day);
         return LocalDateTime.of(date, time);
+    }
+
+    public static LocalDateTime newLocalDateTime(int year, Month month, int day, int hour, int minute, int second) {
+        return LocalDateTime.of(year, month, day, hour, minute, second).withNano(0);
     }
 
     public static Month month(LocalDate date) {
@@ -167,5 +177,27 @@ public final class Dates {
 
     public static Date toDate(LocalDate localDate) {
         return Date.from(localDate.atStartOfDay(zoneId()).toInstant());
+    }
+
+    public static boolean isOnOrBefore(LocalDateTime date, LocalDateTime base) {
+        if (date == null || base == null) {
+            return false;
+        }
+        return date.isEqual(base) || date.isBefore(base);
+    }
+
+    public static boolean isOnOrBeforeNow(LocalDateTime date) {
+        return isOnOrBefore(date, newLocalDateTime());
+    }
+
+    public static boolean isOnOrAfter(LocalDateTime date, LocalDateTime base) {
+        if (date == null || base == null) {
+            return false;
+        }
+        return date.isEqual(base) || date.isAfter(base);
+    }
+
+    public static boolean isOnOrAfterNow(LocalDateTime date) {
+        return isOnOrAfter(date, newLocalDateTime());
     }
 }

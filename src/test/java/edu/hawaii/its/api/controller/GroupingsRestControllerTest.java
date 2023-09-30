@@ -1,12 +1,14 @@
 package edu.hawaii.its.api.controller;
 
+import static edu.hawaii.its.groupings.util.Dates.newLocalDateTime;
 import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -28,14 +30,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 import java.lang.reflect.Field;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import edu.hawaii.its.api.service.HttpRequestService;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -47,17 +50,24 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.context.WebApplicationContext;
 
+import edu.hawaii.its.api.service.HttpRequestService;
+import edu.hawaii.its.groupings.access.User;
+import edu.hawaii.its.groupings.access.UserContextService;
 import edu.hawaii.its.groupings.configuration.Realm;
 import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
 import edu.hawaii.its.groupings.controller.WithMockUhUser;
 import edu.hawaii.its.groupings.exceptions.ApiServerHandshakeException;
+import edu.hawaii.its.groupings.type.Announcement;
 import edu.hawaii.its.groupings.util.JsonUtil;
 
 @ActiveProfiles("localTest")
 @SpringBootTest(classes = { SpringBootWebApplication.class })
 public class GroupingsRestControllerTest {
+
+    private final Log logger = LogFactory.getLog(getClass());
 
     private static final String GROUPING = "grouping1";
     private static final String GROUPING2 = "grouping2";
@@ -78,7 +88,10 @@ public class GroupingsRestControllerTest {
     private WebApplicationContext context;
 
     @Autowired
-    GroupingsRestController groupingsRestController;
+    private GroupingsRestController groupingsRestController;
+
+    @Autowired
+    private UserContextService userContextService;
 
     private MockMvc mockMvc;
 
@@ -952,4 +965,71 @@ public class GroupingsRestControllerTest {
         assertFalse(sanitizedList.contains("<img></img>"));
         assertFalse(sanitizedList.contains("<script></script>"));
     }
+
+    @Test
+    @WithMockUhUser
+    public void announcements() throws Exception {
+        String result = "[{"
+                + "\"message\":\"old message\","
+                + "\"start\":\"20230607T000000\","
+                + "\"end\":\"20230615T000000\""
+                + "},"
+                + "{"
+                + "\"message\":\"future message\","
+                + "\"start\":\"20530928T000000\","
+                + "\"end\":\"20530930T000000\""
+                + "},"
+                + "{"
+                + "\"message\":\"first valid message\","
+                + "\"start\":\"20230928T000000\","
+                + "\"end\":\"20530930T000000\""
+                + "},"
+                + "{"
+                + "\"message\":\"second valid message\","
+                + "\"start\":\"20230928T000000\","
+                + "\"end\":\"20631001T000000\""
+                + "}]";
+        User user = userContextService.getCurrentUser();
+        final String username = user.getUsername();
+        final String grouperUri = API_2_1_BASE + "/announcements";
+        given(httpRequestService.makeApiRequest(username, grouperUri, HttpMethod.GET))
+                .willReturn(ResponseEntity.ok(result));
+
+        final String restUri = REST_CONTROLLER_BASE + "announcements";
+        MvcResult mvcResult = mockMvc.perform(get(restUri))
+                .andExpect(status().isOk())
+                .andReturn();
+        assertNotNull(mvcResult);
+        String content = mvcResult.getResponse().getContentAsString();
+        List<Announcement> list = JsonUtil.asList(content, Announcement.class);
+
+        Announcement a0 = list.get(0);
+        assertThat(a0.getMessage(), equalTo("old message"));
+        assertThat(a0.getStart(), equalTo(newLocalDateTime(2023, Month.JUNE, 7, 0, 0, 0)));
+        assertThat(a0.getEnd(), equalTo(newLocalDateTime(2023, Month.JUNE, 15, 0, 0, 0)));
+        assertThat(a0.state(), equalTo(Announcement.State.Expired));
+        a0 = null;
+
+        Announcement a1 = list.get(1);
+        assertThat(a1.getMessage(), equalTo("future message"));
+        assertThat(a1.getStart(), equalTo(newLocalDateTime(2053, Month.SEPTEMBER, 28, 0, 0, 0)));
+        assertThat(a1.getEnd(), equalTo(newLocalDateTime(2053, Month.SEPTEMBER, 30, 0, 0, 0)));
+        assertThat(a1.state(), equalTo(Announcement.State.Future));
+        a1 = null;
+
+        Announcement a2 = list.get(2);
+        assertThat(a2.getMessage(), equalTo("first valid message"));
+        assertThat(a2.getStart(), equalTo(newLocalDateTime(2023, Month.SEPTEMBER, 28, 0, 0, 0)));
+        assertThat(a2.getEnd(), equalTo(newLocalDateTime(2053, Month.SEPTEMBER, 30, 0, 0, 0)));
+        assertThat(a2.state(), equalTo(Announcement.State.Active));
+        a2 = null;
+
+        Announcement a3 = list.get(3);
+        assertThat(a3.getMessage(), equalTo("second valid message"));
+        assertThat(a3.getStart(), equalTo(newLocalDateTime(2023, Month.SEPTEMBER, 28, 0, 0, 0)));
+        assertThat(a3.getEnd(), equalTo(newLocalDateTime(2063, Month.OCTOBER, 1, 0, 0, 0)));
+        assertThat(a3.state(), equalTo(Announcement.State.Active));
+        a3 = null;
+    }
+
 }
