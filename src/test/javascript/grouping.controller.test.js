@@ -361,13 +361,23 @@ describe("GroupingController", () => {
         });
 
         beforeEach(() => {
-            scope.modelDescription = "descriptionOfAModal";
+            scope.groupingDescription = "description";
         });
 
-        it("should update the description for a grouping", () => {
+
+        it("should update the description with default value when new description is an empty string for a grouping", () => {
+            scope.modelDescription = "";
             spyOn(gs, "updateDescription").and.callThrough();
             scope.saveDescription();
-            expect(scope.modelDescription).toBe("descriptionOfAModal");
+            expect(scope.groupingDescription).toBe("No description given for this Grouping.");
+            expect(gs.updateDescription).toHaveBeenCalled();
+        });
+        
+        it("should update the description for a grouping", () => {
+            scope.modelDescription = "descriptionOfAModal";
+            spyOn(gs, "updateDescription").and.callThrough();
+            scope.saveDescription();
+            expect(scope.groupingDescription).toBe("descriptionOfAModal");
             expect(gs.updateDescription).toHaveBeenCalled();
         });
     });

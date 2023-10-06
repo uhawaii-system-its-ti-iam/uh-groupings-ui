@@ -357,7 +357,7 @@
             if ($scope.groupingDescription.localeCompare($scope.modelDescription) === 0) {
                 return $scope.cancelDescriptionEdit();
             }
-            $scope.groupingDescription = $scope.modelDescription;
+            $scope.groupingDescription = $scope.modelDescription.length > 0 ? $scope.modelDescription : $scope.noDescriptionMessage;
             groupingsService.updateDescription($scope.groupingDescription, $scope.selectedGrouping.path,
                 () => {
                     $scope.descriptionForm = !($scope.descriptionForm);
