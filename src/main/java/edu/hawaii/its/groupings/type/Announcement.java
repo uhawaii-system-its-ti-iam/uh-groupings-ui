@@ -1,6 +1,7 @@
 package edu.hawaii.its.groupings.type;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -8,8 +9,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 
-public class Announcement {
+public class Announcement implements Comparable<Announcement> {
 
+    public static final long serialVersionUID = 2L;
     private final String message;
     private final State state;
 
@@ -65,8 +67,34 @@ public class Announcement {
     }
 
     @Override
+    public int compareTo(Announcement o) {
+        return Comparator.comparing(Announcement::getStart)
+                .compare(this, o);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Announcement that = (Announcement) o;
+
+        if (message != null ? !message.equals(that.message) : that.message != null) return false;
+        if (start != null ? !start.equals(that.start) : that.start != null) return false;
+        return end != null ? end.equals(that.end) : that.end == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = message != null ? message.hashCode() : 0;
+        result = 31 * result + (start != null ? start.hashCode() : 0);
+        result = 31 * result + (end != null ? end.hashCode() : 0);
+        return result;
+    }
+
+    @Override
     public String toString() {
-        return "Announcements [" +
+        return "Announcement [" +
                 "message='" + message + '\'' +
                 ", start='" + start + '\'' +
                 ", end='" + end + '\'' +

@@ -34,6 +34,9 @@ import edu.hawaii.its.groupings.access.User;
 import edu.hawaii.its.groupings.access.UserContextService;
 import edu.hawaii.its.groupings.configuration.Realm;
 import edu.hawaii.its.groupings.exceptions.ApiServerHandshakeException;
+import edu.hawaii.its.groupings.type.Announcement;
+import edu.hawaii.its.groupings.type.Announcements;
+import edu.hawaii.its.groupings.util.JsonUtil;
 
 @RestController
 @RequestMapping("/api/groupings")
@@ -115,13 +118,23 @@ public class GroupingsRestController {
         return httpRequestService.makeApiRequest(principalName, uri, HttpMethod.GET);
     }
 
-    @GetMapping(value = "/announcements")
-    public ResponseEntity<String> announcements(Principal principal) {
+    @GetMapping(value = "/announcements", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Announcements> announcements(Principal principal) {
+        //
         // TODO: Need to implement for real.
+        //
         logger.info("Entered REST announcements...");
         String principalName = policy.sanitize(principal.getName());
         String uri = API_2_1_BASE + "/announcements";
-        return httpRequestService.makeApiRequest(principalName, uri, HttpMethod.GET);
+        ResponseEntity<String> responseEntity
+                = httpRequestService.makeApiRequest(principalName, uri, HttpMethod.GET);
+
+        String content = responseEntity.getBody();
+        List<Announcement> list = JsonUtil.asList(content, Announcement.class);
+
+        return ResponseEntity
+                .ok()
+                .body(new Announcements(list));
     }
 
     @PostMapping(value = "/groupings/group")

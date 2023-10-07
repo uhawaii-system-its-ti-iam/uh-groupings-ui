@@ -4,6 +4,7 @@ import static edu.hawaii.its.groupings.util.Dates.newLocalDateTime;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -61,6 +62,7 @@ import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
 import edu.hawaii.its.groupings.controller.WithMockUhUser;
 import edu.hawaii.its.groupings.exceptions.ApiServerHandshakeException;
 import edu.hawaii.its.groupings.type.Announcement;
+import edu.hawaii.its.groupings.type.Announcements;
 import edu.hawaii.its.groupings.util.JsonUtil;
 
 @ActiveProfiles("localTest")
@@ -126,10 +128,11 @@ public class GroupingsRestControllerTest {
     @WithMockUhUser
     public void currentUsernameTest() throws Exception {
         String uri = REST_CONTROLLER_BASE + "/currentUser";
-        assertNotNull(mockMvc.perform(get(uri).with(csrf()))
+        MvcResult mvcResult = mockMvc.perform(get(uri).with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(content().json("{'username':" + USERNAME + "}"))
-                .andReturn());
+                .andReturn();
+        assertNotNull(mvcResult);
     }
 
     @Test
@@ -996,12 +999,24 @@ public class GroupingsRestControllerTest {
                 .willReturn(ResponseEntity.ok(result));
 
         final String restUri = REST_CONTROLLER_BASE + "announcements";
-        MvcResult mvcResult = mockMvc.perform(get(restUri))
+        MvcResult mvcResult = mockMvc.perform(get(restUri).with(csrf()))
                 .andExpect(status().isOk())
                 .andReturn();
         assertNotNull(mvcResult);
+
         String content = mvcResult.getResponse().getContentAsString();
-        List<Announcement> list = JsonUtil.asList(content, Announcement.class);
+        Announcements announcements = JsonUtil.asObject(content, Announcements.class);
+        assertThat(announcements, notNullValue());
+
+        List<Announcement> activeAnnouncements = announcements.values(Announcement.State.Active);
+        assertThat(activeAnnouncements.size(), equalTo(2));
+        List<Announcement> expiredAnnouncements = announcements.values(Announcement.State.Expired);
+        assertThat(expiredAnnouncements.size(), equalTo(1));
+        List<Announcement> futureAnnouncements = announcements.values(Announcement.State.Future);
+        assertThat(futureAnnouncements.size(), equalTo(1));
+
+        List<Announcement> list = announcements.values();
+        assertThat(list.size(), equalTo(4));
 
         Announcement a0 = list.get(0);
         assertThat(a0.getMessage(), equalTo("old message"));
@@ -1011,25 +1026,24 @@ public class GroupingsRestControllerTest {
         a0 = null;
 
         Announcement a1 = list.get(1);
-        assertThat(a1.getMessage(), equalTo("future message"));
-        assertThat(a1.getStart(), equalTo(newLocalDateTime(2053, Month.SEPTEMBER, 28, 0, 0, 0)));
+        assertThat(a1.getMessage(), equalTo("first valid message"));
+        assertThat(a1.getStart(), equalTo(newLocalDateTime(2023, Month.SEPTEMBER, 28, 0, 0, 0)));
         assertThat(a1.getEnd(), equalTo(newLocalDateTime(2053, Month.SEPTEMBER, 30, 0, 0, 0)));
-        assertThat(a1.state(), equalTo(Announcement.State.Future));
+        assertThat(a1.state(), equalTo(Announcement.State.Active));
         a1 = null;
 
         Announcement a2 = list.get(2);
-        assertThat(a2.getMessage(), equalTo("first valid message"));
+        assertThat(a2.getMessage(), equalTo("second valid message"));
         assertThat(a2.getStart(), equalTo(newLocalDateTime(2023, Month.SEPTEMBER, 28, 0, 0, 0)));
-        assertThat(a2.getEnd(), equalTo(newLocalDateTime(2053, Month.SEPTEMBER, 30, 0, 0, 0)));
+        assertThat(a2.getEnd(), equalTo(newLocalDateTime(2063, Month.OCTOBER, 1, 0, 0, 0)));
         assertThat(a2.state(), equalTo(Announcement.State.Active));
         a2 = null;
 
         Announcement a3 = list.get(3);
-        assertThat(a3.getMessage(), equalTo("second valid message"));
-        assertThat(a3.getStart(), equalTo(newLocalDateTime(2023, Month.SEPTEMBER, 28, 0, 0, 0)));
-        assertThat(a3.getEnd(), equalTo(newLocalDateTime(2063, Month.OCTOBER, 1, 0, 0, 0)));
-        assertThat(a3.state(), equalTo(Announcement.State.Active));
+        assertThat(a3.getMessage(), equalTo("future message"));
+        assertThat(a3.getStart(), equalTo(newLocalDateTime(2053, Month.SEPTEMBER, 28, 0, 0, 0)));
+        assertThat(a3.getEnd(), equalTo(newLocalDateTime(2053, Month.SEPTEMBER, 30, 0, 0, 0)));
+        assertThat(a3.state(), equalTo(Announcement.State.Future));
         a3 = null;
     }
-
 }
