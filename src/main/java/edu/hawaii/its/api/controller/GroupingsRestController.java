@@ -744,5 +744,4 @@ public class GroupingsRestController {
     public void setRealm(Realm realm) {
         this.realm = realm;
     }
-
 }

@@ -417,7 +417,15 @@
                 return Object.entries(params)
                     .map(([key, value]) => euc(key) + "=" + euc(value))
                     .join("&");
-            }
+            },
+
+            /**
+             * Throws an exception
+             */
+            throwException(onSuccess, onError) {
+                let endpoint = BASE_URL + "testing/" + "exception";
+                dataProvider.loadData(endpoint, onSuccess, onError);
+            },
         };
     });
 })();

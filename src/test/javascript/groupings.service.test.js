@@ -605,6 +605,7 @@ describe("GroupingsService", () => {
             expect(httpBackend.flush).not.toThrow();
         });
     });
+
     describe("encodeParameterizedQueryString", () => {
         it("should encode a parameterized query string", () => {
             let params = {
@@ -615,6 +616,14 @@ describe("GroupingsService", () => {
             };
             let result = gs.encodeParameterizedQueryString(params);
             expect(result).toEqual("page=1&size=2&sortString=name&isAscending=true");
+        });
+    });
+
+    describe("getNumberOfGroupings", () => {
+        it("should call dataProvider.loadData", () => {
+            spyOn(dp, "loadData");
+            gs.throwException(onSuccess, onError);
+            expect(dp.loadData).toHaveBeenCalled();
         });
     });
 });

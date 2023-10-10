@@ -733,4 +733,12 @@ describe("AdminController", function () {
                 groupingPath, scope.handleGroupingOwnersOnSuccess, scope.handleGroupingOwnersOnError);
         });
     });
+
+    describe("throwException", () => {
+        it("should throw an exception", () => {
+            spyOn(gs, "throwException");
+            scope.throwException();
+            expect(gs.throwException).toHaveBeenCalled();
+        });
+    });
 });
