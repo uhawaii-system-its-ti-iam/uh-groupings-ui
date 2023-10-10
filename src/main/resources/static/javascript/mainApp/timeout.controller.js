@@ -21,11 +21,11 @@
 
         angular.extend(this, $controller("GeneralJsController", { $scope }));
 
-        let displayTimeoutModalPromise = {};
-        let countdownTimerPromise = {};
+        let displayTimeoutModalPromise;
+        let countdownTimerPromise;
         let isModalOpen = false;
         const MAX_TIME_IDLE = 1000 * 60 * 25; // Time until modal opens - 25 minutes in milliseconds
-        const TIME_TO_LOGOUT = 60 * 5; // When modal opens, seconds left until user is logged out
+        const TIME_TO_LOGOUT = 60 * 5; // When modal opens, seconds left until user is logged out - 5 minutes in seconds
 
         $scope.secondsRemaining = TIME_TO_LOGOUT; // Seconds remaining before log out
         $scope.timeRemaining = ""; // Formatted string of seconds remaining
@@ -106,7 +106,7 @@
         /**
          * Create a countdown timer.
          */
-        const timer = () => {
+         $scope.timer = () => {
             $scope.timeRemaining = secondsToMinutes($scope.secondsRemaining);
             if ($scope.secondsRemaining <= 0) {
                 $scope.logoutOnIdle();
@@ -138,7 +138,7 @@
             });
             // Callback when timeout modal is opened.
             $scope.timeoutModalInstance.opened.then(() => {
-                countdownTimerPromise = $interval(timer, 1000); // Start 5 minute countdown
+                countdownTimerPromise = $interval($scope.timer, 1000); // Start 5 minute countdown
                 isModalOpen = true;
             });
             // Callback when timeout modal is closed.
