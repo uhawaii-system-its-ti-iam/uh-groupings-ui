@@ -199,7 +199,7 @@ describe("TableController", () => {
 
         it("should be equivalent to groupToPages if query is empty", () => {
             scope.filter(scope.items, "pagedItems", "currentPage", "", true);
-            var pagedItemsUsingGtp = scope.groupToPages(scope.items);
+            let pagedItemsUsingGtp = scope.groupToPages(scope.items);
 
             expect(scope.pagedItems).toEqual(pagedItemsUsingGtp);
         });
