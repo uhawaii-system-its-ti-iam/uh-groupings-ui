@@ -7,6 +7,7 @@
     UHGroupingsApp.factory("dataProvider", function ($http, $window, BASE_URL) {
 
         const timeLimit = 20000;
+        const maxRetries = 1;
 
         /**
          * Sets delay in milliseconds. Used with await in async functions.
@@ -109,6 +110,26 @@
                         pollData(response.data, callback, callError);
                     }, (response) => {
                         callError(response);
+                    });
+            },
+
+            /**
+             * Perform a POST request to the specified URL that retries on error.
+             * @param {string} url - the URL to perform the request on
+             * @param {any} data - the data to perform the request with
+             * @param {function} callback - the function to perform on a successful request (200)
+             * @param {function} callError - Execute if response returns as an error.
+             * @param {number} retries - the number of retries to attempt
+             */
+            loadDataWithBodyRetry(url, data, callback, callError, retries = maxRetries) {
+                $http.post(encodeURI(url), data)
+                    .then((response) => callback(response.data))
+                    .catch((response) => {
+                        if (retries <= 0) {
+                            callError(response);
+                            return;
+                        }
+                        this.loadDataWithBodyRetry(url, data, callback, callError, retries - 1);
                     });
             },
 
