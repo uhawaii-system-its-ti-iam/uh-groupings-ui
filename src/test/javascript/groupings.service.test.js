@@ -50,10 +50,10 @@ describe("GroupingsService", () => {
             isAscending = true;
         });
 
-        it("should call dataProvider.loadDataWithBody", () => {
-            spyOn(dp, "loadDataWithBody");
+        it("should call dataProvider.loadDataWithBodyRetry", () => {
+            spyOn(dp, "loadDataWithBodyRetry");
             gs.getGrouping(groupingPath, page, size, sortString, isAscending, onSuccess, onError);
-            expect(dp.loadDataWithBody).toHaveBeenCalled();
+            expect(dp.loadDataWithBodyRetry).toHaveBeenCalled();
         });
 
         it("should call encodeParameterizedQueryString()", () => {

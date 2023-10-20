@@ -39,7 +39,7 @@
                 let params = { page, size, sortString, isAscending };
                 let query = this.encodeParameterizedQueryString(params);
                 endpoint = endpoint + query;
-                dataProvider.loadDataWithBody(endpoint, groupPaths, onSuccess, onError);
+                dataProvider.loadDataWithBodyRetry(endpoint, groupPaths, onSuccess, onError);
             },
 
             /**
