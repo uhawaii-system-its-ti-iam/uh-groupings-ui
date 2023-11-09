@@ -1253,8 +1253,8 @@
             let groupingPath = $scope.selectedGrouping.path;
             let resetInclude = $scope.includeCheck;
             let resetExclude = $scope.excludeCheck;
-            var resetIncludeResult = [];
-            var resetExcludeResult = [];
+            let resetIncludeResult = [];
+            let resetExcludeResult = [];
 
             let resetGroup = (resetFunction, groupingPath, resetResult) => {
                 return new Promise((resolve) => {
