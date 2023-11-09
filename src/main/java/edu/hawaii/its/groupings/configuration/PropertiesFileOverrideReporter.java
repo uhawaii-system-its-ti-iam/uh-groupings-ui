@@ -14,7 +14,7 @@ public class PropertiesFileOverrideReporter {
     private static final Log logger = LogFactory.getLog(PropertiesFileOverrideReporter.class);
     private final String message;
 
-    public PropertiesFileOverrideReporter(@Value("${properties.override.result:default}") String result) {
+    public PropertiesFileOverrideReporter(@Value("${properties.override.result:DEFAULT}") String result) {
         this.message = "Properties override result: " + result;
     }
 
