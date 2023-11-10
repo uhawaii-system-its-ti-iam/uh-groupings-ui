@@ -5,6 +5,7 @@ import edu.hawaii.its.groupings.type.Feedback;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mail.MailException;
 import org.springframework.mail.MailSendException;
@@ -15,7 +16,6 @@ import java.net.UnknownHostException;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.doThrow;
 
@@ -30,6 +30,8 @@ public class EmailServiceTest {
 
     public EmailService mockEmailService;
 
+    @Value("${app.environment}")
+    private String environment;
 
     private Feedback createBaseFeedback() {
         Feedback feedback = new Feedback();
@@ -54,8 +56,8 @@ public class EmailServiceTest {
         emailService = new EmailService(sender);
         emailService.setEnabled(true);
         emailService.setRecipient("address");
+        emailService.setEnvironment(environment);
         mockEmailService = spy(new EmailService(sender));
-
 
         wasSent = false;
     }
@@ -171,4 +173,12 @@ public class EmailServiceTest {
         assertTrue(messageSent.getText().contains("Unknown Host"));
     }
 
+    @Test
+    public void environmentInSubject() {
+        emailService.setEnabled(true);
+        String environment = emailService.getEnvironment();
+        assertTrue(environment.equals("dev"));
+        emailService.sendWithStack(new NullPointerException(), "Null Pointer Exception");
+        assertTrue(messageSent.getSubject().contains("(dev)"));
+    }
 }
