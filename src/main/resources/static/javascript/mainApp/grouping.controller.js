@@ -941,6 +941,8 @@
             let memberToReturn;
             if (/[0-9]{8}/.test(memberIdentifier)) {
                 memberToReturn = _.find(currentPage, (member) => member.uhUuid === memberIdentifier);
+            } else if (!/[0-9]{8}/.test(memberIdentifier)) {
+                memberToReturn = _.find(currentPage, (member) => member.uhUuid === memberIdentifier);
             } else {
                 memberToReturn = _.find(currentPage, (member) => member.uid === memberIdentifier);
             }
