@@ -39,10 +39,10 @@ public class HomeController {
         return "home";
     }
 
-    @GetMapping(value = "/info")
-    public String info() {
-        logger.info("User at info.");
-        return "info";
+    @GetMapping(value = "/about")
+    public String about() {
+        logger.info("User at about.");
+        return "about";
     }
 
     @GetMapping(value = "/404")
