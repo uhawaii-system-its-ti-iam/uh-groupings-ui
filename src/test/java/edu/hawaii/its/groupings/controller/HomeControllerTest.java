@@ -132,10 +132,10 @@ public class HomeControllerTest {
     }
 
     @Test
-    public void requestInfo() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(get("/info"))
+    public void requestAbout() throws Exception {
+        MvcResult mvcResult = mockMvc.perform(get("/about"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("info"))
+                .andExpect(view().name("about"))
                 .andReturn();
         assertNotNull(mvcResult);
     }
