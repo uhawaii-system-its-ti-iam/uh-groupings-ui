@@ -31,7 +31,7 @@ describe("AdminController", function () {
     };
 
     beforeEach(inject(($rootScope, $controller, $uibModal, _BASE_URL_, _$httpBackend_, groupingsService, _$window_) => {
-        scope = $rootScope.$new();
+        scope = $rootScope.$new(true);
         window = {
             location: {
                 pathname: "/uhgroupings/",
