@@ -14,7 +14,7 @@ describe("GroupingController", () => {
     let message;
 
     beforeEach(inject(($rootScope, $controller, _BASE_URL_, _$httpBackend_, groupingsService, $uibModal, Threshold, Message) => {
-        scope = $rootScope.$new();
+        scope = $rootScope.$new(true);
         controller = $controller("GroupingJsController", {
             $scope: scope
         });
@@ -2703,7 +2703,7 @@ describe("SyncDestModalController", () => {
     let uibModalInstance;
 
     beforeEach(inject(($rootScope, $controller, Message) => {
-        scope = $rootScope.$new();
+        scope = $rootScope.$new(true);
         uibModalInstance = jasmine.createSpyObj("syncDestInstance", ["dismiss", "close"]);
         controller = $controller("SyncDestModalController", {
             $scope: scope,
