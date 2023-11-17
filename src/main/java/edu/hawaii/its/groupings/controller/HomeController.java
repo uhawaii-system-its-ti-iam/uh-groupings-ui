@@ -231,9 +231,4 @@ public class HomeController {
     public String groupingOwnersModal() {
         return "modal/groupingOwnersModal";
     }
-
-    @GetMapping(value = "/modal/{modalName}")
-    public String openModalPath(@PathVariable String modalName) {
-        return "modal/" + modalName;
-    }
 }

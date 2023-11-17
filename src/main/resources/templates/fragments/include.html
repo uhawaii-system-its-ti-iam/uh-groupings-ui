@@ -24,8 +24,8 @@
                 <tr>
                     <th scope="col" class="ml-1 align-top" aria-label="Check all checkboxes">
                         <input class="position-relative ml-0" type="checkbox"
-                               aria-label="Check all in PAGE"
-                               ng-model="cbPageSelected"
+                               aria-label="Select all checkboxes in the current page"
+                               ng-model="PageSelected"
                                ng-disabled="groupingInclude.length === 0"
                                id="include-cb-page"
                                ng-click="toggleCheckAllSelection('Include', 'page')"
@@ -33,7 +33,7 @@
                                ng-keydown="$event.keyCode === 13 ? toggleCheckAllSelection('Include', 'page') : null">
                         <i class="fas fa-tools" aria-hidden="true"
                            tooltip data-placement="right"
-                           ng-show="showToolTip"
+                           ng-show="checkedBoxes > 20"
                            title="See Tools tab to remove entire list">
                         </i>
                     </th>
@@ -73,7 +73,7 @@
                                ng-keydown="clickCheckbox($event, i)"
                                ng-model="membersInCheckboxList[i.uhUuid]"
                                id="{{'include-checkbox-' + i.uhUuid}}"
-                               ng-click="$event.stopPropagation();toggleCheckAllSelection('Include', 'single')">
+                               ng-click="$event.stopPropagation(); toggleCheckAllSelection('Include', 'single')">
                     </td>
                     <td class="overflow-auto py-1 px-3">
                         {{i.name}}

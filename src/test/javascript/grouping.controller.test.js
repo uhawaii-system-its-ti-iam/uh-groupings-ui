@@ -1825,11 +1825,11 @@ describe("GroupingController", () => {
         });
 
         it("should clear all checkboxes in a grouping", () => {
-            scope.cbPageSelected = true;
+            scope.PageSelected = true;
             scope.membersInCheckboxList = {"testiwta": true, "testiwtb": true, "testiwtc": true};
             scope.cancelRemoveModal();
             expect(scope.membersInCheckboxList).toEqual({});
-            expect(scope.cbPageSelected).toBeFalse();
+            expect(scope.PageSelected).toBeFalse();
         });
     });
 
@@ -2542,23 +2542,23 @@ describe("GroupingController", () => {
             scope.membersInCheckboxList = scope.pagedItemsInclude;
         });
 
-        it("should set cbPageSelected to true if false", () => {
-            scope.cbPageSelected = false;
+        it("should set PageSelected to true if false", () => {
+            scope.PageSelected = false;
             scope.toggleCheckAllSelection("Include", "page");
-            expect(scope.cbPageSelected).toBeTrue();
+            expect(scope.PageSelected).toBeTrue();
         });
-        it("should set cbPageSelected to false if true", () => {
-            scope.cbPageSelected = true;
+        it("should set PageSelected to false if true", () => {
+            scope.PageSelected = true;
             scope.toggleCheckAllSelection("Include", "page");
-            expect(scope.cbPageSelected).toBeFalse();
+            expect(scope.PageSelected).toBeFalse();
         });
-        it("should set the membersInCheckboxList.uhUuid to the value of scope.cbPageSelected", () => {
-            scope.cbPageSelected = false;
+        it("should set the membersInCheckboxList.uhUuid to the value of scope.PageSelected", () => {
+            scope.PageSelected = false;
             scope.toggleCheckAllSelection("Include", "page");
             expect(scope.membersInCheckboxList[((scope.pagedItemsInclude[0][0]).uhUuid)]).toEqual(true);
         });
-        it("should set the membersInCheckboxList.uhUuid to the value of scope.cbPageSelected", () => {
-            scope.cbPageSelected = true;
+        it("should set the membersInCheckboxList.uhUuid to the value of scope.PageSelected", () => {
+            scope.PageSelected = true;
             scope.toggleCheckAllSelection("Include", "page");
             expect(scope.membersInCheckboxList[((scope.pagedItemsInclude[0][0]).uhUuid)]).toEqual(false);
         });
@@ -2593,10 +2593,10 @@ describe("GroupingController", () => {
             expect(scope.membersInCheckboxList).toEqual({});
         });
 
-        it("should set cbPageSelected to false", () => {
-            scope.cbPageSelected = true;
+        it("should set PageSelected to false", () => {
+            scope.PageSelected = true;
             scope.resetFields();
-            expect(scope.cbPageSelected).toBeFalse();
+            expect(scope.PageSelected).toBeFalse();
         });
 
         it("should set waitingForImportResponse to false", () => {

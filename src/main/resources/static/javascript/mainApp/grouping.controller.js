@@ -73,8 +73,9 @@
         // Checkbox list
         $scope.membersInCheckboxList = {};
         $scope.paginatedPageChange = true;
-        $scope.showToolTip = false;
-        $scope.cbPageSelected = false;
+        $scope.showIconTool = false;
+        $scope.checkedBoxes = 0;
+        $scope.PageSelected = false;
         $scope.manageMembers = "";
 
         // Add members
@@ -405,7 +406,7 @@
          * Small function that resets the checkboxes on the page
          */
         const resetCheckboxes = () => {
-            $scope.cbPageSelected = false;
+            $scope.PageSelected = false;
             $scope.membersInCheckboxList = {};
         };
 
@@ -425,8 +426,9 @@
             $scope.manageMembers = "";
             $scope.membersInCheckboxList = {};
             $scope.paginatedPageChange = true;
-            $scope.showToolTip = false;
-            $scope.cbPageSelected = false;
+            $scope.showIconTool = false;
+            $scope.checkedBoxes = 0;
+            $scope.PageSelected = false;
             $scope.waitingForImportResponse = false;
         };
         
@@ -1640,9 +1642,9 @@
                 };
             }
             if (checkboxClicked === "page") {
-                $scope.cbPageSelected = !$scope.cbPageSelected;
+                $scope.PageSelected = !$scope.PageSelected;
                 for (let member of item.pageItems[Number(item.pageNumber)]) {
-                    $scope.membersInCheckboxList[member.uhUuid] = $scope.cbPageSelected;
+                    $scope.membersInCheckboxList[member.uhUuid] = $scope.PageSelected;
                 }
                 $scope.updateMainSelectAllCheckboxes(item);
             } else {
@@ -1661,7 +1663,7 @@
          * @param {number} newValue - The new value of currentPageInclude.
          * @param {number} oldValue - The previous value of currentPageInclude.
          */
-        $scope.$watch("currentPageInclude", function (newValue, oldValue) {
+        $scope.$watch("currentPageInclude", (newValue, oldValue) => {
             if (newValue !== oldValue) {
                 // Page number has changed, update the checkbox event listeners
                 const item = {
@@ -1682,7 +1684,7 @@
          * @param {number} newValue - The new value of currentPageExclude.
          * @param {number} oldValue - The previous value of currentPageExclude.
          */
-        $scope.$watch("currentPageExclude", function (newValue, oldValue) {
+        $scope.$watch("currentPageExclude", (newValue, oldValue) => {
             if (newValue !== oldValue) {
                 // Page number has changed, update the checkbox event listeners
                 const item = {
@@ -1732,9 +1734,9 @@
         $scope.toggleCheckboxState = (item) => {
             let check = $scope.checkerMainSelectAllCheckboxes(item);
             // refresh elements
-            $scope.$apply(function () {
-                $scope.cbPageSelected = check.page;
-                $scope.showToolTip = check.toolTip;
+            $scope.$apply(() => {
+                $scope.PageSelected = check.page;
+                $scope.showIconTool = check.toolTip;
             });
         };
 
@@ -1748,8 +1750,8 @@
          */
         $scope.updateMainSelectAllCheckboxes = (item) => {
             let check = $scope.checkerMainSelectAllCheckboxes(item);
-            $scope.cbPageSelected = check.page;
-            $scope.showToolTip = check.toolTip;
+            $scope.PageSelected = check.page;
+            $scope.showIconTool = check.toolTip;
         };
 
         /**
@@ -1782,31 +1784,12 @@
             try {
                 // Show tool tip if group size is above 20 and total checkboxes checked is above 20
                 if (!item.allitems <= 20) {
-                    check.toolTip = (data.true.length >= 20);
+                    check.toolTip = (data.true.length > 20);
                 }
             } catch {
                 // catches if either "true" or "false" groups is empty
             }
             return check;
-        };
-
-        /**
-         * Displays a modal to select either all members on page or all in entire grouping.
-         */
-        $scope.displaySelectAllModal = () => {
-            $scope.selectAllModalInstance = $uibModal.open({
-                templateUrl: "modal/selectAllModal",
-                scope: $scope,
-                backdrop: "static"
-            });
-        };
-
-        /**
-         * Close the select all modal.
-         */
-        $scope.closeSelectAllModal = () => {
-            clearMemberInput();
-            $scope.selectAllModalInstance.close();
         };
 
         /**
