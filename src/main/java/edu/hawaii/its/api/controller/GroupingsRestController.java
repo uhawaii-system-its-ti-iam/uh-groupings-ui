@@ -101,21 +101,21 @@ public class GroupingsRestController {
     }
 
     @GetMapping(value = "/groupingAdmins")
-    public ResponseEntity<String> groupingAdmins() {
+    public ResponseEntity<String> groupingAdmins(Principal principal) {
         logger.info("Entered REST groupingAdmins...");
-        String currentUsername = policy.sanitize(userContextService.getCurrentUsername());
+        String principalName = policy.sanitize(principal.getName());
         String uri = API_2_1_BASE + "/grouping-admins";
-        return httpRequestService.makeApiRequest(currentUsername, uri, HttpMethod.GET);
+        return httpRequestService.makeApiRequest(principalName, uri, HttpMethod.GET);
     }
 
     @GetMapping(value = "/allGroupings")
-    public ResponseEntity<String> allGroupings() {
+    public ResponseEntity<String> allGroupings(Principal principal) {
         logger.info("Entered REST allGroupings...");
-        String currentUsername = policy.sanitize(userContextService.getCurrentUsername());
+        String principalName = policy.sanitize(principal.getName());
         String uri = API_2_1_BASE + "/all-groupings";
-        return httpRequestService.makeApiRequest(currentUsername, uri, HttpMethod.GET);
+        return httpRequestService.makeApiRequest(principalName, uri, HttpMethod.GET);
     }
-
+    
     @PostMapping(value = "/groupings/group")
     @ResponseBody
     public ResponseEntity<String> getGrouping(@RequestBody(required = true) List<String> groupPaths,
