@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
@@ -120,114 +121,9 @@ public class HomeController {
     /**
      * Modal Pages
      */
-
-    @GetMapping(value = "/modal/apiError")
-    public String apiError() {
-        return "modal/apiError";
+    @GetMapping(value = "/modal/{modalName}")
+    public String openModalPath(@PathVariable String modalName) {
+        return "modal/" + modalName;
     }
 
-    @GetMapping(value = "/modal/preferenceErrorModal")
-    public String preferenceErrorModal() {
-        return "modal/preferenceErrorModal";
-    }
-
-    @GetMapping(value = "/modal/addModal")
-    public String addModal() {
-        return "modal/addModal";
-    }
-
-    @GetMapping(value = "/modal/multiAddModal")
-    public String multiAddModal() {
-        return "modal/multiAddModal";
-    }
-
-    @GetMapping(value = "/modal/removeModal")
-    public String removeModal() {
-        return "modal/removeModal";
-    }
-
-    @GetMapping(value = "/modal/multiRemoveModal")
-    public String multiRemoveModal() {
-        return "modal/multiRemoveModal";
-    }
-
-    @GetMapping(value = "/modal/resetModal")
-    public String resetModal() {
-        return "modal/resetModal";
-    }
-
-    @GetMapping(value = "/modal/successfulGroupResetModal")
-    public String successfulGroupResetModal() {
-        return "modal/successfulGroupResetModal";
-    }
-
-    @GetMapping(value = "/modal/removeFromGroupsModal")
-    public String removeFromGroupsModal() {
-        return "modal/removeFromGroupsModal";
-    }
-
-    @GetMapping(value = "/modal/emptyGroupModal")
-    public String emptyGroupModal() {
-        return "modal/emptyGroupModal";
-    }
-
-    @GetMapping(value = "/modal/syncDestModal")
-    public String syncDestModal() {
-        return "modal/syncDestModal";
-    }
-
-    @GetMapping(value = "/modal/removeErrorModal")
-    public String removeErrorModal() {
-        return "modal/removeErrorModal";
-    }
-
-    @GetMapping(value = "/modal/timeoutModal")
-    public String timeoutModal() {
-        return "modal/timeoutModal";
-    }
-
-    @GetMapping(value = "/modal/roleErrorModal")
-    public String roleErrorModal() {
-        return "modal/roleErrorModal";
-    }
-
-    @GetMapping(value = "/modal/ownerErrorModal")
-    public String ownerErrorModal() {
-        return "modal/ownerErrorModal";
-    }
-
-    @GetMapping(value = "/modal/optErrorModal")
-    public String optErrorModal() {
-        return "modal/optErrorModal";
-    }
-
-    @GetMapping(value = "/modal/importModal")
-    public String importModal() {
-        return "modal/importModal";
-    }
-
-    @GetMapping(value = "/modal/importConfirmationModal")
-    public String importConfirmationModal() {
-        return "modal/importConfirmationModal";
-    }
-
-    @GetMapping(value = "/modal/importSuccessModal")
-    public String importSuccessModal() {
-        return "modal/importSuccessModal";
-    }
-
-    @GetMapping(value = "modal/importErrorModal")
-    public String importErrorModal() {
-        return "modal/importErrorModal";
-    }
-
-    @GetMapping(value = "/modal/dynamicModal")
-    public String dynamicModal() {
-        return "modal/dynamicModal";
-    }
-
-    @GetMapping(value = "/modal/groupingOwnersModal")
-    public String groupingOwnersModal() {
-        return "modal/groupingOwnersModal";
-    }
 }
