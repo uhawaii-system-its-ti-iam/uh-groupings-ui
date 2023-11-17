@@ -104,10 +104,18 @@
             },
 
             /**
-             * Get a list of all admins and groupings.
+             * Get a list of admins.
              */
-            getAdminsGroupings(onSuccess, onError) {
-                let endpoint = BASE_URL + "adminsGroupings";
+            getGroupingAdmins(onSuccess, onError) {
+                let endpoint = BASE_URL + "groupingAdmins";
+                dataProvider.loadData(endpoint, onSuccess, onError);
+            },
+
+            /**
+             * Get a list of all groupings.
+             */
+            getAllGroupings(onSuccess, onError) {
+                let endpoint = BASE_URL + "allGroupings";
                 dataProvider.loadData(endpoint, onSuccess, onError);
             },
 
