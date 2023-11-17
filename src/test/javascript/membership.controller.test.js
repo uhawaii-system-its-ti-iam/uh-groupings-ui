@@ -11,7 +11,7 @@ describe("MembershipController", () => {
     let uibModal;
 
     beforeEach(inject(($rootScope, $controller, _BASE_URL_, _$httpBackend_, $uibModal) => {
-        scope = $rootScope.$new();
+        scope = $rootScope.$new(true);
         controller = $controller("MembershipJsController", {
             $scope: scope
         });

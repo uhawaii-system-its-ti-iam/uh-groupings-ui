@@ -14,7 +14,7 @@ describe("GeneralController", () => {
     let window;
 
     beforeEach(inject(($rootScope, $controller, _BASE_URL_, _$httpBackend_, groupingsService, $uibModal, _$window_) => {
-        scope = $rootScope.$new();
+        scope = $rootScope.$new(true);
         window = {
             location: {
                 pathname: "/uhgroupings/",

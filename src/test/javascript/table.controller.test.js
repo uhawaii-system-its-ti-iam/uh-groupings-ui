@@ -8,7 +8,7 @@ describe("TableController", () => {
     let controller;
 
     beforeEach(inject(($rootScope, $controller) => {
-        scope = $rootScope.$new();
+        scope = $rootScope.$new(true);
         controller = $controller("TableJsController", {
             $scope: scope
         });
