@@ -14,12 +14,6 @@
      */
     function AdminJsController($scope, $window, $uibModal, $controller, dataProvider, groupingsService, Message) {
 
-        $scope.adminsList = [];
-        $scope.pagedItemsAdmins = [];
-        $scope.currentPageAdmins = 0;
-        $scope.personList = [];
-        $scope.pagedItemsPerson = [];
-        $scope.currentPagePerson = 0;
         $scope.personToLookup = "";
         $scope.currentManagePerson = "";
         $scope.fromManagePerson = false;

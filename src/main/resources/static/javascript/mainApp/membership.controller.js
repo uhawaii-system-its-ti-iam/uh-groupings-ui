@@ -13,13 +13,6 @@
      */
     function MembershipJsController($scope, $controller, $window, $uibModal, groupingsService, dataProvider) {
 
-        $scope.membershipsList = [];
-        $scope.pagedItemsMemberships = [];
-        $scope.currentPageMemberships = 0;
-
-        $scope.optInList = [];
-        $scope.pagedItemsOptInList = [];
-        $scope.currentPageOptIn = 0;
         $scope.resStatus = 0;
 
         $scope.loadingMemberships = false;

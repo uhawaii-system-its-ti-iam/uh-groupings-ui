@@ -9,6 +9,58 @@
      */
     function TableJsController($scope, $filter) {
 
+        //Variables used to fill the tables:
+
+        // Admin table variables
+        $scope.adminsList = [];
+        $scope.pagedItemsAdmins = [];
+        $scope.currentPageAdmins = 0;
+
+        // Person table variables
+        $scope.personList = [];
+        $scope.pagedItemsPerson = [];
+        $scope.currentPagePerson = 0;
+
+        // Manage memberships table variables
+        $scope.membershipsList = [];
+        $scope.pagedItemsMemberships = [];
+        $scope.currentPageMemberships = 0;
+
+        // Available memberships table variables
+        $scope.optInList = [];
+        $scope.pagedItemsOptInList = [];
+        $scope.currentPageOptIn = 0;
+
+        // Groupings table variables
+        $scope.groupingsList = [];
+        $scope.pagedItemsGroupings = [];
+        $scope.currentPageGroupings = 0;
+
+        // A grouping's members table variables
+        $scope.groupingMembers = [];
+        $scope.pagedItemsMembers = [];
+        $scope.currentPageMembers = 0;
+
+        // A grouping's basis table variables
+        $scope.groupingBasis = [];
+        $scope.pagedItemsBasis = [];
+        $scope.currentPageBasis = 0;
+
+        // A grouping's include table variables
+        $scope.groupingInclude = [];
+        $scope.pagedItemsInclude = [];
+        $scope.currentPageInclude = 0;
+
+        // A grouping's exclude table variables
+        $scope.groupingExclude = [];
+        $scope.pagedItemsExclude = [];
+        $scope.currentPageExclude = 0;
+
+        // A grouping's owners table variables
+        $scope.groupingOwners = [];
+        $scope.pagedItemsOwners = [];
+        $scope.currentPageOwners = 0;
+
         $scope.columnSort = {};
 
         $scope.itemsPerPage = 20;

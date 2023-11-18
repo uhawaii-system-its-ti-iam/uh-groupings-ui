@@ -21,31 +21,7 @@
         $scope.paginatingProgress = true;
         $scope.paginatingComplete = false;
         $scope.largeGrouping = false;
-
-        $scope.groupingsList = [];
-        $scope.pagedItemsGroupings = [];
-        $scope.currentPageGroupings = 0;
         $scope.selectedGrouping = {};
-
-        $scope.groupingBasis = [];
-        $scope.pagedItemsBasis = [];
-        $scope.currentPageBasis = 0;
-
-        $scope.groupingMembers = [];
-        $scope.pagedItemsMembers = [];
-        $scope.currentPageMembers = 0;
-
-        $scope.groupingInclude = [];
-        $scope.pagedItemsInclude = [];
-        $scope.currentPageInclude = 0;
-
-        $scope.groupingExclude = [];
-        $scope.pagedItemsExclude = [];
-        $scope.currentPageExclude = 0;
-
-        $scope.groupingOwners = [];
-        $scope.pagedItemsOwners = [];
-        $scope.currentPageOwners = 0;
 
         $scope.allowOptIn = false;
         $scope.allowOptOut = false;
