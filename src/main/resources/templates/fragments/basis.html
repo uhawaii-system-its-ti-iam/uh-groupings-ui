@@ -64,7 +64,7 @@
         </div>
         <div class="pl-0 pr-0">
             <div class="d-flex justify-content-lg-end justify-content-start">
-                <div th:replace="fragments/pagination :: pagination(currentPage='currentPageBasis', pagedItems='pagedItemsBasis')"></div>
+                <div th:replace="~{fragments/pagination :: pagination(currentPage='currentPageBasis', pagedItems='pagedItemsBasis')}"></div>
             </div>
         </div>
     </div>

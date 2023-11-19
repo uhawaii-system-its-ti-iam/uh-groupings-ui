@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -114,7 +114,6 @@ public class GroupingsRestController {
         String uri = API_2_1_BASE + "/admins-and-groupings";
         return httpRequestService.makeApiRequest(principalName, uri, HttpMethod.GET);
     }
-
 
     @PostMapping(value = "/groupings/group")
     @ResponseBody

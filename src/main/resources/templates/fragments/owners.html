@@ -102,9 +102,9 @@
                 </form>
             </div>
         </div>
-        <div th:replace="fragments/add-error-messages :: add-error-messages"></div>
+        <div th:replace="~{fragments/add-error-messages :: add-error-messages}"></div>
         <div class="pageBtn mt-lg-0 mt-2">
-            <div th:replace="fragments/pagination :: pagination (currentPage = 'currentPageOwners', pagedItems='pagedItemsOwners')"></div>
+            <div th:replace="~{fragments/pagination :: pagination (currentPage = 'currentPageOwners', pagedItems='pagedItemsOwners')}"></div>
         </div>
     </div>
 </th:block>

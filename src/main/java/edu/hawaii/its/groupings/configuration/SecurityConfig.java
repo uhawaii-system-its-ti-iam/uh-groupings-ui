@@ -1,26 +1,33 @@
 package edu.hawaii.its.groupings.configuration;
 
-import javax.annotation.PostConstruct;
+import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
+
+import jakarta.annotation.PostConstruct;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.jasig.cas.client.proxy.ProxyGrantingTicketStorage;
-import org.jasig.cas.client.proxy.ProxyGrantingTicketStorageImpl;
-import org.jasig.cas.client.session.SingleSignOutFilter;
-import org.jasig.cas.client.validation.Saml11TicketValidator;
+
+import org.apereo.cas.client.proxy.ProxyGrantingTicketStorage;
+import org.apereo.cas.client.proxy.ProxyGrantingTicketStorageImpl;
+import org.apereo.cas.client.session.SingleSignOutFilter;
+import org.apereo.cas.client.validation.Saml11TicketValidator;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.cas.ServiceProperties;
 import org.springframework.security.cas.authentication.CasAssertionAuthenticationToken;
 import org.springframework.security.cas.authentication.CasAuthenticationProvider;
 import org.springframework.security.cas.web.CasAuthenticationEntryPoint;
 import org.springframework.security.cas.web.CasAuthenticationFilter;
 import org.springframework.security.cas.web.authentication.ServiceAuthenticationDetailsSource;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.AuthenticationUserDetailsService;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
@@ -33,7 +40,8 @@ import edu.hawaii.its.groupings.access.DelegatingAuthenticationFailureHandler;
 import edu.hawaii.its.groupings.access.UserBuilder;
 
 @EnableWebSecurity
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+@Configuration
+public class SecurityConfig {
 
     private static final Log logger = LogFactory.getLog(SecurityConfig.class);
 
@@ -131,9 +139,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public CasAuthenticationFilter casAuthenticationFilter() throws Exception {
+    public CasAuthenticationFilter casAuthenticationFilter(AuthenticationManager authenticationManager) {
         CasAuthenticationFilter filter = new CasAuthenticationFilter();
-        filter.setAuthenticationManager(authenticationManager());
+        filter.setAuthenticationManager(authenticationManager);
 
         filter.setProxyAuthenticationFailureHandler(authenticationFailureHandler());
         filter.setAuthenticationFailureHandler(authenticationFailureHandler());
@@ -152,6 +160,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+    }
+
+    @Bean
     public AuthenticationSuccessHandler authenticationSuccessHandler() {
         SavedRequestAwareAuthenticationSuccessHandler authenticationSuccessHandler =
                 new SavedRequestAwareAuthenticationSuccessHandler();
@@ -164,46 +177,45 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public DelegatingAuthenticationFailureHandler authenticationFailureHandler() {
         return new DelegatingAuthenticationFailureHandler(appUrlBase);
     }
-    
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.sessionManagement()
-                .sessionFixation().migrateSession();
 
-        http.authorizeRequests()
-                .antMatchers("/").permitAll()
-                .antMatchers("/api/**").hasRole("UH")
-                .antMatchers("/css/**").permitAll()
-                .antMatchers("/fonts/**").permitAll()
-                .antMatchers("/images/**").permitAll()
-                .antMatchers("/javascript/**").permitAll()
-                .antMatchers("/webjars/**").permitAll()
-                .antMatchers("/home").permitAll()
-                .antMatchers("/about").permitAll()
-                .antMatchers("/feedback").hasRole("UH")
-                .antMatchers("/denied").permitAll()
-                .antMatchers("/404").permitAll()
-                .antMatchers("/login").hasRole("UH")
-                .antMatchers("/admin/**").hasRole("ADMIN")
-                .antMatchers("/groupings/**").hasAnyRole("ADMIN", "OWNER")
-                .antMatchers("/memberships/**").hasRole("UH")
-                .antMatchers("/modal/apiError").permitAll()
-                .antMatchers("/uhuuid-error").permitAll()
-                .antMatchers("/error").permitAll()
-                .antMatchers("/testing/**").hasRole("ADMIN")
-                .anyRequest().authenticated()
-                .and()
-                .addFilter(casAuthenticationFilter())
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http, CasAuthenticationFilter casAuthenticationFilter) throws Exception {
+        http.sessionManagement((session) -> session.sessionFixation().migrateSession());
+
+        http.authorizeHttpRequests((auths) -> auths
+                .requestMatchers(antMatcher("/")).permitAll()
+                .requestMatchers(antMatcher("/api/**")).hasRole("UH")
+                .requestMatchers(antMatcher("/css/**")).permitAll()
+                .requestMatchers(antMatcher("/fonts/**")).permitAll()
+                .requestMatchers(antMatcher("/images/**")).permitAll()
+                .requestMatchers(antMatcher("/javascript/**")).permitAll()
+                .requestMatchers(antMatcher("/webjars/**")).permitAll()
+                .requestMatchers(antMatcher("/home")).permitAll()
+                .requestMatchers(antMatcher("/about")).permitAll()
+                .requestMatchers(antMatcher("/feedback")).hasRole("UH")
+                .requestMatchers(antMatcher("/denied")).permitAll()
+                .requestMatchers(antMatcher("/404")).permitAll()
+                .requestMatchers(antMatcher("/login")).hasRole("UH")
+                .requestMatchers(antMatcher("/admin/**")).hasRole("ADMIN")
+                .requestMatchers(antMatcher("/groupings/**")).hasAnyRole("ADMIN", "OWNER")
+                .requestMatchers(antMatcher("/memberships/**")).hasRole("UH")
+                .requestMatchers(antMatcher("/modal/apiError")).permitAll()
+                .requestMatchers(antMatcher("/uhuuid-error")).permitAll()
+                .requestMatchers(antMatcher("/error")).permitAll()
+                .requestMatchers(antMatcher("/testing/**")).hasRole("ADMIN")
+                .anyRequest().authenticated())
+                .addFilter(casAuthenticationFilter)
                 .addFilterBefore(logoutFilter(), LogoutFilter.class)
-                .exceptionHandling().authenticationEntryPoint(casProcessingFilterEntryPoint())
-                .and()
-                .csrf()
-                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                .and()
-                .logout()
-                .invalidateHttpSession(true)
-                .deleteCookies("JSESSIONID")
-                .logoutUrl("/logout")
-                .logoutSuccessUrl(appUrlHome);
+                .exceptionHandling((exception) -> exception.authenticationEntryPoint(casProcessingFilterEntryPoint()))
+                .csrf((csrf) -> csrf
+                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                        .ignoringRequestMatchers(antMatcher("/api/**")))
+                .logout((logout) -> logout
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl(appUrlHome));
+
+        return http.build();
     }
 }

@@ -1,14 +1,14 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
       lang="en">
 
-<head th:replace="header :: copy(headingTitle='UH Groupings Home')">
+<head th:replace="~{header :: copy(headingTitle='UH Groupings Home')}">
 
 
 </head>
 <body ng-app="UHGroupingsApp">
-<nav th:replace="menubar :: copy"></nav>
+<nav th:replace="~{menubar :: copy}"></nav>
 <!--  Content container -->
 
 <main>
@@ -23,7 +23,6 @@
                          th:src="@{images/uh-groupings-text.png}">
                     <p class="lead" th:utext="#{screen.message.home.page.leadDescription}"></p>
                     <div sec:authorize="!isAuthenticated()">
-
                         <form action="/login" th:action="@{/login}" method="post">
                             <button class="btn btn-lg dark-teal-bg" role="button">Login Here</button>
                         </form>
@@ -108,10 +107,10 @@
                         <div>
                             <h1 class="h3 text-center text-md-left">Role:
                                 <span th:switch="true">
-                              <span th:case="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">Admin</span>
-                              <span th:case="${#authorization.expression('hasRole(''ROLE_OWNER'')')}">Owner</span>
-                              <span th:case="${#authorization.expression('hasRole(''ROLE_UH'')')}">Member</span>
-                            </span>
+                                    <span th:case="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">Admin</span>
+                                    <span th:case="${#authorization.expression('hasRole(''ROLE_OWNER'')')}">Owner</span>
+                                    <span th:case="${#authorization.expression('hasRole(''ROLE_UH'')')}">Member</span>
+                                </span>
                             </h1>
                         </div>
                     </div>
@@ -160,6 +159,6 @@
     </div>
 </main>
 <!-- / Content container. -->
-<div th:replace="footer :: copy"></div>
+<div th:replace="~{footer :: copy}"></div>
 </body>
 </html>
