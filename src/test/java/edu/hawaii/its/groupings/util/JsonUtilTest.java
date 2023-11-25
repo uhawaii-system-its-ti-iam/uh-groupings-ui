@@ -1,13 +1,14 @@
 package edu.hawaii.its.groupings.util;
 
-import org.junit.jupiter.api.Test;
-import edu.hawaii.its.groupings.type.Feedback;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.Test;
+
+import edu.hawaii.its.groupings.type.Feedback;
 
 public class JsonUtilTest {
 

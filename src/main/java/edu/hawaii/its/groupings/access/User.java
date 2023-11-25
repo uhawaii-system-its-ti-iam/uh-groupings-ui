@@ -1,9 +1,9 @@
 package edu.hawaii.its.groupings.access;
 
+import java.util.Collection;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-
-import java.util.Collection;
 
 public class User extends org.springframework.security.core.userdetails.User {
 
