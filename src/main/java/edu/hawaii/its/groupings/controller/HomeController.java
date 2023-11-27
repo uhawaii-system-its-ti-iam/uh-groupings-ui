@@ -1,25 +1,26 @@
 package edu.hawaii.its.groupings.controller;
 
+import java.util.Locale;
+import java.util.Map;
+
+import javax.servlet.http.HttpSession;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import edu.hawaii.its.groupings.access.UserContextService;
-import edu.hawaii.its.groupings.service.EmailService;
-import edu.hawaii.its.groupings.type.Feedback;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.SessionAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.http.HttpSession;
-import java.util.Locale;
-import java.util.Map;
+import edu.hawaii.its.groupings.access.UserContextService;
+import edu.hawaii.its.groupings.service.EmailService;
+import edu.hawaii.its.groupings.type.Feedback;
 
 @Controller
 public class HomeController {
