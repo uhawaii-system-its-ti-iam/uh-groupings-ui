@@ -1,26 +1,24 @@
 package edu.hawaii.its.groupings.controller;
 
-import org.junit.jupiter.api.Test;
-
 import static org.hamcrest.CoreMatchers.is;
-
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.lang.NonNull;
-import org.springframework.web.context.request.WebRequest;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import edu.hawaii.its.api.type.GroupingsServiceResultException;
-import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
-
-import edu.internet2.middleware.grouperClient.ws.GcWebServiceError;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.security.Principal;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.lang.NonNull;
+import org.springframework.web.context.request.WebRequest;
+
+import edu.hawaii.its.api.type.GroupingsServiceResultException;
+import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
+
+import edu.internet2.middleware.grouperClient.ws.GcWebServiceError;
 
 @SpringBootTest(classes = { SpringBootWebApplication.class })
 public class ErrorControllerAdviceTest {

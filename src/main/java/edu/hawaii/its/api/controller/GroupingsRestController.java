@@ -1,15 +1,17 @@
 package edu.hawaii.its.api.controller;
 
+import java.security.Principal;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.PostConstruct;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.owasp.html.PolicyFactory;
 import org.owasp.html.Sanitizers;
-import edu.hawaii.its.api.service.HttpRequestService;
-import edu.hawaii.its.groupings.access.User;
-import edu.hawaii.its.groupings.access.UserContextService;
-import edu.hawaii.its.groupings.configuration.Realm;
-import edu.hawaii.its.groupings.exceptions.ApiServerHandshakeException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
@@ -27,12 +29,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.annotation.PostConstruct;
-import java.security.Principal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import edu.hawaii.its.api.service.HttpRequestService;
+import edu.hawaii.its.groupings.access.User;
+import edu.hawaii.its.groupings.access.UserContextService;
+import edu.hawaii.its.groupings.configuration.Realm;
+import edu.hawaii.its.groupings.exceptions.ApiServerHandshakeException;
 
 @RestController
 @RequestMapping("/api/groupings")
