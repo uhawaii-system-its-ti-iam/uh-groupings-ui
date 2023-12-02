@@ -30,6 +30,7 @@
         <bootstrap-version>4.5.0</bootstrap-version>
 
         <lodash-version>4.17.21</lodash-version>
+        <jasmine.test.specs>**/**.test.js</jasmine.test.specs>
     </properties>
 
     <dependencies>
@@ -238,6 +239,7 @@
                         <source>${basedir}/src/main/resources/static/javascript/mainApp/app.js</source>
                         <source>${basedir}/src/main/resources/static/javascript/mainApp/app.directives.js</source>
                         <source>${basedir}/src/main/resources/static/javascript/mainApp/admin.controller.js</source>
+                        <source>${basedir}/src/main/resources/static/javascript/mainApp/announcements.controller.js</source>
                         <source>${basedir}/src/main/resources/static/javascript/mainApp/app.service.js</source>
                         <source>${basedir}/src/main/resources/static/javascript/mainApp/groupings.service.js</source>
                         <source>${basedir}/src/main/resources/static/javascript/mainApp/app.constants.js</source>
@@ -251,7 +253,7 @@
                         <source>${basedir}/src/main/resources/static/javascript/mainApp/feedback.controller.js</source>
                     </preloadSources>
                     <specIncludes>
-                        <include>**/**.test.js</include>
+                        <include>${jasmine.test.specs}</include>
                     </specIncludes>
                 </configuration>
             </plugin>

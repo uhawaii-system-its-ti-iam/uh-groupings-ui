@@ -1,12 +1,12 @@
 package edu.hawaii.its.api.service;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+
+import java.util.List;
 
 @Service("httpRequestService")
 public class HttpRequestService {
@@ -29,6 +29,17 @@ public class HttpRequestService {
         return webClient.method(method)
                 .uri(uri)
                 .header(CURRENT_USER, currentUser)
+                .retrieve()
+                .toEntity(String.class)
+                .block();
+    }
+
+    /*
+     * Make a http request to the API with path variables and without CURRENT_USER in http header.
+     */
+    public ResponseEntity<String> makeApiRequest(String uri, HttpMethod method) {
+        return webClient.method(method)
+                .uri(uri)
                 .retrieve()
                 .toEntity(String.class)
                 .block();
