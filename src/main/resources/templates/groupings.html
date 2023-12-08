@@ -2,9 +2,9 @@
 <html xmlns:th="http://www.thymeleaf.org"
       lang="en">
 
-<head th:replace="header :: copy(headingTitle='UH Groupings Owners')"></head>
+<head th:replace="~{header :: copy(headingTitle='UH Groupings Owners')}"></head>
 <body ng-app="UHGroupingsApp" ng-controller="GroupingsJsController" data-ng-init="init()">
-<nav th:replace="menubar :: copy"></nav>
+<nav th:replace="~{menubar :: copy}"></nav>
 
 <main>
     <!--  Content container-->
@@ -33,7 +33,7 @@
                                    title="Filter Groupings" aria-label="Filter Groupings..."
                                    ng-model="groupingsQuery"
                                    ng-change="filter(groupingsList, 'pagedItemsGroupings', 'currentPageGroupings', groupingsQuery, true)"/>
-                            <div th:replace="fragments/table-settings"></div>
+                            <div th:replace="~{fragments/table-settings}"></div>
                         </div>
                     </div>
                     <div ng-if="groupingsList.length === 0 && !loading" class="text-center">
@@ -41,18 +41,18 @@
                         </p>
                     </div>
                     <div ng-if="groupingsList.length > 0">
-                        <div th:replace="fragments/groupings-list :: groupings-list"></div>
+                        <div th:replace="~{fragments/groupings-list :: groupings-list}"></div>
                     </div>
                 </div>
             </div>
         </div>
         <div ng-show="showGrouping" ng-cloak>
-            <div th:replace="fragments/selected-grouping :: selected-grouping(tabContent=true)"></div>
+            <div th:replace="~{fragments/selected-grouping :: selected-grouping(tabContent=true)}"></div>
         </div>
     </div>
 </main>
 
 <!-- / Content container. -->
-<div th:replace="footer :: copy"></div>
+<div th:replace="~{footer :: copy}"></div>
 </body>
 </html>

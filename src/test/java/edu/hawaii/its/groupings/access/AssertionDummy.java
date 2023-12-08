@@ -1,11 +1,12 @@
 package edu.hawaii.its.groupings.access;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Map;
 
-import org.jasig.cas.client.authentication.AttributePrincipal;
-import org.jasig.cas.client.authentication.AttributePrincipalImpl;
-import org.jasig.cas.client.validation.Assertion;
+import org.apereo.cas.client.authentication.AttributePrincipal;
+import org.apereo.cas.client.authentication.AttributePrincipalImpl;
+import org.apereo.cas.client.validation.Assertion;
 
 public class AssertionDummy implements Assertion {
 
@@ -55,6 +56,11 @@ public class AssertionDummy implements Assertion {
 
     @Override
     public Date getAuthenticationDate() {
+        return null;
+    }
+
+    @Override
+    public Map<String, Serializable> getContext() {
         return null;
     }
 

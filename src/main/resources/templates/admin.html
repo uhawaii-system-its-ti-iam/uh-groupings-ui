@@ -1,11 +1,9 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
-      lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 
-<head th:replace="header :: copy(headingTitle='UH Groupings Admin')"></head>
+<head th:replace="~{header :: copy(headingTitle='UH Groupings Admin')}"></head>
 <body ng-app="UHGroupingsApp" ng-controller="AdminJsController" data-ng-init="init()">
-<nav th:replace="menubar :: copy"></nav>
+<nav th:replace="~{menubar :: copy}"></nav>
 
 <main>
     <div class="seafoam-bg pt-4">
@@ -52,10 +50,10 @@
                                    title="Filter Groupings" aria-label="Filter Groupings..."
                                    ng-model="groupingsQuery"
                                    ng-change="filter(groupingsList, 'pagedItemsGroupings', 'currentPageGroupings', groupingsQuery, true)"/>
-                            <div th:replace="fragments/table-settings"></div>
+                            <div th:replace="~{fragments/table-settings}"></div>
                         </div>
                     </div>
-                    <div th:replace="fragments/admin-groupings-list :: admin-groupings-list(title='Manage Groupings', tabContent=true)"></div>
+                    <div th:replace="~{fragments/admin-groupings-list :: admin-groupings-list(title='Manage Groupings', tabContent=true)}"></div>
                 </div>
                 <!-- Manage Admins -->
                 <div class="tab-pane fade" id="manage-admins" role="tabpanel">
@@ -147,10 +145,10 @@
                                 <div class="spinner-border spinner-border-sm ml-1 align-self-center"
                                      ng-show="waitingForImportResponse"></div>
                             </form>
-                            <div th:replace="fragments/admin-error-messages :: admin-error-messages"></div>
+                            <div th:replace="~{fragments/admin-error-messages :: admin-error-messages}"></div>
                         </div>
                         <div class="col-lg-5">
-                            <div th:replace="fragments/pagination :: pagination(currentPage='currentPageAdmins', pagedItems='pagedItemsAdmins')"></div>
+                            <div th:replace="~{fragments/pagination :: pagination(currentPage='currentPageAdmins', pagedItems='pagedItemsAdmins')}"></div>
                         </div>
                     </div>
                 </div>
@@ -206,7 +204,7 @@
                             </form>
                         </div>
                         <div class="w-100"></div>
-                        <div th:replace="fragments/admin-error-messages :: admin-error-messages"></div>
+                        <div th:replace="~{fragments/admin-error-messages :: admin-error-messages}"></div>
                         <!--message for no groupings selected-->
                         <div ng-show="!errorDismissed2 && !loading && emptySelect"
                              class="ml-sm-auto mb-n1 mt-2 alert alert-danger form-alert fade show"
@@ -306,7 +304,7 @@
                     <div class="row">
                         <div class="col-lg-7"></div>
                         <div class="col-lg-5">
-                            <div th:replace="fragments/pagination :: pagination(currentPage='currentPagePerson', pagedItems='pagedItemsPerson')"></div>
+                            <div th:replace="~{fragments/pagination :: pagination(currentPage='currentPagePerson', pagedItems='pagedItemsPerson')}"></div>
                         </div>
                     </div>
                 </div>
@@ -322,11 +320,11 @@
             </div>
         </div>
         <div ng-show="showGrouping" ng-cloak>
-            <div th:replace="fragments/selected-grouping :: selected-grouping(tabContent=true)"></div>
+            <div th:replace="~{fragments/selected-grouping :: selected-grouping(tabContent=true)}"></div>
         </div>
     </div>
 </main>
 <!-- / Content container. -->
-<div th:replace="footer :: copy"></div>
+<div th:replace="~{footer :: copy}"></div>
 </body>
 </html>

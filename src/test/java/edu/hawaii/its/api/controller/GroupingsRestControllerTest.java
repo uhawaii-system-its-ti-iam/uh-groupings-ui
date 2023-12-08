@@ -337,7 +337,7 @@ public class GroupingsRestControllerTest {
     @Test
     @WithMockUhUser
     public void membersAttributesTest() throws Exception {
-        String uri = REST_CONTROLLER_BASE + "members/";
+        String uri = REST_CONTROLLER_BASE + "members";
         List<String> members = new ArrayList<>();
         members.add(USERNAME);
 
