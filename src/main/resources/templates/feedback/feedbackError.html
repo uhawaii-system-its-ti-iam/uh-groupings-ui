@@ -1,9 +1,8 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
-<head th:replace="header :: copy"></head>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{header :: copy}"></head>
 <body>
-<nav th:replace="menubar :: copy"></nav>
+<nav th:replace="~{menubar :: copy}"></nav>
 
 <!--   Content container -->
 <div class='container'>
@@ -62,6 +61,6 @@
     </div>
 </div>
 <!-- / Content container. -->
-<div th:replace="footer"></div>
+<div th:replace="~{footer :: copy}"></div>
 </body>
 </html>

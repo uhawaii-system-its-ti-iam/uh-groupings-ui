@@ -1,11 +1,9 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
-      lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 
-<head th:replace="header :: copy(headingTitle='UH Groupings Membership')"></head>
+<head th:replace="~{header :: copy(headingTitle='UH Groupings Membership')}"></head>
 <body ng-app="UHGroupingsApp" ng-controller="MembershipJsController">
-<nav th:replace="menubar :: copy"></nav>
+<nav th:replace="~{menubar :: copy}"></nav>
 
 <!--  Content container -->
 <div class="seafoam-bg pt-4" role="banner">
@@ -46,7 +44,7 @@
                                title="Filter Groupings" aria-label="Filter Groupings..."
                                ng-model="membersQuery" class="form-control"
                                ng-change="filter(membershipsList, 'pagedItemsMemberships', 'currentPageMemberships', membersQuery, true)"/>
-                        <div th:replace="fragments/table-settings"></div>
+                        <div th:replace="~{fragments/table-settings}"></div>
                     </div>
                 </div>
                 <!-- Current Membership Tab-->
@@ -127,7 +125,7 @@
                         </table>
                     </div>
                     <div class="mt-lg-0 mt-2">
-                        <div th:replace="fragments/pagination :: pagination(currentPage='currentPageMemberships', pagedItems='pagedItemsMemberships')"></div>
+                        <div th:replace="~{fragments/pagination :: pagination(currentPage='currentPageMemberships', pagedItems='pagedItemsMemberships')}"></div>
                     </div>
                 </div>
                 <div ng-if="membershipsList.length === 0 && !loadingMemberships" class="no-memberships-text">
@@ -152,7 +150,7 @@
                                ng-model="optInQuery" class="form-control"
                                ng-change="filter(optInList, 'pagedItemsOptInList', 'currentPageOptIn', optInQuery, true)"
                                id="optIn"/>
-                        <div th:replace="fragments/table-settings"></div>
+                        <div th:replace="~{fragments/table-settings}"></div>
                     </div>
 
                 </div>
@@ -226,7 +224,7 @@
                         </table>
                     </div>
                     <div class="mt-lg-0 mt-2">
-                        <div th:replace="fragments/pagination :: pagination(currentPage='currentPageOptIn', pagedItems='pagedItemsOptInList')"></div>
+                        <div th:replace="~{fragments/pagination :: pagination(currentPage='currentPageOptIn', pagedItems='pagedItemsOptInList')}"></div>
                     </div>
                 </div>
                 <div ng-if="optInList.length === 0 && !loadingOptIn" class="no-memberships-text">
@@ -239,6 +237,6 @@
     </div>
 </main>
 <!-- / Content container. -->
-<div th:replace="footer :: copy"></div>
+<div th:replace="~{footer :: copy}"></div>
 </body>
 </html>

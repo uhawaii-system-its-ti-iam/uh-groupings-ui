@@ -18,8 +18,7 @@ public class ApiServerHandshakeExceptionTest {
         ex = new ApiServerHandshakeException("stop", new Throwable("me"));
         assertNotNull(ex);
         assertThat(ex.getCause(), instanceOf(Throwable.class));
-        String expected = "stop; nested exception is java.lang.Throwable: me";
-        assertThat(ex.getMessage(), is(expected));
-        assertThat(ex.getLocalizedMessage(), is(expected));
+        assertThat(ex.getMessage(), is("stop"));
+        assertThat(ex.getLocalizedMessage(), is("stop"));
     }
 }

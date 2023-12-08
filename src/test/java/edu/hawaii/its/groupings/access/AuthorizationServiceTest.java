@@ -11,7 +11,8 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 
 import java.security.Principal;
 
-import org.jasig.cas.client.authentication.SimplePrincipal;
+import org.apereo.cas.client.authentication.SimplePrincipal;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
