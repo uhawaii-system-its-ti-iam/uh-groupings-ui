@@ -4,19 +4,11 @@
      * Service function that provides GET and POST requests for getting or updating data
      * @name dataProvider
      */
-    UHGroupingsApp.factory("dataProvider", function ($http, $window, BASE_URL) {
+    UHGroupingsApp.factory("dataProvider", function ($http, $timeout, $window, BASE_URL) {
 
+        const delay = 5000;
         const timeLimit = 20000;
         const maxRetries = 3;
-
-        /**
-         * Sets delay in milliseconds. Used with await in async functions.
-         * @param {number} ms - milliseconds of delay
-         * @returns {Promise} setTimeout callback
-         */
-        const delay = (ms = 5000) => {
-            return new Promise((resolve) => setTimeout(resolve, ms));
-        };
 
         /**
          * Polls to getAsyncJobResult API endpoint until the async job has completed with a result
@@ -27,13 +19,12 @@
          */
         const pollData = (jobId, callback, callError, timeoutID = 0) => {
             $http.get(encodeURI(`${BASE_URL}jobs/${jobId}`))
-                .then(async (response) => {
+                .then((response) => {
                     if (response.data.status === "COMPLETED") {
                         clearTimeout(timeoutID);
                         callback(response.data.result);
                     } else {
-                        await delay();
-                        pollData(jobId, callback, callError, timeoutID);
+                        $timeout(() => pollData(jobId, callback, callError, timeoutID), delay);
                     }
                 }, (response) => {
                     callError(response);
@@ -105,9 +96,8 @@
              */
             loadDataWithBodyAsync(url, data, initialPoll, callback, callError) {
                 $http.post(encodeURI(url), data)
-                    .then(async (response) => {
-                        await delay(initialPoll);
-                        pollData(response.data, callback, callError);
+                    .then((response) => {
+                        $timeout(() => pollData(response.data, callback, callError), initialPoll);
                     }, (response) => {
                         callError(response);
                     });
@@ -124,13 +114,15 @@
             loadDataWithBodyRetry(url, data, callback, callError, retries = maxRetries) {
                 $http.post(encodeURI(url), data)
                     .then((response) => callback(response.data))
-                    .catch(async (response) => {
+                    .catch((response) => {
                         if (retries <= 0) {
                             callError(response);
                             return;
                         }
-                        await delay(2000 * Math.log(maxRetries / retries));
-                        this.loadDataWithBodyRetry(url, data, callback, callError, retries - 1);
+                        $timeout(
+                            () => this.loadDataWithBodyRetry(url, data, callback, callError, retries - 1),
+                            2000 * Math.log(maxRetries / retries)
+                        );
                     });
             },
 
@@ -158,9 +150,8 @@
              */
             updateDataAsync(url, initialPoll, callback, callError) {
                 $http.post(encodeURI(url))
-                    .then(async (response) => {
-                        await delay(initialPoll);
-                        pollData(response.data, callback, callError);
+                    .then((response) => {
+                        $timeout(() => pollData(response.data, callback, callError), initialPoll);
                     }, (response) => {
                         callError(response);
                     });
@@ -192,13 +183,13 @@
              * @param {function} callError - Execute if response returns as an error.
              */
             updateDataWithBodyAndTimeoutModal(url, data, callback, callError, modal) {
-                let timeoutID = setTimeout(modal, timeLimit);
+                let timeoutPromise = $timeout(modal, timeLimit);
                 $http.put(encodeURI(url), data)
                     .then((response) => {
-                        clearTimeout(timeoutID);
+                        $timeout.cancel(timeoutPromise)
                         callback(response.data);
                     }, (response) => {
-                        clearTimeout(timeoutID);
+                        $timeout.cancel(timeoutPromise)
                         callError(response);
                     });
             },
@@ -214,14 +205,13 @@
              * @param {function} callError - Execute if response returns as an error.
              */
             updateDataWithBodyAndTimeoutModalAsync(url, data, initialPoll, callback, callError, modal) {
-                const timeoutID = setTimeout(modal, timeLimit);
+                let timeoutPromise = $timeout(modal, timeLimit);
                 $http.put(encodeURI(url), data)
-                    .then(async (response) => {
-                        await delay(initialPoll);
-                        pollData(response.data, callback, callError, timeoutID);
+                    .then((response) => {
+                        $timeout(() => pollData(response.data, callback, callError, timeoutPromise), initialPoll);
                     }, (response) => {
                         callError(response);
-                        clearTimeout(timeoutID);
+                        $timeout.cancel(timeoutPromise)
                     });
             },
 
@@ -240,8 +230,7 @@
                     .then(() => {
                         $window.location.href = redirectUrl;
                     });
-            }
+            },
         };
     });
-
 })();
