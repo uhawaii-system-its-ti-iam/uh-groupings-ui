@@ -13,7 +13,7 @@ UH Groupings utilizes the Internet2 Grouper project.  Grouper is an enterprise a
 [![CodeQL](https://github.com/uhawaii-system-its-ti-iam/uh-groupings-api/actions/workflows/codeql.yml/badge.svg)](https://github.com/uhawaii-system-its-ti-iam/uh-groupings-ui/actions/workflows/codeql.yml)
 
 ##### Java
-You'll need a Java JDK to build and run the project (version 1.17).
+You'll need a Java JDK to build and run the project (version 17).
 
 The files for the project are kept in a code repository,
 available from here:
