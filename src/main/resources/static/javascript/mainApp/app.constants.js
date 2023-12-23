@@ -23,7 +23,8 @@ UHGroupingsApp.constant("Message", {
         ADD_MEMBERS: "Add Members",
         REMOVE_MEMBER: "Remove Member",
         REMOVE_MEMBERS: "Remove Members",
-        DISPLAY_OWNERS_ERROR: "Error Displaying Owners"
+        DISPLAY_OWNERS_ERROR: "Error Displaying Owners",
+        INVALID_EMAIL_ERROR: "Invalid Email"
     },
     Body: {
         IMPORT_OUT_OF_BOUNDS: `Importing more than ${threshold.MAX_IMPORT} users is not allowed.`,
@@ -34,7 +35,8 @@ UHGroupingsApp.constant("Message", {
         ADD_MEMBERS: { with: (listName) => `All members have been added successfully to the ${listName} list.` },
         REMOVE_MEMBER: { with: (member, listName) => `${member} has been successfully removed from the ${listName} list.` },
         REMOVE_MEMBERS: { with: (listName) => `All selected members have been successfully removed from the ${listName} list.` },
-        DISPLAY_OWNERS_ERROR: "There was an error displaying the owners."
+        DISPLAY_OWNERS_ERROR: "There was an error displaying the owners.",
+        INVALID_EMAIL_ERROR: "Please enter a valid email address."
     },
     Csv: {
         GROUP_NOT_LOADED: "Export will be available once all members are loaded.",
