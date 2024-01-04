@@ -20,6 +20,14 @@
             },
 
             /**
+             * Get a list of active announcements to display on the home page.
+             */
+            getActiveAnnouncements(onSuccess, onError) {
+                let endpoint = "announcements/active";
+                dataProvider.loadData(endpoint, onSuccess, onError);
+            },
+
+            /**
              * @param {String[]} groupPaths - The paths to the grouping.
              * @param {Number} page - The number to fetch.
              * @param {Number} size - The size data chunk to be fetched.
@@ -299,7 +307,6 @@
                 let endpoint = BASE_URL + "groupings/optInGroups";
                 dataProvider.loadData(endpoint, onSuccess, onError);
             },
-
 
             /**
              * Toggle the preference option to allow users to opt into a grouping.
