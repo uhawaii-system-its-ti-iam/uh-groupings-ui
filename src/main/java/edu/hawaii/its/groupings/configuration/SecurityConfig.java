@@ -6,12 +6,10 @@ import jakarta.annotation.PostConstruct;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.apereo.cas.client.proxy.ProxyGrantingTicketStorage;
 import org.apereo.cas.client.proxy.ProxyGrantingTicketStorageImpl;
 import org.apereo.cas.client.session.SingleSignOutFilter;
 import org.apereo.cas.client.validation.Saml11TicketValidator;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -184,6 +182,7 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests((auths) -> auths
                 .requestMatchers(antMatcher("/")).permitAll()
+                .requestMatchers(antMatcher("/announcements/**")).permitAll()
                 .requestMatchers(antMatcher("/api/**")).hasRole("UH")
                 .requestMatchers(antMatcher("/css/**")).permitAll()
                 .requestMatchers(antMatcher("/fonts/**")).permitAll()
