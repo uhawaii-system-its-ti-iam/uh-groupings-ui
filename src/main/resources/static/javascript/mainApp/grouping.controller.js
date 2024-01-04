@@ -1269,10 +1269,18 @@
             };
 
             if (resetInclude) {
-                await resetGroup(groupingsService.resetIncludeGroupAsync, groupingPath, resetIncludeResult);
+                if ($scope.groupingInclude.length <= Threshold.RESET_GROUP) {
+                    await resetGroup(groupingsService.resetIncludeGroup, groupingPath, resetIncludeResult);
+                } else {
+                    await resetGroup(groupingsService.resetIncludeGroupAsync, groupingPath, resetIncludeResult);
+                }
             }
             if (resetExclude) {
-                await resetGroup(groupingsService.resetExcludeGroupAsync, groupingPath, resetExcludeResult);
+                if ($scope.groupingExclude.length <= Threshold.RESET_GROUP) {
+                    await resetGroup(groupingsService.resetExcludeGroup, groupingPath, resetExcludeResult);
+                } else {
+                    await resetGroup(groupingsService.resetExcludeGroupAsync, groupingPath, resetExcludeResult);
+                }
             }
             $scope.loading = false;
             $scope.handleGroupingReset(groupingPath, resetIncludeResult.pop(), resetExcludeResult.pop());

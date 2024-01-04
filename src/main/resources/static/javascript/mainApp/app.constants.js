@@ -4,7 +4,8 @@ const threshold = {
     "MULTI_ADD": 100,
     "MULTI_REMOVE": 100,
     "MAX_IMPORT": 100000,
-    "MAX_LIST_SIZE": 10
+    "MAX_LIST_SIZE": 10,
+    "RESET_GROUP": 750
 };
 UHGroupingsApp.constant("Threshold", threshold);
 UHGroupingsApp.constant("Utility", {
