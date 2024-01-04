@@ -1646,9 +1646,10 @@
                 for (let member of item.pageItems[Number(item.pageNumber)]) {
                     $scope.membersInCheckboxList[member.uhUuid] = $scope.PageSelected;
                 }
-                $scope.updateMainSelectAllCheckboxes(item);
+                let check = $scope.checkerMainSelectAllCheckboxes(item);
+                $scope.PageSelected = check.page;
+                $scope.showIconTool = check.toolTip;
             } else {
-                // generate new eventListeners when new pagination has happened
                 if ($scope.paginatedPageChange === true) {
                     $scope.updateCheckboxEventListeners(item, group);
                     $scope.paginatedPageChange = false;
@@ -1665,14 +1666,15 @@
          */
         $scope.$watch("currentPageInclude", (newValue, oldValue) => {
             if (newValue !== oldValue) {
-                // Page number has changed, update the checkbox event listeners
                 const item = {
                     allItems: $scope.groupingInclude,
                     pageItems: $scope.pagedItemsInclude,
-                    pageNumber: newValue // Update with the new page number
+                    pageNumber: newValue
                 };
                 $scope.updateCheckboxEventListeners(item, "Include");
-                $scope.updateMainSelectAllCheckboxes(item);
+                let check = $scope.checkerMainSelectAllCheckboxes(item);
+                $scope.PageSelected = check.page;
+                $scope.showIconTool = check.toolTip;
                 $scope.paginatedPageChange = true;
             }
         });
@@ -1686,14 +1688,15 @@
          */
         $scope.$watch("currentPageExclude", (newValue, oldValue) => {
             if (newValue !== oldValue) {
-                // Page number has changed, update the checkbox event listeners
                 const item = {
                     allItems: $scope.groupingExclude,
                     pageItems: $scope.pagedItemsExclude,
-                    pageNumber: newValue // Update with the new page number
+                    pageNumber: newValue
                 };
                 $scope.updateCheckboxEventListeners(item, "Exclude");
-                $scope.updateMainSelectAllCheckboxes(item);
+                let check = $scope.checkerMainSelectAllCheckboxes(item);
+                $scope.PageSelected = check.page;
+                $scope.showIconTool = check.toolTip;
                 $scope.paginatedPageChange = true;
             }
         });
@@ -1709,7 +1712,11 @@
          */
         $scope.updateCheckboxEventListeners = (item, group) => {
             const handleCheckboxChange = () => {
-                $scope.toggleCheckboxState(item);
+                let check = $scope.checkerMainSelectAllCheckboxes(item);
+                $scope.$apply(() => {
+                    $scope.PageSelected = check.page;
+                    $scope.showIconTool = check.toolTip;
+                });
             };
             // Remove existing event listeners before reattaching them
             let groupStringID = ((group === "Include") ? "[id^=\"include-checkbox-\"]" : "[id^=\"exclude-checkbox-\"]");
@@ -1721,37 +1728,6 @@
             checkboxes.forEach(checkbox => {
                 checkbox.addEventListener("change", handleCheckboxChange);
             });
-        };
-
-        /**
-         * Toggles the state of checkboxes based on the checkbox changes and updates related elements.
-         *
-         * @param {Object} item - An object containing information about the group and pagination.
-         *                       {Object} allItems - The array of all items in the group.
-         *                       {Object} pageItems - The array of items on the current page.
-         *                       {number} pageNumber - The current page number.
-         */
-        $scope.toggleCheckboxState = (item) => {
-            let check = $scope.checkerMainSelectAllCheckboxes(item);
-            // refresh elements
-            $scope.$apply(() => {
-                $scope.PageSelected = check.page;
-                $scope.showIconTool = check.toolTip;
-            });
-        };
-
-        /**
-         * Updates the main "Select All" checkboxes based on the checkbox changes in a specified group.
-         *
-         * @param {Object} item - An object containing information about the group and pagination.
-         *                       {Object} allItems - The array of all items in the group.
-         *                       {Object} pageItems - The array of items on the current page.
-         *                       {number} pageNumber - The current page number.
-         */
-        $scope.updateMainSelectAllCheckboxes = (item) => {
-            let check = $scope.checkerMainSelectAllCheckboxes(item);
-            $scope.PageSelected = check.page;
-            $scope.showIconTool = check.toolTip;
         };
 
         /**
@@ -1770,25 +1746,18 @@
                 page: true,
                 toolTip: false
             };
-            // groups the members by either true or false to get total of what is checked and unchecked
-            let datas = [];
-            let data;
-            datas = $scope.membersInCheckboxList;
-            data = _.groupBy(datas, (checkbox) => checkbox);
             for (let member of item.pageItems[Number(item.pageNumber)]) {
                 if (!$scope.membersInCheckboxList[member.uhUuid]) {
                     check.page = false;
                     break;
                 }
             }
-            try {
-                // Show tool tip if group size is above 20 and total checkboxes checked is above 20
-                if (!item.allitems <= 20) {
-                    check.toolTip = (data.true.length > 20);
-                }
-            } catch {
-                // catches if either "true" or "false" groups is empty
+            const data = _.countBy($scope.membersInCheckboxList);
+            // Show tool tip if group size is above 20 and total checkboxes checked is above 20
+            if (!item.allItems <= 20) {
+                check.toolTip = ((data.true || 0) > 20);
             }
+
             return check;
         };
 
