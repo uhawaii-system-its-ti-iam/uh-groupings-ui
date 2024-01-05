@@ -1,22 +1,5 @@
 package edu.hawaii.its.groupings.controller;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
-import edu.hawaii.its.groupings.type.Feedback;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.test.context.support.WithAnonymousUser;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.web.context.WebApplicationContext;
-
-import javax.servlet.http.HttpSession;
-
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -34,6 +17,25 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
+
+import jakarta.servlet.http.HttpSession;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithAnonymousUser;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.web.context.WebApplicationContext;
+
+import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
+import edu.hawaii.its.groupings.type.Feedback;
 
 @ActiveProfiles("localTest")
 @SpringBootTest(classes = { SpringBootWebApplication.class })
@@ -132,10 +134,10 @@ public class HomeControllerTest {
     }
 
     @Test
-    public void requestInfo() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(get("/info"))
+    public void requestAbout() throws Exception {
+        MvcResult mvcResult = mockMvc.perform(get("/about"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("info"))
+                .andExpect(view().name("about"))
                 .andReturn();
         assertNotNull(mvcResult);
     }
@@ -280,212 +282,15 @@ public class HomeControllerTest {
         assertNotNull(mvcResult);
     }
 
-    @Test
+    @ParameterizedTest
+    @ValueSource(strings = {"apiError", "preferenceErrorModal", "addModal", "multiAddModal", "removeModal", "multiRemoveModal", "resetModal",
+            "successfulGroupResetModal", "removeFromGroupsModal", "emptyGroupModal", "syncDestModal", "removeErrorModal", "timeoutModal",
+            "roleErrorModal", "ownerErrorModal", "optErrorModal", "importModal", "importConfirmationModal", "importSuccessModal", "importErrorModal", "dynamicModal"})
     @WithMockUhUser(username = "uh")
-    public void requestApiErrorModal() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(get("/modal/apiError"))
+    public void requestModal(String modalName) throws Exception {
+        MvcResult mvcResult = mockMvc.perform(get("/modal/" + modalName))
                 .andExpect(status().isOk())
-                .andExpect(view().name("modal/apiError"))
-                .andReturn();
-        assertNotNull(mvcResult);
-    }
-
-    @Test
-    @WithMockUhUser(username = "uh")
-    public void requestPreferenceErrorModal() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(get("/modal/preferenceErrorModal"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("modal/preferenceErrorModal"))
-                .andReturn();
-        assertNotNull(mvcResult);
-    }
-
-    @Test
-    @WithMockUhUser(username = "uh")
-    public void requestAddModal() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(get("/modal/addModal"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("modal/addModal"))
-                .andReturn();
-        assertNotNull(mvcResult);
-    }
-
-    @Test
-    @WithMockUhUser(username = "uh")
-    public void requestMultiAddModal() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(get("/modal/multiAddModal"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("modal/multiAddModal"))
-                .andReturn();
-        assertNotNull(mvcResult);
-    }
-
-    @Test
-    @WithMockUhUser(username = "uh")
-    public void requestRemoveModal() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(get("/modal/removeModal"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("modal/removeModal"))
-                .andReturn();
-        assertNotNull(mvcResult);
-    }
-
-    @Test
-    @WithMockUhUser(username = "uh")
-    public void requestMultiRemoveModal() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(get("/modal/multiRemoveModal"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("modal/multiRemoveModal"))
-                .andReturn();
-        assertNotNull(mvcResult);
-    }
-
-    @Test
-    @WithMockUhUser(username = "uh")
-    public void requestResetModal() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(get("/modal/resetModal"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("modal/resetModal"))
-                .andReturn();
-        assertNotNull(mvcResult);
-    }
-
-    @Test
-    @WithMockUhUser(username = "uh")
-    public void requestSuccessfulGroupResetModal() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(get("/modal/successfulGroupResetModal"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("modal/successfulGroupResetModal"))
-                .andReturn();
-        assertNotNull(mvcResult);
-    }
-
-    @Test
-    @WithMockUhUser(username = "uh")
-    public void requestRemoveFromGroupsModal() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(get("/modal/removeFromGroupsModal"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("modal/removeFromGroupsModal"))
-                .andReturn();
-        assertNotNull(mvcResult);
-    }
-
-    @Test
-    @WithMockUhUser(username = "uh")
-    public void requestEmptyGroupModal() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(get("/modal/emptyGroupModal"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("modal/emptyGroupModal"))
-                .andReturn();
-        assertNotNull(mvcResult);
-    }
-
-    @Test
-    @WithMockUhUser(username = "uh")
-    public void requestSyncDestModal() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(get("/modal/syncDestModal"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("modal/syncDestModal"))
-                .andReturn();
-        assertNotNull(mvcResult);
-    }
-
-    @Test
-    @WithMockUhUser(username = "uh")
-    public void requestRemoveErrorModal() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(get("/modal/removeErrorModal"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("modal/removeErrorModal"))
-                .andReturn();
-        assertNotNull(mvcResult);
-    }
-
-    @Test
-    @WithMockUhUser(username = "uh")
-    public void requestTimeoutModal() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(get("/modal/timeoutModal"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("modal/timeoutModal"))
-                .andReturn();
-        assertNotNull(mvcResult);
-    }
-
-    @Test
-    @WithMockUhUser(username = "uh")
-    public void requestRoleErrorModal() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(get("/modal/roleErrorModal"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("modal/roleErrorModal"))
-                .andReturn();
-        assertNotNull(mvcResult);
-    }
-
-    @Test
-    @WithMockUhUser(username = "uh")
-    public void requestOwnerErrorModal() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(get("/modal/ownerErrorModal"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("modal/ownerErrorModal"))
-                .andReturn();
-        assertNotNull(mvcResult);
-    }
-
-    @Test
-    @WithMockUhUser(username = "uh")
-    public void requestOptErrorModal() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(get("/modal/optErrorModal"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("modal/optErrorModal"))
-                .andReturn();
-        assertNotNull(mvcResult);
-    }
-
-    @Test
-    @WithMockUhUser(username = "uh")
-    public void requestImportModal() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(get("/modal/importModal"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("modal/importModal"))
-                .andReturn();
-        assertNotNull(mvcResult);
-    }
-
-    @Test
-    @WithMockUhUser(username = "uh")
-    public void requestImportConfirmationModal() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(get("/modal/importConfirmationModal"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("modal/importConfirmationModal"))
-                .andReturn();
-        assertNotNull(mvcResult);
-    }
-
-    @Test
-    @WithMockUhUser(username = "uh")
-    public void requestImportSuccessModal() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(get("/modal/importSuccessModal"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("modal/importSuccessModal"))
-                .andReturn();
-        assertNotNull(mvcResult);
-    }
-
-    @Test
-    @WithMockUhUser(username = "uh")
-    public void requestImportErrorModal() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(get("/modal/importErrorModal"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("modal/importErrorModal"))
-                .andReturn();
-        assertNotNull(mvcResult);
-    }
-
-    @Test
-    @WithMockUhUser(username = "uh")
-    public void requestDynamicModal() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(get("/modal/dynamicModal"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("modal/dynamicModal"))
+                .andExpect(view().name("modal/" + modalName))
                 .andReturn();
         assertNotNull(mvcResult);
     }

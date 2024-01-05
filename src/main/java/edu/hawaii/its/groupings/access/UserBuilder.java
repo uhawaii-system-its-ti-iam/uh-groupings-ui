@@ -1,13 +1,14 @@
 package edu.hawaii.its.groupings.access;
 
-import edu.hawaii.its.groupings.util.Strings;
+import java.util.Map;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
+import edu.hawaii.its.groupings.util.Strings;
 
 @Service
 public final class UserBuilder {

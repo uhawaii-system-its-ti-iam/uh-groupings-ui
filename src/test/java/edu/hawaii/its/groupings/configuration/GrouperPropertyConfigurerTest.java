@@ -1,16 +1,15 @@
 package edu.hawaii.its.groupings.configuration;
 
-import edu.internet2.middleware.grouperClient.util.GrouperClientConfig;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.junit.jupiter.api.Test;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.env.ConfigurableEnvironment;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import edu.internet2.middleware.grouperClient.util.GrouperClientConfig;
 
 @SpringBootTest(classes = { SpringBootWebApplication.class })
 public class GrouperPropertyConfigurerTest {

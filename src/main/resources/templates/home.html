@@ -1,17 +1,29 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
       lang="en">
 
-<head th:replace="header :: copy(headingTitle='UH Groupings Home')">
+<head th:replace="~{header :: copy(headingTitle='UH Groupings Home')}">
 
 
 </head>
 <body ng-app="UHGroupingsApp">
-<nav th:replace="menubar :: copy"></nav>
+<nav th:replace="~{menubar :: copy}"></nav>
 <!--  Content container -->
 
 <main>
+    <div class="col-12 p-1" data-ng-controller="AnnouncementsJsController" ng-init="init()">
+        <div ng-if="outageMessage.length">
+            <div ng-repeat="message in outageMessage">
+                <div class="alert alert-warning container alert-dismissible fade show no-space pt-2 pb-2" role="alert">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="container mt-5 mb-5">
         <div class="row">
             <div class="col-sm-7 d-inline-flex align-items-center">
@@ -23,7 +35,6 @@
                          th:src="@{images/uh-groupings-text.png}">
                     <p class="lead" th:utext="#{screen.message.home.page.leadDescription}"></p>
                     <div sec:authorize="!isAuthenticated()">
-
                         <form action="/login" th:action="@{/login}" method="post">
                             <button class="btn btn-lg dark-teal-bg" role="button">Login Here</button>
                         </form>
@@ -108,10 +119,10 @@
                         <div>
                             <h1 class="h3 text-center text-md-left">Role:
                                 <span th:switch="true">
-                              <span th:case="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">Admin</span>
-                              <span th:case="${#authorization.expression('hasRole(''ROLE_OWNER'')')}">Owner</span>
-                              <span th:case="${#authorization.expression('hasRole(''ROLE_UH'')')}">Member</span>
-                            </span>
+                                    <span th:case="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">Admin</span>
+                                    <span th:case="${#authorization.expression('hasRole(''ROLE_OWNER'')')}">Owner</span>
+                                    <span th:case="${#authorization.expression('hasRole(''ROLE_UH'')')}">Member</span>
+                                </span>
                             </h1>
                         </div>
                     </div>
@@ -121,7 +132,7 @@
         <div ng-controller="HomeJsController" data-ng-init="init()">
         <div class="container mt-5 mb-5">
             <div class="row">
-                <div class="col-md-4 mb-5 mb-md-0" sec:authorize="hasRole('ROLE_ADMIN')">
+                <div class="col-md-4 mb-5" sec:authorize="hasRole('ROLE_ADMIN')">
                     <div class="dashboard-item-icon text-primary mb-3">
                         <i class="fa fa-key fa-3x mr-4" aria-hidden="true"></i>
                     </div>
@@ -132,7 +143,7 @@
                         <a class="btn dark-teal-bg btn-bottom" th:href="@{/admin}">Admin</a>
                     </div>
                 </div>
-                <div class="col-md-4 mb-5 mb-md-0" sec:authorize="hasRole('ROLE_UH')">
+                <div class="col-md-4 mb-5" sec:authorize="hasRole('ROLE_UH')">
                     <div class="text-primary mb-3">
                         <i class="fa fa-id-card fa-3x mr-4" aria-hidden="true"></i>
                         <span ng-bind="numberOfMemberships" id="memberCount" class="h1"></span>
@@ -143,7 +154,7 @@
                         <a class="btn dark-teal-bg btn-bottom" th:href="@{/memberships}">Memberships</a>
                     </div>
                 </div>
-                <div class="col-md-4" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_OWNER')">
+                <div class="col-md-4 mb-5" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_OWNER')">
                     <div class="text-primary mb-3">
                         <i class="fa fa-wrench fa-3x mr-3" aria-hidden="true"></i>
                         <span ng-bind="numberOfGroupings" id="groupCount" class="h1"></span>
@@ -160,6 +171,6 @@
     </div>
 </main>
 <!-- / Content container. -->
-<div th:replace="footer :: copy"></div>
+<div th:replace="~{footer :: copy}"></div>
 </body>
 </html>

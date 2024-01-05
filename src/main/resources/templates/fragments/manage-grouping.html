@@ -16,24 +16,24 @@
         </div>
         <div class="container">
             <div class="overflow-hidden mb-5 mt-5">
-                <div th:replace="fragments/side-nav :: side-nav"></div>
+                <div th:replace="~{fragments/side-nav :: side-nav}"></div>
                 <div id="all" class="tab-pane fade show active">
-                    <div th:replace="fragments/members :: members"></div>
+                    <div th:replace="~{fragments/members :: members}"></div>
                 </div>
                 <div id="basis" class="tab-pane fade">
-                    <div th:replace="fragments/basis :: basis"></div>
+                    <div th:replace="~{fragments/basis :: basis}"></div>
                 </div>
                 <div id="include" class="tab-pane fade">
-                    <div th:replace="fragments/include :: include"></div>
+                    <div th:replace="~{fragments/include :: include}"></div>
                 </div>
                 <div id="exclude" class="tab-pane fade">
-                    <div th:replace="fragments/exclude :: exclude"></div>
+                    <div th:replace="~{fragments/exclude :: exclude}"></div>
                 </div>
                 <div id="owners" class="tab-pane fade">
-                    <div th:replace="fragments/owners :: owners"></div>
+                    <div th:replace="~{fragments/owners :: owners}"></div>
                 </div>
                 <div id="preferences" class="tab-pane fade">
-                    <div th:replace="fragments/preferences :: preferences"></div>
+                    <div th:replace="~{fragments/preferences :: preferences}"></div>
                 </div>
             </div>
         </div>

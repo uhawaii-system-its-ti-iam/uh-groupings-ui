@@ -1,10 +1,8 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
-      lang="en">
-<head th:replace="header :: copy"></head>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{header :: copy}"></head>
 <body>
-<nav th:replace="menubar :: copy"></nav>
+<nav th:replace="~{menubar :: copy}"></nav>
 
 <div class="container error_page">
     <h1>Error</h1>
@@ -19,6 +17,6 @@
 
 </div>
 
-<div th:replace="footer :: copy"></div>
+<div th:replace="~{footer :: copy}"></div>
 </body>
 </html>

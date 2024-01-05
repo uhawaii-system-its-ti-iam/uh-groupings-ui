@@ -8,7 +8,7 @@ describe("TableController", () => {
     let controller;
 
     beforeEach(inject(($rootScope, $controller) => {
-        scope = $rootScope.$new();
+        scope = $rootScope.$new(true);
         controller = $controller("TableJsController", {
             $scope: scope
         });
@@ -199,7 +199,7 @@ describe("TableController", () => {
 
         it("should be equivalent to groupToPages if query is empty", () => {
             scope.filter(scope.items, "pagedItems", "currentPage", "", true);
-            var pagedItemsUsingGtp = scope.groupToPages(scope.items);
+            let pagedItemsUsingGtp = scope.groupToPages(scope.items);
 
             expect(scope.pagedItems).toEqual(pagedItemsUsingGtp);
         });

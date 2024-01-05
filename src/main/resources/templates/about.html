@@ -1,11 +1,9 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
-      lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 
-<head th:replace="header :: copy(headingTitle='UH Groupings Info')"></head>
+<head th:replace="~{header :: copy(headingTitle='UH Groupings Info')}"></head>
 <body ng-app="UHGroupingsApp">
-<nav th:replace="menubar :: copy"></nav>
+<nav th:replace="~{menubar :: copy}"></nav>
 
 <!--  Content container -->
 <main>
@@ -104,7 +102,7 @@
     </div>
 
 
-    <div class="container">
+    <div class="container mb-5">
         <h2 class="h5 text-center text-uppercase font-weight-bold pb-4 pt-4">Technical Information</h2>
         <div class="row">
             <div class="col-md-3">
@@ -162,6 +160,6 @@
     </div>
 </main>
 <!-- / Content container. -->
-<div th:replace="footer :: copy"></div>
+<div th:replace="~{footer :: copy}"></div>
 </body>
 </html>

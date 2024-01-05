@@ -1,16 +1,18 @@
 package edu.hawaii.its.groupings.access;
 
+import java.security.Principal;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.jasig.cas.client.authentication.SimplePrincipal;
-import edu.hawaii.its.api.controller.GroupingsRestController;
-import edu.hawaii.its.groupings.service.UhUuidCheckerService;
+
+import org.apereo.cas.client.authentication.SimplePrincipal;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.security.Principal;
+import edu.hawaii.its.api.controller.GroupingsRestController;
+import edu.hawaii.its.groupings.service.UhUuidCheckerService;
 
 @Service
 public class AuthorizationService {

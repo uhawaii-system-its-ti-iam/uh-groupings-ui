@@ -15,7 +15,7 @@ describe("TimeoutController", function () {
     let httpBackend;
 
     beforeEach(inject(($rootScope, _$window_, $uibModal, $controller, _BASE_URL_, $timeout, $interval, dataProvider, _$httpBackend_) => {
-        scope = $rootScope.$new();
+        scope = $rootScope.$new(true);
 
         window = {
             location: {

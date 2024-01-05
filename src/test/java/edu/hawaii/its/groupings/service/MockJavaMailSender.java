@@ -1,12 +1,13 @@
 package edu.hawaii.its.groupings.service;
 
+import java.io.InputStream;
+
+import jakarta.mail.internet.MimeMessage;
+
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessagePreparator;
-
-import javax.mail.internet.MimeMessage;
-import java.io.InputStream;
 
 public class MockJavaMailSender implements JavaMailSender {
 

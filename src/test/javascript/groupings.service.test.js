@@ -37,6 +37,19 @@ describe("GroupingsService", () => {
         });
     });
 
+    describe("getActiveAnnouncements", () => {
+        it("should call dataProvider.loadData", () => {
+            spyOn(dp, "loadData");
+            gs.getActiveAnnouncements(onSuccess, onError);
+            expect(dp.loadData).toHaveBeenCalled();
+        });
+        it("should use the correct path", () => {
+            gs.getActiveAnnouncements(onSuccess, onError);
+            httpBackend.expectGET("announcements/active").respond(200);
+            expect(httpBackend.flush).not.toThrow();
+        });
+    });
+
     describe("getGrouping", () => {
         let page;
         let size;
@@ -394,7 +407,7 @@ describe("GroupingsService", () => {
 
         it("should use the correct path", () => {
             gs.getMembershipResults(onSuccess, onError);
-            httpBackend.expectGET(BASE_URL + "members/memberships/").respond(200);
+            httpBackend.expectGET(BASE_URL + "members/memberships").respond(200);
             expect(httpBackend.flush).not.toThrow();
         });
     });
@@ -409,7 +422,7 @@ describe("GroupingsService", () => {
 
         it("should use the correct path", () => {
             gs.managePersonResults(member, onSuccess, onError);
-            httpBackend.expectGET(BASE_URL + "members/" + member + "/groupings/").respond(200);
+            httpBackend.expectGET(BASE_URL + "members/" + member + "/groupings").respond(200);
             expect(httpBackend.flush).not.toThrow();
         });
     });
@@ -429,7 +442,7 @@ describe("GroupingsService", () => {
 
     });
     describe("getMembershipAssignmentForUser", () => {
-        let username;
+        const username = "";
         it("should call dataProvider.loadData", () => {
             spyOn(dp, "loadData");
             gs.getMembershipAssignmentForUser(onSuccess, onError, username);
@@ -438,7 +451,7 @@ describe("GroupingsService", () => {
 
         it("should use the correct path", () => {
             gs.getMembershipAssignmentForUser(onSuccess, onError, username);
-            httpBackend.expectGET(BASE_URL + "members/" + username + "/groupings/").respond(200);
+            httpBackend.expectGET(BASE_URL + "members/" + username + "/groupings").respond(200);
             expect(httpBackend.flush).not.toThrow();
         });
     });
@@ -452,7 +465,7 @@ describe("GroupingsService", () => {
 
         it("should use the correct path", () => {
             gs.getOptInGroups(onSuccess, onError);
-            httpBackend.expectGET(BASE_URL + "groupings/optInGroups/").respond(200);
+            httpBackend.expectGET(BASE_URL + "groupings/optInGroups").respond(200);
             expect(httpBackend.flush).not.toThrow();
         });
     });

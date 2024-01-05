@@ -10,7 +10,7 @@ describe("HomeController", () => {
     let gs;
 
     beforeEach(inject(($rootScope, $controller, _BASE_URL_, _$httpBackend_, groupingsService) => {
-        scope = $rootScope.$new();
+        scope = $rootScope.$new(true);
         controller = $controller("HomeJsController", {
             $scope: scope,
         });

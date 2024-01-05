@@ -1,6 +1,10 @@
 package edu.hawaii.its.groupings.service;
 
-import edu.hawaii.its.groupings.type.Feedback;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,15 +14,12 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
+import edu.hawaii.its.groupings.type.Feedback;
 
 @Service
 public class EmailService {
 
-    @Value("#{'${email.send.recipient.override:}' == '' ? '${email.send.recipient}' : '${email.send.recipient.override:}'}")
+    @Value("${email.send.recipient}")
     private String recipient;
     
     @Value("${email.send.from}")
@@ -41,6 +42,11 @@ public class EmailService {
 
     public void send(Feedback feedback) {
         logger.info("Feedback received in EmailService: " + feedback);
+
+        if (!isEnabled) {
+            logger.warn("Email service is not enabled. Set email.is.enabled property to true to enable");
+            return;
+        }
 
         String hostname = "Unknown Host";
 
@@ -82,6 +88,12 @@ public class EmailService {
 
     public void sendWithStack(Exception e, String exceptionType) {
         logger.info("Feedback Error email has been triggered.");
+
+        if (!isEnabled) {
+            logger.warn("Email service is not enabled. Set email.is.enabled property to true to enable");
+            return;
+        }
+
         StringWriter sw = new StringWriter();
         e.printStackTrace(new PrintWriter(sw));
         String exceptionAsString = sw.toString();

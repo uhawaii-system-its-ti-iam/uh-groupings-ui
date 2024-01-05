@@ -73,7 +73,7 @@
 
 
         <div class="d-flex justify-content-lg-end justify-content-start">
-            <div th:replace="fragments/pagination :: pagination(currentPage='currentPageMembers', pagedItems='pagedItemsMembers')"></div>
+            <div th:replace="~{fragments/pagination :: pagination(currentPage='currentPageMembers', pagedItems='pagedItemsMembers')}"></div>
         </div>
     </div>
 </th:block>

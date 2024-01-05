@@ -1,4 +1,4 @@
-<div th:fragment="copy" th:remove="tag">
+<div th:fragment="copy" th:remove="tag" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 
 <script type="text/javascript" th:src="@{/webjars/angularjs/angular.min.js}"></script>
 <script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
@@ -14,14 +14,16 @@
 <script type="text/javascript" th:src="@{/javascript/mainApp/app.constants.js}"></script>
 <script type="text/javascript" th:src="@{/javascript/mainApp/home.controller.js}"></script>
 <script type="text/javascript" th:src="@{/javascript/mainApp/admin.controller.js}"></script>
+<script type="text/javascript" th:src="@{/javascript/mainApp/announcements.controller.js}"></script>
 <script type="text/javascript" th:src="@{/javascript/mainApp/general.controller.js}"></script>
 <script type="text/javascript" th:src="@{/javascript/mainApp/membership.controller.js}"></script>
 <script type="text/javascript" th:src="@{/javascript/mainApp/timeout.controller.js}"></script>
 <script type="text/javascript" th:src="@{/javascript/mainApp/grouping.controller.js}"></script>
 <script type="text/javascript" th:src="@{/javascript/mainApp/groupings.controller.js}"></script>
 <script type="text/javascript" th:src="@{/javascript/mainApp/table.controller.js}"></script>
+<script type="text/javascript" th:src="@{/javascript/mainApp/feedback.controller.js}"></script>
 
-<footer class="footer black-bg pt-5 pb-5" id="footer-top">
+<footer class="footer black-bg pt-5 pb-5">
     <div class="container">
         <div class="row">
             <div class="col-md-4 col-sm-5 text-center ">

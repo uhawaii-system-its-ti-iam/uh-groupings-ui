@@ -123,30 +123,30 @@
                 <div class="card-body p-0 border-bottom border-left border-right rounded-bottom">
                     <div class="row mx-auto">
                         <div class="col-lg-1 col-md-2 col-12 teal-tint-bg pt-3 pb-3" id="pills-column">
-                            <div th:replace="fragments/side-nav :: side-nav"></div>
+                            <div th:replace="~{fragments/side-nav :: side-nav}"></div>
                         </div>
                         <div class="tab-content col-lg-11 col-md-10 col-12" id="pill-content">
-                            <div th:replace="fragments/members :: members"></div>
+                            <div th:replace="~{fragments/members :: members}"></div>
                             <div id="basis" class="tab-pane fade">
-                                <div th:replace="fragments/basis :: basis"></div>
+                                <div th:replace="~{fragments/basis :: basis}"></div>
                             </div>
                             <div id="include" class="tab-pane fade">
-                                <div th:replace="fragments/include :: include"></div>
+                                <div th:replace="~{fragments/include :: include}"></div>
                             </div>
                             <div id="exclude" class="tab-pane fade">
-                                <div th:replace="fragments/exclude :: exclude"></div>
+                                <div th:replace="~{fragments/exclude :: exclude}"></div>
                             </div>
                             <div id="owners" class="tab-pane fade">
-                                <div th:replace="fragments/owners :: owners"></div>
+                                <div th:replace="~{fragments/owners :: owners}"></div>
                             </div>
                             <div id="sync-destinations" class="tab-pane fade">
-                                <div th:replace="fragments/sync-destinations :: sync-destinations"></div>
+                                <div th:replace="~{fragments/sync-destinations :: sync-destinations}"></div>
                             </div>
                             <div id="preferences" class="tab-pane fade">
-                                <div th:replace="fragments/preferences :: preferences"></div>
+                                <div th:replace="~{fragments/preferences :: preferences}"></div>
                             </div>
                             <div id="actions" class="tab-pane fade">
-                                <div th:replace="fragments/actions :: actions"></div>
+                                <div th:replace="~{fragments/actions :: actions}"></div>
                             </div>
                         </div>
                     </div>

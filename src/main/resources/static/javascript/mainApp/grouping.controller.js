@@ -950,7 +950,7 @@
             if (/[0-9]{8}/.test(memberIdentifier)) {
                 memberToReturn = _.find(currentPage, (member) => member.uhUuid === memberIdentifier);
             } else {
-                memberToReturn = _.find(currentPage, (member) => member.uid === memberIdentifier);
+                memberToReturn = _.find(currentPage, (member) => (member.username === memberIdentifier || member.uid === memberIdentifier));
             }
             return memberToReturn;
         };
@@ -1261,8 +1261,8 @@
             let groupingPath = $scope.selectedGrouping.path;
             let resetInclude = $scope.includeCheck;
             let resetExclude = $scope.excludeCheck;
-            var resetIncludeResult = [];
-            var resetExcludeResult = [];
+            let resetIncludeResult = [];
+            let resetExcludeResult = [];
 
             let resetGroup = (resetFunction, groupingPath, resetResult) => {
                 return new Promise((resolve) => {
@@ -1277,10 +1277,18 @@
             };
 
             if (resetInclude) {
-                await resetGroup(groupingsService.resetIncludeGroupAsync, groupingPath, resetIncludeResult);
+                if ($scope.groupingInclude.length <= Threshold.RESET_GROUP) {
+                    await resetGroup(groupingsService.resetIncludeGroup, groupingPath, resetIncludeResult);
+                } else {
+                    await resetGroup(groupingsService.resetIncludeGroupAsync, groupingPath, resetIncludeResult);
+                }
             }
             if (resetExclude) {
-                await resetGroup(groupingsService.resetExcludeGroupAsync, groupingPath, resetExcludeResult);
+                if ($scope.groupingExclude.length <= Threshold.RESET_GROUP) {
+                    await resetGroup(groupingsService.resetExcludeGroup, groupingPath, resetExcludeResult);
+                } else {
+                    await resetGroup(groupingsService.resetExcludeGroupAsync, groupingPath, resetExcludeResult);
+                }
             }
             $scope.loading = false;
             $scope.handleGroupingReset(groupingPath, resetIncludeResult.pop(), resetExcludeResult.pop());
@@ -1757,7 +1765,6 @@
             if (!item.allItems <= 20) {
                 check.toolTip = ((data.true || 0) > 20);
             }
-
             return check;
         };
 

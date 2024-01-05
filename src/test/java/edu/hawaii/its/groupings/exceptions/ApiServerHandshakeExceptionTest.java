@@ -1,11 +1,11 @@
 package edu.hawaii.its.groupings.exceptions;
 
-import org.junit.jupiter.api.Test;
-
-import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import org.junit.jupiter.api.Test;
 
 public class ApiServerHandshakeExceptionTest {
 
@@ -18,8 +18,7 @@ public class ApiServerHandshakeExceptionTest {
         ex = new ApiServerHandshakeException("stop", new Throwable("me"));
         assertNotNull(ex);
         assertThat(ex.getCause(), instanceOf(Throwable.class));
-        String expected = "stop; nested exception is java.lang.Throwable: me";
-        assertThat(ex.getMessage(), is(expected));
-        assertThat(ex.getLocalizedMessage(), is(expected));
+        assertThat(ex.getMessage(), is("stop"));
+        assertThat(ex.getLocalizedMessage(), is("stop"));
     }
 }

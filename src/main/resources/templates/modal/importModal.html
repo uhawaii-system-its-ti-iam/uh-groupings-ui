@@ -13,15 +13,11 @@
                 Import
             </button>
         </div>
-        <div class="row container">
-            <div type="button" role="link" aria-expanded="false" class="collapsed link" data-toggle="collapse" data-target=".instructions">
-                Instructions
-                <i class="fa fa-chevron-up font-weight-bold"></i>
-            </div>
+        <div class="row container mt-2">
+            <h3>Instructions</h3>
         </div>
-
-        <div class="row mb-3 container collapse instructions">
-            <p th:utext=#{screen.message.import.modal.instruction}></p>
+        <div class="row mb-3 container instructions">
+            <p th:utext="#{screen.message.import.modal.instruction}"></p>
             <div class="col-md-4 pl-0">
                 <div type="button" role="link" aria-expanded="false" class="card-header collapsed" data-toggle="collapse" data-target=".text-file-example" th:utext="#{screen.message.import.modal.importTextFileGuide}">
                 </div><br>
@@ -45,14 +41,16 @@
                 <div type="button" role="link" aria-expanded="false" data-toggle="collapse" data-target=".csv-file-example" class="card-header collapsed" th:utext="#{screen.message.import.modal.importCSVFileGuide}">
                 </div><br>
                 <div class="card-body list-styling text-nowrap csv-file-example collapse" role="list">
-                    <li>Last,First,Username,UH Number,Email</li>
-                    <li>TestIAM-staff,Testf-iwt-a,testiwta,99997010,testiwta@hawaii.edu</li>
-                    <li>TestIAM-staff,Testf-iwt-b,testiwtb,99997027,testiwtb@hawaii.edu</li>
-                    <li>TestIAM-staff,Testf-iwt-c,testiwtc,99997033,testiwtc@hawaii.edu</li>
+                    <ul class="list-styling">
+                        <li>Last,First,Username,UH Number,Email</li>
+                        <li>TestIAM-staff,Testf-iwt-a,testiwta,99997010,testiwta@hawaii.edu</li>
+                        <li>TestIAM-staff,Testf-iwt-b,testiwtb,99997027,testiwtb@hawaii.edu</li>
+                        <li>TestIAM-staff,Testf-iwt-c,testiwtc,99997033,testiwtc@hawaii.edu</li>
+                    </ul>
                 </div>
             </div>
         </div>
-        </div>
+    </div>
 </div>
 <div class="modal-footer">
 </div>

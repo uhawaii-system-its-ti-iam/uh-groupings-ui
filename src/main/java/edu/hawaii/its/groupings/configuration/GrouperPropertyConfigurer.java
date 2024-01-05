@@ -1,11 +1,12 @@
 package edu.hawaii.its.groupings.configuration;
 
-import edu.internet2.middleware.grouperClient.util.GrouperClientConfig;
+import jakarta.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 
-import javax.annotation.PostConstruct;
+import edu.internet2.middleware.grouperClient.util.GrouperClientConfig;
 
 @Configuration
 public class GrouperPropertyConfigurer {

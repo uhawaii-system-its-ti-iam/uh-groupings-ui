@@ -20,6 +20,14 @@
             },
 
             /**
+             * Get a list of active announcements to display on the home page.
+             */
+            getActiveAnnouncements(onSuccess, onError) {
+                let endpoint = "announcements/active";
+                dataProvider.loadData(endpoint, onSuccess, onError);
+            },
+
+            /**
              * @param {String[]} groupPaths - The paths to the grouping.
              * @param {Number} page - The number to fetch.
              * @param {Number} size - The size data chunk to be fetched.
@@ -263,7 +271,7 @@
              * Get a list of memberships that the current user is associated with.
              */
             getMembershipResults(onSuccess, onError) {
-                let endpoint = BASE_URL + "members/memberships/";
+                let endpoint = BASE_URL + "members/memberships";
                 dataProvider.loadData(endpoint, onSuccess, onError);
             },
 
@@ -271,7 +279,7 @@
              * Get a list of all groupings that a user is associated with.
              */
             managePersonResults(uhIdentifier, onSuccess, onError) {
-                let endpoint = BASE_URL + "members/" + uhIdentifier + "/groupings/";
+                let endpoint = BASE_URL + "members/" + uhIdentifier + "/groupings";
                 dataProvider.loadData(endpoint, onSuccess, onError);
             },
 
@@ -288,7 +296,7 @@
              * Get a list of memberships that username is associated with.
              */
             getMembershipAssignmentForUser(onSuccess, onError, username) {
-                let endpoint = BASE_URL + "members/" + username + "/groupings/";
+                let endpoint = BASE_URL + "members/" + username + "/groupings";
                 dataProvider.loadData(endpoint, onSuccess, onError);
             },
 
@@ -296,10 +304,9 @@
              * Get a list of grouping paths that the current user can opt into.
              */
             getOptInGroups(onSuccess, onError) {
-                let endpoint = BASE_URL + "groupings/optInGroups/";
+                let endpoint = BASE_URL + "groupings/optInGroups";
                 dataProvider.loadData(endpoint, onSuccess, onError);
             },
-
 
             /**
              * Toggle the preference option to allow users to opt into a grouping.
