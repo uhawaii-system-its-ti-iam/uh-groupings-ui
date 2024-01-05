@@ -884,7 +884,7 @@ describe("GroupingController", () => {
             const uhIdentifiers = ["iamtst01", "iamtst02"];
 
             beforeEach(() => {
-                httpBackend.whenGET(BASE_URL + "currentUser").passThrough();
+                httpBackend.whenGET("currentUser").passThrough();
                 httpBackend.whenGET("modal/addModal").passThrough();
                 httpBackend.whenGET("modal/importConfirmationModal").passThrough();
                 httpBackend.whenGET("modal/importErrorModal").passThrough();
@@ -1075,7 +1075,7 @@ describe("GroupingController", () => {
             beforeEach(() => {
                 spyOn(gs, "getMembersAttributes").and.callThrough();
 
-                httpBackend.whenGET(BASE_URL + "currentUser").passThrough();
+                httpBackend.whenGET("currentUser").passThrough();
                 httpBackend.whenGET("modal/addModal").passThrough();
             });
 

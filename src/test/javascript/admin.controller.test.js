@@ -385,7 +385,7 @@ describe("AdminController", function () {
 
     describe("addAdmin", () => {
         beforeEach(() => {
-            httpBackend.whenGET(BASE_URL + "currentUser").passThrough();
+            httpBackend.whenGET("currentUser").passThrough();
         });
 
         it("should check if the admin to add is empty", () => {

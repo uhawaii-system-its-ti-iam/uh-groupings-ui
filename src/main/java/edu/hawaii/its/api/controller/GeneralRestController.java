@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import edu.hawaii.its.api.service.HttpRequestService;
+import edu.hawaii.its.groupings.access.User;
+import edu.hawaii.its.groupings.access.UserContextService;
 
 @RestController
 public class GeneralRestController {
@@ -21,6 +23,9 @@ public class GeneralRestController {
     @Autowired
     private HttpRequestService httpRequestService;
 
+    @Autowired
+    private UserContextService userContextService;
+
     /**
      * Get the list of active announcements to display.
      */
@@ -29,5 +34,14 @@ public class GeneralRestController {
         logger.info("Entered REST activeAnnouncements...");
         String uri = String.format(API_2_1_BASE + "/announcements/active");
         return httpRequestService.makeApiRequest(uri, HttpMethod.GET);
+    }
+
+    /**
+     * Get the current user.
+     */
+    @GetMapping(value = "/currentUser")
+    public ResponseEntity<User> currentUser() {
+        User currentUser = userContextService.getCurrentUser();
+        return ResponseEntity.ok().body(currentUser);
     }
 }

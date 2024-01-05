@@ -111,7 +111,7 @@ public class GroupingsRestControllerTest {
     @Test
     @WithMockUhUser
     public void currentUsernameTest() throws Exception {
-        String uri = REST_CONTROLLER_BASE + "/currentUser";
+        String uri = "/currentUser";
         assertNotNull(mockMvc.perform(get(uri).with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(content().json("{'username':" + USERNAME + "}"))
