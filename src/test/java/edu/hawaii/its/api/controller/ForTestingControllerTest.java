@@ -31,7 +31,7 @@ import edu.hawaii.its.groupings.controller.WithMockUhUser;
 
 @ActiveProfiles("localTest")
 @SpringBootTest(classes = { SpringBootWebApplication.class })
-public class GroupingsRestControllerForTestingTest {
+public class ForTestingControllerTest {
 
     private static final String USERNAME = "user";
 
