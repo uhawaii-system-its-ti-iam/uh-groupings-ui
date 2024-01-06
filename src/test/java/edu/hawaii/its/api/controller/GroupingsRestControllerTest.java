@@ -296,46 +296,6 @@ public class GroupingsRestControllerTest {
 
     @Test
     @WithMockUhUser
-    public void invalidUhIdentifiersTest() throws Exception {
-        String uri = REST_CONTROLLER_BASE + "members/invalid";
-        List<String> members = new ArrayList<>();
-        members.add(UID);
-
-        given(httpRequestService.makeApiRequestWithBody(eq(UID), anyString(), anyList(), eq(HttpMethod.POST)))
-                .willReturn(new ResponseEntity(HttpStatus.OK));
-
-        assertNotNull(mockMvc.perform(post(uri).with(csrf())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(JsonUtil.asJson(members)))
-                .andExpect(status().isOk())
-                .andReturn());
-
-        verify(httpRequestService, times(1))
-                .makeApiRequestWithBody(eq(UID), anyString(), anyList(), eq(HttpMethod.POST));
-    }
-
-    @Test
-    @WithMockUhUser
-    public void invalidUhIdentifiersAsyncTest() throws Exception {
-        String uri = REST_CONTROLLER_BASE + "members/invalidAsync";
-        List<String> members = new ArrayList<>();
-        members.add(UID);
-
-        given(httpRequestService.makeApiRequestWithBody(eq(UID), anyString(), anyList(), eq(HttpMethod.POST)))
-                .willReturn(new ResponseEntity(HttpStatus.ACCEPTED));
-
-        assertNotNull(mockMvc.perform(post(uri).with(csrf())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(JsonUtil.asJson(members)))
-                .andExpect(status().isAccepted())
-                .andReturn());
-
-        verify(httpRequestService, times(1))
-                .makeApiRequestWithBody(eq(UID), anyString(), anyList(), eq(HttpMethod.POST));
-    }
-
-    @Test
-    @WithMockUhUser
     public void memberAttributesTest() throws Exception {
         String uri = REST_CONTROLLER_BASE + "members/0000";
 
@@ -352,7 +312,7 @@ public class GroupingsRestControllerTest {
 
     @Test
     @WithMockUhUser
-    public void membersAttributesTest() throws Exception {
+    public void memberAttributeResultsTest() throws Exception {
         String uri = REST_CONTROLLER_BASE + "members";
         List<String> members = new ArrayList<>();
         members.add(UID);
@@ -364,6 +324,26 @@ public class GroupingsRestControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JsonUtil.asJson(members)))
                 .andExpect(status().isOk())
+                .andReturn());
+
+        verify(httpRequestService, times(1))
+                .makeApiRequestWithBody(eq(UID), anyString(), anyList(), eq(HttpMethod.POST));
+    }
+
+    @Test
+    @WithMockUhUser
+    public void memberAttributeResultsAsyncTest() throws Exception {
+        String uri = REST_CONTROLLER_BASE + "members/membersAsync";
+        List<String> members = new ArrayList<>();
+        members.add(UID);
+
+        given(httpRequestService.makeApiRequestWithBody(eq(UID), anyString(), anyList(), eq(HttpMethod.POST)))
+                .willReturn(new ResponseEntity(HttpStatus.ACCEPTED));
+
+        assertNotNull(mockMvc.perform(post(uri).with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(JsonUtil.asJson(members)))
+                .andExpect(status().isAccepted())
                 .andReturn());
 
         verify(httpRequestService, times(1))

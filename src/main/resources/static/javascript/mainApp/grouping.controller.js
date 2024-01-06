@@ -701,46 +701,52 @@
                 return;
             }
 
-            // Call async invalidUhIdentifiers check if batch import
+            // Call async memberAttributeResults check if batch import
+            const getMemberAttributeResults = $scope.isBatchImport
+                ? groupingsService.getMemberAttributeResultsAsync
+                : groupingsService.getMemberAttributeResults;
+
             $scope.isBatchImport = uhIdentifiers.length > Threshold.MULTI_ADD;
-            const checkInvalidUhIdentifiers = $scope.isBatchImport
-                ? groupingsService.invalidUhIdentifiersAsync
-                : groupingsService.invalidUhIdentifiers;
+
+            // Filter out members already in the group
+            uhIdentifiers = uhIdentifiers.filter((member) => !$scope.membersInList.includes(member));
+
+            if (_.isEmpty(uhIdentifiers)) {
+                $scope.containsInput = true;
+                return;
+            }
 
             $scope.waitingForImportResponse = true; // Small spinner on
-            checkInvalidUhIdentifiers(uhIdentifiers, (res) => { // Check for invalid uhIdentifiers
-                $scope.waitingForImportResponse = false; // Small spinner off
-                $scope.isBatchImport = uhIdentifiers.length > Threshold.MULTI_ADD;
-                // Check if res returned any invalid uhIdentifiers
-                if (!_.isEmpty(res)) {
-                    // Display invalid uhIdentifiers in add-error-messages.html or importError modal
-                    $scope.invalidMembers = res;
+
+            // Get attributes for each member
+            getMemberAttributeResults(uhIdentifiers, (res) => {
+                $scope.waitingForImportResponse = false;
+                if (!_.isEmpty(res.invalid)) {
+                    $scope.invalidMembers = res.invalid;
                     $scope.addInputError = true;
                     if ($scope.isBatchImport) {
                         $scope.displayImportErrorModal();
                         $scope.addInputError = false;
                     }
+                    $scope.waitingForImportResponse = false; // Small spinner off
                     return;
                 }
-
-                // Filter out members already in the group
-                uhIdentifiers = uhIdentifiers.filter((member) => !$scope.membersInList.includes(member));
-
                 // Display the appropriate modal
                 if ($scope.isBatchImport) {
                     $scope.displayImportConfirmationModal(listName, uhIdentifiers);
                 } else {
                     $scope.displayAddModal({
-                        membersToAdd: uhIdentifiers,
+                        membersAttributes: res,
+                        uhIdentifiers,
                         listName
                     });
                 }
-            }, (res) => {
-                // Display API error modal
-                $scope.waitingForImportResponse = false;
-                $scope.resStatus = res.status;
-                $scope.displayApiErrorModal();
-            });
+                }, (res) => {
+                    // Display API error modal
+                    $scope.waitingForImportResponse = false;
+                    $scope.resStatus = res.status;
+                    $scope.displayApiErrorModal();
+                });
         };
 
         /**
@@ -810,55 +816,39 @@
          * @param {string} options.listName - the grouping list the member(s) is/are being added to
          */
         $scope.displayAddModal = (options) => {
-            const membersToAdd = [].concat(options.membersToAdd); // Allows either string or array to be passed in
+            const uhIdentifiers = [].concat(options.uhIdentifiers); // Allows either string or array to be passed in
+
             $scope.listName = options.listName;
-            $scope.isMultiAdd = membersToAdd.length > 1;
+            $scope.isMultiAdd = uhIdentifiers.length > 1;
 
-            // Prevent displaying add/multiAdd modal with 0 members
-            if (_.isEmpty(membersToAdd)) {
-                $scope.containsInput = true;
-                return;
-            }
+            // Sets information to be displayed in add/multiAdd modal
+            $scope.multiAddResults = options.membersAttributes.results;
+            $scope.addInGroups($scope.multiAddResults);
+            $scope.initMemberDisplayName($scope.multiAddResults[0]);
 
-            $scope.waitingForImportResponse = true; // Small spinner on
-            groupingsService.getMembersAttributes(membersToAdd, (res) => { // Get attributes for each member
-                $scope.waitingForImportResponse = false; // Small spinner off
+            // Open add or multiAdd modal
+            const templateUrl = $scope.isMultiAdd ? "modal/multiAddModal" : "modal/addModal";
+            $scope.addModalInstance = $uibModal.open({
+                templateUrl,
+                scope: $scope,
+                backdrop: "static",
+                ariaLabelledBy: "add-modal"
+            });
 
-                // Sets information to be displayed in add/multiAdd modal
-                $scope.multiAddResults = res;
-                $scope.addInGroups($scope.multiAddResults);
-                $scope.initMemberDisplayName($scope.multiAddResults[0]);
-
-                // Open add or multiAdd modal
-                const templateUrl = $scope.isMultiAdd ? "modal/multiAddModal" : "modal/addModal";
-                $scope.addModalInstance = $uibModal.open({
-                    templateUrl,
-                    scope: $scope,
-                    backdrop: "static",
-                    ariaLabelledBy: "add-modal"
-                });
-
-                // On pressing "Yes/Add" in the modal, make API call to add members to the group
-                $scope.addModalInstance.result.then(async () => {
-                    $scope.waitingForImportResponse = true; // Small spinner on
-                    const groupingPath = $scope.selectedGrouping.path;
-                    if ($scope.listName === "Include") {
-                        await groupingsService.addIncludeMembers(membersToAdd, groupingPath, handleSuccessfulAdd, handleUnsuccessfulRequest, displaySlowImportModal);
-                    } else if ($scope.listName === "Exclude") {
-                        await groupingsService.addExcludeMembers(membersToAdd, groupingPath, handleSuccessfulAdd, handleUnsuccessfulRequest, displaySlowImportModal);
-                    } else if ($scope.listName === "owners") {
-                        await groupingsService.addOwnerships(groupingPath, membersToAdd, handleSuccessfulAdd, handleUnsuccessfulRequest);
-                    } else if ($scope.listName === "admins") {
-                        await groupingsService.addAdmin(membersToAdd, handleSuccessfulAdd, handleUnsuccessfulRequest);
-                    }
-                }, () => { /* onRejected: handles modal promise rejection */
-                });
-
-            }, (res) => {
-                // Display API error modal
-                $scope.waitingForImportResponse = false;
-                $scope.resStatus = res.status;
-                $scope.displayApiErrorModal();
+            // On pressing "Yes/Add" in the modal, make API call to add members to the group
+            $scope.addModalInstance.result.then(async () => {
+                $scope.waitingForImportResponse = true; // Small spinner on
+                const groupingPath = $scope.selectedGrouping.path;
+                if ($scope.listName === "Include") {
+                    await groupingsService.addIncludeMembers(uhIdentifiers, groupingPath, handleSuccessfulAdd, handleUnsuccessfulRequest, displaySlowImportModal);
+                } else if ($scope.listName === "Exclude") {
+                    await groupingsService.addExcludeMembers(uhIdentifiers, groupingPath, handleSuccessfulAdd, handleUnsuccessfulRequest, displaySlowImportModal);
+                } else if ($scope.listName === "owners") {
+                    await groupingsService.addOwnerships(groupingPath, uhIdentifiers, handleSuccessfulAdd, handleUnsuccessfulRequest);
+                } else if ($scope.listName === "admins") {
+                    await groupingsService.addAdmin(uhIdentifiers, handleSuccessfulAdd, handleUnsuccessfulRequest);
+                }
+            }, () => { /* onRejected: handles modal promise rejection */
             });
         };
 

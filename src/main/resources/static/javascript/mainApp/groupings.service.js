@@ -226,24 +226,6 @@
             },
 
             /**
-             * Get a list of invalid given a list of uhIdentifiers.
-             */
-            invalidUhIdentifiers(uhIdentifiers, onSuccess, onError) {
-                let endpoint = BASE_URL + "members/invalid";
-                dataProvider.loadDataWithBody(endpoint, uhIdentifiers, onSuccess, onError);
-            },
-
-            /**
-             * Get a list of invalid given a list of uhIdentifiers asynchronously. The initial poll gets as close to the
-             * average time of the non-async version of this endpoint based on the number of uhIdentifiers.
-             */
-            invalidUhIdentifiersAsync(uhIdentifiers, onSuccess, onError) {
-                let endpoint = BASE_URL + "members/invalidAsync";
-                let initialPoll = Math.pow(uhIdentifiers.length, 1.2);
-                dataProvider.loadDataWithBodyAsync(endpoint, uhIdentifiers, initialPoll, onSuccess, onError);
-            },
-
-            /**
              * Get the attributes of a user, which includes their uid, uhUuid, givenName, cn, and sn.
              */
             getMemberAttributes(member, onSuccess, onError) {
@@ -253,10 +235,22 @@
 
             /**
              * Get the attributes of a user, which includes their uid, uhUuid, givenName, cn, and sn.
+             * Get a list of invalid given a list of uhIdentifiers.
              */
-            getMembersAttributes(members, onSuccess, onError) {
+            getMemberAttributeResults(members, onSuccess, onError) {
                 let endpoint = BASE_URL + "members";
                 dataProvider.loadDataWithBody(endpoint, members, onSuccess, onError);
+            },
+
+            /**
+             * Get the attributes of a user, which includes their uid, uhUuid, givenName, cn, and sn asynchronously.
+             * Get a list of invalid given a list of uhIdentifiers asynchronously. The initial poll gets as close to the
+             * average time of the non-async version of this endpoint based on the number of uhIdentifiers.
+             */
+            getMemberAttributeResultsAsync(members, onSuccess, onError) {
+                let endpoint = BASE_URL + "members/membersAsync";
+                let initialPoll = Math.pow(members.length, 1.2);
+                dataProvider.loadDataWithBodyAsync(endpoint, members, initialPoll, onSuccess, onError);
             },
 
             /**

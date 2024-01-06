@@ -98,7 +98,7 @@
                     $scope.searchForUserGroupingInformationOnSuccessCallback,
                     $scope.searchForUserGroupingInformationOnErrorCallback
                 );
-                groupingsService.getMemberAttributes(validUser, (person) => {
+                groupingsService.getMemberAttributeResults(validUser, (person) => {
                     $scope.initMemberDisplayName(person);
                     $scope.setCurrentManagePerson(person);
                 });
@@ -189,7 +189,7 @@
             $scope.createGroupPathsAndNames($scope.pagedItemsPerson[$scope.currentPagePerson], $scope.selectedGroupingsNames, $scope.selectedGroupingsPaths, $scope.selectedOwnedGroupingsNames, $scope.selectedOwnedGroupings);
 
             if ($scope.personToLookup != null) {
-                groupingsService.getMemberAttributes($scope.personToLookup, $scope.checkSoleOwner);
+                groupingsService.getMemberAttributeResults($scope.personToLookup, $scope.checkSoleOwner);
             }
         };
 
@@ -257,14 +257,10 @@
                 return;
             }
 
-            groupingsService.invalidUhIdentifiers([sanitizedAdmin], (res) => {
-                if (!_.isEmpty(res)) {
-                    $scope.invalidInput = true;
-                    return;
-                }
-
+            groupingsService.getMemberAttributeResults([sanitizedAdmin], (res) => {
                 $scope.displayAddModal({
-                    membersToAdd: sanitizedAdmin,
+                    membersAttributes: res,
+                    uhIdentifiers: sanitizedAdmin,
                     listName: "admins"
                 });
             });
@@ -316,7 +312,7 @@
 
             const windowClass = $scope.showWarningRemovingSelf() ? "modal-danger" : "";
 
-            groupingsService.getMemberAttributes(sanitizedUser, (person) => {
+            groupingsService.getMemberAttributeResults(sanitizedUser, (person) => {
                 if (person === "") {
                     return;
                 } else {
