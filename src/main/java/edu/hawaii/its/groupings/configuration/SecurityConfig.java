@@ -184,6 +184,7 @@ public class SecurityConfig {
                 .requestMatchers(antMatcher("/")).permitAll()
                 .requestMatchers(antMatcher("/announcements/**")).permitAll()
                 .requestMatchers(antMatcher("/api/**")).hasRole("UH")
+                .requestMatchers(antMatcher("/currentUser")).permitAll()
                 .requestMatchers(antMatcher("/css/**")).permitAll()
                 .requestMatchers(antMatcher("/fonts/**")).permitAll()
                 .requestMatchers(antMatcher("/images/**")).permitAll()

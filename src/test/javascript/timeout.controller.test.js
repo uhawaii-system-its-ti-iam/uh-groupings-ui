@@ -50,7 +50,7 @@ describe("TimeoutController", function () {
             spyOn(scope,"logoutOnIdle");
 
             let mockResponse  = {data: "mock"};
-            httpBackend.expectGET('api/groupings/currentUser').respond(200, mockResponse);
+            httpBackend.expectGET('currentUser').respond(200, mockResponse);
 
             scope.displayTimeoutModal();
 

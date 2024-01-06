@@ -8,7 +8,7 @@
      * NOTE: All API requests defined here require at least two parameters, namely onSuccess and onError, which are
      * controller handlers(callback functions) for manipulating data on a successful or unsuccessful request.
      */
-    UHGroupingsApp.factory("groupingsService", function (dataProvider, BASE_URL) {
+    UHGroupingsApp.service("groupingsService", function (dataProvider, BASE_URL) {
         return {
 
             /**
@@ -99,7 +99,7 @@
              * Get a User object containing information of the current user
              */
             getCurrentUser(onSuccess) {
-                let endpoint = BASE_URL + "currentUser";
+                let endpoint = "currentUser";
                 dataProvider.retrieveData(endpoint, onSuccess);
             },
 

@@ -50,17 +50,17 @@ describe("GeneralController", () => {
         const mockUser = { username: "iamtst01", uhUuid: "iamtst01" };
         const mockResponse = 999;
         beforeEach(() => {
-            httpBackend.whenGET(BASE_URL + "currentUser")
+            httpBackend.whenGET("currentUser")
                 .respond(200, mockUser);
         });
 
         it("should make an API call to getCurrentUser", () => {
-            httpBackend.expectGET(BASE_URL + "currentUser").respond(200, mockUser);
+            httpBackend.expectGET("currentUser").respond(200, mockUser);
             expect(httpBackend.flush).not.toThrow();
         });
 
         it("should initialize currentUser", () => {
-            httpBackend.expectGET(BASE_URL + "currentUser").respond(200, mockUser);
+            httpBackend.expectGET("currentUser").respond(200, mockUser);
             httpBackend.flush();
 
             expect(scope.currentUser).toEqual({ uid: "iamtst01", uhUuid: "iamtst01" });

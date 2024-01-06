@@ -30,7 +30,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import edu.hawaii.its.api.service.HttpRequestService;
-import edu.hawaii.its.groupings.access.User;
 import edu.hawaii.its.groupings.access.UserContextService;
 import edu.hawaii.its.groupings.configuration.Realm;
 import edu.hawaii.its.groupings.exceptions.ApiServerHandshakeException;
@@ -57,6 +56,9 @@ public class GroupingsRestController {
     @Value("${app.api.handshake.enabled:true}")
     private Boolean API_HANDSHAKE_ENABLED = true;
 
+    @Autowired
+    private UserContextService userContextService;
+
     /*
      * Checks to make sure that the API is running and that there are no issues with the overrides file.
      * Gets the active profiles and only runs the tests the active profile relies on the API.
@@ -69,9 +71,6 @@ public class GroupingsRestController {
 
     @Autowired
     private Realm realm;
-
-    @Autowired
-    private UserContextService userContextService;
 
     // Constructor.
     public GroupingsRestController() {
@@ -99,12 +98,6 @@ public class GroupingsRestController {
     @GetMapping(value = "/")
     public ResponseEntity<String> hello() {
         return ResponseEntity.ok("University of Hawaii UHGroupings");
-    }
-
-    @GetMapping(value = "/currentUser")
-    public ResponseEntity<User> currentUser() {
-        User currentUser = userContextService.getCurrentUser();
-        return ResponseEntity.ok().body(currentUser);
     }
 
     @GetMapping(value = "/adminsGroupings")
