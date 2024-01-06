@@ -127,5 +127,5 @@ public class HomeController {
     public String openModalPath(@PathVariable String modalName) {
         return "modal/" + modalName;
     }
-
+    
 }
