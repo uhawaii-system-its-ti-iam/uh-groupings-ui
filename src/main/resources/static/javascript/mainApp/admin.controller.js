@@ -257,8 +257,8 @@
                 return;
             }
 
-            groupingsService.invalidUhIdentifiers([sanitizedAdmin], (res) => {
-                if (!_.isEmpty(res)) {
+            groupingsService.invalidUhIdentifiersResults([sanitizedAdmin], (res) => {
+                if (!_.isEmpty(res.results)) {
                     $scope.invalidInput = true;
                     return;
                 }

@@ -296,7 +296,7 @@ public class GroupingsRestControllerTest {
 
     @Test
     @WithMockUhUser
-    public void invalidUhIdentifiersTest() throws Exception {
+    public void invalidUhIdentifiersResultsTest() throws Exception {
         String uri = REST_CONTROLLER_BASE + "members/invalid";
         List<String> members = new ArrayList<>();
         members.add(USERNAME);
@@ -352,7 +352,7 @@ public class GroupingsRestControllerTest {
 
     @Test
     @WithMockUhUser
-    public void membersAttributesTest() throws Exception {
+    public void memberAttributeResultsTest() throws Exception {
         String uri = REST_CONTROLLER_BASE + "members";
         List<String> members = new ArrayList<>();
         members.add(USERNAME);

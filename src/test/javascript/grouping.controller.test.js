@@ -797,17 +797,17 @@ describe("GroupingController", () => {
     describe("addMembers", () => {
         it("should use $scope.manageMembers when membersToAdd parameter is null", () => {
             scope.manageMembers = "iamtst01";
-            spyOn(gs, "invalidUhIdentifiers").and.callThrough();
+            spyOn(gs, "invalidUhIdentifiersResults").and.callThrough();
             scope.addMembers("Include");
-            expect(gs.invalidUhIdentifiers).toHaveBeenCalledWith([scope.manageMembers],
+            expect(gs.invalidUhIdentifiersResults).toHaveBeenCalledWith([scope.manageMembers],
                 jasmine.any(Function), jasmine.any(Function));
         });
 
         it("should ignore $scope.manageMembers when a membersToAdd parameter is passed in", () => {
             scope.manageMembers = "iamtst01";
-            spyOn(gs, "invalidUhIdentifiers").and.callThrough();
+            spyOn(gs, "invalidUhIdentifiersResults").and.callThrough();
             scope.addMembers("Include", ["iamtst02"]);
-            expect(gs.invalidUhIdentifiers).toHaveBeenCalledWith(["iamtst02"],
+            expect(gs.invalidUhIdentifiersResults).toHaveBeenCalledWith(["iamtst02"],
                 jasmine.any(Function), jasmine.any(Function));
         });
 
@@ -870,18 +870,18 @@ describe("GroupingController", () => {
             expect(scope.errorDismissed).toBeFalse();
         });
 
-        it("should call gs.invalidUhIdentifiers and set $scope.waitingForImportResponse to true", () => {
+        it("should call gs.invalidUhIdentifiersResults and set $scope.waitingForImportResponse to true", () => {
             scope.waitingForImportResponse = false;
-            spyOn(gs, "invalidUhIdentifiers").and.callThrough();
+            spyOn(gs, "invalidUhIdentifiersResults").and.callThrough();
             scope.addMembers("Include", ["iamtst01"]);
 
             expect(scope.waitingForImportResponse).toBeTrue();
-            expect(gs.invalidUhIdentifiers).toHaveBeenCalled();
+            expect(gs.invalidUhIdentifiersResults).toHaveBeenCalled();
         });
 
-        describe("gs.invalidUhIdentifiers callbacks", () => {
-            const uhIdentifier = ["iamtst01"];
-            const uhIdentifiers = ["iamtst01", "iamtst02"];
+        describe("gs.invalidUhIdentifiersResults callbacks", () => {
+            const uhIdentifiers = ["testiwta", "testiwtb"];
+            const results = { resultCode: "SUCCESS", results: uhIdentifiers };
 
             beforeEach(() => {
                 httpBackend.whenGET("currentUser").passThrough();
@@ -894,9 +894,9 @@ describe("GroupingController", () => {
             describe("onSuccess", () => {
                 it("should set $scope.waitingForImportResponse to false", () => {
                     scope.waitingForImportResponse = true;
-                    scope.addMembers("Include", uhIdentifier);
+                    scope.addMembers("Include", uhIdentifiers);
 
-                    httpBackend.expectPOST(BASE_URL + "members/invalid", uhIdentifier).respond(200, uhIdentifier);
+                    httpBackend.expectPOST(BASE_URL + "members/invalid", uhIdentifiers).respond(200, results);
                     httpBackend.flush();
 
                     expect(scope.waitingForImportResponse).toBeFalse();
@@ -904,8 +904,8 @@ describe("GroupingController", () => {
 
                 it("should set $scope.isBatchImport", () => {
                     scope.isBatchImport = true;
-                    scope.addMembers("Include", uhIdentifier);
-                    httpBackend.expectPOST(BASE_URL + "members/invalid", uhIdentifier).respond(200, uhIdentifier);
+                    scope.addMembers("Include", uhIdentifiers);
+                    httpBackend.expectPOST(BASE_URL + "members/invalid", uhIdentifiers).respond(200, results);
                     httpBackend.flush();
                     expect(scope.isBatchImport).toBeFalse();
 
@@ -951,13 +951,13 @@ describe("GroupingController", () => {
                     httpBackend.flush();
 
                     expect(scope.displayAddModal).toHaveBeenCalledWith({
-                        membersToAdd: uhIdentifier,
+                        membersToAdd: results.results,
                         listName: "Include"
                     });
                 });
 
                 it("should call $scope.displayImportConfirmationModal when adding more than multi-add threshold", () => {
-                    spyOn(gs, "invalidUhIdentifiersAsync").and.callFake(gs.invalidUhIdentifiers);
+                    spyOn(gs, "invalidUhIdentifiersAsync").and.callFake(gs.invalidUhIdentifiersResults);
                     spyOn(scope, "displayImportConfirmationModal").and.callThrough();
                     let arr = [];
                     for (let i = 0; i < 102; i++) {
@@ -973,17 +973,17 @@ describe("GroupingController", () => {
 
                 it("should set $scope.invalidMembers and $scope.addInputError when res has invalid uhIdentifiers", () => {
                     scope.addInputError = false;
-                    scope.addMembers("Include", uhIdentifier);
+                    scope.addMembers("Include", uhIdentifiers);
 
-                    httpBackend.expectPOST(BASE_URL + "members/invalid", uhIdentifier).respond(200, uhIdentifier);
+                    httpBackend.expectPOST(BASE_URL + "members/invalid", uhIdentifiers).respond(200, results);
                     httpBackend.flush();
 
-                    expect(scope.invalidMembers).toEqual(uhIdentifier);
+                    expect(scope.invalidMembers).toEqual(uhIdentifiers);
                     expect(scope.addInputError).toBeTrue();
                 });
 
                 it("should set $scope.invalidMembers and call $scope.displayImportErrorModal when res has uhIdentifiers", () => {
-                    spyOn(gs, "invalidUhIdentifiersAsync").and.callFake(gs.invalidUhIdentifiers);
+                    spyOn(gs, "invalidUhIdentifiersAsync").and.callFake(gs.invalidUhIdentifiersResults);
                     spyOn(scope, "displayImportErrorModal").and.callThrough();
                     let arr = [];
                     for (let i = 0; i < 102; i++) {
@@ -991,10 +991,10 @@ describe("GroupingController", () => {
                     }
                     scope.addMembers("Include", arr);
 
-                    httpBackend.expectPOST(BASE_URL + "members/invalid", arr).respond(200, uhIdentifier);
+                    httpBackend.expectPOST(BASE_URL + "members/invalid", arr).respond(200, results);
                     httpBackend.flush();
 
-                    expect(scope.invalidMembers).toEqual(uhIdentifier);
+                    expect(scope.invalidMembers).toEqual(results.results);
                     expect(scope.displayImportErrorModal).toHaveBeenCalled();
                 });
             });
@@ -1003,14 +1003,14 @@ describe("GroupingController", () => {
                 it("should set $scope.waitingForImportResponse, $scope.resStatus and call $scope.displayApiErrorModal", () => {
                     const resStatus = 404;
                     spyOn(scope, "displayApiErrorModal").and.callThrough();
-                    scope.addMembers("Include", uhIdentifier);
+                    scope.addMembers("Include", uhIdentifiers);
 
-                    httpBackend.expectPOST(BASE_URL + "members/invalid", uhIdentifier).respond(resStatus);
+                    httpBackend.expectPOST(BASE_URL + "members/invalid", uhIdentifiers).respond(resStatus);
                     httpBackend.expectGET("modal/apiError").respond(200);
                     httpBackend.flush();
 
                     expect(scope.waitingForImportResponse).toBeFalse();
-                    expect(scope.resStatus).toBe(resStatus);
+                    expect(scope.resStatus).toBe(resStatus.results);
                     expect(scope.displayApiErrorModal).toHaveBeenCalled();
                 });
             });
@@ -1020,23 +1020,31 @@ describe("GroupingController", () => {
     describe("displayAddModal", () => {
         const member = ["iamtst01"];
         const members = ["iamtst01", "iamtst02"];
-        const mockResponseSingle = [{
-            name: "tst01name",
-            uid: "iamtst01",
-            uhUuid: "iamtst01"
-        }];
-        const mockResponseMulti = [
-            {
-                name: "tst01name",
-                uid: "iamtst01",
-                uhUuid: "iamtst01"
-            },
-            {
-                name: "tst02name",
-                uid: "iamtst02",
-                uhUuid: "iamtst02"
-            }
-        ];
+        const memberAttributeResultsSingle = {
+            resultCode: "SUCCESS",
+            results: [
+                {
+                    name: "tst01name",
+                    uid: "iamtst01",
+                    uhUuid: "iamtst01"
+                }
+            ]
+        }
+        const memberAttributeResultsMulti = {
+            resultCode: "SUCCESS",
+            results: [
+                {
+                    name: "tst01name",
+                    uid: "iamtst01",
+                    uhUuid: "iamtst01"
+                },
+                {
+                    name: "tst02name",
+                    uid: "iamtst02",
+                    uhUuid: "iamtst02"
+                }
+            ]
+        }
 
         it("should set $scope.listName to the parameter passed in", () => {
             scope.listName = "";
@@ -1049,31 +1057,31 @@ describe("GroupingController", () => {
         });
 
         it("should set $scope.containsInput to true and return when membersToAdd is empty", () => {
-            spyOn(gs, "getMembersAttributes");
+            spyOn(gs, "getMemberAttributeResults");
             scope.displayAddModal({
                 membersToAdd: [],
                 listName: "Include"
             });
 
             expect(scope.containsInput).toBeTrue();
-            expect(gs.getMembersAttributes).not.toHaveBeenCalled();
+            expect(gs.getMemberAttributeResults).not.toHaveBeenCalled();
         });
 
-        it("should call gs.getMembersAttributes and set $scope.waitingForImportResponse to true", () => {
+        it("should call gs.getMemberAttributeResults and set $scope.waitingForImportResponse to true", () => {
             scope.waitingForImportResponse = false;
-            spyOn(gs, "getMembersAttributes").and.callThrough();
+            spyOn(gs, "getMemberAttributeResults").and.callThrough();
             scope.displayAddModal({
                 membersToAdd: member,
                 listName: "Include"
             });
 
             expect(scope.waitingForImportResponse).toBeTrue();
-            expect(gs.getMembersAttributes).toHaveBeenCalled();
+            expect(gs.getMemberAttributeResults).toHaveBeenCalled();
         });
 
-        describe("gs.getMembersAttributes callbacks", () => {
+        describe("gs.getMemberAttributeResults callbacks", () => {
             beforeEach(() => {
-                spyOn(gs, "getMembersAttributes").and.callThrough();
+                spyOn(gs, "getMemberAttributeResults").and.callThrough();
 
                 httpBackend.whenGET("currentUser").passThrough();
                 httpBackend.whenGET("modal/addModal").passThrough();
@@ -1089,11 +1097,11 @@ describe("GroupingController", () => {
                         listName: "Include"
                     });
 
-                    httpBackend.expectPOST(BASE_URL + "members", member).respond(200, mockResponseSingle);
+                    httpBackend.expectPOST(BASE_URL + "members", member).respond(200, memberAttributeResultsSingle);
                     httpBackend.flush();
 
                     expect(scope.waitingForImportResponse).toBeFalse();
-                    expect(scope.multiAddResults).toEqual(mockResponseSingle);
+                    expect(scope.multiAddResults).toEqual(memberAttributeResultsSingle.results);
                 });
 
                 it("should call $scope.addInGroups and set $scope.initMemberDisplayName", () => {
@@ -1104,7 +1112,7 @@ describe("GroupingController", () => {
                         listName: "Include"
                     });
 
-                    httpBackend.expectPOST(BASE_URL + "members", member).respond(200, mockResponseSingle);
+                    httpBackend.expectPOST(BASE_URL + "members", member).respond(200, memberAttributeResultsSingle);
                     httpBackend.flush();
 
                     expect(scope.addInGroups).toHaveBeenCalled();
@@ -1119,7 +1127,7 @@ describe("GroupingController", () => {
                         listName: "Include"
                     });
 
-                    httpBackend.expectPOST(BASE_URL + "members", member).respond(200, mockResponseSingle);
+                    httpBackend.expectPOST(BASE_URL + "members", member).respond(200, memberAttributeResultsSingle);
                     httpBackend.expectGET("modal/addModal").respond(200);
                     httpBackend.flush();
 
@@ -1127,7 +1135,7 @@ describe("GroupingController", () => {
                 });
 
                 it("should open multiAddModal.html", () => {
-                    for (const mockResponse of mockResponseMulti) {
+                    for (const mockResponse of memberAttributeResultsMulti.results) {
                         mockResponse["inBasis"] = "No";
                         mockResponse["inInclude"] = "No";
                         mockResponse["inExclude"] = "No";
@@ -1137,12 +1145,12 @@ describe("GroupingController", () => {
                         listName: "Include"
                     });
 
-                    httpBackend.expectPOST(BASE_URL + "members", members).respond(200, mockResponseMulti);
+                    httpBackend.expectPOST(BASE_URL + "members", members).respond(200, memberAttributeResultsMulti);
                     httpBackend.expectGET("modal/multiAddModal").respond(200);
                     httpBackend.flush();
 
                     expect(scope.isMultiAdd).toBeTrue();
-                    expect(scope.multiAddResults).toEqual(mockResponseMulti);
+                    expect(scope.multiAddResults).toEqual(memberAttributeResultsMulti.results);
                 });
 
                 describe("Pressing 'add' or 'cancel' on add/multiAddModal", () => {
@@ -1173,7 +1181,7 @@ describe("GroupingController", () => {
                             listName: "Include"
                         });
 
-                        httpBackend.expectPOST(BASE_URL + "members", member).respond(200, mockResponseSingle);
+                        httpBackend.expectPOST(BASE_URL + "members", member).respond(200, memberAttributeResultsSingle);
                         httpBackend.expectGET("modal/addModal").respond(200);
                         httpBackend.flush();
 
@@ -1191,7 +1199,7 @@ describe("GroupingController", () => {
                             listName: "Include"
                         });
 
-                        httpBackend.expectPOST(BASE_URL + "members", members).respond(200, mockResponseMulti);
+                        httpBackend.expectPOST(BASE_URL + "members", members).respond(200, memberAttributeResultsMulti);
                         httpBackend.expectGET("modal/multiAddModal").respond(200);
                         httpBackend.flush();
 
@@ -1210,7 +1218,7 @@ describe("GroupingController", () => {
                             listName: "Include"
                         });
 
-                        httpBackend.expectPOST(BASE_URL + "members", member).respond(200, mockResponseSingle);
+                        httpBackend.expectPOST(BASE_URL + "members", member).respond(200, memberAttributeResultsSingle);
                         httpBackend.flush();
 
                         scope.proceedAddModal();
@@ -1225,7 +1233,7 @@ describe("GroupingController", () => {
                             listName: "Include"
                         });
 
-                        httpBackend.expectPOST(BASE_URL + "members", members).respond(200, mockResponseMulti);
+                        httpBackend.expectPOST(BASE_URL + "members", members).respond(200, memberAttributeResultsMulti);
                         httpBackend.flush();
 
                         scope.proceedAddModal();
@@ -1240,7 +1248,7 @@ describe("GroupingController", () => {
                             listName: "Exclude"
                         });
 
-                        httpBackend.expectPOST(BASE_URL + "members", member).respond(200, mockResponseSingle);
+                        httpBackend.expectPOST(BASE_URL + "members", member).respond(200, memberAttributeResultsSingle);
                         httpBackend.flush();
 
                         scope.proceedAddModal();
@@ -1255,7 +1263,7 @@ describe("GroupingController", () => {
                             listName: "Exclude"
                         });
 
-                        httpBackend.expectPOST(BASE_URL + "members", members).respond(200, mockResponseMulti);
+                        httpBackend.expectPOST(BASE_URL + "members", members).respond(200, memberAttributeResultsMulti);
                         httpBackend.flush();
 
                         scope.proceedAddModal();
@@ -1270,7 +1278,7 @@ describe("GroupingController", () => {
                             listName: "owners"
                         });
 
-                        httpBackend.expectPOST(BASE_URL + "members", member).respond(200, mockResponseSingle);
+                        httpBackend.expectPOST(BASE_URL + "members", member).respond(200, memberAttributeResultsSingle);
                         httpBackend.flush();
 
                         scope.proceedAddModal();
@@ -1285,7 +1293,7 @@ describe("GroupingController", () => {
                             listName: "owners"
                         });
 
-                        httpBackend.expectPOST(BASE_URL + "members", members).respond(200, mockResponseMulti);
+                        httpBackend.expectPOST(BASE_URL + "members", members).respond(200, memberAttributeResultsMulti);
                         httpBackend.flush();
 
                         scope.proceedAddModal();
@@ -1300,7 +1308,7 @@ describe("GroupingController", () => {
                             listName: "admins"
                         });
 
-                        httpBackend.expectPOST(BASE_URL + "members", member).respond(200, mockResponseSingle);
+                        httpBackend.expectPOST(BASE_URL + "members", member).respond(200, memberAttributeResultsSingle);
                         httpBackend.flush();
 
                         scope.proceedAddModal();

@@ -228,8 +228,8 @@ public class GroupingsRestController {
      */
     @PostMapping(value = "/members/invalid")
     @ResponseBody
-    public ResponseEntity<String> invalidUhIdentifiers(@RequestBody List<String> uhIdentifiers) {
-        logger.info("Entered REST invalidUhIdentifiers...");
+    public ResponseEntity<String> invalidUhIdentifiersResults(@RequestBody List<String> uhIdentifiers) {
+        logger.info("Entered REST invalidUhIdentifiersResults...");
         String currentUsername = policy.sanitize(userContextService.getCurrentUsername());
         List<String> safeInput = sanitizeList(uhIdentifiers);
         String uri = String.format(API_2_1_BASE + "/members/invalid");
@@ -315,8 +315,8 @@ public class GroupingsRestController {
      */
     @PostMapping(value = "/members")
     @ResponseBody
-    public ResponseEntity<String> membersAttributes(@RequestBody List<String> uhIdentifiers) {
-        logger.info("Entered REST membersAttributes...");
+    public ResponseEntity<String> memberAttributeResults(@RequestBody List<String> uhIdentifiers) {
+        logger.info("Entered REST memberAttributeResults...");
         String currentUsername = policy.sanitize(userContextService.getCurrentUsername());
         List<String> safeInput = sanitizeList(uhIdentifiers);
         String uri = String.format(API_2_1_BASE + "/members");

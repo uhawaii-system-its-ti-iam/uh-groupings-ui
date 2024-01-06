@@ -228,7 +228,7 @@
             /**
              * Get a list of invalid given a list of uhIdentifiers.
              */
-            invalidUhIdentifiers(uhIdentifiers, onSuccess, onError) {
+            invalidUhIdentifiersResults(uhIdentifiers, onSuccess, onError) {
                 let endpoint = BASE_URL + "members/invalid";
                 dataProvider.loadDataWithBody(endpoint, uhIdentifiers, onSuccess, onError);
             },
@@ -254,7 +254,7 @@
             /**
              * Get the attributes of a user, which includes their uid, uhUuid, givenName, cn, and sn.
              */
-            getMembersAttributes(members, onSuccess, onError) {
+            getMemberAttributeResults(members, onSuccess, onError) {
                 let endpoint = BASE_URL + "members";
                 dataProvider.loadDataWithBody(endpoint, members, onSuccess, onError);
             },

@@ -330,15 +330,15 @@ describe("GroupingsService", () => {
         });
     });
 
-    describe("invalidUhIdentifiers", () => {
+    describe("invalidUhIdentifiersResults", () => {
         let uhIdentifiers = "";
         it("should call dataProvider.loadDataWithBody", () => {
             spyOn(dp, "loadDataWithBody");
-            gs.invalidUhIdentifiers(uhIdentifiers, onSuccess, onError);
+            gs.invalidUhIdentifiersResults(uhIdentifiers, onSuccess, onError);
             expect(dp.loadDataWithBody).toHaveBeenCalled();
         });
         it("should use the correct path", () => {
-            gs.invalidUhIdentifiers(uhIdentifiers, onSuccess, onError);
+            gs.invalidUhIdentifiersResults(uhIdentifiers, onSuccess, onError);
             httpBackend.expectPOST(BASE_URL + "members/invalid").respond(200);
             expect(httpBackend.flush).not.toThrow();
         });
@@ -372,15 +372,15 @@ describe("GroupingsService", () => {
         });
     });
 
-    describe("getMembersAttributes", () => {
+    describe("getMemberAttributeResults", () => {
         let member = "";
         it("should call dataProvider.loadDataWithBody", () => {
             spyOn(dp, "loadDataWithBody");
-            gs.getMembersAttributes(member, onSuccess, onError);
+            gs.getMemberAttributeResults(member, onSuccess, onError);
             expect(dp.loadDataWithBody).toHaveBeenCalled();
         });
         it("should use the correct path", () => {
-            gs.getMembersAttributes(member, onSuccess, onError);
+            gs.getMemberAttributeResults(member, onSuccess, onError);
             httpBackend.expectPOST(BASE_URL + "members").respond(200);
             expect(httpBackend.flush).not.toThrow();
         });

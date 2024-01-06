@@ -707,16 +707,16 @@
             $scope.isBatchImport = uhIdentifiers.length > Threshold.MULTI_ADD;
             const checkInvalidUhIdentifiers = $scope.isBatchImport
                 ? groupingsService.invalidUhIdentifiersAsync
-                : groupingsService.invalidUhIdentifiers;
+                : groupingsService.invalidUhIdentifiersResults;
 
             $scope.waitingForImportResponse = true; // Small spinner on
             checkInvalidUhIdentifiers(uhIdentifiers, (res) => { // Check for invalid uhIdentifiers
                 $scope.waitingForImportResponse = false; // Small spinner off
                 $scope.isBatchImport = uhIdentifiers.length > Threshold.MULTI_ADD;
                 // Check if res returned any invalid uhIdentifiers
-                if (!_.isEmpty(res)) {
+                if (!_.isEmpty(res.results)) {
                     // Display invalid uhIdentifiers in add-error-messages.html or importError modal
-                    $scope.invalidMembers = res;
+                    $scope.invalidMembers = res.results;
                     $scope.addInputError = true;
                     if ($scope.isBatchImport) {
                         $scope.displayImportErrorModal();
@@ -740,7 +740,7 @@
             }, (res) => {
                 // Display API error modal
                 $scope.waitingForImportResponse = false;
-                $scope.resStatus = res.status;
+                $scope.resStatus = res.status.results;
                 $scope.displayApiErrorModal();
             });
         };
@@ -823,11 +823,11 @@
             }
 
             $scope.waitingForImportResponse = true; // Small spinner on
-            groupingsService.getMembersAttributes(membersToAdd, (res) => { // Get attributes for each member
+            groupingsService.getMemberAttributeResults(membersToAdd, (res)=> { // Get attributes for each member
                 $scope.waitingForImportResponse = false; // Small spinner off
 
                 // Sets information to be displayed in add/multiAdd modal
-                $scope.multiAddResults = res;
+                $scope.multiAddResults = res.results;
                 $scope.addInGroups($scope.multiAddResults);
                 $scope.initMemberDisplayName($scope.multiAddResults[0]);
 
