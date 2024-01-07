@@ -110,8 +110,10 @@
             $scope.dynamicModal = $uibModal.open({
                 templateUrl: "modal/dynamicModal",
                 scope: $scope,
+                backdrop: "static",
                 ariaLabelledBy: $scope.currentModalTitleKebabCase + "-modal"
             });
+
             if (!_.isUndefined(timeTillClose)) {
                 let closeOnTimeout = () => {
                     $scope.dynamicModal.dismiss();

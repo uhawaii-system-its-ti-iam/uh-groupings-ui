@@ -431,7 +431,7 @@
             $scope.pageSelected = false;
             $scope.waitingForImportResponse = false;
         };
-        
+
         /**
          * Display a modal containing a browse local file system for import button.
          * @param listName - Current list
@@ -442,8 +442,12 @@
             $scope.importModalInstance = $uibModal.open({
                 templateUrl: "modal/importModal",
                 size: "lg",
+                backdrop: "static",
                 ariaLabelledBy: "import-modal",
                 scope: $scope
+            });
+
+            $scope.importModalInstance.result.catch(() => {/* onRejected: handles modal promise rejection */
             });
         };
 
@@ -461,6 +465,7 @@
             $scope.importErrorModalInstance = $uibModal.open({
                 templateUrl: "modal/importErrorModal",
                 scope: $scope,
+                backdrop: "static",
                 ariaLabelledBy: "import-error-modal"
             });
         };
@@ -469,7 +474,7 @@
          * Close the import error modal.
          */
         $scope.closeImportErrorModal = () => {
-            $scope.importErrorModalInstance.dismiss();
+            $scope.importErrorModalInstance.close();
         };
 
         /**
@@ -520,8 +525,8 @@
                     const indexOfUhNumber = firstRow.findIndex((header) => header.includes(Message.Csv.UUID_COLUMN_HEADER));
                     if (indexOfUhNumber < 0) {
                         $scope.displayDynamicModal(
-                          Message.Title.INVALID_FILE,
-                          `CSV file does not contain ${Message.Csv.UUID_COLUMN_HEADER} in the header`,
+                            Message.Title.INVALID_FILE,
+                            `CSV file does not contain ${Message.Csv.UUID_COLUMN_HEADER} in the header`,
                         );
                         return;
                     }
@@ -627,7 +632,7 @@
         $scope.existsInList = (listName, members) => {
             const currentPage = getCurrentPage(listName);
             const membersInList = members.filter((member) =>
-                _.some(currentPage, { uhUuid: member }) || _.some(currentPage, { uid: member })
+                _.some(currentPage, {uhUuid: member}) || _.some(currentPage, {uid: member})
             );
             $scope.membersInList = membersInList.join(", ");
 
@@ -772,7 +777,7 @@
                     $scope.getGroupingInformation();
                     $scope.syncDestArray = [];
                 }
-            }).catch(() => {});
+            });
         };
 
         /**
@@ -848,7 +853,9 @@
                     } else if ($scope.listName === "admins") {
                         await groupingsService.addAdmin(membersToAdd, handleSuccessfulAdd, handleUnsuccessfulRequest);
                     }
+                }, () => { /* onRejected: handles modal promise rejection */
                 });
+
             }, (res) => {
                 // Display API error modal
                 $scope.waitingForImportResponse = false;
@@ -887,6 +894,7 @@
             $scope.importConfirmationModalInstance = $uibModal.open({
                 templateUrl: "modal/importConfirmationModal",
                 scope: $scope,
+                backdrop: "static",
                 ariaLabelledBy: "import-confirmation-modal"
             });
 
@@ -899,6 +907,7 @@
                 } else if ($scope.listName === "Exclude") {
                     await groupingsService.addExcludeMembersAsync(membersToAdd, groupingPath, handleSuccessfulAdd, handleUnsuccessfulRequest, displaySlowImportModal);
                 }
+            }, () => {/* onRejected: handles modal promise rejection */
             });
         };
 
@@ -923,6 +932,7 @@
             $scope.importSuccessModalInstance = $uibModal.open({
                 templateUrl: "modal/importSuccessModal",
                 scope: $scope,
+                backdrop: "static",
                 ariaLabelledBy: "import-success-modal"
             });
 
@@ -1055,7 +1065,7 @@
                 $scope.loading = true;
                 clearMemberInput();
                 $scope.getGroupingInformation();
-            }).catch(() => {});
+            });
         };
 
         /**
@@ -1139,6 +1149,7 @@
                 } else if ($scope.listName === "admins") {
                     groupingsService.removeAdmin($scope.membersToRemove, handleAdminRemove, handleUnsuccessfulRequest);
                 }
+            }, () => { /* onRejected: handles modal promise rejection */
             });
         };
 
@@ -1253,7 +1264,9 @@
                 backdrop: "static",
                 ariaLabelledBy: "reset-modal"
             });
-            $scope.resetModalInstance.result.then($scope.initResetGroup);
+            $scope.resetModalInstance.result.then($scope.initResetGroup, () => {
+                /* onRejected: handles modal promise rejection */
+            });
         };
 
         $scope.initResetGroup = async () => {
@@ -1297,7 +1310,7 @@
         $scope.resetGroup = () => {
             let listNames = "";
             let resetAll = [];
-            
+
             if ($scope.includeCheck && $scope.excludeCheck) {
                 listNames = "Exclude and Include lists";
                 resetAll = $scope.groupingInclude.concat($scope.groupingExclude);
@@ -1409,7 +1422,7 @@
             $scope.successfulGroupResetModalInstance.result.finally(() => {
                 $scope.loading = true;
                 $scope.getGroupingInformation();
-            }).catch(() => {});
+            });
         };
 
         /**
@@ -1427,7 +1440,7 @@
         };
 
         $scope.closeEmptyGroupModal = () => {
-            $scope.emptyGroupModalInstance.dismiss();
+            $scope.emptyGroupModalInstance.close();
         };
 
         /**
@@ -1611,7 +1624,7 @@
                 $scope.setSyncDestInArray(syncDestName, !isSyncDestOn);
                 $scope.updateSingleSyncDest(syncDestName);
             }).catch(() => {
-                //do nothing
+                /* onRejected: handles modal promise rejection */
             });
         };
 
