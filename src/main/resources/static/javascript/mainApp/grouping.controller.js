@@ -1647,15 +1647,14 @@
          *                                   If "page", it toggles checkboxes on the current page; if "other", it updates event listeners.
          */
         $scope.toggleCheckAllSelection = (group, checkboxClicked) => {
-            let item;
             if (group === "Exclude") {
-                item = {
+                $scope.item = {
                     allItems: $scope.groupingExclude,
                     pageItems: $scope.pagedItemsExclude,
                     pageNumber: $scope.currentPageExclude
                 };
             } else if (group === "Include") {
-                item = {
+                $scope.item = {
                     allItems: $scope.groupingInclude,
                     pageItems: $scope.pagedItemsInclude,
                     pageNumber: $scope.currentPageInclude
@@ -1663,15 +1662,15 @@
             }
             if (checkboxClicked === "page") {
                 $scope.pageSelected = !$scope.pageSelected;
-                for (let member of item.pageItems[Number(item.pageNumber)]) {
+                for (const member of $scope.item.pageItems[$scope.item.pageNumber]) {
                     $scope.membersInCheckboxList[member.uhUuid] = $scope.pageSelected;
                 }
-                let check = $scope.checkMainSelectAllCheckbox(item);
+                const check = $scope.checkMainSelectAllCheckbox($scope.item);
                 $scope.pageSelected = check.page;
                 $scope.showToolIcon = check.tooltip;
             } else {
                 if ($scope.paginationPageChange === true) {
-                    $scope.updateCheckboxEventListeners(item, group);
+                    $scope.updateCheckboxEventListeners($scope.item, group);
                     $scope.paginationPageChange = false;
                 }
             }
