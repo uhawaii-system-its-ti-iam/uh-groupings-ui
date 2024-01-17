@@ -1668,7 +1668,7 @@
                 }
                 let check = $scope.checkMainSelectAllCheckbox(item);
                 $scope.pageSelected = check.page;
-                $scope.showToolIcon = check.toolTip;
+                $scope.showToolIcon = check.tooltip;
             } else {
                 if ($scope.paginationPageChange === true) {
                     $scope.updateCheckboxEventListeners(item, group);
@@ -1692,7 +1692,7 @@
             $scope.updateCheckboxEventListeners(item, "Include");
             let check = $scope.checkMainSelectAllCheckbox(item);
             $scope.pageSelected = check.page;
-            $scope.showToolIcon = check.toolTip;
+            $scope.showToolIcon = check.tooltip;
             $scope.paginationPageChange = true;
         });
 
@@ -1711,7 +1711,7 @@
             $scope.updateCheckboxEventListeners(item, "Exclude");
             let check = $scope.checkMainSelectAllCheckbox(item);
             $scope.pageSelected = check.page;
-            $scope.showToolIcon = check.toolTip;
+            $scope.showToolIcon = check.tooltip;
             $scope.paginationPageChange = true;
         });
 
@@ -1729,7 +1729,7 @@
                 const check = $scope.checkMainSelectAllCheckbox(item);
                 $scope.$apply(() => {
                     $scope.pageSelected = check.page;
-                    $scope.showToolIcon = check.toolTip;
+                    $scope.showToolIcon = check.tooltip;
                 });
             };
             // Remove existing event listeners before reattaching them
@@ -1753,29 +1753,37 @@
          *                       {number} pageNumber - The current page number.
          * @returns {Object} - An object containing checkbox states.
          *                     {boolean} page - The state of the main "Select All" checkbox on the page.
-         *                     {boolean} toolTip - The state of the tooltip based on checkbox changes.
+         *                     {boolean} tooltip - The state of the tooltip based on checkbox changes.
          */
         $scope.checkMainSelectAllCheckbox = (item) => {
             let check = {
                 page: true,
-                toolTip: false
+                tooltip: false
             };
 
             if (item.pageItems.length === 0) {
                 return check;
             }
 
-            for (let member of item.pageItems[Number(item.pageNumber)]) {
-                if (!$scope.membersInCheckboxList[member.uhUuid]) {
+            for (let member of item.pageItems[item.pageNumber]) {
+                // If any checkbox is unchecked, then the main "Select All" checkbox should be unchecked
+                if ($scope.membersInCheckboxList[member.uhUuid] === false) {
                     check.page = false;
                     break;
                 }
             }
-            const data = _.countBy($scope.membersInCheckboxList);
-            // Show tool tip if group size is above 20 and total checkboxes checked is above 20
-            if (!item.allItems <= 20) {
-                check.toolTip = ((data.true || 0) > 20);
-            }
+
+            // Create a key-value list for the number of people selected and not selected
+            // Has two properties: True = checked, False = unchecked
+            let trueFalseCount = _.countBy($scope.membersInCheckboxList);
+
+            $scope.itemsCheckedCount = {
+                checked: trueFalseCount.true,
+                notChecked: trueFalseCount.false
+            };
+
+            // Show tool tip if the total number of people selected is above 20
+            check.tooltip = $scope.itemsCheckedCount.checked > 20;
             return check;
         };
 
