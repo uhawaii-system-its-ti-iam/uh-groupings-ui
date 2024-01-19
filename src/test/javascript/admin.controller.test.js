@@ -54,59 +54,81 @@ describe("AdminController", function () {
         expect(controller).toBeDefined();
     });
 
-    describe("getAdminsGroupingsCallbackOnSuccess", () => {
+    describe("getGroupingAdminsCallbackOnSuccess", () => {
         let res = {};
         beforeEach(() => {
             res = {
-                "allGroupingPaths": [
+                "resultCode": "resultCode",
+                "groupPath": "groupPath",
+                "members": [
+                    {
+                        "uid": "uid",
+                        "uhUuid": "uhUuid",
+                        "name": "name",
+                        "firstName": "firstName",
+                        "lastName": "lastName",
+                        "resultCode": "resultCode"
+                    },
+                    {
+                        "uid": "uid",
+                        "uhUuid": "uhUuid",
+                        "name": "name",
+                        "firstName": "firstName",
+                        "lastName": "lastName",
+                        "resultCode": "resultCode"
+                    }
+                ]
+            }
+        });
+        it("should call objToPageArray", () => {
+            spyOn(scope, "objToPageArray").and.callThrough();
+            scope.getGroupingAdminsCallbackOnSuccess(res);
+            expect(scope.objToPageArray).toHaveBeenCalled();
+        });
+
+        it("should instantiate scope.pagedItemsAdmins", () => {
+            scope.getGroupingAdminsCallbackOnSuccess(res);
+            expect(scope.pagedItemsAdmins).toBeDefined();
+        });
+
+        it("should set scope.loading to false", () => {
+            scope.getGroupingAdminsCallbackOnSuccess(res);
+            expect(scope.loading).toBeFalse();
+        });
+    });
+
+    describe("getAllGroupingsCallbackOnSuccess", () => {
+        let res = {};
+        beforeEach(() => {
+            res = {
+                "groupingPaths": [
                     {
                         "path": "path",
-                        "name": "name"
+                        "name": "name",
+                        "description": "description"
                     },
                     {
                         "path": "path",
-                        "name": "name"
+                        "name": "name",
+                        "description": "description"
                     }
                 ],
-                "adminGroup": {
-                    "members": [
-                        {
-                            "username": "username",
-                            "uhUuid": "uhUuid",
-                            "firstName": "firstName",
-                            "lastName": "lastName",
-                            "name": "name"
-                        },
-                        {
-                            "username": "username",
-                            "uhUuid": "uhUuid",
-                            "firstName": "firstName",
-                            "lastName": "lastName",
-                            "name": "name"
-                        }
-                    ]
-                }
             };
         });
 
         it("should call objToPageArray", () => {
             spyOn(scope, "objToPageArray").and.callThrough();
-            scope.getAdminsGroupingsCallbackOnSuccess(res);
+            scope.getAllGroupingsCallbackOnSuccess(res);
             expect(scope.objToPageArray).toHaveBeenCalled();
         });
 
-        it("should instantiate scope.pagedItemsAdmins", () => {
-            scope.getAdminsGroupingsCallbackOnSuccess(res);
-            expect(scope.pagedItemsAdmins).toBeDefined();
-        });
-
         it("should instantiate scope.groupingsList", () => {
-            scope.getAdminsGroupingsCallbackOnSuccess(res);
+            scope.getAllGroupingsCallbackOnSuccess(res);
             expect(scope.groupingsList).toBeDefined();
         });
 
         it("should set scope.loading to false", () => {
-            scope.getAdminsGroupingsCallbackOnSuccess(res);
+            scope.getAllGroupingsCallbackOnSuccess(res);
             expect(scope.loading).toBeFalse();
         });
     });
@@ -116,10 +138,16 @@ describe("AdminController", function () {
             sessionStorage.clear();
         });
 
-        it("should call groupingsService.getAdminsGroupings", () => {
-            spyOn(gs, "getAdminsGroupings").and.callThrough();
+        it("should call groupingsService.getGroupingAdmins", () => {
+            spyOn(gs, "getGroupingAdmins").and.callThrough();
             scope.init();
-            expect(gs.getAdminsGroupings).toHaveBeenCalled();
+            expect(gs.getGroupingAdmins).toHaveBeenCalled();
+        });
+
+        it("should call groupingsService.getAllGroupings", () => {
+            spyOn(gs, "getAllGroupings").and.callThrough();
+            scope.init();
+            expect(gs.getAllGroupings).toHaveBeenCalled();
         });
 
         it("should call scope.initManagePersonGrouping", () => {
@@ -548,7 +576,8 @@ describe("AdminController", function () {
 
         beforeEach(() => {
             spyOn(scope, "searchForUserGroupingInformation");
-            spyOn(gs, "getAdminsGroupings");
+            spyOn(gs, "getGroupingAdmins");
+            spyOn(gs, "getAllGroupings");
             sessionStorage.setItem("personToLookup", personToLookup);
         });
 
@@ -573,10 +602,10 @@ describe("AdminController", function () {
             expect(sessionStorage.getItem("personToLookup")).toBe(personToLookup);
         });
 
-        it("should call scope.searchForUserGroupingInformation and gs.getAdminsGroupings", () => {
+        it("should call scope.searchForUserGroupingInformation and gs.getGroupingAdmins", () => {
             scope.returnToManagePerson();
             expect(scope.searchForUserGroupingInformation).toHaveBeenCalled();
-            expect(gs.getAdminsGroupings).toHaveBeenCalled();
+            expect(gs.getGroupingAdmins).toHaveBeenCalled();
         });
     });
 

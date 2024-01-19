@@ -137,17 +137,32 @@ describe("GroupingsService", () => {
         });
     });
 
-    describe("getAdminsGroupings", () => {
+    describe("getGroupingAdmins", () => {
 
         it("should call dataProvider.loadData", () => {
             spyOn(dp, "loadData");
-            gs.getAdminsGroupings(onSuccess, onError);
+            gs.getGroupingAdmins(onSuccess, onError);
             expect(dp.loadData).toHaveBeenCalled();
         });
 
         it("should use the correct path", () => {
-            gs.getAdminsGroupings(onSuccess, onError);
-            httpBackend.expectGET(BASE_URL + "adminsGroupings").respond(200);
+            gs.getGroupingAdmins(onSuccess, onError);
+            httpBackend.expectGET(BASE_URL + "groupingAdmins").respond(200);
+            expect(httpBackend.flush).not.toThrow();
+        });
+    });
+
+    describe("getAllGroupings", () => {
+
+        it("should call dataProvider.loadData", () => {
+            spyOn(dp, "loadData");
+            gs.getAllGroupings(onSuccess, onError);
+            expect(dp.loadData).toHaveBeenCalled();
+        });
+
+        it("should use the correct path", () => {
+            gs.getAllGroupings(onSuccess, onError);
+            httpBackend.expectGET(BASE_URL + "allGroupings").respond(200);
             expect(httpBackend.flush).not.toThrow();
         });
     });

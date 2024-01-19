@@ -26,23 +26,31 @@
         $scope.selectedGroupingsPaths = [];
         $scope.emptySelect = false;
         $scope.selectedOwnedGroupingsNames = [];
+        $scope.allGroupingsLoading = false;
+        $scope.userGroupingInformationLoading = false;
 
         let PAGE_SIZE = 20;
 
         angular.extend(this, $controller("GroupingJsController", { $scope }));
 
         /**
-         * Callback which takes the admin tab data and moves it into adminList and groupingsList, each of these objects
+         * Callback which takes the admin tab data and moves it into adminList, the object is then paginated.
+         */
+        $scope.getGroupingAdminsCallbackOnSuccess = (res) => {
+            $scope.adminsList = _.sortBy(res.members, "name");
+            $scope.pagedItemsAdmins = $scope.objToPageArray($scope.adminsList, PAGE_SIZE);
+            $scope.loading = false;
+        }
+
+        /**
+         * Callback which takes the admin tab data and moves it into groupingsList, the object
          * is then paginated.
          */
-        $scope.getAdminsGroupingsCallbackOnSuccess = (res) => {
-            $scope.adminsList = _.sortBy(res.adminGroup.members, "name");
-            $scope.pagedItemsAdmins = $scope.objToPageArray($scope.adminsList, PAGE_SIZE);
-
-            $scope.groupingsList = _.sortBy(res.allGroupingPaths, "name");
+        $scope.getAllGroupingsCallbackOnSuccess = (res) => {
+            $scope.groupingsList = _.sortBy(res.groupingPaths, "name");
             $scope.pagedItemsGroupings = $scope.objToPageArray($scope.groupingsList, PAGE_SIZE);
-            $scope.loading = false;
-        };
+            $scope.allGroupingsLoading = false;
+        }
 
         /**
          * Complete initialization by fetching a list of admins and list of all groupings.
@@ -55,8 +63,13 @@
                 $scope.initManagePersonGrouping(managePersonGrouping);
             } else {
                 $scope.loading = true;
-                groupingsService.getAdminsGroupings(
-                    $scope.getAdminsGroupingsCallbackOnSuccess,
+                $scope.allGroupingsLoading = true;
+                groupingsService.getGroupingAdmins(
+                    $scope.getGroupingAdminsCallbackOnSuccess,
+                    $scope.displayApiErrorModal);
+
+                groupingsService.getAllGroupings(
+                    $scope.getAllGroupingsCallbackOnSuccess,
                     $scope.displayApiErrorModal);
             }
         };
@@ -65,7 +78,7 @@
             $scope.personList = _.sortBy(res, "name");
             $scope.filter($scope.personList, "pagedItemsPerson", "currentPagePerson", $scope.personQuery, true);
             $scope.user = $scope.personToLookup;
-            $scope.loading = false;
+            $scope.userGroupingInformationLoading = false
         };
         $scope.searchForUserGroupingInformationOnErrorCallback = (res) => {
             $scope.personList = [];
@@ -78,9 +91,9 @@
          * Fetch a list of memberships pertaining to $scope.personToLookUp.
          */
         $scope.searchForUserGroupingInformation = () => {
-            $scope.loading = true;
             const validUser = $scope.sanitizer($scope.personToLookup);
             if (validUser !== "") {
+                $scope.userGroupingInformationLoading = true;
                 groupingsService.managePersonResults(validUser,
                     $scope.searchForUserGroupingInformationOnSuccessCallback,
                     $scope.searchForUserGroupingInformationOnErrorCallback
@@ -386,6 +399,7 @@
          */
         $scope.returnToManagePerson = () => {
             $scope.loading = true;
+            $scope.allGroupingsLoading = true;
             $scope.fromManagePerson = false;
             $scope.showGrouping = false;
 
@@ -393,7 +407,8 @@
 
             $scope.personToLookup = sessionStorage.getItem("personToLookup");
             $scope.searchForUserGroupingInformation();
-            groupingsService.getAdminsGroupings($scope.getAdminsGroupingsCallbackOnSuccess, $scope.displayApiErrorModal);
+            groupingsService.getGroupingAdmins($scope.getGroupingAdminsCallbackOnSuccess, $scope.displayApiErrorModal);
+            groupingsService.getAllGroupings($scope.getAllGroupingsCallbackOnSuccess, $scope.displayApiErrorModal);
         };
 
         /**

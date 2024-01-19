@@ -100,14 +100,22 @@ public class GroupingsRestController {
         return ResponseEntity.ok("University of Hawaii UHGroupings");
     }
 
-    @GetMapping(value = "/adminsGroupings")
-    public ResponseEntity<String> adminsGroupings() {
-        logger.info("Entered REST adminsGroupings...");
+    @GetMapping(value = "/groupingAdmins")
+    public ResponseEntity<String> groupingAdmins(Principal principal) {
+        logger.info("Entered REST groupingAdmins...");
         String currentUsername = policy.sanitize(userContextService.getCurrentUsername());
-        String uri = API_2_1_BASE + "/admins-and-groupings";
+        String uri = API_2_1_BASE + "/grouping-admins";
         return httpRequestService.makeApiRequest(currentUsername, uri, HttpMethod.GET);
     }
 
+    @GetMapping(value = "/allGroupings")
+    public ResponseEntity<String> allGroupings(Principal principal) {
+        logger.info("Entered REST allGroupings...");
+        String currentUsername = policy.sanitize(userContextService.getCurrentUsername());
+        String uri = API_2_1_BASE + "/all-groupings";
+        return httpRequestService.makeApiRequest(currentUsername, uri, HttpMethod.GET);
+    }
+    
     @PostMapping(value = "/groupings/group")
     @ResponseBody
     public ResponseEntity<String> getGrouping(@RequestBody(required = true) List<String> groupPaths,
@@ -134,9 +142,9 @@ public class GroupingsRestController {
     @GetMapping(value = "/groupings/{groupPath}/groupings-sync-destinations")
     public ResponseEntity<String> getGroupingSyncDest(Principal principal, @PathVariable String groupPath) {
         logger.info("Entered REST getGroupingSyncDest...");
-        String principalName = policy.sanitize(principal.getName());
+        String currentUsername = policy.sanitize(userContextService.getCurrentUsername());
         String uri = String.format(API_2_1_BASE + "/groupings/%s/groupings-sync-destinations", policy.sanitize(groupPath));
-        return httpRequestService.makeApiRequest(principalName, uri, HttpMethod.GET);
+        return httpRequestService.makeApiRequest(currentUsername, uri, HttpMethod.GET);
     }
 
     @GetMapping(value = "/groupings/{groupPath}/opt-attributes")
@@ -153,9 +161,9 @@ public class GroupingsRestController {
     @GetMapping(value = "/admins")
     public ResponseEntity<String> hasAdminPrivs(Principal principal) {
         logger.info("Entered REST hasAdminPrivs...");
-        String principalName = policy.sanitize(principal.getName());
-        String uri = String.format(API_2_1_BASE + "/admins", principalName);
-        return httpRequestService.makeApiRequest(principalName, uri, HttpMethod.GET);
+        String currentUsername = policy.sanitize(userContextService.getCurrentUsername());
+        String uri = String.format(API_2_1_BASE + "/admins", currentUsername);
+        return httpRequestService.makeApiRequest(currentUsername, uri, HttpMethod.GET);
     }
 
     /**
@@ -507,9 +515,9 @@ public class GroupingsRestController {
     @GetMapping(value = "/owners")
     public ResponseEntity<String> hasOwnerPrivs(Principal principal) {
         logger.info("Entered REST hasOwnerPrivs...");
-        String principalName = policy.sanitize(principal.getName());
-        String uri = String.format(API_2_1_BASE + "/owners", principalName);
-        return httpRequestService.makeApiRequest(principalName, uri, HttpMethod.GET);
+        String currentUsername = policy.sanitize(userContextService.getCurrentUsername());
+        String uri = String.format(API_2_1_BASE + "/owners", currentUsername);
+        return httpRequestService.makeApiRequest(currentUsername, uri, HttpMethod.GET);
     }
 
     /**

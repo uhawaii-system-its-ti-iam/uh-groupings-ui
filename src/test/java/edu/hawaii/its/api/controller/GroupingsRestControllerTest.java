@@ -120,8 +120,24 @@ public class GroupingsRestControllerTest {
 
     @Test
     @WithMockUhUser(username = "admin")
-    public void adminsGroupingsTest() throws Exception {
-        String uri = REST_CONTROLLER_BASE + "adminsGroupings";
+    public void groupingAdminsTest() throws Exception {
+        String uri = REST_CONTROLLER_BASE + "groupingAdmins";
+
+        given(httpRequestService.makeApiRequest(eq(ADMIN_USERNAME), anyString(), eq(HttpMethod.GET)))
+                .willReturn(new ResponseEntity(HttpStatus.OK));
+
+        assertNotNull(mockMvc.perform(get(uri).with(csrf()))
+                .andExpect(status().isOk())
+                .andReturn());
+
+        verify(httpRequestService, times(1))
+                .makeApiRequest(eq(ADMIN_USERNAME), anyString(), eq(HttpMethod.GET));
+    }
+
+    @Test
+    @WithMockUhUser(username = "admin")
+    public void allGroupingsTest() throws Exception {
+        String uri = REST_CONTROLLER_BASE + "allGroupings";
 
         given(httpRequestService.makeApiRequest(eq(ADMIN_USERNAME), anyString(), eq(HttpMethod.GET)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
