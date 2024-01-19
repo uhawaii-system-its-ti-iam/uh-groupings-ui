@@ -459,7 +459,7 @@ describe("GroupingController", () => {
     describe("displayImportErrorModal", () => {
         beforeEach(() => {
             scope.importErrorModalInstance = {
-                dismiss: () => {}
+                close: () => {}
             };
         });
 
@@ -475,10 +475,10 @@ describe("GroupingController", () => {
             scope.displayImportErrorModal();
         });
 
-        it("should dismiss confirmImportInstance", () => {
-            spyOn(scope.importErrorModalInstance, "dismiss").and.callThrough();
+        it("should close confirmImportInstance", () => {
+            spyOn(scope.importErrorModalInstance, "close").and.callThrough();
             scope.closeImportErrorModal();
-            expect(scope.importErrorModalInstance.dismiss).toHaveBeenCalled();
+            expect(scope.importErrorModalInstance.close).toHaveBeenCalled();
         });
     });
 
@@ -1388,6 +1388,7 @@ describe("GroupingController", () => {
             expect(uibModal.open).toHaveBeenCalledWith({
                 templateUrl: "modal/importConfirmationModal",
                 scope,
+                backdrop: "static",
                 ariaLabelledBy: "import-confirmation-modal",
             });
         });
@@ -1453,6 +1454,7 @@ describe("GroupingController", () => {
             expect(uibModal.open).toHaveBeenCalledWith({
                 templateUrl: "modal/importSuccessModal",
                 scope,
+                backdrop: "static",
                 ariaLabelledBy: "import-success-modal",
             });
         });
@@ -2210,10 +2212,10 @@ describe("GroupingController", () => {
             scope.displayEmptyGroupModal();
         });
 
-        it("should dismiss emptyGroupModalInstance", () => {
-            spyOn(scope.emptyGroupModalInstance, "dismiss").and.callThrough();
+        it("should close emptyGroupModalInstance", () => {
+            spyOn(scope.emptyGroupModalInstance, "close").and.callThrough();
             scope.closeEmptyGroupModal();
-            expect(scope.emptyGroupModalInstance.dismiss).toHaveBeenCalled();
+            expect(scope.emptyGroupModalInstance.close).toHaveBeenCalled();
         });
     });
 

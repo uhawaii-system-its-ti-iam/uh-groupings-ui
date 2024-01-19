@@ -336,7 +336,7 @@
                     let memberToRemove = options.member.uhUuid;
                     let groupingPath = $scope.groupPaths;
                     groupingsService.removeFromGroups(groupingPath, memberToRemove, handleRemoveFromGroupsOnSuccess, handleRemoveFromGroupsOnError);
-                });
+                }, () => {/* onRejected: handles modal promise rejection */});
             }, (res) => {
                 $scope.user = memberToRemove;
                 $scope.resStatus = res.status;
@@ -458,6 +458,7 @@
             $scope.groupingOwnersModal = $uibModal.open({
                 templateUrl: "modal/groupingOwnersModal",
                 scope: $scope,
+                backdrop: "static",
                 ariaLabelledBy: "grouping-owners-modal"
             });
             $scope.displayGroupingOwnersModalOnClose = () => {
