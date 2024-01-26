@@ -22,8 +22,8 @@
             /**
              * Get a list of active announcements to display on the home page.
              */
-            getActiveAnnouncements(onSuccess, onError) {
-                let endpoint = "announcements/active";
+            getAnnouncements(onSuccess, onError) {
+                let endpoint = "announcements";
                 dataProvider.loadData(endpoint, onSuccess, onError);
             },
 
