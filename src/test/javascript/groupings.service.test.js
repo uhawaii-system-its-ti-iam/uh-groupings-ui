@@ -37,15 +37,15 @@ describe("GroupingsService", () => {
         });
     });
 
-    describe("getActiveAnnouncements", () => {
+    describe("getAnnouncements", () => {
         it("should call dataProvider.loadData", () => {
             spyOn(dp, "loadData");
-            gs.getActiveAnnouncements(onSuccess, onError);
+            gs.getAnnouncements(onSuccess, onError);
             expect(dp.loadData).toHaveBeenCalled();
         });
         it("should use the correct path", () => {
-            gs.getActiveAnnouncements(onSuccess, onError);
-            httpBackend.expectGET("announcements/active").respond(200);
+            gs.getAnnouncements(onSuccess, onError);
+            httpBackend.expectGET("announcements").respond(200);
             expect(httpBackend.flush).not.toThrow();
         });
     });
