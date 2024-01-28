@@ -78,26 +78,26 @@ public class ErrorControllerAdvice {
     //todo this is for the HolidayRestControllerTest test (should we really have this behavior?)
     @ExceptionHandler(TypeMismatchException.class)
     public String handleTypeMismatchException(Exception ex) {
-        String username = null;
+        String uid = null;
         User user = userContextService.getCurrentUser();
         if (user != null) {
-            username = user.getUsername();
+            uid = user.getUsername();
         }
-        logger.error("username: " + username + "; Exception: ", ex);
+        logger.error("uid: " + uid + "; Exception: ", ex);
         emailService.sendWithStack(ex, "TypeMismatchException");
         return "redirect:/error";
     }
 
     private ResponseEntity<GroupingsHTTPException> exceptionResponse(String message, Throwable cause, int status) {
-        String username = null;
+        String uid = null;
         User user = userContextService.getCurrentUser();
         if (user != null) {
-            username = user.getUsername();
+            uid = user.getUsername();
         }
 
         GroupingsHTTPException httpException = new GroupingsHTTPException(message, cause, status);
 
-        logger.error("username: " + username + "; Exception: ", httpException.getCause());
+        logger.error("uid: " + uid + "; Exception: ", httpException.getCause());
         return ResponseEntity.status(status).body(httpException);
     }
 }

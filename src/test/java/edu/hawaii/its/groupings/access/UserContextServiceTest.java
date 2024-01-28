@@ -23,7 +23,7 @@ public class UserContextServiceTest {
     private UserContextService userContextService;
 
     @Test
-    @WithMockUhUser(username = "admin", roles = { "ROLE_ADMIN" })
+    @WithMockUhUser(uid = "admin", roles = { "ROLE_ADMIN" })
     public void basics() {
         assertThat("12345678", is(userContextService.getCurrentUhUuid()));
         assertThat("admin", is(userContextService.getCurrentUid()));
@@ -38,7 +38,7 @@ public class UserContextServiceTest {
         assertThat("87654321", is(userContextService.getCurrentUhUuid()));
     }
     @Test
-    @WithMockUhUser(username = "Owner", roles = { "ROLE_OWNER"})
+    @WithMockUhUser(uid = "Owner", roles = { "ROLE_OWNER"})
     public void testOwner(){
         User user = userContextService.getCurrentUser();
         assertFalse(user.hasRole(Role.ADMIN));

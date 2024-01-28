@@ -30,11 +30,11 @@
         angular.extend(this, $controller("TableJsController", { $scope }));
 
         /**
-         * Get the username of the current user
+         * Get the uid of the current user
          */
         groupingsService.getCurrentUser((res) => {
             $scope.currentUser = {
-                uid: res.data.username,
+                uid: res.data.uid,
                 uhUuid: res.data.uhUuid
             };
             $scope.feedbackEmail = $scope.currentUser.uid + Message.Csv.EMAIL_SUFFIX;

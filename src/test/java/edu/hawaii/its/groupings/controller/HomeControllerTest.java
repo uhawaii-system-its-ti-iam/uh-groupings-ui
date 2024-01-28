@@ -143,7 +143,7 @@ public class HomeControllerTest {
     }
 
     @Test
-    @WithMockUhUser(username = "uh")
+    @WithMockUhUser(uid = "uh")
     public void memberships() throws Exception {
         MvcResult mvcResult = mockMvc.perform(get("/memberships"))
                 .andExpect(status().isOk())
@@ -153,7 +153,7 @@ public class HomeControllerTest {
     }
 
     @Test
-    @WithMockUhUser(username = "admin", roles = { "ROLE_UH", "ROLE_ADMIN" })
+    @WithMockUhUser(uid = "admin", roles = { "ROLE_UH", "ROLE_ADMIN" })
     public void admin() throws Exception {
         MvcResult mvcResult = mockMvc.perform(get("/admin"))
                 .andExpect(status().isOk())
@@ -163,7 +163,7 @@ public class HomeControllerTest {
     }
 
     @Test
-    @WithMockUhUser(username = "uh")
+    @WithMockUhUser(uid = "uh")
     public void adminViaUh() throws Exception {
         // Not high enough role for access.
         MvcResult mvcResult = mockMvc.perform(get("/admin"))
@@ -184,7 +184,7 @@ public class HomeControllerTest {
     }
 
     @Test
-    @WithMockUhUser(username = "admin", roles = { "ROLE_UH", "ROLE_ADMIN" })
+    @WithMockUhUser(uid = "admin", roles = { "ROLE_UH", "ROLE_ADMIN" })
     public void groupings() throws Exception {
         MvcResult mvcResult = mockMvc.perform(get("/groupings"))
                 .andExpect(status().isOk())
@@ -194,7 +194,7 @@ public class HomeControllerTest {
     }
 
     @Test
-    @WithMockUhUser(username = "owner", roles = { "ROLE_UH", "ROLE_OWNER" })
+    @WithMockUhUser(uid = "owner", roles = { "ROLE_UH", "ROLE_OWNER" })
     public void groupingsViaOwner() throws Exception {
         MvcResult mvcResult = mockMvc.perform(get("/groupings"))
                 .andExpect(status().isOk())
@@ -204,7 +204,7 @@ public class HomeControllerTest {
     }
 
     @Test
-    @WithMockUhUser(username = "uh")
+    @WithMockUhUser(uid = "uh")
     public void groupingsViaUH() throws Exception {
         // Not high enough role for access
 
@@ -286,7 +286,7 @@ public class HomeControllerTest {
     @ValueSource(strings = {"apiError", "preferenceErrorModal", "addModal", "multiAddModal", "removeModal", "multiRemoveModal", "resetModal",
             "successfulGroupResetModal", "removeFromGroupsModal", "emptyGroupModal", "syncDestModal", "removeErrorModal", "timeoutModal",
             "roleErrorModal", "ownerErrorModal", "optErrorModal", "importModal", "importConfirmationModal", "importSuccessModal", "importErrorModal", "dynamicModal"})
-    @WithMockUhUser(username = "uh")
+    @WithMockUhUser(uid = "uh")
     public void requestModal(String modalName) throws Exception {
         MvcResult mvcResult = mockMvc.perform(get("/modal/" + modalName))
                 .andExpect(status().isOk())
