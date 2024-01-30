@@ -121,28 +121,28 @@ describe("TableController", () => {
                     $$hashKey: "random",
                     firstName: "Iwc",
                     lastName: "Iamtst",
-                    username: "tiwc",
+                    uid: "tiwc",
                     uhUuid: "12345678"
                 },
                 {
                     $$hashKey: "random",
                     firstName: "Iwd",
                     lastName: "Iamtst",
-                    username: "iamd",
+                    uid: "iamd",
                     uhUuid: "23456789"
                 },
                 {
                     $$hashKey: "something",
                     firstName: "E",
                     lastName: "Testiw",
-                    username: "te",
+                    uid: "te",
                     uhUuid: "65478912"
                 },
                 {
                     $$hashKey: "another",
                     firstName: "Iwb",
                     lastName: "IamtstIW",
-                    username: "iwb",
+                    uid: "iwb",
                     uhUuid: "72897556"
                 }
             ];

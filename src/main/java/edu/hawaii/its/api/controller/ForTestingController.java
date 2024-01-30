@@ -30,8 +30,8 @@ public class ForTestingController {
     @GetMapping(value = "/exception")
     public ResponseEntity<String> throwException() {
         logger.info("Entered REST throwException...");
-        String currentUsername = userContextService.getCurrentUsername();
+        String currentUid = userContextService.getCurrentUid();
         String uri = String.format(API_2_1_BASE + "/exception");
-        return httpRequestService.makeApiRequest(currentUsername, uri, HttpMethod.GET);
+        return httpRequestService.makeApiRequest(currentUid, uri, HttpMethod.GET);
     }
 }

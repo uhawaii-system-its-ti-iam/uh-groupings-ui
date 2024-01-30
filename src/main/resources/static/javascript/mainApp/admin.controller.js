@@ -140,7 +140,7 @@
                 return;
             }
             let memberToRemove = {
-                username: res.username,
+                uid: res.uid,
                 name: res.name,
                 uhUuid: res.uhUuid
             };
@@ -151,7 +151,7 @@
                 $scope.removeFromGroupsCallbackOnSuccess(memberToRemove);
             }
             _.forEach($scope.selectedOwnedGroupings, (grouping) => {
-                    groupingsService.isSoleOwner(grouping.path, memberToRemove.username, (res) => {
+                    groupingsService.isSoleOwner(grouping.path, memberToRemove.uid, (res) => {
                         if (res) {
                             $scope.soleOwnerGroupingNames.push(grouping.name);
                         }
@@ -237,7 +237,7 @@
          * @returns {boolean} true if the user is already in the list being added to, otherwise returns false
          */
         const inAdminList = (user) => {
-            return _.some($scope.adminsList, { username: user }) ||
+            return _.some($scope.adminsList, { uid: user }) ||
                 _.some($scope.adminsList, { uhUuid: user });
         };
 

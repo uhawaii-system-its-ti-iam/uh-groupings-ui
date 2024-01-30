@@ -27,7 +27,7 @@ public class WithMockUserSecurityContextFactory
             authorities.add(new SimpleGrantedAuthority(role));
         }
 
-        User user = new User(uhUser.username(), uhUser.uhUuid(), authorities);
+        User user = new User(uhUser.uid(), uhUser.uhUuid(), authorities);
         Map<String, String> attrsMap = new HashMap<>();
         attrsMap.put("cn", uhUser.name());
         UhAttributes attributes = new UhAttributes(attrsMap);

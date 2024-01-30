@@ -21,11 +21,6 @@ public class UserContextService {
         return new AnonymousUser();
     }
 
-    public String getCurrentUsername() {
-        User user = getCurrentUser();
-        return user != null ? user.getUsername() : "";
-    }
-
     public String getCurrentUid() {
         User user = getCurrentUser();
         return user != null ? user.getUid() : "";

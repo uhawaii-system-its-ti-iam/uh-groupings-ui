@@ -51,7 +51,7 @@ public class AuthorizationService {
             roleHolder.add(Role.ADMIN);
         }
 
-        logger.info("fetchRoles: username: " + uid + " " + roleHolder.getAuthorities() + ";");
+        logger.info("fetchRoles: uid: " + uid + " " + roleHolder.getAuthorities() + ";");
         return roleHolder;
     }
 

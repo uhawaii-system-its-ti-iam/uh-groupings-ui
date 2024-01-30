@@ -47,7 +47,7 @@ describe("GeneralController", () => {
     });
 
     describe("get current user and home page numbers: ", () => {
-        const mockUser = { username: "iamtst01", uhUuid: "iamtst01" };
+        const mockUser = { uid: "iamtst01", uhUuid: "iamtst01" };
         const mockResponse = 999;
         beforeEach(() => {
             httpBackend.whenGET("currentUser")
@@ -75,21 +75,21 @@ describe("GeneralController", () => {
         scope.groupingBasis = [
             {
                 name: "User One",
-                username: "user1",
+                uid: "user1",
                 uhUuid: "00000001",
                 firstName: "User",
                 lastName: "One"
             },
             {
                 name: "User Four",
-                username: "user4",
+                uid: "user4",
                 uhUuid: "00000004",
                 firstName: "User",
                 lastName: "Four"
             },
             {
                 name: "User Seven",
-                username: "user7",
+                uid: "user7",
                 uhUuid: "00000007",
                 firstName: "User",
                 lastName: "Seven"
@@ -100,21 +100,21 @@ describe("GeneralController", () => {
         scope.groupingInclude = [
             {
                 name: "User One",
-                username: "user1",
+                uid: "user1",
                 uhUuid: "00000001",
                 firstName: "User",
                 lastName: "One"
             },
             {
                 name: "User Two",
-                username: "user2",
+                uid: "user2",
                 uhUuid: "00000002",
                 firstName: "User",
                 lastName: "Two"
             },
             {
                 name: "User Three",
-                username: "user3",
+                uid: "user3",
                 uhUuid: "00000003",
                 firstName: "User",
                 lastName: "Three"
@@ -125,21 +125,21 @@ describe("GeneralController", () => {
         scope.groupingExclude = [
             {
                 name: "User Four",
-                username: "user4",
+                uid: "user4",
                 uhUuid: "00000004",
                 firstName: "User",
                 lastName: "Four"
             },
             {
                 name: "User Five",
-                username: "user5",
+                uid: "user5",
                 uhUuid: "00000005",
                 firstName: "User",
                 lastName: "Five"
             },
             {
                 name: "User Nine",
-                username: "",
+                uid: "",
                 uhUuid: "00000009",
                 firstName: "User",
                 lastName: "Nine"
@@ -150,7 +150,7 @@ describe("GeneralController", () => {
         scope.groupingMembers = _.cloneDeep(scope.groupingInclude);
         scope.groupingMembers.push({
             name: "User Seven",
-            username: "user7",
+            uid: "user7",
             uhUuid: "00000007",
             firstName: "User",
             lastName: "Seven"
@@ -160,7 +160,7 @@ describe("GeneralController", () => {
         scope.groupingOwners = [
             {
                 name: "User Six",
-                username: "user6",
+                uid: "user6",
                 uhUuid: "00000006",
                 firstName: "User",
                 lastName: "Six"
@@ -261,7 +261,7 @@ describe("GeneralController", () => {
             expect(arrayOfValidNames).toEqual(["iamtst01"]);
         });
 
-        it("should return an array of usernames that match the definition of a uhuuid or a uid", () => {
+        it("should return an array of uids that match the definition of a uhuuid or a uid", () => {
             const arrayOfValidNames = parseFile(goodFile);
             expect(arrayOfValidNames.length).toEqual(14);
             expect(arrayOfValidNames.toString()).toEqual("iamtst01,iamtst02,iamtst03,iamtst04,iamtst05,iamtst06,22222222,12345678,bogusname,fakename,_1234455,_iamtst01,_test_123-abc,ab");

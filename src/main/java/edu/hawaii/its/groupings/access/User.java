@@ -11,13 +11,13 @@ public class User extends org.springframework.security.core.userdetails.User {
     private String uhUuid;
     private UhAttributes attributes;
 
-    public User(String username, String uhUuid, Collection<GrantedAuthority> authorities) {
-        super(username, "", authorities);
+    public User(String uid, String uhUuid, Collection<GrantedAuthority> authorities) {
+        super(uid, "", authorities);
         setUhUuid(uhUuid);
     }
 
-    public User(String username, Collection<GrantedAuthority> authorities) {
-        super(username, "", authorities);
+    public User(String uid, Collection<GrantedAuthority> authorities) {
+        super(uid, "", authorities);
     }
 
     public String getUid() {

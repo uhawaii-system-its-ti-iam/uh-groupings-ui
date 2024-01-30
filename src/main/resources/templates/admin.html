@@ -83,10 +83,10 @@
                                     <i class="fa sort-icon" ng-show="columnSort.adminsList.property === 'uhUuid'"
                                        ng-class="{ reverse: columnSort.adminsList.reverse }"></i>
                                 </th>
-                                <th ng-click="sortBy('adminsList', 'pagedItemsAdmins', 'username')"
+                                <th ng-click="sortBy('adminsList', 'pagedItemsAdmins', 'uid')"
                                     class="clickable">
                                     UH Username
-                                    <i class="fa sort-icon" ng-show="columnSort.adminsList.property === 'username'"
+                                    <i class="fa sort-icon" ng-show="columnSort.adminsList.property === 'uid'"
                                        ng-class="{ reverse: columnSort.adminsList.reverse }"></i>
                                 </th>
                                 <th class="delete" scope="col">
@@ -103,12 +103,12 @@
                                     {{l.uhUuid}}
                                 </td>
                                 <td class="p-10">
-                                    {{l.username}}
-                                    <div ng-if="l.username === ''">
+                                    {{l.uid}}
+                                    <div ng-if="l.uid === ''">
                                         <span>N/A</span>
                                         <i class="fa fa-question-circle clickable"
                                            tooltip data-placement="right"
-                                           th:title="#{screen.message.common.tooltip.username.notApplicable}">
+                                           th:title="#{screen.message.common.tooltip.uid.notApplicable}">
                                         </i>
                                     </div>
                                 </td>
