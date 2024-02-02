@@ -11,17 +11,17 @@
         <div class="alert pt-4 alert-success" role="alert" th:if="${success}">
             <p th:utext="#{screen.message.feedback.page.alertSuccess}"></p>
         </div>
-    <div class="row pt-5 pb-4">
-        <div class="col-lg-5 col-md-4 col-12">
-            <h1 class="text-center text-md-left">Feedback</h1>
-            <p class="lead text-center text-md-left" th:utext="#{screen.message.feedback.page.description}"></p>
-        </div>
-        <div class="col-lg-7 col-md-8 col-12">
-        <form th:action="@{/feedback}" th:object="${feedback}" method="post" ng-submit="checkEmail($event)" >
-            <div class="form-group pb-3" id="typeError">
-                <label for="input-type">Feedback type:
-                    <span class="required-asterisk">*</span>
-                </label>
+        <div class="row pt-5 pb-4">
+            <div class="col-lg-5 col-md-4 col-12">
+                <h1 class="text-center text-md-left">Feedback</h1>
+                <p class="lead text-center text-md-left" th:utext="#{screen.message.feedback.page.description}"></p>
+            </div>
+            <div class="col-lg-7 col-md-8 col-12">
+            <form th:action="@{/feedback}" th:object="${feedback}" method="post" ng-submit="checkEmail($event)" >
+                <div class="form-group pb-3" id="typeError">
+                    <label for="input-type">Feedback type:
+                        <span class="required-asterisk">*</span>
+                    </label>
                     <select class="form-control" id="input-type" th:field="*{type}">
                         <option value="general">General</option>
                         <option value="problem">Problem</option>
@@ -29,35 +29,32 @@
                         <option value="question">Question</option>
                     </select>
                 </div>
-            <div class="form-group pb-3">
-                <label for="input-name">Your Name (Optional): </label>
+                <div class="form-group pb-3">
+                    <label for="input-name">Your Name (Optional): </label>
                     <input th:field="*{name}" aria-required="false" class="form-control" id="input-name" placeholder="John Doe"/>
                 </div>
-            <div class="form-group pb-3">
-                <label for="input-email">Email address
-                    <span class="required-asterisk">*</span>
-                </label>
+                <div class="form-group pb-3">
+                    <label for="input-email">Email address
+                        <span class="required-asterisk">*</span>
+                    </label>
                     <input ng-model="feedbackEmail" class="form-control" id="input-email" th:required="required" th:field="*{email}"/>
                 </div>
-            <div class="form-group pb-3">
-                <label for="input-feedback">Your Feedback
-                    <span class="required-asterisk">*</span>
-                </label>
-                        <textarea th:field="*{message}" class="form-control" id="input-feedback" rows="6"
-                                  th:required="required">
-                        </textarea>
-            </div>
-            <div class="d-none">
-                <label for="input-exception" class="col-sm-3 col-form-label">Exception Error</label>
-                <div class="col-sm-9">
-                    <textarea th:field="*{exceptionMessage}" class="form-control" id="input-exception"></textarea>
+                <div class="form-group pb-3">
+                    <label for="input-feedback">Your Feedback
+                        <span class="required-asterisk">*</span>
+                    </label>
+                    <textarea th:field="*{message}" class="form-control" id="input-feedback" rows="6" th:required="required"></textarea>
                 </div>
-            </div>
+                <div class="d-none">
+                    <label for="input-exception" class="col-form-label">Exception Error</label>
+                    <!--The below will never be displayed to user. "title" tag only included to pass invalid "WAVE" accessibility error-->
+                    <textarea aria-hidden="true" title="Exception Message Container" th:field="*{exceptionMessage}" class="form-control" id="input-exception"></textarea>
+                </div>
                 <button class="btn btn-primary" type="submit">Submit</button>
-        </form>
+            </form>
+            </div>
         </div>
     </div>
-</div>
 </main>
 
 <!-- / Content container. -->
