@@ -73,7 +73,6 @@
         // Checkbox list
         $scope.membersInCheckboxList = {};
         $scope.paginationPageChange = true;
-        $scope.showToolIcon = false;
         $scope.checkedBoxes = 0;
         $scope.pageSelected = false;
         $scope.manageMembers = "";
@@ -426,7 +425,6 @@
             $scope.manageMembers = "";
             $scope.membersInCheckboxList = {};
             $scope.paginationPageChange = true;
-            $scope.showToolIcon = false;
             $scope.checkedBoxes = 0;
             $scope.pageSelected = false;
             $scope.waitingForImportResponse = false;
@@ -1639,40 +1637,59 @@
         };
 
         /**
-         * Toggles the selection of all checkboxes in a specified group (Include or Exclude).
-         * This function is typically called when the "Select All" checkbox on a page is clicked.
-         *
-         * @param {string} group - The group identifier ("Include" or "Exclude") for which the checkboxes should be toggled.
-         * @param {string} checkboxClicked - Specifies the type of checkbox interaction ("page" or "other").
-         *                                   If "page", it toggles checkboxes on the current page; if "other", it updates event listeners.
+         * Toggles the "Select All" checkbox in the Include or Exclude tab.
+         * @param group - The group identifier ("Include" or "Exclude") for which the checkboxes should be toggled.
+         * @param keyCode - The key code used to select the box.
          */
-        $scope.toggleCheckAllSelection = (group, checkboxClicked) => {
+        $scope.toggleSelectAllCheckbox = (group, keyCode) => {
+            $scope.assignListToGroup(group);
+
+            if (keyCode === 13) { //Enter key needs manual flip
+                $scope.pageSelected = !$scope.pageSelected;
+            }
+
+            for (const member of $scope.groupingMembers.membersOnPage[$scope.groupingMembers.pageNumber]) {
+                $scope.membersInCheckboxList[member.uhUuid] = $scope.pageSelected;
+            }
+
+            $scope.updateCheckboxEventListeners($scope.groupingMembers, group);
+            $scope.paginationPageChange = false;
+        };
+
+        /**
+         * Toggles the single checkboxes in the Include or Exclude tab.
+         * @param group - The group identifier ("Include" or "Exclude") for which the checkbox should be toggled.
+         * @param member - The member associated to the checkbox to be toggled.
+         * @param keyCode - The key code used to select the box.
+         */
+        $scope.toggleSingleCheckbox = (group, member, keyCode) => {
+            $scope.assignListToGroup(group);
+
+            if (keyCode === 13) { //Enter key needs manual flip
+                $scope.membersInCheckboxList[member.uhUuid] = !$scope.membersInCheckboxList[member.uhUuid];
+            }
+
+            $scope.pageSelected = $scope.checkMainSelectAllCheckbox($scope.groupingMembers);
+            $scope.updateCheckboxEventListeners($scope.groupingMembers, group);
+            $scope.paginationPageChange = false;
+        };
+
+        /**
+         * Assigning groupingMembers to specified group ("Include" or "Exclude").
+         */
+        $scope.assignListToGroup = (group) => {
             if (group === "Exclude") {
-                $scope.item = {
-                    allItems: $scope.groupingExclude,
-                    pageItems: $scope.pagedItemsExclude,
+                $scope.groupingMembers = {
+                    allMembers: $scope.groupingExclude,
+                    membersOnPage: $scope.pagedItemsExclude,
                     pageNumber: $scope.currentPageExclude
                 };
             } else if (group === "Include") {
-                $scope.item = {
-                    allItems: $scope.groupingInclude,
-                    pageItems: $scope.pagedItemsInclude,
+                $scope.groupingMembers = {
+                    allMembers: $scope.groupingInclude,
+                    membersOnPage: $scope.pagedItemsInclude,
                     pageNumber: $scope.currentPageInclude
                 };
-            }
-            if (checkboxClicked === "page") {
-                $scope.pageSelected = !$scope.pageSelected;
-                for (const member of $scope.item.pageItems[$scope.item.pageNumber]) {
-                    $scope.membersInCheckboxList[member.uhUuid] = $scope.pageSelected;
-                }
-                const check = $scope.checkMainSelectAllCheckbox($scope.item);
-                $scope.pageSelected = check.page;
-                $scope.showToolIcon = check.tooltip;
-            } else {
-                if ($scope.paginationPageChange === true) {
-                    $scope.updateCheckboxEventListeners($scope.item, group);
-                    $scope.paginationPageChange = false;
-                }
             }
         };
 
@@ -1683,15 +1700,13 @@
          * @param {number} newValue - The new value of currentPageInclude.
          */
         $scope.$watch("currentPageInclude", (newValue) => {
-            const item = {
-                allItems: $scope.groupingInclude,
-                pageItems: $scope.pagedItemsInclude,
+            const groupingMembers = {
+                allMembers: $scope.groupingInclude,
+                membersOnPage: $scope.pagedItemsInclude,
                 pageNumber: newValue
             };
-            $scope.updateCheckboxEventListeners(item, "Include");
-            let check = $scope.checkMainSelectAllCheckbox(item);
-            $scope.pageSelected = check.page;
-            $scope.showToolIcon = check.tooltip;
+            $scope.updateCheckboxEventListeners(groupingMembers, "Include");
+            $scope.pageSelected = $scope.checkMainSelectAllCheckbox(groupingMembers);
             $scope.paginationPageChange = true;
         });
 
@@ -1702,15 +1717,13 @@
          * @param {number} newValue - The new value of currentPageExclude.
          */
         $scope.$watch("currentPageExclude", (newValue) => {
-            const item = {
-                allItems: $scope.groupingExclude,
-                pageItems: $scope.pagedItemsExclude,
+            const groupingMembers = {
+                allMembers: $scope.groupingExclude,
+                membersOnPage: $scope.pagedItemsExclude,
                 pageNumber: newValue
             };
-            $scope.updateCheckboxEventListeners(item, "Exclude");
-            let check = $scope.checkMainSelectAllCheckbox(item);
-            $scope.pageSelected = check.page;
-            $scope.showToolIcon = check.tooltip;
+            $scope.updateCheckboxEventListeners(groupingMembers, "Exclude");
+            $scope.pageSelected = $scope.checkMainSelectAllCheckbox(groupingMembers);
             $scope.paginationPageChange = true;
         });
 
@@ -1718,17 +1731,15 @@
          * Updates checkbox event listeners for a specified group (Include or Exclude).
          *
          * @param {Object} item - An object containing information about the group and pagination.
-         *                       {Object} allItems - The array of all items in the group.
-         *                       {Object} pageItems - The array of items on the current page.
+         *                       {Object} allMembers - The array of all items in the group.
+         *                       {Object} membersOnPage - The array of items on the current page.
          *                       {number} pageNumber - The current page number.
          * @param {string} group - The group identifier ("Include" or "Exclude").
          */
         $scope.updateCheckboxEventListeners = (item, group) => {
             const handleCheckboxChange = () => {
-                const check = $scope.checkMainSelectAllCheckbox(item);
                 $scope.$apply(() => {
-                    $scope.pageSelected = check.page;
-                    $scope.showToolIcon = check.tooltip;
+                    $scope.pageSelected = $scope.checkMainSelectAllCheckbox(item);
                 });
             };
             // Remove existing event listeners before reattaching them
@@ -1744,46 +1755,29 @@
         };
 
         /**
-         * Checks the state of the main "Select All" checkboxes and tooltip based on checkbox changes.
+         * Checks the state of the main "Select All" checkbox based on checkbox toggles.
          *
-         * @param {Object} item - An object containing information about the group and pagination.
-         *                       {Object} allItems - The array of all items in the group.
-         *                       {Object} pageItems - The array of items on the current page.
+         * @param {Object} groupingMembers - An object containing information about the group and pagination.
+         *                       {Object} allMembers - The array of all members in the group.
+         *                       {Object} membersOnPage - The array of members on the current page.
          *                       {number} pageNumber - The current page number.
-         * @returns {Object} - An object containing checkbox states.
-         *                     {boolean} page - The state of the main "Select All" checkbox on the page.
-         *                     {boolean} tooltip - The state of the tooltip based on checkbox changes.
+         * @returns {boolean} - Reflects if the "Select All" checkbox should be checked.
          */
-        $scope.checkMainSelectAllCheckbox = (item) => {
-            let check = {
-                page: true,
-                tooltip: false
-            };
+        $scope.checkMainSelectAllCheckbox = (groupingMembers) => {
+            $scope.checkPage = true;
 
-            if (item.pageItems.length === 0) {
-                return check;
+            if (groupingMembers.membersOnPage.length === 0) {
+                return $scope.checkPage;
             }
 
-            for (let member of item.pageItems[item.pageNumber]) {
+            for (let member of groupingMembers.membersOnPage[groupingMembers.pageNumber]) {
                 // If any checkbox is unchecked, then the main "Select All" checkbox should be unchecked
                 if ($scope.membersInCheckboxList[member.uhUuid] === false) {
-                    check.page = false;
+                    $scope.checkPage = false;
                     break;
                 }
             }
-
-            // Create a key-value list for the number of people selected and not selected
-            // Has two properties: True = checked, False = unchecked
-            let trueFalseCount = _.countBy($scope.membersInCheckboxList);
-
-            $scope.itemsCheckedCount = {
-                checked: trueFalseCount.true,
-                notChecked: trueFalseCount.false
-            };
-
-            // Show tool tip if the total number of people selected is above 20
-            check.tooltip = $scope.itemsCheckedCount.checked > 20;
-            return check;
+            return $scope.checkPage;
         };
 
         /**
@@ -1799,17 +1793,6 @@
                 }
             }
             return _.keys(_.pickBy(obj)).join(",");
-        };
-
-        /**
-         * Used with ng-keydown directive in HTML to click a checkbox in include and exclude list using the enter key.
-         * @param event - pass in $event in HTML
-         * @param {number} i - index of checkbox
-         */
-        $scope.clickCheckbox = (event, i) => {
-            if (event.keyCode === 13) {
-                $scope.membersInCheckboxList[i.uhUuid] = !$scope.membersInCheckboxList[i.uhUuid];
-            }
         };
 
         /**
