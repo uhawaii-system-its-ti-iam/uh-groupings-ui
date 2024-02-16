@@ -15,7 +15,6 @@
          */
         $scope.init = () => {
             groupingsService.getAnnouncements((res) => {
-                    console.log(res);
                     $scope.activeAnnouncements = $scope.handleActiveAnnouncements(res.announcements);
                 }, () =>{
                     $scope.displayApiErrorModal();

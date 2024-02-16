@@ -8,7 +8,7 @@
                      role="status">
                     <span class="sr-only">Loading...</span>
                 </div>
-                <p class=" mb-1" ng-show="largeGrouping" th:text="#{screen.message.common.loading.toolarge}"><i
+                <p class="mb-1" ng-show="largeGrouping" th:text="#{screen.message.common.loading.toolarge}"><i
                         class="fa fa-check" aria-hidden="true"></i></p>
             </div>
             <div class="col-md-4 py-2">
@@ -28,13 +28,13 @@
                                ng-model="pageSelected"
                                ng-disabled="groupingInclude.length === 0"
                                id="include-checkbox-page"
-                               ng-click="toggleCheckAllSelection('Include', 'page')"
                                value="option1" tooltip="Select Page" data-placement="top"
-                               ng-keydown="$event.keyCode === 13 ? toggleCheckAllSelection('Include', 'page') : null">
+                               ng-change="toggleSelectAllCheckbox('Include', $event.keyCode)"
+                               ng-keydown="toggleSelectAllCheckbox('Include', $event.keyCode)">
                         <i class="fas fa-tools" aria-hidden="true"
                            tooltip data-placement="right"
-                           ng-show="showToolIcon"
-                           title="See Tools tab to remove entire list">
+                           ng-show="pageSelected"
+                           th:title="#{screen.message.common.tooltip.selectAllCheckbox}">
                         </i>
                     </th>
                     <th scope="col" role="button"
@@ -65,30 +65,30 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr ng-repeat="i in pagedItemsInclude[currentPageInclude]" class="table table-sm">
+                <tr ng-repeat="member in pagedItemsInclude[currentPageInclude]" class="table table-sm">
                     <td class="overflow-auto py-1 px-3">
-                        <input class="position-relative ml-0 position-left blank-checkbox" type="checkbox"
+                        <input class="position-relative ml-0 blank-checkbox" type="checkbox"
 							   tabindex="0"
-							   aria-label="Remove {{i.name}} from the include."
-                               ng-keydown="clickCheckbox($event, i)"
-                               ng-model="membersInCheckboxList[i.uhUuid]"
-                               id="{{'include-checkbox-' + i.uhUuid}}"
-                               ng-click="$event.stopPropagation(); toggleCheckAllSelection('Include', 'single')">
+							   aria-label="Remove {{member.name}} from the include."
+                               ng-model="membersInCheckboxList[member.uhUuid]"
+                               id="{{'include-checkbox-' + member.uhUuid}}"
+                               ng-keypress="toggleSingleCheckbox('Include', member, $event.keyCode)"
+                               ng-click="toggleSingleCheckbox('Include', member, $event.keyCode)">
                     </td>
                     <td class="overflow-auto py-1 px-3">
-                        {{i.name}}
+                        {{member.name}}
                         <span class="far fa-trash-alt fa-pull-right clickable pt-1" role="button"
                               tooltip data-placement="top"
-                              tabindex="0" aria-label="Remove {{i.name}} from the Include list"
+                              tabindex="0" aria-label="Remove {{member.name}} from the Include list"
                               th:title="#{screen.message.common.tooltip.remove.include}"
                               ng-keypress="$event.keyCode === 13 ? removeMemberWithTrashcan('Include', currentPageInclude, $index) : null"
                               ng-click="removeMemberWithTrashcan('Include', currentPageInclude, $index)">
                         </span>
                     </td>
-                    <td class="overflow-auto py-1 px-3">{{i.uhUuid}}</td>
+                    <td class="overflow-auto py-1 px-3">{{member.uhUuid}}</td>
                     <td class="overflow-auto py-1 px-3">
-                        {{i.uid}}
-                        <div ng-if="i.uid === ''">
+                        {{member.uid}}
+                        <div ng-if="member.uid === ''">
                             <span>N/A</span>
                             <i class="fa fa-question-circle" role="button" aria-hidden="true"
                                tooltip data-placement="right"
@@ -97,7 +97,7 @@
                         </div>
                     </td>
                     <td class="overflow-auto py-1 px-3">
-                        <i class="text-dark">{{(i.inBasis === 'Yes') ? 'Yes' : 'No'}}</i>
+                        <i class="text-dark">{{(member.inBasis === 'Yes') ? 'Yes' : 'No'}}</i>
                     </td>
                 </tr>
                 </tbody>
