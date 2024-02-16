@@ -2568,7 +2568,7 @@ describe("GroupingController", () => {
             for (let i in scope.membersInCheckboxList[0]) {
                 if (scope.membersInCheckboxList[0].length !== 0) {
                     const memberUuid = scope.pagedItemsInclude[0][Number(i)].uhUuid;
-                    expect(scope.membersInCheckboxList[Number(memberUuid)]).toEqual(true);
+                    expect(scope.membersInCheckboxList[String(memberUuid)]).toEqual(true);
                 }
             }
         });
@@ -2579,7 +2579,7 @@ describe("GroupingController", () => {
             for (let i in scope.membersInCheckboxList[0]) {
                 if (scope.membersInCheckboxList[0].length !== 0) {
                     const memberUuid = scope.pagedItemsInclude[0][Number(i)].uhUuid;
-                    expect(scope.membersInCheckboxList[Number(memberUuid)]).toEqual(false);
+                    expect(scope.membersInCheckboxList[String(memberUuid)]).toEqual(false);
                 }
             }
         });
