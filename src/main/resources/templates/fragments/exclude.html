@@ -8,7 +8,7 @@
                      role="status">
                     <span class="sr-only">Loading...</span>
                 </div>
-                <p class=" mb-1" ng-show="largeGrouping" th:text="#{screen.message.common.loading.toolarge}"><i
+                <p class="mb-1" ng-show="largeGrouping" th:text="#{screen.message.common.loading.toolarge}"><i
                         class="fa fa-check" aria-hidden="true"></i></p>
             </div>
             <div class="col-md-4 py-2">
@@ -22,19 +22,19 @@
             <table class="table table-striped table-hover" aria-live="assertive">
                 <thead>
                 <tr>
-                    <th scope="col" aria-label="Check all checkboxes">
-                        <input class="position-relative ml-0" type="checkbox"
+                    <th scope="col" class="ml-1 align-top" aria-label="Check all checkboxes">
+                        <input class="position-relative ml-1" type="checkbox"
                                aria-label="Select all checkboxes in the current page"
                                ng-model="pageSelected"
                                ng-disabled="groupingExclude.length === 0"
                                id="exclude-checkbox-page"
-                               ng-click="toggleCheckAllSelection('Exclude', 'page')"
-                               value="option1" tooltip="Check all" data-placement="top"
-                               ng-keydown="$event.keyCode === 13 ? toggleCheckAllSelection('Exclude', 'page') : null">
+                               value="option1" tooltip="Select page" data-placement="top"
+                               ng-change="toggleSelectAllCheckbox('Exclude', $event.keyCode)"
+                               ng-keydown="toggleSelectAllCheckbox('Exclude', $event.keyCode)">
                         <i class="fas fa-tools" aria-hidden="true"
                            tooltip data-placement="right"
-                           ng-show="showToolIcon"
-                           title="See Tools tab to remove entire list">
+                           ng-show="pageSelected"
+                           th:title="#{screen.message.common.tooltip.selectAllCheckbox}">
                         </i>
                     </th>
                     <th scope="col" role="button"
@@ -65,29 +65,30 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr ng-repeat="e in pagedItemsExclude[currentPageExclude]" class="table table-sm">
+                <tr ng-repeat="member in pagedItemsExclude[currentPageExclude]" class="table table-sm">
                     <td class="overflow-auto py-1 px-3">
                         <input class="position-relative ml-0 blank-checkbox" type="checkbox"
-                               aria-label="Remove {{e.name}} from the exclude."
-                               ng-keydown="clickCheckbox($event, e)"
-                               ng-model="membersInCheckboxList[e.uhUuid]"
+                               tabindex="0"
+                               aria-label="Remove {{member.name}} from the exclude."
+                               ng-model="membersInCheckboxList[member.uhUuid]"
                                id="{{'exclude-checkbox-' + e.uhUuid}}"
-                               ng-click="$event.stopPropagation(); toggleCheckAllSelection('Exclude', 'single')">
+                               ng-keydown="toggleSingleCheckbox('Exclude', member, $event.keyCode)"
+                               ng-click="toggleSingleCheckbox('Exclude', member, $event.keyCode)">
                     </td>
                     <td class="overflow-auto py-1 px-3">
-                        {{e.name}}
+                        {{member.name}}
                         <span class="far fa-trash-alt fa-pull-right pt-1"  role="button"
                               tooltip data-placement="top"
-                              tabindex="0" aria-label="Remove {{e.name}} from the Exclude list"
+                              tabindex="0" aria-label="Remove {{member.name}} from the Exclude list"
                               th:title="#{screen.message.common.tooltip.remove.exclude}"
                               ng-keypress="$event.keyCode === 13 ? removeMemberWithTrashcan('Exclude', currentPageExclude, $index) : null"
                               ng-click="removeMemberWithTrashcan('Exclude', currentPageExclude, $index)">
                     </span>
                     </td>
-                    <td class="overflow-auto py-1 px-3">{{e.uhUuid}}</td>
+                    <td class="overflow-auto py-1 px-3">{{member.uhUuid}}</td>
                     <td class="overflow-auto py-1 px-3">
                         {{e.uid}}
-                        <div ng-if="e.uid === ''">
+                        <div ng-if="member.uid === ''">
                             <span>N/A</span>
                             <i class="fa fa-question-circle" role="button" aria-hidden="true"
                                tooltip data-placement="right"
@@ -96,7 +97,7 @@
                         </div>
                     </td>
                     <td class="overflow-auto py-1 px-3">
-                        <i class="text-dark">{{(e.inBasis === 'Yes') ? 'Yes' : 'No'}}</i>
+                        <i class="text-dark">{{(member.inBasis === 'Yes') ? 'Yes' : 'No'}}</i>
                     </td>
                 </tr>
                 </tbody>
