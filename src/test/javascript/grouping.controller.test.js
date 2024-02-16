@@ -2650,6 +2650,62 @@ describe("GroupingController", () => {
         });
     });
 
+    describe("updateCheckboxEventListeners", () => {
+        let checkbox;
+
+        beforeEach(() => {
+            scope.testGroupingMembers = {
+                allMembers: scope.groupingInclude,
+                membersOnPage: scope.pagedItemsInclude,
+                pageNumber: scope.currentPageInclude
+            };
+
+            // Mock a checkbox element to attach event listeners to.
+            checkbox = document.createElement("input");
+            checkbox.setAttribute("id","include-checkbox-00000001");
+            checkbox.setAttribute("type","checkbox");
+            document.body.appendChild(checkbox);
+
+            // Expect a GET request from the digest cycle.
+            httpBackend.expectGET('currentUser').respond('Success');
+            // Attach the event listeners.
+            scope.updateCheckboxEventListeners(scope.testGroupingMembers, "Include");
+            httpBackend.flush();
+        });
+
+        afterEach(() => {
+            document.body.removeChild(checkbox);
+        });
+
+        it("should call $apply", () => {
+            spyOn(scope, "$apply").and.callThrough();
+            checkbox.click();
+            expect(scope.$apply).toHaveBeenCalled();
+        });
+
+        it("should set pageSelected to be false", () => {
+            scope.pageSelected = true;
+            // Set all users to unchecked.
+            for (let item of scope.testGroupingMembers.membersOnPage[0]) {
+                scope.membersInCheckboxList[item.uhUuid] = false;
+            }
+            // Trigger the event listeners.
+            checkbox.click();
+            expect(scope.pageSelected).toBeFalse();
+        });
+
+        it("should set pageSelected to be true", () => {
+            scope.pageSelected = false;
+            // Set all users to checked.
+            for (let item of scope.testGroupingMembers.membersOnPage[0]) {
+                scope.membersInCheckboxList[item.uhUuid] = true;
+            }
+            // Trigger the event listeners.
+            checkbox.click();
+            expect(scope.pageSelected).toBeTrue();
+        });
+    });
+
     describe("checkMainSelectAllCheckbox", () => {
         beforeEach(() => {
             scope.testGroupingMembers = {
