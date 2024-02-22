@@ -146,13 +146,11 @@
             $scope.timeoutModalInstance.result.then(() => {
                 restartTimeouts();
                 restartCountdown();
-                $scope.pingServer();
                 isModalOpen = false;
             }, () => {
                 // Error catching if modal is not closed properly.
                 restartTimeouts();
                 restartCountdown();
-                $scope.pingServer();
                 isModalOpen = false;
             });
         };
@@ -162,16 +160,6 @@
          */
         $scope.closeTimeoutModal = () => {
             $scope.timeoutModalInstance.close();
-        };
-
-        /**
-         * Ping tomcat server with a GET request to retrieve user info.
-         */
-        $scope.pingServer = () => {
-            const endpoint = BASE_URL + "members/aaronvil";
-            dataProvider.loadData(() => {
-            }, () => {
-            }, endpoint);
         };
 
         /**
