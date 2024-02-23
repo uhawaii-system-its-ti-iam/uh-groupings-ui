@@ -12,16 +12,16 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.0</version>
+        <version>3.2.2</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
     <properties>
         <maven-war-plugin.version>3.4.0</maven-war-plugin.version>
         <java.version>17</java.version>
-        <org.apereo.cas.client-version>4.0.3</org.apereo.cas.client-version>
+        <org.apereo.cas.client-version>4.0.4</org.apereo.cas.client-version>
 
-        <jquery-version>3.5.0</jquery-version>
+        <jquery-version>3.7.1</jquery-version>
         <angular-mocks-version>1.7.9</angular-mocks-version>
         <angular-ui-bootstrap-version>2.2.0</angular-ui-bootstrap-version>
 
@@ -115,7 +115,7 @@
         <dependency>
             <groupId>com.googlecode.owasp-java-html-sanitizer</groupId>
             <artifactId>owasp-java-html-sanitizer</artifactId>
-            <version>20211018.2</version>
+            <version>20220608.1</version>
         </dependency>
 
         <!-- Webjars -->
