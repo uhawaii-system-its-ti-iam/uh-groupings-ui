@@ -32,6 +32,7 @@ import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.util.Assert;
+import org.springframework.ws.config.annotation.DelegatingWsConfiguration;
 
 import edu.hawaii.its.groupings.access.CasUserDetailsServiceImpl;
 import edu.hawaii.its.groupings.access.DelegatingAuthenticationFailureHandler;
@@ -174,6 +175,11 @@ public class SecurityConfig {
     @Bean
     public DelegatingAuthenticationFailureHandler authenticationFailureHandler() {
         return new DelegatingAuthenticationFailureHandler(appUrlBase);
+    }
+
+    @Bean
+    public DelegatingWsConfiguration delegatingWsConfiguration() {
+        return new DelegatingWsConfiguration();
     }
 
     @Bean
