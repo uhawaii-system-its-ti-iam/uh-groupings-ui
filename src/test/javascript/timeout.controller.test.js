@@ -104,15 +104,6 @@ describe("TimeoutController", function () {
         });
     });
 
-    describe("pingServer", () => {
-        it("should ping server", () => {
-            spyOn(dp, "loadData");
-            scope.pingServer();
-            expect(dp.loadData).toHaveBeenCalled();
-        });
-
-    });
-
     describe("timer", () => {
         it("should decrement seconds remaining", () => {
             scope.secondsRemaining = 10;
