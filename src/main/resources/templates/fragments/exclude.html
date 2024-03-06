@@ -29,8 +29,8 @@
                                ng-disabled="groupingExclude.length === 0"
                                id="exclude-checkbox-page"
                                value="option1" tooltip="Select page" data-placement="top"
-                               ng-change="toggleSelectAllCheckbox('Exclude', $event.keyCode)"
-                               ng-keydown="toggleSelectAllCheckbox('Exclude', $event.keyCode)">
+                               ng-click="toggleSelectAllCheckbox('Exclude')"
+                               ng-keydown="toggleSelectAllCheckbox('Exclude')">
                         <i class="fas fa-tools" aria-hidden="true"
                            tooltip data-placement="right"
                            ng-show="pageSelected"
@@ -136,7 +136,7 @@
         </div>
         <div th:replace="~{fragments/add-error-messages :: add-error-messages}"></div>
         <div class="pageBtn mt-lg-0 mt-2">
-            <div th:replace="~{fragments/pagination :: pagination(currentPage ='currentPageExclude', pagedItems='pagedItemsExclude')}"></div>
+            <div th:replace="~{fragments/pagination :: pagination(currentPage ='currentPageExclude', pagedItems='pagedItemsExclude', groupType='Exclude')}"></div>
         </div>
     </div>
 </th:block>

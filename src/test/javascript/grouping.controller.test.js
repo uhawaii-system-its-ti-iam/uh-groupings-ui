@@ -1828,7 +1828,8 @@ describe("GroupingController", () => {
             scope.pageSelected = true;
             scope.membersInCheckboxList = {"testiwta": true, "testiwtb": true, "testiwtc": true};
             scope.cancelRemoveModal();
-            expect(scope.membersInCheckboxList).toEqual({});
+            _.forOwn(scope.membersInCheckboxList, (value) => {
+                expect(value).toBeFalse()});
             expect(scope.pageSelected).toBeFalse();
         });
     });
@@ -2543,37 +2544,25 @@ describe("GroupingController", () => {
         });
         it("should call assignListToGroup", () => {
             spyOn(scope, "assignListToGroup").and.callThrough();
-            scope.toggleSelectAllCheckbox("Include", 9);
+            scope.toggleSelectAllCheckbox("Include");
             expect(scope.assignListToGroup).toHaveBeenCalled();
-        });
-
-        it("should check the Select All checkbox with the Enter key", () => {
-            scope.pageSelected = false;
-            scope.toggleSelectAllCheckbox("Include", 13);
-            expect(scope.pageSelected).toBeTrue();
-        });
-
-        it("should uncheck the Select All checkbox with the Enter key", () => {
-            scope.pageSelected = true;
-            scope.toggleSelectAllCheckbox("Include", 13);
-            expect(scope.pageSelected).toBeFalse();
         });
 
         it("should check the Select All checkbox", () => {
             scope.pageSelected = false;
-            scope.toggleSelectAllCheckbox("Include", 9);
+            scope.toggleSelectAllCheckbox("Include");
             expect(scope.pageSelected = true);
         });
 
         it("should uncheck the Select All checkbox", () => {
             scope.pageSelected = false;
-            scope.toggleSelectAllCheckbox("Include", 9);
+            scope.toggleSelectAllCheckbox("Include");
             expect(scope.pageSelected = true);
         });
 
         it("should check all checkboxes", () => {
-            scope.pageSelected = true;
-            scope.toggleSelectAllCheckbox("Include", 9);
+            scope.pageSelected = false;
+            scope.toggleSelectAllCheckbox("Include");
             for (let i in scope.membersInCheckboxList[0]) {
                 if (scope.membersInCheckboxList[0].length !== 0) {
                     const memberUuid = scope.pagedItemsInclude[0][Number(i)].uhUuid;
@@ -2583,25 +2572,20 @@ describe("GroupingController", () => {
         });
 
         it("should uncheck all checkboxes", () => {
-            scope.pageSelected = false;
-            scope.toggleSelectAllCheckbox("Include", 9);
+            scope.pageSelected = true;
+            scope.toggleSelectAllCheckbox("Include");
             for (let i in scope.membersInCheckboxList[0]) {
                 if (scope.membersInCheckboxList[0].length !== 0) {
                     const memberUuid = scope.pagedItemsInclude[0][Number(i)].uhUuid;
                     expect(scope.membersInCheckboxList[String(memberUuid)]).toEqual(false);
                 }
             }
-        });
-
-        it("should call updateCheckboxEventListeners", () => {
-            spyOn(scope, "updateCheckboxEventListeners").and.callThrough();
-            scope.toggleSelectAllCheckbox("Include", 9);
-            expect(scope.updateCheckboxEventListeners).toHaveBeenCalled();
+            expect(scope.pageSelected).toBeFalse();
         });
 
         it("should change paginationPageChange from true to false", () => {
             scope.paginationPageChange = true;
-            scope.toggleSelectAllCheckbox("Include", 9);
+            scope.toggleSelectAllCheckbox("Include");
             expect(scope.paginationPageChange).toBeFalse();
         });
     });
@@ -2615,19 +2599,25 @@ describe("GroupingController", () => {
 
         it("should call assignListToGroup", () => {
             spyOn(scope, "assignListToGroup").and.callThrough();
-            scope.toggleSingleCheckbox("Include", testUser, 9);
+            scope.toggleSingleCheckbox("Include", testUser);
             expect(scope.assignListToGroup).toHaveBeenCalled();
         });
 
-        it("should call updateCheckboxEventListeners", () => {
-            spyOn(scope, "updateCheckboxEventListeners").and.callThrough();
-            scope.toggleSingleCheckbox("Include", testUser, 9);
-            expect(scope.updateCheckboxEventListeners).toHaveBeenCalled();
+        it("should check the member's checkbox", () => {
+            scope.membersInCheckboxList[testUser.uhUuid] = false;
+            scope.toggleSingleCheckbox("Include", testUser);
+            expect(scope.membersInCheckboxList[testUser.uhUuid]).toBeTrue();
+        });
+
+        it("should uncheck the member's checkbox", () => {
+            scope.membersInCheckboxList[testUser.uhUuid] = true;
+            scope.toggleSingleCheckbox("Include", testUser);
+            expect(scope.membersInCheckboxList[testUser.uhUuid]).toBeFalse();
         });
 
         it("should change paginationPageChange from true to false", () => {
             scope.paginationPageChange = true;
-            scope.toggleSingleCheckbox("Include", testUser, 9);
+            scope.toggleSingleCheckbox("Include", testUser);
             expect(scope.paginationPageChange).toBeFalse();
         });
     });
@@ -2656,6 +2646,36 @@ describe("GroupingController", () => {
             expect(scope.groupingMembers.allMembers).toEqual(scope.groupingInclude);
             expect(scope.groupingMembers.membersOnPage).toEqual(scope.pagedItemsInclude);
             expect(scope.groupingMembers.pageNumber).toEqual(scope.currentPageInclude);
+        });
+    });
+
+    describe("newPage", () => {
+        it("should call assignListToGroup", () => {
+            spyOn(scope, "assignListToGroup").and.callThrough();
+            scope.newPage("Include");
+            expect(scope.assignListToGroup).toHaveBeenCalled();
+        });
+
+        it("should check the Select All checkbox", () => {
+            scope.membersInCheckboxList = {
+                "00000001": true,
+                "00000002": true,
+                "00000003": true,
+            };
+            scope.pageSelected = false;
+            scope.newPage("Include");
+            expect(scope.pageSelected).toBeTrue();
+        });
+
+        it("should uncheck the Select All checkbox", () => {
+            scope.membersInCheckboxList = {
+                "00000001": true,
+                "00000002": true,
+                "00000003": false,
+            };
+            scope.pageSelected = true;
+            scope.newPage("Include");
+            expect(scope.pageSelected).toBeFalse();
         });
     });
 
@@ -2710,9 +2730,18 @@ describe("GroupingController", () => {
 
     describe("resetFields", () => {
         it("should reset membersInCheckboxList array", () => {
-            scope.membersInCheckboxList = [1, 2, 3];
+            scope.membersInCheckboxList = {
+                1111111: true,
+                2222222: true,
+                3333333: true
+            };
             scope.resetFields();
-            expect(scope.membersInCheckboxList).toEqual({});
+            const expected = {
+                1111111: false,
+                2222222: false,
+                3333333: false
+            };
+            expect(scope.membersInCheckboxList).toEqual(expected);
         });
 
         it("should set PageSelected to false", () => {
