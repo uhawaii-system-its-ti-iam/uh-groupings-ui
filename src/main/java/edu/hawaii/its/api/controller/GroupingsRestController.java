@@ -224,32 +224,6 @@ public class GroupingsRestController {
     }
 
     /**
-     * Get a list of invalid uhIdentifiers given a list of uhIdentifiers.
-     */
-    @PostMapping(value = "/members/invalid")
-    @ResponseBody
-    public ResponseEntity<String> invalidUhIdentifiers(@RequestBody List<String> uhIdentifiers) {
-        logger.info("Entered REST invalidUhIdentifiers...");
-        String currentUid = policy.sanitize(userContextService.getCurrentUid());
-        List<String> safeInput = sanitizeList(uhIdentifiers);
-        String uri = String.format(API_2_1_BASE + "/members/invalid");
-        return httpRequestService.makeApiRequestWithBody(currentUid, uri, safeInput, HttpMethod.POST);
-    }
-
-    /**
-     * Get a list of invalid uhIdentifiers given a list of uhIdentifiers asynchronously.
-     */
-    @PostMapping(value = "/members/invalidAsync")
-    @ResponseBody
-    public ResponseEntity<String> invalidUhIdentifiersAsync(@RequestBody List<String> uhIdentifiers) {
-        logger.info("Entered REST invalidUhIdentifiersAsync...");
-        String currentUid = policy.sanitize(userContextService.getCurrentUid());
-        List<String> safeInput = sanitizeList(uhIdentifiers);
-        String uri = String.format(API_2_1_BASE + "/members/invalid/async");
-        return httpRequestService.makeApiRequestWithBody(currentUid, uri, safeInput, HttpMethod.POST);
-    }
-
-    /**
      * Remove all members from the include group.
      */
     @PostMapping(value = "{groupingPath}/resetIncludeGroup")
@@ -312,14 +286,29 @@ public class GroupingsRestController {
 
     /**
      * Get a member's attributes based off username.
+     * Get a list of invalid uhIdentifiers given a list of uhIdentifiers.
      */
     @PostMapping(value = "/members")
     @ResponseBody
-    public ResponseEntity<String> membersAttributes(@RequestBody List<String> uhIdentifiers) {
-        logger.info("Entered REST membersAttributes...");
+    public ResponseEntity<String> memberAttributeResults(@RequestBody List<String> uhIdentifiers) {
+        logger.info("Entered REST memberAttributeResults...");
         String currentUid = policy.sanitize(userContextService.getCurrentUid());
         List<String> safeInput = sanitizeList(uhIdentifiers);
         String uri = String.format(API_2_1_BASE + "/members");
+        return httpRequestService.makeApiRequestWithBody(currentUid, uri, safeInput, HttpMethod.POST);
+    }
+
+    /**
+     * Get a member's attributes based off username asynchronously.
+     * Get a list of invalid uhIdentifiers given a list of uhIdentifiers asynchronously.
+     */
+    @PostMapping(value = "/members/membersAsync")
+    @ResponseBody
+    public ResponseEntity<String> memberAttributeResultsAsync(@RequestBody List<String> uhIdentifiers) {
+        logger.info("Entered REST memberAttributeResultsAsync...");
+        String currentUid = policy.sanitize(userContextService.getCurrentUid());
+        List<String> safeInput = sanitizeList(uhIdentifiers);
+        String uri = String.format(API_2_1_BASE + "/members/async");
         return httpRequestService.makeApiRequestWithBody(currentUid, uri, safeInput, HttpMethod.POST);
     }
 

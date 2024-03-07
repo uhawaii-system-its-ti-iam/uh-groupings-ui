@@ -330,34 +330,6 @@ describe("GroupingsService", () => {
         });
     });
 
-    describe("invalidUhIdentifiers", () => {
-        let uhIdentifiers = "";
-        it("should call dataProvider.loadDataWithBody", () => {
-            spyOn(dp, "loadDataWithBody");
-            gs.invalidUhIdentifiers(uhIdentifiers, onSuccess, onError);
-            expect(dp.loadDataWithBody).toHaveBeenCalled();
-        });
-        it("should use the correct path", () => {
-            gs.invalidUhIdentifiers(uhIdentifiers, onSuccess, onError);
-            httpBackend.expectPOST(BASE_URL + "members/invalid").respond(200);
-            expect(httpBackend.flush).not.toThrow();
-        });
-    });
-
-    describe("invalidUhIdentifiersAsync", () => {
-        let uhIdentifiers = "";
-        it("should call dataProvider.loadDataWithBodyAsync", () => {
-            spyOn(dp, "loadDataWithBodyAsync");
-            gs.invalidUhIdentifiersAsync(uhIdentifiers, onSuccess, onError);
-            expect(dp.loadDataWithBodyAsync).toHaveBeenCalled();
-        });
-        it("should use the correct path", () => {
-            gs.invalidUhIdentifiersAsync(uhIdentifiers, onSuccess, onError);
-            httpBackend.expectPOST(BASE_URL + "members/invalidAsync").respond(200);
-            expect(httpBackend.flush).not.toThrow();
-        });
-    });
-
     describe("getMemberAttributes", () => {
         let member = "";
         it("should call dataProvider.loadData", () => {
@@ -372,16 +344,30 @@ describe("GroupingsService", () => {
         });
     });
 
-    describe("getMembersAttributes", () => {
+    describe("getMemberAttributeResults", () => {
         let member = "";
         it("should call dataProvider.loadDataWithBody", () => {
             spyOn(dp, "loadDataWithBody");
-            gs.getMembersAttributes(member, onSuccess, onError);
+            gs.getMemberAttributeResults(member, onSuccess, onError);
             expect(dp.loadDataWithBody).toHaveBeenCalled();
         });
         it("should use the correct path", () => {
-            gs.getMembersAttributes(member, onSuccess, onError);
+            gs.getMemberAttributeResults(member, onSuccess, onError);
             httpBackend.expectPOST(BASE_URL + "members").respond(200);
+            expect(httpBackend.flush).not.toThrow();
+        });
+    });
+
+    describe("getMemberAttributeResultsAsync", () => {
+        let member = "";
+        it("should call dataProvider.loadDataWithBodyAsync", () => {
+            spyOn(dp, "loadDataWithBodyAsync");
+            gs.getMemberAttributeResultsAsync(member, onSuccess, onError);
+            expect(dp.loadDataWithBodyAsync).toHaveBeenCalled();
+        });
+        it("should use the correct path", () => {
+            gs.getMemberAttributeResultsAsync(member, onSuccess, onError);
+            httpBackend.expectPOST(BASE_URL + "members/membersAsync").respond(200);
             expect(httpBackend.flush).not.toThrow();
         });
     });

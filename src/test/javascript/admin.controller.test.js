@@ -240,11 +240,11 @@ describe("AdminController", function () {
             scope.searchForUserGroupingInformation();
             expect(gs.managePersonResults).toHaveBeenCalled();
         });
-        it("should call groupingsService.getMemberAttributes", () => {
+        it("should call groupingsService.getMemberAttributeResults", () => {
             scope.personToLookup = "iamtst01";
-            spyOn(gs, "getMemberAttributes").and.callThrough();
+            spyOn(gs, "getMemberAttributeResults").and.callThrough();
             scope.searchForUserGroupingInformation();
-            expect(gs.getMemberAttributes).toHaveBeenCalled();
+            expect(gs.getMemberAttributeResults).toHaveBeenCalled();
         });
         it("should clear the table", () => {
             scope.personToLookup = "j";
@@ -322,10 +322,10 @@ describe("AdminController", function () {
             scope.personToLookup = "";
         });
 
-        it("should call groupingsService.getMemberAttributes", () => {
-            spyOn(gs, "getMemberAttributes").and.callThrough();
+        it("should call groupingsService.getMemberAttributeResults", () => {
+            spyOn(gs, "getMemberAttributeResults").and.callThrough();
             scope.removeFromGroups();
-            expect(gs.getMemberAttributes).toHaveBeenCalled();
+            expect(gs.getMemberAttributeResults).toHaveBeenCalled();
         });
     });
 
@@ -412,6 +412,10 @@ describe("AdminController", function () {
     });
 
     describe("addAdmin", () => {
+        const uhIdentifiers = ["testiwta"];
+        const results = { resultCode: "SUCCESS", invalid: [], results: uhIdentifiers };
+        const invalid = { resultCode: "FAILURE", invalid: uhIdentifiers, results: [] };
+
         beforeEach(() => {
             httpBackend.whenGET("currentUser").passThrough();
         });
@@ -424,8 +428,8 @@ describe("AdminController", function () {
 
         it("should check that the admin to add is in the admin list", () => {
             scope.containsInput = false;
-            scope.adminToAdd = "iamtst01";
-            scope.adminsList = [{username: "iamtst01", uhUuid: "iamtst01"}];
+            scope.adminToAdd = "testiwta";
+            scope.adminsList = [{uid: "testiwta", uhUuid: "99997027" }];
             scope.addAdmin();
 
             expect(scope.user).toBe(scope.adminToAdd);
@@ -435,13 +439,13 @@ describe("AdminController", function () {
 
         it("should display the add modal", () => {
             spyOn(scope, "displayAddModal");
-            scope.adminToAdd = "iamtst01";
+            scope.adminToAdd = uhIdentifiers;
             scope.addAdmin();
 
-            httpBackend.expectPOST(BASE_URL + "members/invalid", ["iamtst01"]).respond(200, []);
+            httpBackend.expectPOST(BASE_URL + "members", [uhIdentifiers]).respond(200, results);
             httpBackend.flush();
 
-            expect(scope.user).toBe(scope.adminToAdd);
+            expect(scope.user).toEqual(scope.adminToAdd);
             expect(scope.displayAddModal).toHaveBeenCalled();
         });
     });
@@ -501,10 +505,10 @@ describe("AdminController", function () {
         });
 
         it("should call groupingsService", () => {
-            spyOn(gs, "getMemberAttributes").and.callThrough();
+            spyOn(gs, "getMemberAttributeResults").and.callThrough();
             scope.displayRemoveFromGroupsModal(options);
 
-            expect(gs.getMemberAttributes).toHaveBeenCalled();
+            expect(gs.getMemberAttributeResults).toHaveBeenCalled();
         });
     });
 
