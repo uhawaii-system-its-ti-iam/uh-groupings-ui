@@ -227,14 +227,6 @@
 
             /**
              * Get the attributes of a user, which includes their uid, uhUuid, givenName, cn, and sn.
-             */
-            getMemberAttributes(member, onSuccess, onError) {
-                let endpoint = BASE_URL + "members/" + member;
-                dataProvider.loadData(endpoint, onSuccess, onError);
-            },
-
-            /**
-             * Get the attributes of a user, which includes their uid, uhUuid, givenName, cn, and sn.
              * Get a list of invalid given a list of uhIdentifiers.
              */
             getMemberAttributeResults(members, onSuccess, onError) {

@@ -330,20 +330,6 @@ describe("GroupingsService", () => {
         });
     });
 
-    describe("getMemberAttributes", () => {
-        let member = "";
-        it("should call dataProvider.loadData", () => {
-            spyOn(dp, "loadData");
-            gs.getMemberAttributes(member, onSuccess, onError);
-            expect(dp.loadData).toHaveBeenCalled();
-        });
-        it("should use the correct path", () => {
-            gs.getMemberAttributes(member, onSuccess, onError);
-            httpBackend.expectGET(BASE_URL + "members/" + member).respond(200);
-            expect(httpBackend.flush).not.toThrow();
-        });
-    });
-
     describe("getMemberAttributeResults", () => {
         let member = "";
         it("should call dataProvider.loadDataWithBody", () => {
