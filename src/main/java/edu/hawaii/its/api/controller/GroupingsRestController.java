@@ -273,19 +273,6 @@ public class GroupingsRestController {
 
     /**
      * Get a member's attributes based off username.
-     */
-    @GetMapping(value = "/members/{uhIdentifier}")
-    @ResponseBody
-    public ResponseEntity<String> memberAttributes(@PathVariable String uhIdentifier) {
-        logger.info("Entered REST memberAttributes...");
-        String currentUid = policy.sanitize(userContextService.getCurrentUid());
-        String safeInput = policy.sanitize(uhIdentifier);
-        String uri = String.format(API_2_1_BASE + "/members/%s", safeInput);
-        return httpRequestService.makeApiRequest(currentUid, uri, HttpMethod.GET);
-    }
-
-    /**
-     * Get a member's attributes based off username.
      * Get a list of invalid uhIdentifiers given a list of uhIdentifiers.
      */
     @PostMapping(value = "/members")
