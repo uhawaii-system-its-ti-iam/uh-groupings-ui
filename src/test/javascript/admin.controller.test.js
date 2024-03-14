@@ -162,23 +162,18 @@ describe("AdminController", function () {
     describe("searchForUserGroupingInformationOnSuccessCallback", () => {
         let res;
         beforeEach(() => {
-            res = [
-                {
-                    "identifier": null,
-                    "person": null,
-                    "group": null,
-                    "path": "path-to-grouping-name",
-                    "name": "grouping-name",
-                    "inBasis": false,
-                    "inInclude": false,
-                    "inExclude": false,
-                    "inOwner": true,
-                    "inBasisAndInclude": false,
-                    "optOutEnabled": true,
-                    "optInEnabled": false,
-                    "selfOpted": false
-                }];
-
+            res = {
+                "resultCode": "resultCode",
+                "results": [
+                    {
+                        "path": "path-to-grouping-name",
+                        "name": "grouping-name",
+                        "inInclude": false,
+                        "inExclude": false,
+                        "inOwner": false,
+                        "inBasisAndInclude": false,
+                    }]
+            };
         });
 
         it("should call scope.filter", () => {
@@ -189,7 +184,7 @@ describe("AdminController", function () {
 
         it("should set scope.personList equal to api response", () => {
             scope.searchForUserGroupingInformationOnSuccessCallback(res);
-            expect(scope.personList).toEqual(res);
+            expect(scope.personList).toEqual(res.results);
         });
 
         it("should set scope.user equal to scope.personToLookup", () => {
