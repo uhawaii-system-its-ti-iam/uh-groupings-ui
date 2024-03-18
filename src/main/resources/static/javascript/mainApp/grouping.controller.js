@@ -428,6 +428,7 @@
             $scope.checkedBoxes = 0;
             $scope.pageSelected = false;
             $scope.waitingForImportResponse = false;
+            $scope.errorDismissed = true;
         };
 
         /**
