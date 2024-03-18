@@ -426,9 +426,21 @@
             $scope.membersInCheckboxList = {};
             $scope.paginationPageChange = true;
             $scope.checkedBoxes = 0;
+<<<<<<< HEAD
             $scope.pageSelected = false;
             $scope.waitingForImportResponse = false;
             $scope.errorDismissed = true;
+=======
+            $scope.waitingForImportResponse = false;
+<<<<<<< HEAD
+            $scope.pageSelected = false;
+            for (const mem in $scope.membersInCheckboxList) {
+                $scope.membersInCheckboxList[mem] = false;
+            }
+=======
+            $scope.errorDismissed = true;
+>>>>>>> 2d29c6fd (Fixes add error message bug (#925))
+>>>>>>> 16abbd89 (Fixes add error message bug (#925))
         };
 
         /**
