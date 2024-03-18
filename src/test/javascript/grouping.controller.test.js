@@ -2755,6 +2755,12 @@ describe("GroupingController", () => {
             scope.resetFields();
             expect(scope.waitingForImportResponse).toBeFalse();
         });
+
+        it("should set errorDismissed to true", () => {
+            scope.errorDismissed = false;
+            scope.resetFields();
+            expect(scope.errorDismissed).toBeTrue();
+        });
     });
 
     describe("exportGroupToCsv", () => {
