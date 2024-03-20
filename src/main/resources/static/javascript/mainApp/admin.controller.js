@@ -75,7 +75,7 @@
         };
 
         $scope.searchForUserGroupingInformationOnSuccessCallback = (res) => {
-            $scope.personList = _.sortBy(res, "name");
+            $scope.personList = _.sortBy(res.results, "name");
             $scope.filter($scope.personList, "pagedItemsPerson", "currentPagePerson", $scope.personQuery, true);
             $scope.user = $scope.personToLookup;
             $scope.userGroupingInformationLoading = false
@@ -98,7 +98,8 @@
                     $scope.searchForUserGroupingInformationOnSuccessCallback,
                     $scope.searchForUserGroupingInformationOnErrorCallback
                 );
-                groupingsService.getMemberAttributeResults(validUser, (person) => {
+                groupingsService.getMemberAttributeResults([validUser], (res) => {
+                    const person = res.results[0];
                     $scope.initMemberDisplayName(person);
                     $scope.setCurrentManagePerson(person);
                 });
@@ -124,7 +125,7 @@
          */
         $scope.setCurrentManagePerson = (person) => {
             if ($scope.uhUuid != null) {
-                $scope.currentManagePerson = "(" + person.name + ", " + person.username + ", " + person.uhUuid + ")";
+                $scope.currentManagePerson = "(" + person.name + ", " + person.uid + ", " + person.uhUuid + ")";
             } else {
                 $scope.currentManagePerson = "";
                 $scope.invalidInput = true;
