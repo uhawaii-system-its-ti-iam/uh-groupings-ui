@@ -435,7 +435,9 @@
 <<<<<<< HEAD
             $scope.pageSelected = false;
             for (const mem in $scope.membersInCheckboxList) {
-                $scope.membersInCheckboxList[mem] = false;
+                if ($scope.membersInCheckboxList[mem] !== undefined) {
+                    $scope.membersInCheckboxList[mem] = false;
+                }
             }
 =======
             $scope.errorDismissed = true;
