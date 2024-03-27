@@ -401,15 +401,6 @@
         };
 
         /**
-         * Helper - clearMemberInput
-         * Small function that resets the checkboxes on the page
-         */
-        const resetCheckboxes = () => {
-            $scope.pageSelected = false;
-            $scope.membersInCheckboxList = {};
-        };
-
-        /**
          * Clears the user input for adding/deleting a member to/from a list.
          */
         const clearMemberInput = () => {
@@ -418,17 +409,16 @@
             $scope.membersInList = "";
             $scope.multiRemoveResults = [];
             $scope.waitingForImportResponse = false;
-            resetCheckboxes();
         };
 
         $scope.resetFields = () => {
             $scope.manageMembers = "";
-            $scope.membersInCheckboxList = {};
             $scope.paginationPageChange = true;
             $scope.checkedBoxes = 0;
-            $scope.pageSelected = false;
             $scope.waitingForImportResponse = false;
             $scope.errorDismissed = true;
+            $scope.pageSelected = false;
+            $scope.membersInCheckboxList = _.mapValues($scope.membersInCheckboxList, () => false);
         };
 
         /**
@@ -1155,6 +1145,7 @@
          */
         $scope.cancelRemoveModal = () => {
             clearMemberInput();
+            $scope.resetFields();
             $scope.removeModalInstance.dismiss("cancel");
         };
 
@@ -1617,7 +1608,6 @@
             });
         };
 
-
         /**
          * Copies the members in the current page to an object by UH number
          * that holds true/false value for triggering checkboxes.
@@ -1630,20 +1620,15 @@
         /**
          * Toggles the "Select All" checkbox in the Include or Exclude tab.
          * @param group - The group identifier ("Include" or "Exclude") for which the checkboxes should be toggled.
-         * @param keyCode - The key code used to select the box.
          */
-        $scope.toggleSelectAllCheckbox = (group, keyCode) => {
+        $scope.toggleSelectAllCheckbox = (group) => {
             $scope.assignListToGroup(group);
-
-            if (keyCode === 13) { //Enter key needs manual flip
-                $scope.pageSelected = !$scope.pageSelected;
-            }
-
+            // Only called when checkbox is clicked on.
+            // Therefore, needs to be flipped to reflect the function of a checkbox.
+            $scope.pageSelected = !$scope.pageSelected;
             for (const member of $scope.groupingMembers.membersOnPage[$scope.groupingMembers.pageNumber]) {
                 $scope.membersInCheckboxList[member.uhUuid] = $scope.pageSelected;
             }
-
-            $scope.updateCheckboxEventListeners($scope.groupingMembers, group);
             $scope.paginationPageChange = false;
         };
 
@@ -1651,22 +1636,17 @@
          * Toggles the single checkboxes in the Include or Exclude tab.
          * @param group - The group identifier ("Include" or "Exclude") for which the checkbox should be toggled.
          * @param member - The member associated to the checkbox to be toggled.
-         * @param keyCode - The key code used to select the box.
          */
-        $scope.toggleSingleCheckbox = (group, member, keyCode) => {
+        $scope.toggleSingleCheckbox = (group, member) => {
             $scope.assignListToGroup(group);
-
-            if (keyCode === 13) { //Enter key needs manual flip
-                $scope.membersInCheckboxList[member.uhUuid] = !$scope.membersInCheckboxList[member.uhUuid];
-            }
-
+            $scope.membersInCheckboxList[member.uhUuid] = !$scope.membersInCheckboxList[member.uhUuid];
             $scope.pageSelected = $scope.checkMainSelectAllCheckbox($scope.groupingMembers);
-            $scope.updateCheckboxEventListeners($scope.groupingMembers, group);
             $scope.paginationPageChange = false;
         };
 
         /**
          * Assigning groupingMembers to specified group ("Include" or "Exclude").
+         * @param group - The group identifier ("Include" or "Exclude").
          */
         $scope.assignListToGroup = (group) => {
             if (group === "Exclude") {
@@ -1685,64 +1665,13 @@
         };
 
         /**
-         * Watches changes in the currentPageInclude variable and triggers updates
-         * for checkbox event listeners when the page number changes.
-         *
-         * @param {number} newValue - The new value of currentPageInclude.
+         * Called on by pagination to set the Select All checkbox status.
+         * Based on the page members checkboxes.
+         * @param group - The group identifier ("Include" or "Exclude").
          */
-        $scope.$watch("currentPageInclude", (newValue) => {
-            const groupingMembers = {
-                allMembers: $scope.groupingInclude,
-                membersOnPage: $scope.pagedItemsInclude,
-                pageNumber: newValue
-            };
-            $scope.updateCheckboxEventListeners(groupingMembers, "Include");
-            $scope.pageSelected = $scope.checkMainSelectAllCheckbox(groupingMembers);
-            $scope.paginationPageChange = true;
-        });
-
-        /**
-         * Watches changes in the currentPageExclude variable and triggers updates
-         * for checkbox event listeners when the page number changes.
-         *
-         * @param {number} newValue - The new value of currentPageExclude.
-         */
-        $scope.$watch("currentPageExclude", (newValue) => {
-            const groupingMembers = {
-                allMembers: $scope.groupingExclude,
-                membersOnPage: $scope.pagedItemsExclude,
-                pageNumber: newValue
-            };
-            $scope.updateCheckboxEventListeners(groupingMembers, "Exclude");
-            $scope.pageSelected = $scope.checkMainSelectAllCheckbox(groupingMembers);
-            $scope.paginationPageChange = true;
-        });
-
-        /**
-         * Updates checkbox event listeners for a specified group (Include or Exclude).
-         *
-         * @param {Object} item - An object containing information about the group and pagination.
-         *                       {Object} allMembers - The array of all items in the group.
-         *                       {Object} membersOnPage - The array of items on the current page.
-         *                       {number} pageNumber - The current page number.
-         * @param {string} group - The group identifier ("Include" or "Exclude").
-         */
-        $scope.updateCheckboxEventListeners = (item, group) => {
-            const handleCheckboxChange = () => {
-                $scope.$apply(() => {
-                    $scope.pageSelected = $scope.checkMainSelectAllCheckbox(item);
-                });
-            };
-            // Remove existing event listeners before reattaching them
-            const groupStringID = ((group === "Include") ? "[id^=\"include-checkbox-\"]" : "[id^=\"exclude-checkbox-\"]");
-            const checkboxes = document.querySelectorAll(groupStringID);
-            checkboxes.forEach(checkbox => {
-                checkbox.removeEventListener("change", handleCheckboxChange);
-            });
-            // Reattach new eventListeners
-            checkboxes.forEach(checkbox => {
-                checkbox.addEventListener("change", handleCheckboxChange);
-            });
+        $scope.newPage = (group) => {
+            $scope.assignListToGroup(group);
+            $scope.pageSelected =  $scope.checkMainSelectAllCheckbox($scope.groupingMembers);
         };
 
         /**
