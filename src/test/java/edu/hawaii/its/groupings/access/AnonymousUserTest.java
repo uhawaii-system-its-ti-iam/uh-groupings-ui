@@ -21,7 +21,7 @@ public class AnonymousUserTest {
     @Test
     public void testConstructions() {
         assertNotNull(user);
-        assertThat(user.getUsername(), is("anonymous"));
+        assertThat(user.getUid(), is("anonymous"));
         assertThat(user.getUid(), is("anonymous"));
         assertNull(user.getUhUuid());
         assertThat(user.getPassword(), is(""));

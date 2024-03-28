@@ -135,8 +135,8 @@ describe("GroupingController", () => {
         scope.allowOptIn = true;
         scope.allowOptOut = true;
 
-        scope.pagedItemsPerson = [];
-        scope.currentPagePerson = 0;
+        scope.pagedItemsSubject = [];
+        scope.currentPageSubject = 0;
     });
 
     describe("displayGrouping", () => {
@@ -566,7 +566,7 @@ describe("GroupingController", () => {
                 name: "testName",
                 firstName: "testFirstName",
                 uhUuid: "testuhUuid",
-                uid: "testUsername"
+                uid: "testUid"
             };
 
             scope.initMemberDisplayName(attributes);
@@ -579,7 +579,7 @@ describe("GroupingController", () => {
                 name: "testName",
                 firstName: "testFirstName",
                 uhUuid: "testuhUuid",
-                uid: "testUsername"
+                uid: "testUid"
             };
 
             scope.initMemberDisplayName(attributes);
@@ -594,7 +594,7 @@ describe("GroupingController", () => {
                 name: "testName",
                 firstName: "testFirstName",
                 uhUuid: "testuhUuid",
-                uid: "testUsername",
+                uid: "testUid",
                 inBasis: "Yes",
                 inInclude: "Yes",
                 inExclude: "Yes"
@@ -609,7 +609,7 @@ describe("GroupingController", () => {
                 name: "testName",
                 firstName: "testFirstName",
                 uhUuid: "testuhUuid",
-                uid: "testUsername",
+                uid: "testUid",
                 inBasis: "No",
                 inInclude: "No",
                 inExclude: "No"
@@ -626,7 +626,7 @@ describe("GroupingController", () => {
                 name: "testName",
                 firstName: "testFirstName",
                 uhUuid: "testuhUuid",
-                uid: "testUsername"
+                uid: "testUid"
             };
 
             scope.initMemberDisplayName(attributes);
@@ -638,7 +638,7 @@ describe("GroupingController", () => {
                 name: "",
                 firstName: "testFirstName",
                 uhUuid: "testuhUuid",
-                uid: "testUsername"
+                uid: "testUid"
             };
 
             scope.initMemberDisplayName(attributes);
@@ -2280,7 +2280,7 @@ describe("GroupingController", () => {
             expect(scope.adminsQuery).toEqual("");
             expect(scope.optInQuery).toEqual("");
             expect(scope.ownersQuery).toEqual("");
-            expect(scope.personQuery).toEqual("");
+            expect(scope.subjectQuery).toEqual("");
         });
     });
 

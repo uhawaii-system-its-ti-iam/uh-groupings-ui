@@ -150,12 +150,12 @@ describe("AdminController", function () {
             expect(gs.getAllGroupings).toHaveBeenCalled();
         });
 
-        it("should call scope.initManagePersonGrouping", () => {
-            const managePersonGrouping = {name: "testName", path: "testPath"};
-            spyOn(scope, "initManagePersonGrouping");
-            sessionStorage.setItem("managePersonGrouping", JSON.stringify(managePersonGrouping));
+        it("should call scope.initManageSubjectGrouping", () => {
+            const manageSubjectGrouping = {name: "testName", path: "testPath"};
+            spyOn(scope, "initManageSubjectGrouping");
+            sessionStorage.setItem("manageSubjectGrouping", JSON.stringify(manageSubjectGrouping));
             scope.init();
-            expect(scope.initManagePersonGrouping).toHaveBeenCalledWith(managePersonGrouping);
+            expect(scope.initManageSubjectGrouping).toHaveBeenCalledWith(manageSubjectGrouping);
         });
     });
 
@@ -182,14 +182,14 @@ describe("AdminController", function () {
             expect(scope.filter).toHaveBeenCalled();
         });
 
-        it("should set scope.personList equal to api response", () => {
+        it("should set scope.subjectList equal to api response", () => {
             scope.searchForUserGroupingInformationOnSuccessCallback(res);
-            expect(scope.personList).toEqual(res.results);
+            expect(scope.subjectList).toEqual(res.results);
         });
 
-        it("should set scope.user equal to scope.personToLookup", () => {
+        it("should set scope.user equal to scope.subjectToLookup", () => {
             scope.searchForUserGroupingInformationOnSuccessCallback(res);
-            expect(expect(scope.user).toEqual(scope.personToLookup));
+            expect(expect(scope.user).toEqual(scope.subjectToLookup));
         });
 
         it("should set scope.loading to be false", () => {
@@ -205,8 +205,8 @@ describe("AdminController", function () {
         it("should set scope.loading to be false", () => {
             expect(scope.loading).toBeFalse();
         });
-        it("should set scope.user equal to scope.personToLookup", () => {
-            expect(expect(scope.user).toEqual(scope.personToLookup));
+        it("should set scope.user equal to scope.subjectToLookup", () => {
+            expect(expect(scope.user).toEqual(scope.subjectToLookup));
         });
     });
 
@@ -214,63 +214,63 @@ describe("AdminController", function () {
         it("should set emptyInput to true", () => {
             scope.searchForUserGroupingInformation();
             expect(scope.emptyInput).toBeTrue();
-            expect(scope.personList).toEqual([]);
-            expect(scope.currentManagePerson).toEqual("");
+            expect(scope.subjectList).toEqual([]);
+            expect(scope.currentManageSubject).toEqual("");
         });
-        it("should set emptyInput to be true and personList to empty array", () => {
-            scope.personToLookup = "";
+        it("should set emptyInput to be true and subjectList to empty array", () => {
+            scope.subjectToLookup = "";
             scope.searchForUserGroupingInformation();
             expect(scope.emptyInput).toBeTrue();
-            expect(scope.personList).toEqual([]);
+            expect(scope.subjectList).toEqual([]);
         });
         it("should set invalidInput to be true", () => {
             scope.invalidInput = false;
-            scope.personToLookup = "123$";
+            scope.subjectToLookup = "123$";
             scope.searchForUserGroupingInformation();
             expect(scope.invalidInput).toBeTrue();
         });
-        it("should call groupingsService.managePersonResults", () => {
-            scope.personToLookup = "iamtst01";
-            spyOn(gs, "managePersonResults").and.callThrough();
+        it("should call groupingsService.manageSubjectResults", () => {
+            scope.subjectToLookup = "iamtst01";
+            spyOn(gs, "manageSubjectResults").and.callThrough();
             scope.searchForUserGroupingInformation();
-            expect(gs.managePersonResults).toHaveBeenCalled();
+            expect(gs.manageSubjectResults).toHaveBeenCalled();
         });
         it("should call groupingsService.getMemberAttributeResults", () => {
-            scope.personToLookup = "iamtst01";
+            scope.subjectToLookup = "iamtst01";
             spyOn(gs, "getMemberAttributeResults").and.callThrough();
             scope.searchForUserGroupingInformation();
             expect(gs.getMemberAttributeResults).toHaveBeenCalled();
         });
         it("should clear the table", () => {
-            scope.personToLookup = "j";
+            scope.subjectToLookup = "j";
             scope.searchForUserGroupingInformation();
-            expect(scope.personList).toEqual([]);
+            expect(scope.subjectList).toEqual([]);
 
-            scope.personToLookup = "*";
+            scope.subjectToLookup = "*";
             scope.searchForUserGroupingInformation();
-            expect(scope.personList).toEqual([]);
+            expect(scope.subjectList).toEqual([]);
         });
     });
 
-    describe("setCurrentManagePerson", () => {
-        it("should not set currentManagePerson and set invalidInput to true", () => {
+    describe("setCurrentManageSubject", () => {
+        it("should not set currentManageSubject and set invalidInput to true", () => {
             scope.uhUuid = null;
             scope.invalidInput = false;
-            scope.setCurrentManagePerson("");
+            scope.setCurrentManageSubject("");
             expect(scope.invalidInput).toBeTrue();
-            expect(scope.currentManagePerson).toEqual("");
+            expect(scope.currentManageSubject).toEqual("");
         });
-        it("should set currentManagePerson and not set invalidInput", () => {
+        it("should set currentManageSubject and not set invalidInput", () => {
             scope.uhUuid = "notnull";
             scope.invalidInput = false;
-            scope.setCurrentManagePerson("iamtst");
+            scope.setCurrentManageSubject("iamtst");
             expect(scope.invalidInput).toBeFalse();
-            expect(scope.currentManagePerson).not.toEqual("");
+            expect(scope.currentManageSubject).not.toEqual("");
         });
     });
 
     describe("checkSoleOwner", () => {
-        let res = {username: "testUsername", name: "testName", uhUuid: "testId"};
+        let res = {uid: "testUid", name: "testName", uhUuid: "testId"};
         it("should empty soleOwnerGroupingNames", () => {
             scope.soleOwnerGroupingNames = ["test1", "test2"];
             scope.selectedOwnedGroupings = ["test"];
@@ -296,7 +296,7 @@ describe("AdminController", function () {
     describe("removeFromGroupsCallbackOnSuccess", () => {
         let res;
         beforeEach(() => {
-            scope.personToLookup = "iamtst01";
+            scope.subjectToLookup = "iamtst01";
             res = {
                 "uid": "iamtst01",
                 "uhUuid": "iamtst01",
@@ -314,7 +314,7 @@ describe("AdminController", function () {
 
     describe("removeFromGroups", () => {
         beforeEach(() => {
-            scope.personToLookup = "";
+            scope.subjectToLookup = "";
         });
 
         it("should call groupingsService.getMemberAttributeResults", () => {
@@ -391,7 +391,7 @@ describe("AdminController", function () {
 
     describe("updateCheckBoxes", () => {
         beforeEach(() => {
-            scope.pagedItemsPerson[scope.currentPagePerson] = {
+            scope.pagedItemsSubject[scope.currentPageSubject] = {
                 inBasis: false,
                 inExclude: false,
                 inInclude: true,
@@ -447,23 +447,23 @@ describe("AdminController", function () {
 
     describe("removeAdmin", () => {
         beforeEach(() => {
-            scope.pagedItemsAdmins[0] = {name: "zzz", username: "zzz", uhUuid: "zzz"};
+            scope.pagedItemsAdmins[0] = {name: "zzz", uid: "zzz", uhUuid: "zzz"};
         });
         it("should call scope.displayRemoveModal", () => {
             scope.adminsList = [
                 {
                     name: "iamtst01",
-                    username: "iamtst01",
+                    uid: "iamtst01",
                     uhUuid: "iamtst01"
                 },
                 {
                     name: "iamtst02",
-                    username: "iamtst02",
+                    uid: "iamtst02",
                     uhUuid: "iamtst02"
                 },
                 {
                     name: "iamtst03",
-                    username: "iamtst03",
+                    uid: "iamtst03",
                     uhUuid: "iamtst03"
                 }
             ];
@@ -512,105 +512,105 @@ describe("AdminController", function () {
             sessionStorage.clear();
         });
 
-        it("should set the items managePersonGrouping and personToLookup", () => {
+        it("should set the items manageSubjectGrouping and subjectToLookup", () => {
             spyOn(sessionStorage, "removeItem");
-            scope.personToLookup = "testId";
+            scope.subjectToLookup = "testId";
             scope.displayGroupingInNewTab("testName", "testPath");
-            expect(JSON.parse(sessionStorage.getItem("managePersonGrouping")))
+            expect(JSON.parse(sessionStorage.getItem("manageSubjectGrouping")))
                 .toEqual({name: "testName", path: "testPath"});
-            expect(sessionStorage.getItem("personToLookup")).toBe(scope.personToLookup);
+            expect(sessionStorage.getItem("subjectToLookup")).toBe(scope.subjectToLookup);
         });
 
-        it("should remove the managePersonGrouping item from sessionStorage at the end", () => {
-            scope.personToLookup = "testId";
+        it("should remove the manageSubjectGrouping item from sessionStorage at the end", () => {
+            scope.subjectToLookup = "testId";
             scope.displayGroupingInNewTab("testName", "testPath");
-            expect(sessionStorage.getItem("managePersonGrouping")).toBeNull();
-            expect(sessionStorage.getItem("personToLookup")).toBe(scope.personToLookup);
+            expect(sessionStorage.getItem("manageSubjectGrouping")).toBeNull();
+            expect(sessionStorage.getItem("subjectToLookup")).toBe(scope.subjectToLookup);
         });
 
         it("should open a new /admin tab", () => {
             spyOn(window, "open");
-            scope.personToLookup = "testId";
+            scope.subjectToLookup = "testId";
             scope.displayGroupingInNewTab("testGroupingName", "testGroupingPath");
             expect(window.open).toHaveBeenCalledWith("admin");
         });
     });
 
-    describe("initManagePersonGrouping", () => {
-        const managePersonGrouping = {name: "testName", path: "testPath"};
+    describe("initManageSubjectGrouping", () => {
+        const manageSubjectGrouping = {name: "testName", path: "testPath"};
 
         beforeEach(() => {
             spyOn(scope, "getGroupingInformation");
             spyOn(scope, "toggleShowAdminTab");
-            sessionStorage.setItem("managePersonGrouping", JSON.stringify(managePersonGrouping));
+            sessionStorage.setItem("manageSubjectGrouping", JSON.stringify(manageSubjectGrouping));
         });
 
-        it("should set fromManagePerson and showGrouping to true", () => {
-            scope.fromManagePerson = false;
+        it("should set fromManageSubject and showGrouping to true", () => {
+            scope.fromManageSubject = false;
             scope.showGrouping = false;
-            scope.initManagePersonGrouping(managePersonGrouping);
-            expect(scope.fromManagePerson).toBeTrue();
+            scope.initManageSubjectGrouping(manageSubjectGrouping);
+            expect(scope.fromManageSubject).toBeTrue();
             expect(scope.showGrouping).toBeTrue();
         });
 
-        it("should set scope.selectedGrouping to the managePersonGrouping passed in", () => {
-            scope.initManagePersonGrouping(managePersonGrouping);
-            expect(scope.selectedGrouping).toBe(managePersonGrouping);
+        it("should set scope.selectedGrouping to the manageSubjectGrouping passed in", () => {
+            scope.initManageSubjectGrouping(manageSubjectGrouping);
+            expect(scope.selectedGrouping).toBe(manageSubjectGrouping);
         });
 
         it("should call scope.getGroupingInformation and scope.toggleShowAdminTab", () => {
-            scope.initManagePersonGrouping(managePersonGrouping);
+            scope.initManageSubjectGrouping(manageSubjectGrouping);
             expect(scope.getGroupingInformation).toHaveBeenCalled();
             expect(scope.toggleShowAdminTab).toHaveBeenCalled();
         });
 
-        it("should remove the managePersonGrouping item from sessionStorage", () => {
-            scope.initManagePersonGrouping(managePersonGrouping);
-            expect(sessionStorage.getItem("managePersonGrouping")).toBeNull();
+        it("should remove the manageSubjectGrouping item from sessionStorage", () => {
+            scope.initManageSubjectGrouping(manageSubjectGrouping);
+            expect(sessionStorage.getItem("manageSubjectGrouping")).toBeNull();
         });
     });
 
-    describe("returnToManagePerson", () => {
-        const personToLookup = "testId";
+    describe("returnToManageSubject", () => {
+        const subjectToLookup = "testId";
 
         beforeEach(() => {
             spyOn(scope, "searchForUserGroupingInformation");
             spyOn(gs, "getGroupingAdmins");
             spyOn(gs, "getAllGroupings");
-            sessionStorage.setItem("personToLookup", personToLookup);
+            sessionStorage.setItem("subjectToLookup", subjectToLookup);
         });
 
-        it("should set fromManagePerson and showGrouping to false", () => {
-            scope.fromManagePerson = true;
+        it("should set fromManageSubject and showGrouping to false", () => {
+            scope.fromManageSubject = true;
             scope.showGrouping = true;
-            scope.returnToManagePerson();
-            expect(scope.fromManagePerson).toBeFalse();
+            scope.returnToManageSubject();
+            expect(scope.fromManageSubject).toBeFalse();
             expect(scope.showGrouping).toBeFalse();
         });
 
-        it("should open the manage-person tab", () => {
+        it("should open the manage-subject tab", () => {
             spyOn($.fn, "tab");
             spyOn(document, "getElementById");
-            scope.returnToManagePerson();
+            scope.returnToManageSubject();
             expect($.fn.tab).toHaveBeenCalledWith("show");
-            expect(document.getElementById).toHaveBeenCalledWith("manage-person-tab");
+            expect(document.getElementById).toHaveBeenCalledWith("manage-subject-tab");
         });
 
-        it("should set scope.personToLookup to personToLookup from sessionStorage", () => {
-            scope.returnToManagePerson();
-            expect(sessionStorage.getItem("personToLookup")).toBe(personToLookup);
+        it("should set scope.subjectToLookup to subjectToLookup from sessionStorage", () => {
+            scope.returnToManageSubject();
+            expect(sessionStorage.getItem("subjectToLookup")).toBe(subjectToLookup);
         });
 
         it("should call scope.searchForUserGroupingInformation and gs.getGroupingAdmins", () => {
-            scope.returnToManagePerson();
+            scope.returnToManageSubject();
             expect(scope.searchForUserGroupingInformation).toHaveBeenCalled();
             expect(gs.getGroupingAdmins).toHaveBeenCalled();
         });
     });
 
-    describe("clearManagePersonCheckboxes", () => {
+    describe("clearManageSubjectCheckboxes", () => {
         beforeEach(() => {
-            scope.pagedItemsPerson[scope.currentPagePerson] = {
+            scope.pagedItemsSubject[scope.currentPageSubject] = {
                 inBasis: false,
                 inExclude: false,
                 inInclude: true,
@@ -620,7 +620,7 @@ describe("AdminController", function () {
 
         it("should negate scope.checkAll", () => {
             scope.checkAll = true;
-            scope.clearManagePersonCheckboxes();
+            scope.clearManageSubjectCheckboxes();
             expect(scope.checkAll).toEqual(false);
         });
     });
@@ -652,11 +652,11 @@ describe("AdminController", function () {
             expect(scope.removeFromGroupsModalInstance.dismiss).toHaveBeenCalled();
         });
 
-        it("should clear all checkboxes in Manage Person", () => {
-            spyOn(scope, "clearManagePersonCheckboxes");
+        it("should clear all checkboxes in Manage Subject", () => {
+            spyOn(scope, "clearManageSubjectCheckboxes");
             scope.listName = "admins";
             scope.cancelRemoveFromGroupsModal();
-            expect(scope.clearManagePersonCheckboxes).toHaveBeenCalled();
+            expect(scope.clearManageSubjectCheckboxes).toHaveBeenCalled();
         });
     });
 
@@ -674,11 +674,11 @@ describe("AdminController", function () {
             expect(scope.removeErrorModalInstance.close).toHaveBeenCalled();
         });
 
-        it("should call clearManagePersonCheckboxes", () => {
-            spyOn(scope, "clearManagePersonCheckboxes").and.callThrough();
+        it("should call clearManageSubjectCheckboxes", () => {
+            spyOn(scope, "clearManageSubjectCheckboxes").and.callThrough();
             scope.listName = "admins";
             scope.closeRemoveErrorModal();
-            expect(scope.clearManagePersonCheckboxes).toHaveBeenCalled();
+            expect(scope.clearManageSubjectCheckboxes).toHaveBeenCalled();
         });
     });
 

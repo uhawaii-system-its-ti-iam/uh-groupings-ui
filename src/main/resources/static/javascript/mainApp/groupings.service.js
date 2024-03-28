@@ -272,7 +272,7 @@
             /**
              * Get a list of all groupings that a user is associated with.
              */
-            managePersonResults(uhIdentifier, onSuccess, onError) {
+            manageSubjectResults(uhIdentifier, onSuccess, onError) {
                 let endpoint = BASE_URL + "members/" + uhIdentifier + "/groupings";
                 dataProvider.loadData(endpoint, onSuccess, onError);
             },
@@ -287,10 +287,10 @@
             },
 
             /**
-             * Get a list of memberships that username is associated with.
+             * Get a list of memberships that uid is associated with.
              */
-            getMembershipAssignmentForUser(onSuccess, onError, username) {
-                let endpoint = BASE_URL + "members/" + username + "/groupings";
+            getMembershipAssignmentForUser(onSuccess, onError, uid) {
+                let endpoint = BASE_URL + "members/" + uid + "/groupings";
                 dataProvider.loadData(endpoint, onSuccess, onError);
             },
 

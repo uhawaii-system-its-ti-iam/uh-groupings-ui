@@ -2,12 +2,12 @@
 
     <div class="mt-4">
         <!-- Return to groupings list button -->
-        <button ng-show="!fromManagePerson" class="btn btn-primary" type="submit"
+        <button ng-show="!fromManageSubject" class="btn btn-primary" type="submit"
                 ng-click="returnToGroupingsList(); cancelDescriptionEdit(); toggleShowAdminTab();">
             <i class="fas fa-arrow-left mr-1"></i> Return to Groupings List
         </button>
-        <button ng-show="fromManagePerson" class="btn btn-primary" type="submit"
-                ng-click="returnToManagePerson(); cancelDescriptionEdit(); toggleShowAdminTab();">
+        <button ng-show="fromManageSubject" class="btn btn-primary" type="submit"
+                ng-click="returnToManageSubject(); cancelDescriptionEdit(); toggleShowAdminTab();">
             <i class="fas fa-arrow-left mr-1"></i> Return to Manage Person
         </button>
 

@@ -21,7 +21,7 @@
             <p th:text="#{screen.message.modal.add.preExisting.admin}"></p>
         </div>
         <!--message for no groupings result-->
-        <div ng-if="resStatus && personToLookup.length > 0 && personList.length <= 0"
+        <div ng-if="resStatus && subjectToLookup.length > 0 && subjectList.length <= 0"
              class="float-md-left my-3 px-3 pt-2 rounded alert-danger show">
             <p th:text="#{screen.message.modal.search.noResults}"></p>
         </div>

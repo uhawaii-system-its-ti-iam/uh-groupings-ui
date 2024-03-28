@@ -24,7 +24,7 @@ public class UserTest {
         User user = new User("a", authorities);
         assertNotNull(user);
 
-        assertThat(user.getUsername(), is("a"));
+        assertThat(user.getUid(), is("a"));
         assertThat(user.getUid(), is("a"));
         assertNull(user.getUhUuid());
         assertNull(user.getAttributes());
@@ -33,7 +33,7 @@ public class UserTest {
         authorities.add(new SimpleGrantedAuthority(Role.ANONYMOUS.longName()));
         user = new User("b", "12345", authorities);
 
-        assertThat(user.getUsername(), is("b"));
+        assertThat(user.getUid(), is("b"));
         assertThat(user.getUid(), is("b"));
         assertThat(user.getUhUuid(), is("12345"));
         assertNull(user.getAttributes());

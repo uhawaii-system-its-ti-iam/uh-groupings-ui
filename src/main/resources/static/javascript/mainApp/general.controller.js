@@ -41,7 +41,7 @@
         });
 
         /**
-         * Shows/hides admin tabs: Manage Groupings, Manage Admins, Manage Person
+         * Shows/hides admin tabs: Manage Groupings, Manage Admins, Manage Subject
          */
         $scope.toggleShowAdminTab = () => {
             $scope.showAdminTab = $scope.showAdminTab === false;

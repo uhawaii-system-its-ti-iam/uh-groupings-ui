@@ -85,7 +85,7 @@ public class UserDetailsServiceTest {
         User user = (User) userDetailsService.loadUserDetails(assertion);
 
         // Basics.
-        assertThat(user.getUsername(), is("testiwe"));
+        assertThat(user.getUid(), is("testiwe"));
         assertThat(user.getUid(), is("testiwe"));
         assertThat(user.getUhUuid(), is("89999999"));
 
@@ -124,7 +124,7 @@ public class UserDetailsServiceTest {
         User user = (User) userDetailsService.loadUserDetails(assertion);
 
         // Basics.
-        assertThat(user.getUsername(), is("testiwd"));
+        assertThat(user.getUid(), is("testiwd"));
         assertThat(user.getUid(), is("testiwd"));
         assertThat(user.getUhUuid(), is("90000000"));
 

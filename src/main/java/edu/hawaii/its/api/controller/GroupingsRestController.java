@@ -272,7 +272,7 @@ public class GroupingsRestController {
     }
 
     /**
-     * Get a member's attributes based off username.
+     * Get a member's attributes based off uid.
      * Get a list of invalid uhIdentifiers given a list of uhIdentifiers.
      */
     @PostMapping(value = "/members")
@@ -286,7 +286,7 @@ public class GroupingsRestController {
     }
 
     /**
-     * Get a member's attributes based off username asynchronously.
+     * Get a member's attributes based off uid asynchronously.
      * Get a list of invalid uhIdentifiers given a list of uhIdentifiers asynchronously.
      */
     @PostMapping(value = "/members/membersAsync")
@@ -323,8 +323,8 @@ public class GroupingsRestController {
 
     @GetMapping(value = "/members/{uhIdentifier}/groupings",
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> managePersonResults(@PathVariable String uhIdentifier) {
-        logger.info("Entered REST managePersonResults...");
+    public ResponseEntity<String> manageSubjectResults(@PathVariable String uhIdentifier) {
+        logger.info("Entered REST manageSubjectResults...");
         String currentUid = policy.sanitize(userContextService.getCurrentUid());
         String uri = String.format(API_2_1_BASE + "/members/%s/groupings", uhIdentifier);
         return httpRequestService.makeApiRequest(currentUid, uri, HttpMethod.GET);

@@ -10,7 +10,7 @@ import java.util.Map;
 public class UhAttributes  {
 
     private Map<String, List<String>> uhAttributeMap = new HashMap<>();
-    private final String uid; // CAS login username.
+    private final String uid; // CAS login uid.
     private final Map<?, ?> map; // Original CAS results.
 
     // Constructor.
@@ -54,36 +54,7 @@ public class UhAttributes  {
         return getValue("cn");
     }
 
-    public String getUsername() {
-        //return username;
-        return "";
-    }
-
-    public String getUid() {
-        List<String> values = uhAttributeMap.get("uid");
-        if (values != null) {
-            // Check expected case first.
-            if (values.size() == 1) {
-                return values.get(0); // We are done.
-            }
-
-            if (values.size() > 1) {
-                // More than one uid in the results.
-                // Try to match up with the username.
-                for (String s : values) {
-                    if (s.equals(getUsername())) {
-                        return s;
-                    }
-                }
-
-                // Couldn't match up username with uid,
-                // so just return first value.
-                return values.get(0); // We are done.
-            }
-        }
-
-        return ""; // Didn't find anything.
-    }
+    public String getUid() { return getValue("uid"); }
 
     public String getUhUuid() {
         return getValue("uhUuid");
@@ -119,7 +90,7 @@ public class UhAttributes  {
     }
 
     public String toString() {
-        return "UhCasAttributes [username=" + uid
+        return "UhCasAttributes [uid=" + uid
                 + ", uhAttributeMap=" + uhAttributeMap
                 + ", map=" + map + "]";
     }

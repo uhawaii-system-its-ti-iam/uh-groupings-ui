@@ -26,11 +26,11 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="person in multiRemoveResults">
+                <tr ng-repeat="subject in multiRemoveResults">
                     <!-- Display table data -->
                     <td>
-                        {{ person['uid'] }}
-                        <span class="modal-black-text" ng-if="person['uid'] === ''">
+                        {{ subject['uid'] }}
+                        <span class="modal-black-text" ng-if="subject['uid'] === ''">
                             N/A
                             <span class="fa fa-question-circle clickable" aria-hidden="true"
                                tooltip
@@ -38,8 +38,8 @@
                             </span>
                         </span>
                     </td>
-                    <td>{{ person['uhUuid'] }}</td>
-                    <td>{{ person['name'] }}</td>
+                    <td>{{ subject['uhUuid'] }}</td>
+                    <td>{{ subject['name'] }}</td>
                 </tr>
             </tbody>
         </table>
