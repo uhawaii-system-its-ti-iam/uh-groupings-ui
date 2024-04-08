@@ -18,11 +18,11 @@ public final class UserBuilder {
     @Autowired
     private AuthorizationService authorizationService;
 
-    public final User make(Map<String, ?> map) {
+    public User make(Map<String, ?> map) {
         return make(new UhAttributes(map));
     }
 
-    public final User make(UhAttributes attributes) {
+    public User make(UhAttributes attributes) {
 
         String uid = attributes.getUid();
         if (Strings.isEmpty(uid)) {
@@ -30,14 +30,18 @@ public final class UserBuilder {
             throw new UsernameNotFoundException("uid is empty");
         }
 
-        logger.debug("Adding roles start.");
         String uhUuid = attributes.getUhUuid();
+        if (Strings.isEmpty(uhUuid)) {
+            // When logging into a department account without an uhUuid.
+            throw new UsernameNotFoundException(uid);
+        }
+
+        logger.debug("Adding roles start.");
         RoleHolder roleHolder = authorizationService.fetchRoles(uhUuid, uid);
 
         logger.info("Adding roles. uid: " + uid + "; roles: " + roleHolder.getAuthorities());
         User user = new User(uid, roleHolder.getAuthorities());
         logger.debug("Done adding roles; uid: " + uid);
-
 
         // Convert the uhUuid to a Long and record it.
         // Don't move this statement above the exists call

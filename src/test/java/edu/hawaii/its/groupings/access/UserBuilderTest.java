@@ -120,6 +120,22 @@ public class UserBuilderTest {
     }
 
     @Test
+    public void testUhUuidEmpty() {
+        Map<String, String> map = new HashMap<>();
+        String uid = "testiwt1";
+        map.put("uid", uid);
+        map.put("uhUuid", "");
+
+        try {
+            userBuilder.make(map);
+            fail("Should not reach here.");
+        } catch (Exception e) {
+            assertThat(e.getClass(), is(UsernameNotFoundException.class));
+            assertThat(e.getMessage(), containsString(uid));
+        }
+    }
+
+    @Test
     public void make() {
         UsernameNotFoundException exception =
             assertThrows(UsernameNotFoundException.class, () -> userBuilder.make(new HashMap<String, String>()));
