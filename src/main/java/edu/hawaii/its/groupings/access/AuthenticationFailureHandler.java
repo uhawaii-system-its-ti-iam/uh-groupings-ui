@@ -25,6 +25,7 @@ public class AuthenticationFailureHandler
             throws IOException {
         logger.warn("onAuthenticationFailure; exception: ", exception);
         request.getSession().setAttribute("login.error.message", "It appears that you have not logged in with your personal account. Please check. You may have to log back in with your personal UH account to access this service.");
+        request.getSession().setAttribute("login.error.action.message", "Log out using the button below. Note that this will log out your account from all other UH apps.");
         request.getSession().setAttribute("login.error.exception.message", exception.getMessage());
         response.sendRedirect(redirectUrl);
     }

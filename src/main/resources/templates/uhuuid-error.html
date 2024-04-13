@@ -12,9 +12,15 @@
     </p>
 
     <p>
-        <b>Attempted Username: </b><span th:utext="${loginErrorExceptionMessage}"></span>
+        <b>Action:</b> <span th:utext="${loginErrorActionMessage}"></span>
     </p>
 
+    <a th:href="${logoutUrl}">
+        <button class="btn btn-outline-secondary btn-v-align text-nowrap">
+            Logout (<span id="name" th:utext="${loginErrorExceptionMessage}"></span>)
+            <i class="fas fa-sign-out-alt" aria-hidden="true"></i>
+        </button>
+    </a>
 </div>
 
 <div th:replace="~{footer :: copy}"></div>

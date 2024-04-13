@@ -9,6 +9,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,6 +28,12 @@ import edu.hawaii.its.groupings.type.Feedback;
 public class HomeController {
 
     private static final Log logger = LogFactory.getLog(HomeController.class);
+
+    @Value("${url.base}")
+    private String appUrlBase;
+
+    @Value("${cas.logout.url}")
+    private String casLogoutUrl;
 
     @Autowired
     private EmailService emailService;
@@ -54,11 +61,14 @@ public class HomeController {
 
     @GetMapping(value = "/uhuuid-error")
     public String uhUuidError(Model model,
-            @SessionAttribute("login.error.message") String errormsg,
-            @SessionAttribute("login.error.exception.message") String exceptionmsg) {
+            @SessionAttribute("login.error.message") String errorMessage,
+            @SessionAttribute("login.error.action.message") String actionMessage,
+            @SessionAttribute("login.error.exception.message") String exceptionMessage) {
         logger.info("User at uhuuid-error.");
-        model.addAttribute("loginErrorMessage", errormsg);
-        model.addAttribute("loginErrorExceptionMessage", exceptionmsg);
+        model.addAttribute("loginErrorMessage", errorMessage);
+        model.addAttribute("loginErrorActionMessage", actionMessage);
+        model.addAttribute("loginErrorExceptionMessage", exceptionMessage);
+        model.addAttribute("logoutUrl", casLogoutUrl + "?service=" + appUrlBase);
         return "uhuuid-error";
     }
 
