@@ -12,7 +12,7 @@ public class AssertionDummy implements Assertion {
 
     private static final long serialVersionUID = 1L;
 
-    private String username;
+    private String uid;
 
     // Constructor.
     public AssertionDummy() {
@@ -20,8 +20,8 @@ public class AssertionDummy implements Assertion {
     }
 
     // Constructor.
-    public AssertionDummy(String username) {
-        this.username = username;
+    public AssertionDummy(String uid) {
+        this.uid = uid;
     }
 
     @Override
@@ -66,8 +66,8 @@ public class AssertionDummy implements Assertion {
 
     @Override
     public AttributePrincipal getPrincipal() {
-        if (username != null) {
-            return new AttributePrincipalImpl(username);
+        if (uid != null) {
+            return new AttributePrincipalImpl(uid);
         }
         return null;
     }

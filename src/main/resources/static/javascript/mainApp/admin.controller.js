@@ -17,12 +17,12 @@
         $scope.adminsList = [];
         $scope.pagedItemsAdmins = [];
         $scope.currentPageAdmins = 0;
-        $scope.personList = [];
-        $scope.pagedItemsPerson = [];
-        $scope.currentPagePerson = 0;
-        $scope.personToLookup = "";
-        $scope.currentManagePerson = "";
-        $scope.fromManagePerson = false;
+        $scope.subjectList = [];
+        $scope.pagedItemsSubject = [];
+        $scope.currentPageSubject = 0;
+        $scope.subjectToLookup = "";
+        $scope.currentManageSubject = "";
+        $scope.fromManageSubject = false;
         $scope.selectedGroupingsPaths = [];
         $scope.emptySelect = false;
         $scope.selectedOwnedGroupingsNames = [];
@@ -54,13 +54,13 @@
 
         /**
          * Complete initialization by fetching a list of admins and list of all groupings.
-         * Load grouping from manage-person if sessionStorage saved item into managePersonGrouping key
+         * Load grouping from manage-subject if sessionStorage saved item into manageSubjectGrouping key
          * from $scope.displayGroupingInNewTab
          */
         $scope.init = () => {
-            const managePersonGrouping = JSON.parse(sessionStorage.getItem("managePersonGrouping"));
-            if (!_.isEmpty(managePersonGrouping)) {
-                $scope.initManagePersonGrouping(managePersonGrouping);
+            const manageSubjectGrouping = JSON.parse(sessionStorage.getItem("manageSubjectGrouping"));
+            if (!_.isEmpty(manageSubjectGrouping)) {
+                $scope.initManageSubjectGrouping(manageSubjectGrouping);
             } else {
                 $scope.loading = true;
                 $scope.allGroupingsLoading = true;
@@ -75,59 +75,59 @@
         };
 
         $scope.searchForUserGroupingInformationOnSuccessCallback = (res) => {
-            $scope.personList = _.sortBy(res.results, "name");
-            $scope.filter($scope.personList, "pagedItemsPerson", "currentPagePerson", $scope.personQuery, true);
-            $scope.user = $scope.personToLookup;
+            $scope.subjectList = _.sortBy(res.results, "name");
+            $scope.filter($scope.subjectList, "pagedItemsSubject", "currentPageSubject", $scope.subjectQuery, true);
+            $scope.user = $scope.subjectToLookup;
             $scope.userGroupingInformationLoading = false
         };
         $scope.searchForUserGroupingInformationOnErrorCallback = (res) => {
-            $scope.personList = [];
-            $scope.filter($scope.personList, "pagedItemsPerson", "currentPagePerson", $scope.personQuery, true);
-            $scope.user = $scope.personToLookup;
+            $scope.subjectList = [];
+            $scope.filter($scope.subjectList, "pagedItemsSubject", "currentPageSubject", $scope.subjectQuery, true);
+            $scope.user = $scope.subjectToLookup;
             $scope.loading = false;
             $scope.resStatus = res.status;
         };
         /**
-         * Fetch a list of memberships pertaining to $scope.personToLookUp.
+         * Fetch a list of memberships pertaining to $scope.subjectToLookUp.
          */
         $scope.searchForUserGroupingInformation = () => {
-            const validUser = $scope.sanitizer($scope.personToLookup);
+            const validUser = $scope.sanitizer($scope.subjectToLookup);
             if (validUser !== "") {
                 $scope.userGroupingInformationLoading = true;
-                groupingsService.managePersonResults(validUser,
+                groupingsService.manageSubjectResults(validUser,
                     $scope.searchForUserGroupingInformationOnSuccessCallback,
                     $scope.searchForUserGroupingInformationOnErrorCallback
                 );
                 groupingsService.getMemberAttributeResults([validUser], (res) => {
-                    const person = res.results[0];
-                    $scope.initMemberDisplayName(person);
-                    $scope.setCurrentManagePerson(person);
+                    const subject = res.results[0];
+                    $scope.initMemberDisplayName(subject);
+                    $scope.setCurrentManageSubject(subject);
                 });
             } else {
                 // sets proper error message
-                if (!$scope.personToLookup) {
+                if (!$scope.subjectToLookup) {
                     $scope.emptyInput = true;
                 } else {
                     $scope.invalidInput = true;
                 }
                 $scope.loading = false;
-                $scope.user = $scope.personToLookup;
-                $scope.personList = [];
-                $scope.filter($scope.personList, "pagedItemsPerson", "currentPagePerson", $scope.personQuery, true);
-                $scope.currentManagePerson = "";
+                $scope.user = $scope.subjectToLookup;
+                $scope.subjectList = [];
+                $scope.filter($scope.subjectList, "pagedItemsSubject", "currentPageSubject", $scope.subjectQuery, true);
+                $scope.currentManageSubject = "";
             }
             $scope.checkAll = false;
         };
 
         /**
          * Helper - searchForUserGroupingInformation
-         * @param person
+         * @param subject
          */
-        $scope.setCurrentManagePerson = (person) => {
+        $scope.setCurrentManageSubject = (subject) => {
             if ($scope.uhUuid != null) {
-                $scope.currentManagePerson = "(" + person.name + ", " + person.uid + ", " + person.uhUuid + ")";
+                $scope.currentManageSubject = "(" + subject.name + ", " + subject.uid + ", " + subject.uhUuid + ")";
             } else {
-                $scope.currentManagePerson = "";
+                $scope.currentManageSubject = "";
                 $scope.invalidInput = true;
             }
         };
@@ -187,10 +187,10 @@
             $scope.selectedGroupingsPaths = [];
             $scope.selectedOwnedGroupings = [];
             $scope.selectedOwnedGroupingsNames = [];
-            $scope.createGroupPathsAndNames($scope.pagedItemsPerson[$scope.currentPagePerson], $scope.selectedGroupingsNames, $scope.selectedGroupingsPaths, $scope.selectedOwnedGroupingsNames, $scope.selectedOwnedGroupings);
+            $scope.createGroupPathsAndNames($scope.pagedItemsSubject[$scope.currentPageSubject], $scope.selectedGroupingsNames, $scope.selectedGroupingsPaths, $scope.selectedOwnedGroupingsNames, $scope.selectedOwnedGroupings);
 
-            if ($scope.personToLookup != null) {
-                groupingsService.getMemberAttributeResults($scope.personToLookup, $scope.checkSoleOwner);
+            if ($scope.subjectToLookup != null) {
+                groupingsService.getMemberAttributeResults($scope.subjectToLookup, $scope.checkSoleOwner);
             }
         };
 
@@ -224,7 +224,7 @@
 
         $scope.updateCheckBoxes = () => {
             $scope.checkAll = !$scope.checkAll;
-            _.forEach($scope.pagedItemsPerson[$scope.currentPagePerson], (grouping) => {
+            _.forEach($scope.pagedItemsSubject[$scope.currentPageSubject], (grouping) => {
                 if (grouping.inOwner || grouping.inInclude || grouping.inExclude) {
                     grouping.isSelected = $scope.checkAll;
                 }
@@ -313,11 +313,11 @@
 
             const windowClass = $scope.showWarningRemovingSelf() ? "modal-danger" : "";
 
-            groupingsService.getMemberAttributeResults(sanitizedUser, (person) => {
-                if (person === "") {
+            groupingsService.getMemberAttributeResults(sanitizedUser, (subject) => {
+                if (subject === "") {
                     return;
                 } else {
-                    $scope.initMemberDisplayName(person);
+                    $scope.initMemberDisplayName(subject);
                 }
                 $scope.removeFromGroupsModalInstance = $uibModal.open({
                     templateUrl: "modal/removeFromGroupsModal",
@@ -351,58 +351,58 @@
          * Cancels the remove from groups modal instance.
          */
         $scope.cancelRemoveFromGroupsModal = () => {
-            $scope.clearManagePersonCheckboxes();
+            $scope.clearManageSubjectCheckboxes();
             $scope.removeFromGroupsModalInstance.dismiss("cancel");
         };
 
         /**
-         * Closes the remove error modal and clears checkboxes in Manage Person.
+         * Closes the remove error modal and clears checkboxes in Manage Subject.
          */
         $scope.closeRemoveErrorModal = () => {
-            $scope.clearManagePersonCheckboxes();
+            $scope.clearManageSubjectCheckboxes();
             $scope.removeErrorModalInstance.close();
         };
 
         /**
-         * Saves the needed information managePersonGrouping and personToLookup to sessionStorage for $scope.init()
-         * to display the grouping in a new tab. Opens a new /admin page and removes managePersonGrouping from
+         * Saves the needed information manageSubjectGrouping and subjectToLookup to sessionStorage for $scope.init()
+         * to display the grouping in a new tab. Opens a new /admin page and removes manageSubjectGrouping from
          * sessionStorage to prevent displaying the grouping upon reloading the current page.
          * @param name {string} - The grouping name
          * @param path {String} - The grouping path
          */
         $scope.displayGroupingInNewTab = (name, path) => {
-            sessionStorage.setItem("managePersonGrouping", JSON.stringify({ name, path }));
-            sessionStorage.setItem("personToLookup", $scope.personToLookup);
+            sessionStorage.setItem("manageSubjectGrouping", JSON.stringify({ name, path }));
+            sessionStorage.setItem("subjectToLookup", $scope.subjectToLookup);
 
             $window.open("admin");
-            sessionStorage.removeItem("managePersonGrouping");
+            sessionStorage.removeItem("manageSubjectGrouping");
         };
 
         /**
-         * Initializes the grouping from manage-person to be displayed.
-         * @param managePersonGrouping {object} - The grouping from manage-person
+         * Initializes the grouping from manage-subject to be displayed.
+         * @param manageSubjectGrouping {object} - The grouping from manage-subject
          */
-        $scope.initManagePersonGrouping = (managePersonGrouping) => {
-            $scope.fromManagePerson = true;
+        $scope.initManageSubjectGrouping = (manageSubjectGrouping) => {
+            $scope.fromManageSubject = true;
             $scope.showGrouping = true;
-            $scope.selectedGrouping = managePersonGrouping;
+            $scope.selectedGrouping = manageSubjectGrouping;
             $scope.getGroupingInformation();
             $scope.toggleShowAdminTab();
-            sessionStorage.removeItem("managePersonGrouping");
+            sessionStorage.removeItem("manageSubjectGrouping");
         };
 
         /**
-         * Returns to manage-person page and reloads the admin lists and the current manage-person being looked up.
+         * Returns to manage-subject page and reloads the admin lists and the current manage-subject being looked up.
          */
-        $scope.returnToManagePerson = () => {
+        $scope.returnToManageSubject = () => {
             $scope.loading = true;
             $scope.allGroupingsLoading = true;
-            $scope.fromManagePerson = false;
+            $scope.fromManageSubject = false;
             $scope.showGrouping = false;
 
-            $("#manage-person-tab").tab("show");
+            $("#manage-subject-tab").tab("show");
 
-            $scope.personToLookup = sessionStorage.getItem("personToLookup");
+            $scope.subjectToLookup = sessionStorage.getItem("subjectToLookup");
             $scope.searchForUserGroupingInformation();
             groupingsService.getGroupingAdmins($scope.getGroupingAdminsCallbackOnSuccess, $scope.displayApiErrorModal);
             groupingsService.getAllGroupings($scope.getAllGroupingsCallbackOnSuccess, $scope.displayApiErrorModal);
@@ -410,11 +410,11 @@
 
         /**
          * Helper - cancelRemoveFromGroupsModal, closeRemoveErrorModal
-         * Clears all selected checkboxes in manage person
+         * Clears all selected checkboxes in manage subject
          */
-        $scope.clearManagePersonCheckboxes = () => {
+        $scope.clearManageSubjectCheckboxes = () => {
             $scope.checkAll = false;
-            _.forEach($scope.pagedItemsPerson[$scope.currentPagePerson], (grouping) => {
+            _.forEach($scope.pagedItemsSubject[$scope.currentPageSubject], (grouping) => {
                 if (grouping.inOwner || grouping.inInclude || grouping.inExclude) {
                     grouping.isSelected = $scope.checkAll;
                 }

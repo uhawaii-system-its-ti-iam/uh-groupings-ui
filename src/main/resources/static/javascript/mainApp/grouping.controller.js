@@ -126,7 +126,7 @@
 
         /** Remove all nameless members from members and return a sorted object of distinct members.
          * @param {object[]} members - the members of the group
-         * @returns {object[]} the members of the group, sorted by name and with blank usernames filtered out
+         * @returns {object[]} the members of the group, sorted by name and with blank uids filtered out
          */
         const setGroupMembers = (members) => {
             _.remove(members, (member) => {
@@ -143,7 +143,7 @@
          *  concatenation of initialMembers and membersToAdd objects.
          * @param {object[]} initialMembers - initial members in group
          * @param {object[]} membersToAdd - members to add to group
-         * @returns {object[]} the members of both groups in one array, sorted by name with blank usernames filtered out
+         * @returns {object[]} the members of both groups in one array, sorted by name with blank uids filtered out
          */
         const combineGroupMembers = (initialMembers, membersToAdd) => {
             _.remove(membersToAdd, (member) => {
@@ -468,7 +468,7 @@
 
         /**
          * Read a text file(.txt) or csv file(.csv) from client side. The file should consist of
-         * a list of UH usernames or ids separated by newline characters. This
+         * a list of UH uids or ids separated by newline characters. This
          * function is called implicitly from include.html and exclude.html.
          * The file is retrieved from the html input with id 'upload'.
          */
@@ -572,7 +572,7 @@
             $scope.fullName = attributes.name;
             $scope.givenName = attributes.firstName;
             $scope.uhUuid = attributes.uhUuid;
-            $scope.uid = attributes.username ?? attributes.uid;
+            $scope.uid = attributes.uid;
             $scope.inBasis = attributes.inBasis;
             $scope.inInclude = attributes.inInclude;
             $scope.inExclude = attributes.inExclude;
@@ -929,8 +929,8 @@
 
         /**
          * Helper - displayRemoveModal, fetchMemberProperties
-         * Returns the member object that contains either the provided username or UH number.
-         * @param memberIdentifier - The username or UH ID number of the member object to return.
+         * Returns the member object that contains either the provided uid or UH number.
+         * @param memberIdentifier - The uid or UH ID number of the member object to return.
          * @param listName - The name of the list to search.
          */
         $scope.returnMemberObject = (memberIdentifier, listName) => {
@@ -939,7 +939,7 @@
             if (/[0-9]{8}/.test(memberIdentifier)) {
                 memberToReturn = _.find(currentPage, (member) => member.uhUuid === memberIdentifier);
             } else {
-                memberToReturn = _.find(currentPage, (member) => (member.username === memberIdentifier || member.uid === memberIdentifier));
+                memberToReturn = _.find(currentPage, (member) => member.uid === memberIdentifier);
             }
             return memberToReturn;
         };
@@ -962,13 +962,13 @@
                 if (_.isUndefined(currentMember)) {
                     membersNotInList.push(member);
                 } else {
-                    let person = {
+                    let subject = {
                         "uid": currentMember.uid,
                         "uhUuid": currentMember.uhUuid,
                         "name": currentMember.name
                     };
 
-                    membersInList.push(person);
+                    membersInList.push(subject);
                 }
             }
             $scope.membersNotInList = membersNotInList.join(", ");
@@ -1433,7 +1433,7 @@
             $scope.groupingInclude = [];
             $scope.groupingExclude = [];
             $scope.groupingOwners = [];
-            $scope.personList = [];
+            $scope.subjectList = [];
 
             $scope.pagedItemsMembers = [];
             $scope.pagedItemsBasis = [];
@@ -1446,7 +1446,7 @@
             $scope.currentPageInclude = 0;
             $scope.currentPageExclude = 0;
             $scope.currentPageOwners = 0;
-            $scope.currentPagePerson = 0;
+            $scope.currentPageSubject = 0;
         };
 
         /**
@@ -1460,7 +1460,7 @@
             $scope.adminsQuery = "";
             $scope.optInQuery = "";
             $scope.ownersQuery = "";
-            $scope.personQuery = "";
+            $scope.subjectQuery = "";
         };
 
         /**

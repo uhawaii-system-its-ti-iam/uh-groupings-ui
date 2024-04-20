@@ -16,7 +16,7 @@ public class UhCasAttributesTest {
     @Test
     public void loadNullMap() {
         UhAttributes attributes = new UhAttributes(null);
-        assertThat(attributes.getUsername(), is(""));
+        assertThat(attributes.getUid(), is(""));
         assertThat(attributes.getUhUuid(), is(""));
         assertThat(attributes.getUid(), is(""));
 
@@ -29,7 +29,6 @@ public class UhCasAttributesTest {
         map.put("uhUuid", "666666");
         map.put("uid", "testiwd");
         UhAttributes attributes = new UhAttributes(map);
-        assertThat(attributes.getUsername(), is(""));
         assertThat(attributes.getUhUuid(), is("666666"));
         assertThat(attributes.getUid(), is("testiwd"));
         assertThat(attributes.getValue("not-a-key"), is(""));
@@ -42,7 +41,7 @@ public class UhCasAttributesTest {
         map.put("uhUuid", "666666");
         map.put("uid", 666);
         UhAttributes attributes = new UhAttributes(map);
-        assertThat(attributes.getUsername(), is(""));
+        assertThat(attributes.getUid(), is(""));
         assertThat(attributes.getUhUuid(), is("666666"));
         assertThat(attributes.getUid(), is("")); // Internal error.
         assertThat(attributes.getValue("not-a-key"), is(""));
@@ -54,7 +53,7 @@ public class UhCasAttributesTest {
         map.put("uhUuid", "666666");
         map.put(666, 666);
         UhAttributes attributes = new UhAttributes(map);
-        assertThat(attributes.getUsername(), is(""));
+        assertThat(attributes.getUid(), is(""));
         assertThat(attributes.getUhUuid(), is("666666"));
         assertThat(attributes.getUid(), is(""));
         assertThat(attributes.getValue("not-a-key"), is(""));
@@ -65,7 +64,7 @@ public class UhCasAttributesTest {
         Map<Object, Object> map = new HashMap<>();
         map.put(666, 666);
         UhAttributes attributes = new UhAttributes(map);
-        assertThat(attributes.getUsername(), is(""));
+        assertThat(attributes.getUid(), is(""));
         assertThat(attributes.getUhUuid(), is(""));
         assertThat(attributes.getUid(), is(""));
         assertThat(attributes.getValue("not-a-key"), is(""));
@@ -80,7 +79,6 @@ public class UhCasAttributesTest {
         uids.add("testiwb");
         map.put("uid", uids);
         UhAttributes attributes = new UhAttributes(map);
-        assertThat(attributes.getUsername(), is(""));
         assertThat(attributes.getUhUuid(), is("10967714"));
         assertThat(attributes.getUhUuid(), is("10967714"));
         assertThat(attributes.getUid(), is("testiwc"));
@@ -95,7 +93,7 @@ public class UhCasAttributesTest {
         uids.add(null);
         map.put("uid", uids);
         UhAttributes attributes = new UhAttributes(map);
-        assertThat(attributes.getUsername(), is(""));
+        assertThat(attributes.getUid(), is(""));
         assertThat(attributes.getUid(), is(""));
         assertThat(attributes.getUhUuid(), is("10967714"));
     }
@@ -109,7 +107,7 @@ public class UhCasAttributesTest {
         uids.add("");
         map.put("uid", uids);
         UhAttributes attributes = new UhAttributes(map);
-        assertThat(attributes.getUsername(), is(""));
+        assertThat(attributes.getUid(), is(""));
         assertThat(attributes.getUid(), is(""));
         assertThat(attributes.getUhUuid(), is("10967714"));
     }
@@ -125,7 +123,7 @@ public class UhCasAttributesTest {
         uids.add("testiwc");
         map.put("uid", uids);
         UhAttributes attributes = new UhAttributes(map);
-        assertThat(attributes.getUsername(), is(""));
+        assertThat(attributes.getUid(), is(""));
         assertThat(attributes.getUid(), is("")); // Note this result.
         assertThat(attributes.getUhUuid(), is("10967714"));
     }
@@ -134,7 +132,7 @@ public class UhCasAttributesTest {
     public void loadMapWithNullMap() {
         Map<Object, Object> map = null;
         UhAttributes attributes = new UhAttributes(map);
-        assertThat(attributes.getUsername(), is(""));
+        assertThat(attributes.getUid(), is(""));
         assertThat(attributes.getUhUuid(), is(""));
         assertThat(attributes.getUid(), is(""));
     }
@@ -145,7 +143,7 @@ public class UhCasAttributesTest {
         map.put("uid", null);
         map.put("uhUuid", null);
         UhAttributes attributes = new UhAttributes(map);
-        assertThat( attributes.getUsername(), is(""));
+        assertThat( attributes.getUid(), is(""));
         assertThat(attributes.getUhUuid(), is(""));
         assertThat(attributes.getUid(), is(""));
     }
@@ -156,7 +154,7 @@ public class UhCasAttributesTest {
         map.put("uid", new ArrayList<>());
         map.put("uhUuid", new ArrayList<>(0));
         UhAttributes attributes = new UhAttributes(map);
-        assertThat(attributes.getUsername(), is(""));
+        assertThat(attributes.getUid(), is(""));
         assertThat(attributes.getUhUuid(), is(""));
         assertThat(attributes.getUid(), is(""));
     }
@@ -167,7 +165,7 @@ public class UhCasAttributesTest {
         map.put("uhUuid", "10967714");
         map.put(null, "testiwc");
         UhAttributes attributes = new UhAttributes(map);
-        assertThat(attributes.getUsername(), is(""));
+        assertThat(attributes.getUid(), is(""));
         assertThat(attributes.getUhUuid(), is("10967714"));
         assertThat(attributes.getUid(), is("")); // Note this result.
     }
@@ -183,21 +181,20 @@ public class UhCasAttributesTest {
 
         UhAttributes attributes = new UhAttributes(map);
 
-        assertThat(attributes.getUsername(), is(""));
+        assertThat(attributes.getUid(), is(""));
         assertThat(attributes.getUhUuid(), is("666666"));
         assertThat(attributes.getUid(), is("")); // Note result.
     }
 
     @Test
-    public void loadMapWithNullUsername() {
-        String username = null;
+    public void loadMapWithNullUid() {
+        String uid = null;
         Map<Object, Object> map = new HashMap<>();
         map.put("uid", "testiwd");
         map.put("uhUuid", "6666666");
-        UhAttributes attributes = new UhAttributes(username, map);
+        UhAttributes attributes = new UhAttributes(uid, map);
         assertThat(attributes.getUid(), is("testiwd"));
         assertThat(attributes.getUhUuid(), is("6666666"));
-        assertThat(attributes.getUsername(), is(""));
     }
 
     @Test

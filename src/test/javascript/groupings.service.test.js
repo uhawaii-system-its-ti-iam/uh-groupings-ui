@@ -399,16 +399,16 @@ describe("GroupingsService", () => {
         });
     });
 
-    describe("managePersonResults", () => {
+    describe("manageSubjectResults", () => {
         let member = "";
         it("should call dataProvider.loadData", () => {
             spyOn(dp, "loadData");
-            gs.managePersonResults(member, onSuccess, onError);
+            gs.manageSubjectResults(member, onSuccess, onError);
             expect(dp.loadData).toHaveBeenCalled();
         });
 
         it("should use the correct path", () => {
-            gs.managePersonResults(member, onSuccess, onError);
+            gs.manageSubjectResults(member, onSuccess, onError);
             httpBackend.expectGET(BASE_URL + "members/" + member + "/groupings").respond(200);
             expect(httpBackend.flush).not.toThrow();
         });
@@ -429,16 +429,16 @@ describe("GroupingsService", () => {
 
     });
     describe("getMembershipAssignmentForUser", () => {
-        const username = "";
+        const uid = "";
         it("should call dataProvider.loadData", () => {
             spyOn(dp, "loadData");
-            gs.getMembershipAssignmentForUser(onSuccess, onError, username);
+            gs.getMembershipAssignmentForUser(onSuccess, onError, uid);
             expect(dp.loadData).toHaveBeenCalled();
         });
 
         it("should use the correct path", () => {
-            gs.getMembershipAssignmentForUser(onSuccess, onError, username);
-            httpBackend.expectGET(BASE_URL + "members/" + username + "/groupings").respond(200);
+            gs.getMembershipAssignmentForUser(onSuccess, onError, uid);
+            httpBackend.expectGET(BASE_URL + "members/" + uid + "/groupings").respond(200);
             expect(httpBackend.flush).not.toThrow();
         });
     });

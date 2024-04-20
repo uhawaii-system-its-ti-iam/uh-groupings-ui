@@ -51,11 +51,11 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="person in multiAddResults">
+                <tr ng-repeat="subject in multiAddResults">
                     <!-- Display table data -->
                     <td>
-                        {{ person['uid'] }}
-                        <span class="modal-black-text" ng-if="!person['uid']">
+                        {{ subject['uid'] }}
+                        <span class="modal-black-text" ng-if="!subject['uid']">
                             N/A
                             <span class="fa fa-question-circle clickable" aria-hidden="true"
                             tooltip
@@ -63,16 +63,16 @@
                             </span>
                         </span>
                     </td>
-                    <td>{{ person['uhUuid'] }}</td>
-                    <td>{{ person['name'] }}</td>
+                    <td>{{ subject['uhUuid'] }}</td>
+                    <td>{{ subject['name'] }}</td>
                     <td class="text-center" ng-if="listName !== 'owners' && groupingBasis.length > 0">
-                        {{ person['inBasis'] }}
+                        {{ subject['inBasis'] }}
                     </td>
                     <td class="text-center" ng-if="listName !== 'owners' && listName === 'Exclude'">
-                        {{ person['inInclude'] }}
+                        {{ subject['inInclude'] }}
                     </td>
                     <td class="text-center" ng-if="listName !== 'owners' && listName === 'Include'">
-                        {{ person['inExclude'] }}
+                        {{ subject['inExclude'] }}
                     </td>
                 </tr>
             </tbody>

@@ -352,7 +352,7 @@ public class GroupingsRestControllerTest {
 
     @Test
     @WithMockUhUser
-    public void managePersonResultsTest() throws Exception {
+    public void manageSubjectResultsTest() throws Exception {
         String uri = REST_CONTROLLER_BASE + "members/0000/groupings";
 
         given(httpRequestService.makeApiRequest(eq(UID), anyString(), eq(HttpMethod.GET)))

@@ -20,8 +20,8 @@
                         Manage Admins
                     </a>
                 <li class="nav-item" role="presentation">
-                    <a href="#manage-person" id="manage-person-tab" data-toggle="tab" class="nav-link tab-color" role="tab">
-                        Manage Person
+                    <a href="#manage-subject" id="manage-subject-tab" data-toggle="tab" class="nav-link tab-color" role="tab">
+                        Manage Subject
                     </a>
                 </li>
                 <li th:if="${!@realm.isProduction()}" class="nav-item" role="presentation">
@@ -154,25 +154,25 @@
                     </div>
                 </div>
                 <!-- Manage Person -->
-                <div class="tab-pane fade" id="manage-person" role="tabpanel">
+                <div class="tab-pane fade" id="manage-subject" role="tabpanel">
                     <div class="row m-auto pt-3 pb-3 d-flex">
                         <div class="col-lg-9 col-md-8 col-12 p-0 text-center text-md-left">
                             <h2 class="mt-md-1 mt-0 d-inline-block">Manage Person</h2>
                             <div class="spinner-border ml-1 d-inline-block" ng-show="userGroupingInformationLoading"></div>
-                            <br class="d-md-none"><h3 ng-if="currentManagePerson" class="d-inline-block ml-0 ml-lg-1 mt-n1 mt-lg-0 align-middle">{{currentManagePerson}}</h3>
+                            <br class="d-md-none"><h3 ng-if="currentManageSubject" class="d-inline-block ml-0 ml-lg-1 mt-n1 mt-lg-0 align-middle">{{currentManageSubject}}</h3>
                         </div>
                         <div class="col-lg-3 col-md-4 col-12 p-0">
                             <input class="form-control" placeholder="Filter Groupings..." type="search"
                                    title="Filter Groupings" aria-label="Filter Groupings for this person"
-                                   ng-model="personQuery"
-                                   ng-change="filter(personList, 'pagedItemsPerson', 'currentPagePerson', personQuery, true)"/>
+                                   ng-model="subjectQuery"
+                                   ng-change="filter(subjectList, 'pagedItemsSubject', 'currentPageSubject', subjectQuery, true)"/>
                         </div>
                         <div class="mr-auto col-lg-3 col-md-4 col-12 p-0">
                             <form ng-submit="searchForUserGroupingInformation(); errorDismissed = false;">
                                 <div class="input-group">
                                     <input name="Search Person" class="form-control" type="search" aria-required="true"
                                            title="Enter UH Username" aria-label="Enter UH Username to manage the person"
-                                           placeholder="UH Username" ng-model="personToLookup"
+                                           placeholder="UH Username" ng-model="subjectToLookup"
                                            ng-init="dismissErrors()"
                                            ng-blur="dismissErrors()"
                                     />
@@ -215,13 +215,13 @@
                         </div>
                     </div>
                     <div class="table-responsive-sm">
-                        <table class="table manage-person table-striped table-hover table-md" aria-live="assertive">
+                        <table class="table manage-subject table-striped table-hover table-md" aria-live="assertive">
                             <thead>
                             <tr>
-                                <th ng-click="sortBy('personList', 'pagedItemsPerson', 'name')" class="clickable">
+                                <th ng-click="sortBy('subjectList', 'pagedItemsSubject', 'name')" class="clickable">
                                     Grouping
                                     <i class="fa sort-icon"
-                                        ng-show="columnSort.personList.property === 'name' || !columnSort.groupingsList"
+                                        ng-show="columnSort.subjectList.property === 'name' || !columnSort.groupingsList"
                                         ng-class="{ reverse: columnSort.groupingsList.reverse }"></i>
                                 <th>
                                     Owner?
@@ -241,7 +241,7 @@
                             </tr>
                             </thead>
                             <tbody class="table table-borderless">
-                            <tr ng-repeat="l in pagedItemsPerson[currentPagePerson]" class="row-height">
+                            <tr ng-repeat="l in pagedItemsSubject[currentPageSubject]" class="row-height">
                                 <td class="p-10">
                                     <i class="fa fa-fw fa-external-link-alt clickable" tooltip="Manage grouping"
                                     ng-click="displayGroupingInNewTab(l.name, l.path)"></i>
@@ -306,7 +306,7 @@
                     <div class="row">
                         <div class="col-lg-7"></div>
                         <div class="col-lg-5">
-                            <div th:replace="~{fragments/pagination :: pagination(currentPage='currentPagePerson', pagedItems='pagedItemsPerson')}"></div>
+                            <div th:replace="~{fragments/pagination :: pagination(currentPage='currentPageSubject', pagedItems='pagedItemsSubject')}"></div>
                         </div>
                     </div>
                 </div>

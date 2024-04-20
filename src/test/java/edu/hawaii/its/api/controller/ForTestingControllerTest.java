@@ -33,7 +33,7 @@ import edu.hawaii.its.groupings.controller.WithMockUhUser;
 @SpringBootTest(classes = { SpringBootWebApplication.class })
 public class ForTestingControllerTest {
 
-    private static final String USERNAME = "user";
+    private static final String UID = "user";
 
     private static final String REST_CONTROLLER_BASE = "/api/groupings/testing/";
 
@@ -61,7 +61,7 @@ public class ForTestingControllerTest {
     @WithMockUhUser
     public void throwExceptionTest() throws Exception {
         String uri = REST_CONTROLLER_BASE + "exception";
-        given(httpRequestService.makeApiRequest(eq(USERNAME), anyString(), eq(HttpMethod.GET)))
+        given(httpRequestService.makeApiRequest(eq(UID), anyString(), eq(HttpMethod.GET)))
                 .willReturn(new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR));
 
         assertNotNull(mockMvc.perform(get(uri))
@@ -69,6 +69,6 @@ public class ForTestingControllerTest {
                 .andReturn());
 
         verify(httpRequestService, times(1))
-                .makeApiRequest(eq(USERNAME), anyString(), eq(HttpMethod.GET));
+                .makeApiRequest(eq(UID), anyString(), eq(HttpMethod.GET));
     }
 }

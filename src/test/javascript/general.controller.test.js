@@ -172,8 +172,8 @@ describe("GeneralController", () => {
         scope.allowOptIn = true;
         scope.allowOptOut = true;
 
-        scope.pagedItemsPerson = [];
-        scope.currentPagePerson = 0;
+        scope.pagedItemsSubject = [];
+        scope.currentPageSubject = 0;
     });
 
     describe("toggleShowAdminTab", () => {

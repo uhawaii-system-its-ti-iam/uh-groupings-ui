@@ -81,7 +81,7 @@ public class ErrorControllerAdvice {
         String uid = null;
         User user = userContextService.getCurrentUser();
         if (user != null) {
-            uid = user.getUsername();
+            uid = user.getUid();
         }
         logger.error("uid: " + uid + "; Exception: ", ex);
         emailService.sendWithStack(ex, "TypeMismatchException");
@@ -92,7 +92,7 @@ public class ErrorControllerAdvice {
         String uid = null;
         User user = userContextService.getCurrentUser();
         if (user != null) {
-            uid = user.getUsername();
+            uid = user.getUid();
         }
 
         GroupingsHTTPException httpException = new GroupingsHTTPException(message, cause, status);
