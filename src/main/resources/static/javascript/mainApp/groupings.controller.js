@@ -20,7 +20,6 @@
             groupingsService.getGroupingsOwned((res) => {
                 $scope.groupingsList = _.sortBy(res.groupingPaths, "name");
                 $scope.pagedItemsGroupings = $scope.groupToPages($scope.groupingsList);
-
                 $scope.loading = false;
             }, () => {
                 $scope.displayApiErrorModal();
