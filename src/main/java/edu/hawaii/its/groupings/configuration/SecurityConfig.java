@@ -1,9 +1,9 @@
 package edu.hawaii.its.groupings.configuration;
 
-import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
-
+import edu.hawaii.its.groupings.access.CasUserDetailsServiceImpl;
+import edu.hawaii.its.groupings.access.DelegatingAuthenticationFailureHandler;
+import edu.hawaii.its.groupings.access.UserBuilder;
 import jakarta.annotation.PostConstruct;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apereo.cas.client.proxy.ProxyGrantingTicketStorage;
@@ -12,6 +12,7 @@ import org.apereo.cas.client.session.SingleSignOutFilter;
 import org.apereo.cas.client.validation.Saml11TicketValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -34,12 +35,11 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.util.Assert;
 import org.springframework.ws.config.annotation.DelegatingWsConfiguration;
 
-import edu.hawaii.its.groupings.access.CasUserDetailsServiceImpl;
-import edu.hawaii.its.groupings.access.DelegatingAuthenticationFailureHandler;
-import edu.hawaii.its.groupings.access.UserBuilder;
+import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
 
 @EnableWebSecurity
 @Configuration
+@ConditionalOnProperty(name = "grouping.api.server.type", havingValue = "GROUPER", matchIfMissing = true)
 public class SecurityConfig {
 
     private static final Log logger = LogFactory.getLog(SecurityConfig.class);
@@ -159,7 +159,8 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+            throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
@@ -183,33 +184,34 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, CasAuthenticationFilter casAuthenticationFilter) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, CasAuthenticationFilter casAuthenticationFilter)
+            throws Exception {
         http.sessionManagement((session) -> session.sessionFixation().migrateSession());
 
         http.authorizeHttpRequests((auths) -> auths
-                .requestMatchers(antMatcher("/")).permitAll()
-                .requestMatchers(antMatcher("/announcements/**")).permitAll()
-                .requestMatchers(antMatcher("/api/**")).hasRole("UH")
-                .requestMatchers(antMatcher("/currentUser")).permitAll()
-                .requestMatchers(antMatcher("/css/**")).permitAll()
-                .requestMatchers(antMatcher("/fonts/**")).permitAll()
-                .requestMatchers(antMatcher("/images/**")).permitAll()
-                .requestMatchers(antMatcher("/javascript/**")).permitAll()
-                .requestMatchers(antMatcher("/webjars/**")).permitAll()
-                .requestMatchers(antMatcher("/home")).permitAll()
-                .requestMatchers(antMatcher("/about")).permitAll()
-                .requestMatchers(antMatcher("/feedback")).hasRole("UH")
-                .requestMatchers(antMatcher("/denied")).permitAll()
-                .requestMatchers(antMatcher("/404")).permitAll()
-                .requestMatchers(antMatcher("/login")).hasRole("UH")
-                .requestMatchers(antMatcher("/admin/**")).hasRole("ADMIN")
-                .requestMatchers(antMatcher("/groupings/**")).hasAnyRole("ADMIN", "OWNER")
-                .requestMatchers(antMatcher("/memberships/**")).hasRole("UH")
-                .requestMatchers(antMatcher("/modal/apiError")).permitAll()
-                .requestMatchers(antMatcher("/uhuuid-error")).permitAll()
-                .requestMatchers(antMatcher("/error")).permitAll()
-                .requestMatchers(antMatcher("/testing/**")).hasRole("ADMIN")
-                .anyRequest().authenticated())
+                        .requestMatchers(antMatcher("/")).permitAll()
+                        .requestMatchers(antMatcher("/announcements/**")).permitAll()
+                        .requestMatchers(antMatcher("/api/**")).hasRole("UH")
+                        .requestMatchers(antMatcher("/currentUser")).permitAll()
+                        .requestMatchers(antMatcher("/css/**")).permitAll()
+                        .requestMatchers(antMatcher("/fonts/**")).permitAll()
+                        .requestMatchers(antMatcher("/images/**")).permitAll()
+                        .requestMatchers(antMatcher("/javascript/**")).permitAll()
+                        .requestMatchers(antMatcher("/webjars/**")).permitAll()
+                        .requestMatchers(antMatcher("/home")).permitAll()
+                        .requestMatchers(antMatcher("/about")).permitAll()
+                        .requestMatchers(antMatcher("/feedback")).hasRole("UH")
+                        .requestMatchers(antMatcher("/denied")).permitAll()
+                        .requestMatchers(antMatcher("/404")).permitAll()
+                        .requestMatchers(antMatcher("/login")).hasRole("UH")
+                        .requestMatchers(antMatcher("/admin/**")).hasRole("ADMIN")
+                        .requestMatchers(antMatcher("/groupings/**")).hasAnyRole("ADMIN", "OWNER")
+                        .requestMatchers(antMatcher("/memberships/**")).hasRole("UH")
+                        .requestMatchers(antMatcher("/modal/apiError")).permitAll()
+                        .requestMatchers(antMatcher("/uhuuid-error")).permitAll()
+                        .requestMatchers(antMatcher("/error")).permitAll()
+                        .requestMatchers(antMatcher("/testing/**")).hasRole("ADMIN")
+                        .anyRequest().authenticated())
                 .addFilter(casAuthenticationFilter)
                 .addFilterBefore(logoutFilter(), LogoutFilter.class)
                 .exceptionHandling((exception) -> exception.authenticationEntryPoint(casProcessingFilterEntryPoint()))
