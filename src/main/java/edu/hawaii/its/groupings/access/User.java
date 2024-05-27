@@ -1,6 +1,9 @@
 package edu.hawaii.its.groupings.access;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -16,6 +19,17 @@ public class User extends org.springframework.security.core.userdetails.User {
         setUhUuid(uhUuid);
     }
 
+    public User(String uid, String uhUuid, Collection<GrantedAuthority> authorities,
+            String givenName, String cn, String email) {
+        super(uid, "", authorities);
+        setUhUuid(uhUuid);
+        Map<String, Object> defaultAttributes = new HashMap<>();
+        defaultAttributes.put("cn", Collections.singletonList(cn));
+        defaultAttributes.put("mail", Collections.singletonList(email));
+        defaultAttributes.put("givenName", Collections.singletonList(givenName));
+        setAttributes(new UhAttributes(defaultAttributes));
+    }
+
     public User(String uid, Collection<GrantedAuthority> authorities) {
         super(uid, "", authorities);
     }
@@ -28,7 +42,9 @@ public class User extends org.springframework.security.core.userdetails.User {
         return uhUuid;
     }
 
-    public void setUhUuid(String uhUuid) { this.uhUuid = uhUuid; }
+    public void setUhUuid(String uhUuid) {
+        this.uhUuid = uhUuid;
+    }
 
     public String getAttribute(String name) {
         return attributes.getValue(name);

@@ -12,9 +12,14 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
@@ -29,31 +34,24 @@ public class OotbSecurityConfig {
 
     private static final Log logger = LogFactory.getLog(OotbSecurityConfig.class);
 
-    @Value("${grouping.api.server.type}")
-    private String serverType;
-
-    @Value("${ootb.default.user.name}")
-    private String name;
-
-    @Value("${ootb.default.user.username}")
-    private String username;
-
-    @Value("${ootb.default.user.authorities}")
-    private List<String> authorities;
-
-    @Value("${ootb.default.user.cn}")
-    private String cn;
-
-    @Value("${ootb.default.user.email}")
-    private String email;
+    @Value("${ootb.active.user.profile}")
+    private String userProfile;
 
     @Value("${url.base}")
     private String appUrlBase;
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
-            throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration,
+            UserDetailsService userDetailsService) throws Exception {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setUserDetailsService(userDetailsService);
+        provider.setPasswordEncoder(passwordEncoder());
+        return new ProviderManager(List.of(provider));
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
     @Bean
@@ -104,7 +102,11 @@ public class OotbSecurityConfig {
 
     @Bean
     public OotbStaticUserAuthenticationFilter ootbStaticUserAuthenticationFilter() {
-        return new OotbStaticUserAuthenticationFilter(serverType, name, username, cn, email, authorities);
+        return new OotbStaticUserAuthenticationFilter(userDetailsService(), userProfile);
     }
 
+    @Bean
+    public UserDetailsService userDetailsService() {
+        return new OotbUserDetailsManager();
+    }
 }
