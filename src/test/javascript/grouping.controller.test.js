@@ -2599,26 +2599,22 @@ describe("GroupingController", () => {
         it("should set list with exclude values", () => {
             scope.groupingMembers = {
                 allMembers: scope.groupingInclude,
-                membersOnPage: scope.pagedItemsInclude,
-                pageNumber: scope.currentPageInclude
+                membersOnPage: scope.pagedItemsInclude[scope.currentPageInclude]
             };
 
             scope.assignListToGroup("Exclude");
             expect(scope.groupingMembers.allMembers).toEqual(scope.groupingExclude);
-            expect(scope.groupingMembers.membersOnPage).toEqual(scope.pagedItemsExclude);
-            expect(scope.groupingMembers.pageNumber).toEqual(scope.currentPageExclude);
+            expect(scope.groupingMembers.membersOnPage).toEqual(scope.pagedItemsExclude[scope.currentPageExclude]);
         });
 
         it("should set list with include values", () => {
             scope.groupingMembers = {
                 allItems: scope.groupingExclude,
-                pageItems: scope.pagedItemsExclude,
-                pageNumber: scope.currentPageExclude
+                pageItems: scope.pagedItemsExclude[scope.currentPageExclude]
             };
             scope.assignListToGroup("Include");
             expect(scope.groupingMembers.allMembers).toEqual(scope.groupingInclude);
-            expect(scope.groupingMembers.membersOnPage).toEqual(scope.pagedItemsInclude);
-            expect(scope.groupingMembers.pageNumber).toEqual(scope.currentPageInclude);
+            expect(scope.groupingMembers.membersOnPage).toEqual(scope.pagedItemsInclude[scope.currentPageInclude]);
         });
     });
 
@@ -2656,8 +2652,7 @@ describe("GroupingController", () => {
         beforeEach(() => {
             scope.testGroupingMembers = {
                 allMembers: scope.groupingInclude,
-                membersOnPage: scope.pagedItemsInclude,
-                pageNumber: scope.currentPageInclude
+                membersOnPage: scope.pagedItemsInclude[scope.currentPageInclude]
             };
         });
 
@@ -2668,7 +2663,7 @@ describe("GroupingController", () => {
         });
 
         it("should uncheck the Select All checkbox if there are any unchecked checkboxes", () => {
-            scope.membersInCheckboxList[scope.testGroupingMembers.membersOnPage[0][2].uhUuid] = false;
+            scope.membersInCheckboxList[scope.testGroupingMembers.membersOnPage[2].uhUuid] = false;
             const testCheck = scope.checkMainSelectAllCheckbox(scope.testGroupingMembers);
             expect(testCheck).toBeFalse();
         });
