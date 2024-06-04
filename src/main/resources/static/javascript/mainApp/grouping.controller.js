@@ -1626,7 +1626,7 @@
             // Only called when checkbox is clicked on.
             // Therefore, needs to be flipped to reflect the function of a checkbox.
             $scope.pageSelected = !$scope.pageSelected;
-            for (const member of $scope.groupingMembers.membersOnPage[$scope.groupingMembers.pageNumber]) {
+            for (const member of $scope.groupingMembers.membersOnPage) {
                 $scope.membersInCheckboxList[member.uhUuid] = $scope.pageSelected;
             }
             $scope.paginationPageChange = false;
@@ -1652,14 +1652,12 @@
             if (group === "Exclude") {
                 $scope.groupingMembers = {
                     allMembers: $scope.groupingExclude,
-                    membersOnPage: $scope.pagedItemsExclude,
-                    pageNumber: $scope.currentPageExclude
+                    membersOnPage: $scope.pagedItemsExclude[$scope.currentPageExclude]
                 };
             } else if (group === "Include") {
                 $scope.groupingMembers = {
                     allMembers: $scope.groupingInclude,
-                    membersOnPage: $scope.pagedItemsInclude,
-                    pageNumber: $scope.currentPageInclude
+                    membersOnPage: $scope.pagedItemsInclude[$scope.currentPageInclude]
                 };
             }
         };
@@ -1680,7 +1678,6 @@
          * @param {Object} groupingMembers - An object containing information about the group and pagination.
          *                       {Object} allMembers - The array of all members in the group.
          *                       {Object} membersOnPage - The array of members on the current page.
-         *                       {number} pageNumber - The current page number.
          * @returns {boolean} - Reflects if the "Select All" checkbox should be checked.
          */
         $scope.checkMainSelectAllCheckbox = (groupingMembers) => {
@@ -1690,7 +1687,7 @@
                 return $scope.checkPage;
             }
 
-            for (let member of groupingMembers.membersOnPage[groupingMembers.pageNumber]) {
+            for (let member of groupingMembers.membersOnPage) {
                 // If any checkbox is unchecked, then the main "Select All" checkbox should be unchecked
                 if ($scope.membersInCheckboxList[member.uhUuid] === false) {
                     $scope.checkPage = false;
