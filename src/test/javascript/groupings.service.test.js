@@ -85,7 +85,7 @@ describe("GroupingsService", () => {
 
         it("should use the correct path", () => {
             gs.getGroupingDescription(groupingPath, onSuccess, onError);
-            httpBackend.expectGET(BASE_URL + "groupings/" + groupingPath+ "/description").respond(200);
+            httpBackend.expectGET(BASE_URL + "groupings/" + groupingPath + "/description").respond(200);
             expect(httpBackend.flush).not.toThrow();
         });
     });
@@ -99,7 +99,7 @@ describe("GroupingsService", () => {
 
         it("should use the correct path", () => {
             gs.getGroupingSyncDest(groupingPath, onSuccess, onError);
-            httpBackend.expectGET(BASE_URL + "groupings/" + groupingPath+ "/groupings-sync-destinations").respond(200);
+            httpBackend.expectGET(BASE_URL + "groupings/" + groupingPath + "/groupings-sync-destinations").respond(200);
             expect(httpBackend.flush).not.toThrow();
         });
     });
@@ -113,7 +113,7 @@ describe("GroupingsService", () => {
 
         it("should use the correct path", () => {
             gs.getGroupingOptAttributes(groupingPath, onSuccess, onError);
-            httpBackend.expectGET(BASE_URL + "groupings/" + groupingPath+ "/opt-attributes").respond(200);
+            httpBackend.expectGET(BASE_URL + "groupings/" + groupingPath + "/opt-attributes").respond(200);
             expect(httpBackend.flush).not.toThrow();
         });
     });
@@ -230,6 +230,23 @@ describe("GroupingsService", () => {
             expect(httpBackend.flush).not.toThrow();
         });
     });
+
+    describe("updateOotbActiveProfile", () => {
+        let profile = "testProfile"; // Example profile for testing
+
+        it("should call dataProvider.updateData", () => {
+            spyOn(dp, "updateData"); // Spy on the updateData method
+            gs.updateOotbActiveProfile(profile, onSuccess, onError);
+            expect(dp.updateData).toHaveBeenCalled();
+        });
+
+        it("should use the correct path", () => {
+            gs.updateOotbActiveProfile(profile, onSuccess, onError);
+            httpBackend.expectPOST(BASE_URL + "ootb/" + profile).respond(200);
+            expect(httpBackend.flush).not.toThrow();
+        });
+    });
+
 
     describe("assignOwnership", () => {
         let newOwner;

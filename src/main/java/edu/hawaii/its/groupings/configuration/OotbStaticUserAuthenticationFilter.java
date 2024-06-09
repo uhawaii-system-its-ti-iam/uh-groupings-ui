@@ -15,12 +15,16 @@ import org.springframework.web.filter.GenericFilterBean;
 
 public class OotbStaticUserAuthenticationFilter extends GenericFilterBean {
 
-    private final String userProfile;
     private final UserDetailsService userDetailsService;
+    private volatile String userProfile;
 
     public OotbStaticUserAuthenticationFilter(UserDetailsService userDetailsService, String userProfile) {
         this.userProfile = userProfile;
         this.userDetailsService = userDetailsService;
+    }
+
+    public void setUserProfile(String userProfile) {
+        this.userProfile = userProfile;
     }
 
     @Override
@@ -35,3 +39,4 @@ public class OotbStaticUserAuthenticationFilter extends GenericFilterBean {
         filterChain.doFilter(request, response);
     }
 }
+

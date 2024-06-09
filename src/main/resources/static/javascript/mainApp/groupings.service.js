@@ -120,6 +120,17 @@
             },
 
             /**
+             * Update data harness bean with OotbActiveProfile
+             * @param profile {String}
+             * @param onSuccess {Function}
+             * @param onError {Function}
+             */
+            updateOotbActiveProfile(profile, onSuccess, onError) {
+                let endpoint = BASE_URL + "ootb/" + profile;
+                dataProvider.updateData(endpoint, onSuccess, onError);
+            },
+
+            /**
              * Add a members to the include group of a grouping. A modal is passed in and displayed after a certain amount
              * of time has elapsed.
              */
