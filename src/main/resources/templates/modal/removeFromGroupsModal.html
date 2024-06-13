@@ -17,14 +17,14 @@
             <th class="font-weight-normal modal-attributes">{{fullName}}</th>
         </tr>
         <tr>
-            <th th:utext="#{screen.message.modal.remove.uid}"></th>
+            <th th:utext="#{screen.message.modal.remove.username}"></th>
             <th class="font-weight-normal modal-attributes">
                 {{uid}}
                 <span class="modal-black-text" ng-if="!uid">
                     N/A
                     <span class="fa fa-question-circle clickable" aria-hidden="true"
                           tooltip
-                          th:title="#{screen.message.common.tooltip.uid.notApplicable}">
+                          th:title="#{screen.message.common.tooltip.username.notApplicable}">
                     </span>
                 </span>
             </th>
