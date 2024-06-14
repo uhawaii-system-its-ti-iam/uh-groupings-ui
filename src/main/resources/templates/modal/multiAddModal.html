@@ -78,6 +78,9 @@
             </tbody>
         </table>
     </div>
+    <p class="alert alert-warning mt-2" role="alert" ng-if="hasDeptAccount">
+        <span class="text-dark" th:text="#{screen.message.modal.add.tooltip.deptAccount}"></span>
+    </p>
     <p class="alert alert-warning mt-2" role="alert">
         <span class="text-dark" th:text="#{screen.message.common.membership.info}"></span>
     </p>

@@ -82,6 +82,7 @@
         $scope.invalidMembers = [];
         $scope.membersInList = "";
         $scope.isMultiAdd = false;
+        $scope.hasDeptAccount = false;
 
         // Remove members
         $scope.multiRemoveResults = [];
@@ -808,12 +809,22 @@
          */
         $scope.displayAddModal = (options) => {
             const uhIdentifiers = [].concat(options.uhIdentifiers); // Allows either string or array to be passed in
+            const membersAttributesResults = options.membersAttributes.results;
 
             $scope.listName = options.listName;
             $scope.isMultiAdd = uhIdentifiers.length > 1;
 
+            // Check if there is a dept account to be added.
+            for (let i = 0; i < membersAttributesResults.length; i++) {
+                if (membersAttributesResults[i].uid === membersAttributesResults[i].uhUuid) {
+                    $scope.hasDeptAccount = true;
+                    break;
+                }
+                $scope.hasDeptAccount = false;
+            }
+
             // Sets information to be displayed in add/multiAdd modal
-            $scope.multiAddResults = options.membersAttributes.results;
+            $scope.multiAddResults = membersAttributesResults;
             $scope.addInGroups($scope.multiAddResults);
             $scope.initMemberDisplayName($scope.multiAddResults[0]);
 
