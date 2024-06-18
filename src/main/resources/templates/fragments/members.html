@@ -11,6 +11,14 @@
                      role="status">
                     <span class="sr-only">Loading...</span>
                 </div>
+                <i class="refresh-button fas fa-sync-alt ml-1 pr-2 d-inline-block"
+                   ng-show="!paginatingProgress && !loading"
+                   ng-click="reloadGrouping();resetFields()"
+                   role="button"
+                   aria-label="Refresh grouping"
+                   tooltip data-placement="right"
+                   th:title="#{screen.message.common.refreshMembers}">
+                </i>
                 <p class=" mb-1" ng-show="largeGrouping" th:text="#{screen.message.common.loading.toolarge}"><i
                         class="fa fa-check" aria-hidden="true"></i></p>
             </div>
