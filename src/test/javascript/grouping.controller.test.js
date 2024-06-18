@@ -1051,6 +1051,8 @@ describe("GroupingController", () => {
     describe("displayAddModal", () => {
         const member = ["testiwta"];
         const members = ["testiwta", "testiwtb"];
+        const memberDept = ["testiwt2"];
+        const membersDept = ["testiwta", "testiwt2"]
         const memberAttributeResultsSingle = {
             resultCode: "SUCCESS",
             invalid: [],
@@ -1059,6 +1061,17 @@ describe("GroupingController", () => {
                     name: "Testf-iwt-a TestIAM-staff",
                     uid: "testiwta",
                     uhUuid: "99997010"
+                }
+            ]
+        }
+        const memberDeptAttributeResultsSingle = {
+            resultCode: "SUCCESS",
+            invalid: [],
+            results: [
+                {
+                    name: "Testf-iwt-2 TestIAM-dept",
+                    uid: "testiwt2",
+                    uhUuid: "testiwt2"
                 }
             ]
         }
@@ -1078,6 +1091,58 @@ describe("GroupingController", () => {
                 }
             ]
         }
+        const memberDeptAttributeResultsMulti = {
+            resultCode: "SUCCESS",
+            invalid: [],
+            results: [
+                {
+                    name: "Testf-iwt-a TestIAM-staff",
+                    uid: "testiwta",
+                    uhUuid: "99997010"
+                },
+                {
+                    name: "Testf-iwt-2 TestIAM-dept",
+                    uid: "testiwt2",
+                    uhUuid: "testiwt2"
+                }
+            ]
+        }
+
+        it("should set $scope.hasDeptAccount to False", () => {
+            scope.displayAddModal({
+                membersAttributes: memberAttributeResultsSingle,
+                uhIdentifiers: member,
+                listName: "Include"
+            });
+            expect(scope.hasDeptAccount).toBeFalse();
+        });
+
+        it("should set $scope.hasDeptAccount to True", () => {
+            scope.displayAddModal({
+                membersAttributes: memberDeptAttributeResultsSingle,
+                uhIdentifiers: memberDept,
+                listName: "Include"
+            });
+            expect(scope.hasDeptAccount).toBeTrue();
+        });
+
+        it("should set $scope.hasDeptAccount to False", () => {
+            scope.displayAddModal({
+                membersAttributes: memberAttributeResultsMulti,
+                uhIdentifiers: members,
+                listName: "Include"
+            });
+            expect(scope.hasDeptAccount).toBeFalse();
+        });
+
+        it("should set $scope.hasDeptAccount to True", () => {
+            scope.displayAddModal({
+                membersAttributes: memberDeptAttributeResultsMulti,
+                uhIdentifiers: membersDept,
+                listName: "Include"
+            });
+            expect(scope.hasDeptAccount).toBeTrue();
+        });
 
         it("should concat uhIdentifiers",() => {
             scope.uhIdentifiers = member;
@@ -1296,20 +1361,6 @@ describe("GroupingController", () => {
                 expect(gs.addAdmin).toHaveBeenCalled();
             });
         });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     });
 
     describe("proceedAddModal", () => {
