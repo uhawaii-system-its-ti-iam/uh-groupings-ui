@@ -13,12 +13,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -27,7 +25,6 @@ import edu.hawaii.its.groupings.access.User;
 import edu.hawaii.its.groupings.access.UserContextService;
 import edu.hawaii.its.groupings.configuration.OotbStaticUserAuthenticationFilter;
 import edu.hawaii.its.groupings.service.OotbActiveUserProfileService;
-import edu.hawaii.its.groupings.util.JsonUtil;
 
 @RestController
 @RequestMapping("/api/groupings/ootb")
@@ -60,6 +57,11 @@ public class OotbRestController {
      * the overrides file. Gets the active profiles and only runs the tests the
      * active profile relies on the API.
      */
+    @GetMapping("/availableProfiles")
+    public ResponseEntity<List<String>> getAvailableProfiles() {
+        List<String> profiles = ootbActiveUserProfileService.getAvailableProfiles();
+        return ResponseEntity.ok(profiles);
+    }
 
     @PostMapping(value = "/{activeProfile}")
     public ResponseEntity<String> updateActiveDefaultUser(@PathVariable String activeProfile) {

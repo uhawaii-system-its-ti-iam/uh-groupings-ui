@@ -1,7 +1,12 @@
 package edu.hawaii.its.groupings.util;
 
+import java.nio.file.Files;
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -35,6 +40,28 @@ public class JsonUtil {
         return result;
     }
 
+    public static <T> List<T> asList(final String json, Class<T> type) {
+        List<T> result = null;
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            result = mapper.readValue(json, mapper.getTypeFactory().constructCollectionType(List.class, type));
+        } catch (Exception e) {
+            logger.error("Error: " + e);
+        }
+        return result;
+    }
+
+    public static String readJsonFileToString(String filePath) {
+        String result = null;
+        try {
+            Resource resource = new ClassPathResource(filePath);
+            result = Files.readString(resource.getFile().toPath());
+        } catch (Exception e) {
+            logger.error("Error: " + e);
+        }
+        return result;
+    }
+
     public static void printJson(Object obj) {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
@@ -44,6 +71,7 @@ public class JsonUtil {
             logger.error("Error: " + e);
         }
     }
+
     public static void prettyPrint(Object object) {
         try {
             String json = new ObjectMapper()

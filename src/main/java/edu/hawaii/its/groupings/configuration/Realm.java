@@ -65,4 +65,6 @@ public class Realm {
         return isProfileActive("default");
     }
 
+    public boolean isOotb() { return isProfileActive("ootb"); }
+
 }

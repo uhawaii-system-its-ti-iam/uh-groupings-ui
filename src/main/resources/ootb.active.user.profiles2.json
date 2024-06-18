@@ -1,0 +1,32 @@
+{
+  "JAMES": {
+    "uid": "james0123",
+    "uhUuid": "11111111",
+    "authorities": ["ROLE_UH"],
+    "attributes": {
+      "cn": "MEMBER",
+      "mail": "member@hawaii.edu",
+      "givenName": "UH James"
+    }
+  },
+  "EDDY": {
+    "uid": "eddy0123",
+    "uhUuid": "22222222",
+    "authorities": ["ROLE_UH", "ROLE_OWNER"],
+    "attributes": {
+      "cn": "OWNER",
+      "mail": "owner@hawaii.edu",
+      "givenName": "Eddy Jeon"
+    }
+  },
+  "JSON": {
+    "uid": "json0123",
+    "uhUuid": "33333333",
+    "authorities": ["ROLE_ADMIN", "ROLE_UH", "ROLE_OWNER"],
+    "attributes": {
+      "cn": "ADMIN",
+      "mail": "json@hawaii.edu",
+      "givenName": "UH Json"
+    }
+  }
+}

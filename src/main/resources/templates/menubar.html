@@ -50,7 +50,7 @@
                     <a class="btn btn-primary btn-v-align login" th:href="@{/login}">Login
                         <i class="fas fa-sign-in-alt" aria-hidden="false"></i></a>
                 </li>
-                <li class="nav-item" sec:authorize="isAuthenticated() and !hasAuthority('ROLE_OOTB')">
+                <li class="nav-item" sec:authorize="isAuthenticated()" th:if="${!@realm.isOotb()}">
                     <form action="/logout" th:action="@{/logout}" method="post">
                         <div class="dropdown-divider d-block d-lg-none pb-3"></div>
                         <button class="btn btn-outline-secondary btn-v-align text-nowrap" type="submit">Logout (<span
@@ -59,15 +59,14 @@
                         </button>
                     </form>
                 </li>
-                <li class="nav-item dropdown" sec:authorize="isAuthenticated() and hasAuthority('ROLE_OOTB')">
+                <li class="nav-item dropdown" sec:authorize="isAuthenticated()" th:if="${@realm.isOotb()}" ng-click="loadAvailableProfiles()">
                     <a class="btn btn-outline-secondary btn-v-align text-nowrap dropdown-toggle" href="#" id="navbarDropdownMenuLink2" role="button"
                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Logout (<span sec:authentication="name" id="name"></span>)
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <a class="dropdown-item" href="login" ng-click="updateActiveUserProfile('MEMBER')">Member</a>
-                        <a class="dropdown-item" href="login" ng-click="updateActiveUserProfile('OWNER')">Owner</a>
-                        <a class="dropdown-item" href="login" ng-click="updateActiveUserProfile('ADMIN')">Admin</a>
+                        <a class="dropdown-item" href="login" ng-repeat="profile in availableProfiles"
+                           ng-click="updateActiveUserProfile(profile)">{{profile}}</a>
                     </div>
                 </li>
             </ul>
