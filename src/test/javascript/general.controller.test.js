@@ -478,4 +478,32 @@ describe("GeneralController", () => {
             expect($.fn.popover).toHaveBeenCalled();
         });
     });
+
+    describe("updateActiveUserProfile", () => {
+        let mockProfile = "ADMIN";
+        let successResponse = { status: 200 };
+        let errorResponse = { status: 404 };
+
+        beforeEach(() => {
+            spyOn(gs, "updateOotbActiveProfile").and.callFake((profile, onSuccess, onError) => {
+                if (profile === mockProfile) {
+                    onSuccess(successResponse);
+                } else {
+                    onError(errorResponse);
+                }
+            });
+            httpBackend.whenGET("currentUser").passThrough();
+        });
+
+        it("should call groupingsService.updateOotbActiveProfile with correct parameters", () => {
+            scope.updateActiveUserProfile(mockProfile);
+            expect(gs.updateOotbActiveProfile).toHaveBeenCalledWith(mockProfile, jasmine.any(Function), jasmine.any(Function));
+        });
+
+        it("should handle errors correctly", () => {
+            scope.updateActiveUserProfile("INVALID_PROFILE");
+            expect(scope.resStatus).toEqual(errorResponse.status);
+        });
+    });
+
 });

@@ -26,6 +26,7 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.ws.config.annotation.DelegatingWsConfiguration;
 
 import edu.hawaii.its.groupings.access.DelegatingAuthenticationFailureHandler;
+import edu.hawaii.its.groupings.service.OotbActiveUserProfileService;
 
 @EnableWebSecurity
 @Configuration
@@ -107,6 +108,6 @@ public class OotbSecurityConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return new OotbUserDetailsManager();
+        return new OotbActiveUserProfileService();
     }
 }

@@ -27,6 +27,8 @@
         $scope.showDescriptionColumn = JSON.parse(localStorage.getItem("showDescriptionColumn") ?? true);
         $scope.showGroupingPathColumn = JSON.parse(localStorage.getItem("showPathColumn") ?? false);
 
+        $scope.ootbActiveUser = "";
+
         angular.extend(this, $controller("TableJsController", { $scope }));
 
         /**
@@ -265,6 +267,19 @@
         $scope.hoverCopy = () => {
             $("[data-content='copy']").popover();
         };
+
+        /**
+         * Updates the active user profile, clears cache by reloading the page with a cache-busting URL.
+         * @param profile - the type of profile to switch to ('MEMBER', 'OWNER', 'ADMIN')
+         */
+        $scope.updateActiveUserProfile = (profile) => {
+            groupingsService.updateOotbActiveProfile(profile,
+                () => $scope.$apply(),
+                (res) => {
+                    $scope.resStatus = res.status;
+            });
+        };
+
     }
 
     UHGroupingsApp.controller("GeneralJsController", GeneralJsController);

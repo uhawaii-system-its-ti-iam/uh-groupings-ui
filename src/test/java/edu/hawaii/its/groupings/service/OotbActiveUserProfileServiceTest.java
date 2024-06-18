@@ -1,4 +1,4 @@
-package edu.hawaii.its.groupings.configuration;
+package edu.hawaii.its.groupings.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -12,28 +12,29 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.context.ActiveProfiles;
 
 import edu.hawaii.its.groupings.access.User;
+import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
 
 @SpringBootTest(classes = { SpringBootWebApplication.class })
 @ActiveProfiles("ootb")
-class OotbUserDetailsManagerTest {
+class OotbActiveUserProfileServiceTest {
 
-    private OotbUserDetailsManager manager;
+    private OotbActiveUserProfileService manager;
 
     @BeforeEach
     public void setUp() {
-        manager = new OotbUserDetailsManager();
+        manager = new OotbActiveUserProfileService();
     }
 
     @Test
     public void testUserUserDetails() {
-        UserDetails userDetails = manager.loadUserByUsername("USER");
+        UserDetails userDetails = manager.loadUserByUsername("MEMBER");
         assertNotNull(userDetails, "UserDetails should not be null");
 
-        User user = manager.getUsers().get("USER");
-        assertNotNull(user, "User should not be null");
-        assertEquals("user0123", user.getUid(), "Username should match");
+        User user = manager.getUsers().get("MEMBER");
+        assertNotNull(user, "Member should not be null");
+        assertEquals("member0123", user.getUid(), "Username should match");
         assertEquals("11111111", user.getUhUuid(), "UhUuid should match");
-        assertEquals(1, user.getAuthorities().size(), "Should have 1 authority");
+        assertEquals(2, user.getAuthorities().size(), "Should have 1 authority");
     }
 
     @Test
@@ -45,7 +46,7 @@ class OotbUserDetailsManagerTest {
         assertNotNull(user, "User should not be null");
         assertEquals("owner0123", user.getUid(), "Username should match");
         assertEquals("22222222", user.getUhUuid(), "UhUuid should match");
-        assertEquals(2, user.getAuthorities().size(), "Should have 2 authorities");
+        assertEquals(3, user.getAuthorities().size(), "Should have 2 authorities");
     }
 
     @Test
@@ -57,7 +58,7 @@ class OotbUserDetailsManagerTest {
         assertNotNull(user, "User should not be null");
         assertEquals("admin0123", user.getUid(), "Username should match");
         assertEquals("33333333", user.getUhUuid(), "UhUuid should match");
-        assertEquals(3, user.getAuthorities().size(), "Should have 3 authorities");
+        assertEquals(4, user.getAuthorities().size(), "Should have 3 authorities");
     }
 
     @Test
