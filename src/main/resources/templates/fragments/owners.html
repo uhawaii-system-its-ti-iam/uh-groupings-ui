@@ -26,8 +26,9 @@
                         ng-click="sortBy('groupingOwners', 'pagedItemsOwners', 'name')">
                         Name
                         <i class="fa sort-icon"
-                        ng-show="columnSort.groupingOwners.property === 'name' || !columnSort.groupingOwners"
-                        ng-class="{ reverse: columnSort.groupingOwners.reverse }"></i>
+                           ng-show="columnSort.groupingOwners.property === 'name' || !columnSort.groupingOwners"
+                           ng-class="{ reverse: columnSort.groupingOwners.reverse }">
+                        </i>
                     </th>
                     <th scope="col" role="button"
                         ng-click="sortBy('groupingOwners', 'pagedItemsOwners', 'uid')">
@@ -40,23 +41,33 @@
                 <tbody>
                 <tr ng-repeat="owner in pagedItemsOwners[currentPageOwners]" class="table table-sm">
                     <td class="overflow-auto py-1 px-3" aria-label="{{owner.name}}">
-                        {{owner.name}}
-                        <span ng-if="groupingOwners.length > 1">
-                            <span class="far fa-trash-alt fa-pull-right pt-1" role="button"
-                                  tooltip data-placement="top"
-                                  tabindex="0" aria-label="Remove {{owner.name}} from the Owner members list"
-                                  th:title="#{screen.message.common.tooltip.remove.owner}"
-                                  ng-keypress="$event.keyCode === 13 ? removeOwnerWithTrashcan(currentPageOwners, $index) : null"
-                                  ng-click="removeOwnerWithTrashcan(currentPageOwners, $index)">
+                        <div class="d-flex">
+                            {{owner.name}}
+                            <div ng-if="owner.uid == owner.uhUuid">
+                                <i class="d-inline rounded-circle blue-bg text-light fa fa-school fa-xs p-1 ml-1"
+                                   role="button"
+                                   aria-hidden="true"
+                                   tooltip data-placement="right"
+                                   th:title="#{screen.message.common.tooltip.isDepartmentalAccount}">
+                                </i>
+                            </div>
+                            <span ng-if="groupingOwners.length > 1">
+                                <span class="far fa-trash-alt fa-pull-right pt-1" role="button"
+                                      tooltip data-placement="top"
+                                      tabindex="0" aria-label="Remove {{owner.name}} from the Owner members list"
+                                      th:title="#{screen.message.common.tooltip.remove.owner}"
+                                      ng-keypress="$event.keyCode === 13 ? removeOwnerWithTrashcan(currentPageOwners, $index) : null"
+                                      ng-click="removeOwnerWithTrashcan(currentPageOwners, $index)">
+                                </span>
                             </span>
-                        </span>
-                        <span ng-if="groupingOwners.length === 1">
-                            <span class="far fa-trash-alt fa-pull-right pt-1 fa-trash-alt-disabled" role="button"
-                                  tooltip data-placement="top"
-                                  aria-label="The last owner cannot be removed from the Owner members list"
-                                  th:title="#{screen.message.common.tooltip.remove.warning}">
+                            <span ng-if="groupingOwners.length === 1">
+                                <span class="far fa-trash-alt fa-pull-right pt-1 fa-trash-alt-disabled" role="button"
+                                      tooltip data-placement="top"
+                                      aria-label="The last owner cannot be removed from the Owner members list"
+                                      th:title="#{screen.message.common.tooltip.remove.warning}">
+                                </span>
                             </span>
-                        </span>
+                        </div>
                     </td>
                     <td class="overflow-auto py-1 px-3">
                         {{owner.uid}}
@@ -77,13 +88,13 @@
                 <form>
                     <div class="input-group long">
                         <div class="memSearch">
-                        <input class="form-control" placeholder="UH Username or UH Number" type="search"
-                               ng-init="dismissErrors()"  aria-required="true"
-                               ng-blur="dismissErrors()"
-                               title="Enter one or more UH members"
-                               ng-model="manageMembers"
-                               aria-label="Enter one or more UH members to add to the Owners list"
-                               id="owner-input"/>
+                            <input class="form-control" placeholder="UH Username or UH Number" type="search"
+                                   ng-init="dismissErrors()" aria-required="true"
+                                   ng-blur="dismissErrors()"
+                                   title="Enter one or more UH members"
+                                   ng-model="manageMembers"
+                                   aria-label="Enter one or more UH members to add to the Owners list"
+                                   id="owner-input"/>
                         </div>
                         <div class="memBtns">
                             <button class="btn btn-primary add-margin"
@@ -95,7 +106,8 @@
                                     ng-click="removeOnClick('owners')">
                                 Remove
                             </button>
-                            <div class="spinner-border spinner-border-sm d-inline-block" ng-if="waitingForImportResponse">
+                            <div class="spinner-border spinner-border-sm d-inline-block"
+                                 ng-if="waitingForImportResponse">
                             </div>
                         </div>
                     </div>
