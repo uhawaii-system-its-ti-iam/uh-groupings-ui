@@ -1,16 +1,17 @@
 <th:block th:fragment="sync-destinations">
 
-    <div class="row">
-        <div class="col-md-8">
-            <h1 class="font-weight-bold text-dark pt-2 mb-0 d-inline-block">Synchronization Destinations</h1>
-        </div>
-    </div>
-    <hr/>
-    <div th:text="#{screen.message.common.preferences.info}"></div>
     <div id="sync-destinations-display" class="tab-pane fade show active">
+        <div class="row">
+            <div class="col-md-8">
+                <h1 class="font-weight-bold text-dark pt-2 mb-0 d-inline-block">Synchronization Destinations</h1>
+            </div>
+        </div>
+        <br/>
+        <div th:text="#{screen.message.common.preferences.info}"></div>
+
         <div class="row pt-4 pb-5">
             <div class="col-md-6 col-12">
-                <h3>Sync Destinations</h3>
+                    <h3>Sync Destinations</h3>
                     <div>
                         <div class="form-check" ng-repeat="syncDest in syncDestArray">
                             <div ng-if="!syncDest.hidden">
@@ -33,7 +34,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
             </div>
         </div>
+    </div>
 </th:block>
