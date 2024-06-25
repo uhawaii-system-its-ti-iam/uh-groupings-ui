@@ -1,6 +1,6 @@
 <th:block th:fragment="basis">
-    <div id="basis-display" class="tab-pane show active">
 
+    <div id="basis-display" class="tab-pane show active">
         <div class="row">
             <div class="col-md-8">
                 <h1 class="font-weight-bold text-dark pt-2 mb-0 d-inline-block">Basis Members
@@ -13,7 +13,7 @@
                 <p class=" mb-1" ng-show="largeGrouping" th:text="#{screen.message.common.loading.toolarge}"><i
                         class="fa fa-check" aria-hidden="true"></i></p>
             </div>
-            <div class="col-md-4 pt-2">
+            <div class="col-md-4 py-2">
                 <input placeholder="Filter Members..." type="text" title="Filter Members"
                        ng-model="basisQuery" class="form-control" aria-label="Filter Members..."
                        ng-change="filter(groupingBasis, 'pagedItemsBasis', 'currentPageBasis', basisQuery, true)"/>
