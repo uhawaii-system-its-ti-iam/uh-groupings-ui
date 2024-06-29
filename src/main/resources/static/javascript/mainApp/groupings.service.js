@@ -120,6 +120,14 @@
             },
 
             /**
+             * Get a list of available ootb active profiles.
+             */
+            getAvailableOotbActiveProfiles(onSuccess, onError) {
+                let endpoint = BASE_URL + "ootb/availableProfiles";
+                dataProvider.loadData(endpoint, onSuccess, onError);
+            },
+
+            /**
              * Update data harness bean with OotbActiveProfile
              * @param profile {String}
              * @param onSuccess {Function}

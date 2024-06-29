@@ -231,6 +231,20 @@ describe("GroupingsService", () => {
         });
     });
 
+    describe("getAvailableOotbActiveProfiles", () => {
+        it("should call dataProvider.loadData", () => {
+            spyOn(dp, "loadData");
+            gs.getAvailableOotbActiveProfiles(onSuccess, onError);
+            expect(dp.loadData).toHaveBeenCalled();
+        });
+
+        it("should use the correct path", () => {
+            gs.getAvailableOotbActiveProfiles(onSuccess, onError);
+            httpBackend.expectGET(BASE_URL + "ootb/availableProfiles").respond(200);
+            expect(httpBackend.flush).not.toThrow();
+        });
+    });
+
     describe("updateOotbActiveProfile", () => {
         let profile = "testProfile"; // Example profile for testing
 

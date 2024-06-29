@@ -34,9 +34,10 @@ import edu.hawaii.its.groupings.service.OotbActiveUserProfileService;
 public class OotbSecurityConfig {
 
     private static final Log logger = LogFactory.getLog(OotbSecurityConfig.class);
-
-    @Value("${ootb.active.user.profile}")
     private String userProfile;
+
+    @Value("${ootb.profiles.filename}")
+    private String profilesFileName;
 
     @Value("${url.base}")
     private String appUrlBase;
@@ -108,6 +109,15 @@ public class OotbSecurityConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return new OotbActiveUserProfileService();
+        // Make Profile Service with JSON file that user sets in the properties file
+        OotbActiveUserProfileService ootbActiveUserProfileService = new OotbActiveUserProfileService(profilesFileName);
+
+        // Set the default profile to admin
+        setUserProfile(ootbActiveUserProfileService.findGivenNameForAdminRole());
+        return ootbActiveUserProfileService;
+    }
+
+    public void setUserProfile(String userProfile) {
+        this.userProfile = userProfile;
     }
 }

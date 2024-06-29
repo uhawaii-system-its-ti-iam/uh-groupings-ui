@@ -1,9 +1,12 @@
 package edu.hawaii.its.groupings.access;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -12,6 +15,10 @@ public class User extends org.springframework.security.core.userdetails.User {
     public static final long serialVersionUID = 2L;
     private String uhUuid;
     private UhAttributes attributes;
+
+    public User(){
+        super("", "", null);
+    }
 
     public User(String uid, String uhUuid, Collection<GrantedAuthority> authorities) {
         super(uid, "", authorities);
@@ -22,7 +29,7 @@ public class User extends org.springframework.security.core.userdetails.User {
         super(uid, "", authorities);
     }
 
-    private User(Builder builder) {
+    public User(Builder builder) {
         super(builder.uid, "", builder.authorities);
         this.uhUuid = builder.uhUuid;
         this.attributes = new UhAttributes(builder.attributes);
@@ -74,7 +81,7 @@ public class User extends org.springframework.security.core.userdetails.User {
     public static class Builder {
         private final String uid;
         private String uhUuid;
-        private Collection<GrantedAuthority> authorities;
+        private final Collection<GrantedAuthority> authorities = new ArrayList<>();
         private final Map<String, Object> attributes = new HashMap<>();
 
         public Builder(String uid) {
@@ -86,8 +93,16 @@ public class User extends org.springframework.security.core.userdetails.User {
             return this;
         }
 
-        public Builder authorities(Collection<GrantedAuthority> authorities) {
-            this.authorities = authorities;
+        public Builder addAuthorities(String authority) {
+            this.authorities.add(new SimpleGrantedAuthority(authority));
+            return this;
+        }
+
+        public Builder addAuthorities(List<String> authorities) {
+             List<GrantedAuthority> grantedAuthorities = authorities.stream()
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
+            this.authorities.addAll(grantedAuthorities);
             return this;
         }
 

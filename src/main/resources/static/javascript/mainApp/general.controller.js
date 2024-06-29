@@ -28,6 +28,7 @@
         $scope.showGroupingPathColumn = JSON.parse(localStorage.getItem("showPathColumn") ?? false);
 
         $scope.ootbActiveUser = "";
+        $scope.availableProfiles = [];
 
         angular.extend(this, $controller("TableJsController", { $scope }));
 
@@ -266,6 +267,20 @@
          */
         $scope.hoverCopy = () => {
             $("[data-content='copy']").popover();
+        };
+
+        /**
+         * Get available ootb active profiles that defined in ootb.active.user.profiles.json
+         */
+        $scope.loadAvailableProfiles = () => {
+            groupingsService.getAvailableOotbActiveProfiles(
+                (data) => {
+                    $scope.availableProfiles = data;
+                },
+                (res) => {
+                    $scope.resStatus = res.status;
+                }
+            );
         };
 
         /**

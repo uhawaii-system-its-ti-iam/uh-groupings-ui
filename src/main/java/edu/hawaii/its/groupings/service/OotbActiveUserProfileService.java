@@ -1,51 +1,65 @@
 package edu.hawaii.its.groupings.service;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
-import org.springframework.security.core.authority.AuthorityUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import edu.hawaii.its.groupings.access.Role;
 import edu.hawaii.its.groupings.access.User;
+import edu.hawaii.its.groupings.type.OotbActiveProfile;
+import edu.hawaii.its.groupings.util.JsonUtil;
 
 @Service
 public class OotbActiveUserProfileService implements UserDetailsService {
-    private final Map<String, User> users = new HashMap<>();
+    private static final Log logger = LogFactory.getLog(OotbActiveUserProfileService.class);
+    private final Map<String, User> users = new LinkedHashMap<>();
+
+    // Default JSON file for active profiles
+    private String profilesFileName = "ootb.active.user.profiles.json";
 
     public OotbActiveUserProfileService() {
         initUsers();
     }
 
+    public OotbActiveUserProfileService(String profilesFileName) {
+        this.profilesFileName = profilesFileName;
+        initUsers();
+    }
+
     private void initUsers() {
-        // Initialize member with uid "member0123"
-        users.put("MEMBER", new User.Builder("member0123")  // UID is clearly the first parameter in the constructor
-                .uhUuid("11111111")
-                .authorities(AuthorityUtils.createAuthorityList("ROLE_UH", "ROLE_OOTB"))
-                .addAttribute("cn", "MEMBER")
-                .addAttribute("mail", "member@hawaii.edu")
-                .addAttribute("givenName", "DefaultMember")
-                .build());
+        List<OotbActiveProfile> ootbActiveProfiles =
+                JsonUtil.asList(JsonUtil.readJsonFileToString(profilesFileName), OotbActiveProfile.class);
+        ootbActiveProfiles.forEach(profile -> {
+            users.put(profile.getAttributes().get("givenName"), createUserFromProfile(profile));
+        });
+    }
 
-        // Initialize owner with uid "owner0123"
-        users.put("OWNER", new User.Builder("owner0123")
-                .uhUuid("22222222")
-                .authorities(AuthorityUtils.createAuthorityList("ROLE_UH", "ROLE_OWNER", "ROLE_OOTB"))
-                .addAttribute("cn", "OWNER")
-                .addAttribute("mail", "owner@hawaii.edu")
-                .addAttribute("givenName", "OwnerUser")
-                .build());
+    private User createUserFromProfile(OotbActiveProfile profile) {
+        User.Builder builder = new User.Builder(profile.getUid())
+                .uhUuid(profile.getUhUuid())
+                .addAuthorities(profile.getAuthorities());
 
-        // Initialize admin with uid "admin0123"
-        users.put("ADMIN", new User.Builder("admin0123")
-                .uhUuid("33333333")
-                .authorities(AuthorityUtils.createAuthorityList("ROLE_ADMIN", "ROLE_UH", "ROLE_OWNER", "ROLE_OOTB"))
-                .addAttribute("cn", "ADMIN")
-                .addAttribute("mail", "admin@hawaii.edu")
-                .addAttribute("givenName", "AdminUser")
-                .build());
+        profile.getAttributes().forEach(builder::addAttribute);
+
+        return builder.build();
+    }
+
+    public String findGivenNameForAdminRole() {
+        Optional<String> givenName = users.values().stream()
+                .filter(user -> user.hasRole(Role.ADMIN))
+                .map(User::getGivenName)
+                .findFirst();
+
+        return givenName.orElse(null);
     }
 
     @Override
@@ -54,6 +68,10 @@ public class OotbActiveUserProfileService implements UserDetailsService {
             throw new UsernameNotFoundException("Should be one of MEMBER, OWNER, or ADMIN");
         }
         return users.get(userProfile);
+    }
+
+    public List<String> getAvailableProfiles() {
+        return new ArrayList<>(getUsers().keySet());
     }
 
     public Map<String, User> getUsers() {
