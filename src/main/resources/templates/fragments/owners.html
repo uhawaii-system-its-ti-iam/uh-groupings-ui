@@ -39,16 +39,15 @@
                 <tbody>
                 <tr ng-repeat="owner in pagedItemsOwners[currentPageOwners]" class="table table-sm">
                     <td class="overflow-auto py-1 px-3" aria-label="{{owner.name}}">
-                        <div class="d-flex">
                             {{owner.name}}
-                            <div ng-if="owner.uid == owner.uhUuid">
+                            <span ng-if="owner.uid == owner.uhUuid">
                                 <i class="d-inline rounded-circle blue-bg text-light fa fa-school fa-xs p-1 ml-1"
                                    role="button"
                                    aria-hidden="true"
                                    tooltip data-placement="right"
                                    th:title="#{screen.message.common.tooltip.isDepartmentalAccount}">
                                 </i>
-                            </div>
+                            </span>
                             <span ng-if="groupingOwners.length > 1">
                                 <span class="far fa-trash-alt fa-pull-right pt-1" role="button"
                                       tooltip data-placement="top"
@@ -65,7 +64,6 @@
                                       th:title="#{screen.message.common.tooltip.remove.warning}">
                                 </span>
                             </span>
-                        </div>
                     </td>
                     <td class="overflow-auto py-1 px-3">
                         {{owner.uid}}

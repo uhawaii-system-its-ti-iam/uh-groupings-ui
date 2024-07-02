@@ -78,24 +78,22 @@
                                ng-click="toggleSingleCheckbox('Include', member, $event.keyCode)">
                     </td>
                     <td class="overflow-auto py-1 px-3">
-                        <div class="d-flex">
                             {{member.name}}
-                            <div ng-if="member.uid == member.uhUuid">
+                            <span ng-if="member.uid == member.uhUuid">
                                 <i class="d-inline rounded-circle blue-bg text-light fa fa-school fa-xs p-1 ml-1"
                                    role="button"
                                    aria-hidden="true"
                                    tooltip data-placement="right"
                                    th:title="#{screen.message.common.tooltip.isDepartmentalAccount}">
                                 </i>
-                            </div>
+                            </span>
                             <span class="far fa-trash-alt fa-pull-right clickable pt-1" role="button"
                                   tooltip data-placement="top"
                                   tabindex="0" aria-label="Remove {{member.name}} from the Include list"
                                   th:title="#{screen.message.common.tooltip.remove.include}"
                                   ng-keypress="$event.keyCode === 13 ? removeMemberWithTrashcan('Include', currentPageInclude, $index) : null"
                                   ng-click="removeMemberWithTrashcan('Include', currentPageInclude, $index)">
-                        </span>
-                        </div>
+                            </span>
                     </td>
                     <td class="overflow-auto py-1 px-3">{{member.uhUuid}}</td>
                     <td class="overflow-auto py-1 px-3">
