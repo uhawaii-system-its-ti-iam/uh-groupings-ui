@@ -3,7 +3,8 @@
 
         <div class="row">
             <div class="col-md-8">
-                <h1 class="font-weight-bold text-dark pt-2 mb-0 d-inline-block">Basis Members ({{groupingBasis.length}})</h1>
+                <h1 class="font-weight-bold text-dark pt-2 mb-0 d-inline-block">Basis Members
+                    ({{groupingBasis.length}})</h1>
                 <div class="spinner-border ml-1 d-inline-block"
                      ng-hide="paginatingComplete"
                      role="status">
@@ -46,7 +47,19 @@
                 </thead>
                 <tbody>
                 <tr ng-repeat="b in pagedItemsBasis[currentPageBasis]" class="table table-sm">
-                    <td class="p-10">{{b.name}}</td>
+                    <td class="p-10">
+                        <div class="d-flex">
+                            {{b.name}}
+                            <div ng-if="b.uid == b.uhUuid">
+                                <i class="d-inline rounded-circle blue-bg text-light fa fa-school fa-xs p-1 ml-1"
+                                   role="button"
+                                   aria-hidden="true"
+                                   tooltip data-placement="right"
+                                   th:title="#{screen.message.common.tooltip.isDepartmentalAccount}">
+                                </i>
+                            </div>
+                        </div>
+                    </td>
                     <td class="p-10">{{b.uhUuid}}</td>
                     <td class="p-10">
                         {{b.uid}}
