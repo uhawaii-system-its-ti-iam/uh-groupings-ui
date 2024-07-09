@@ -7,7 +7,6 @@ import org.apache.commons.logging.LogFactory;
 
 import org.apereo.cas.client.authentication.SimplePrincipal;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -17,12 +16,15 @@ import edu.hawaii.its.groupings.service.UhUuidCheckerService;
 @Service
 public class AuthorizationService {
 
-    @Autowired
-    GroupingsRestController groupingsRestController;
-
-    @Autowired
-    UhUuidCheckerService uhUuidCheckerService;
     private static final Log logger = LogFactory.getLog(AuthorizationService.class);
+    private final GroupingsRestController groupingsRestController;
+
+    private final UhUuidCheckerService uhUuidCheckerService;
+
+    public AuthorizationService(GroupingsRestController groupingsRestController, UhUuidCheckerService uhUuidCheckerService) {
+        this.groupingsRestController = groupingsRestController;
+        this.uhUuidCheckerService = uhUuidCheckerService;
+    }
 
     /**
      * Assign roles to user
