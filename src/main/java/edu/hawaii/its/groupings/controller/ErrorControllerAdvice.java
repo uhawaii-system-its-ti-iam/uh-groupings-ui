@@ -7,7 +7,6 @@ import jakarta.mail.MessagingException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.TypeMismatchException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -26,11 +25,14 @@ public class ErrorControllerAdvice {
 
     private static final Log logger = LogFactory.getLog(ErrorControllerAdvice.class);
 
-    @Autowired
-    private UserContextService userContextService;
+    private final UserContextService userContextService;
 
-    @Autowired
-    private EmailService emailService;
+    private final EmailService emailService;
+
+    public ErrorControllerAdvice(UserContextService userContextService, EmailService emailService) {
+        this.userContextService = userContextService;
+        this.emailService = emailService;
+    }
 
     @ExceptionHandler(GroupingsServiceResultException.class)
     public ResponseEntity<GroupingsHTTPException> handleGroupingsServiceResultException(GroupingsServiceResultException gsre) {

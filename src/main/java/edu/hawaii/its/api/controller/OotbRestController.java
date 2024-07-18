@@ -8,7 +8,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.owasp.html.PolicyFactory;
 import org.owasp.html.Sanitizers;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -30,26 +29,28 @@ import edu.hawaii.its.groupings.service.OotbActiveUserProfileService;
 @RequestMapping("/api/groupings/ootb")
 public class OotbRestController {
     private static final Log logger = LogFactory.getLog(OotbRestController.class);
-    private final PolicyFactory policy;
+    private final PolicyFactory policy = Sanitizers.FORMATTING;;
 
     @Value("${url.api.2.1.base}")
     private String API_2_1_BASE;
 
-    @Autowired
-    private UserContextService userContextService;
+    private final UserContextService userContextService;
 
-    @Autowired
-    private OotbStaticUserAuthenticationFilter ootbAuthenticationFilter;
+    private final OotbStaticUserAuthenticationFilter ootbAuthenticationFilter;
 
-    @Autowired
-    private OotbActiveUserProfileService ootbActiveUserProfileService;
+    private final OotbActiveUserProfileService ootbActiveUserProfileService;
 
-    @Autowired
-    private HttpRequestService httpRequestService;
+    private final HttpRequestService httpRequestService;
 
     // Constructor.
-    public OotbRestController() {
-        policy = Sanitizers.FORMATTING;
+    public OotbRestController(UserContextService userContextService,
+            OotbStaticUserAuthenticationFilter ootbAuthenticationFilter,
+            OotbActiveUserProfileService ootbActiveUserProfileService,
+            HttpRequestService httpRequestService) {
+        this.userContextService = userContextService;
+        this.ootbAuthenticationFilter = ootbAuthenticationFilter;
+        this.ootbActiveUserProfileService = ootbActiveUserProfileService;
+        this.httpRequestService = httpRequestService;
     }
 
     /*

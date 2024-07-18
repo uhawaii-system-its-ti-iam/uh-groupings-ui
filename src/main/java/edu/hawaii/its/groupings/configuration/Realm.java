@@ -7,7 +7,6 @@ import jakarta.annotation.PostConstruct;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -17,8 +16,11 @@ public class Realm {
 
     private static final Log logger = LogFactory.getLog(Realm.class);
 
-    @Autowired
-    private Environment environment;
+    private final Environment environment;
+
+    public Realm(Environment environment) {
+        this.environment = environment;
+    }
 
     private Map<String, Boolean> profileMap = new ConcurrentHashMap<>();
 

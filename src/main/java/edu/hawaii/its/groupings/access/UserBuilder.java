@@ -4,7 +4,6 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -15,8 +14,11 @@ public final class UserBuilder {
 
     private static final Log logger = LogFactory.getLog(UserBuilder.class);
 
-    @Autowired
-    private AuthorizationService authorizationService;
+    private final AuthorizationService authorizationService;
+
+    public UserBuilder(AuthorizationService authorizationService) {
+        this.authorizationService = authorizationService;
+    }
 
     public User make(Map<String, ?> map) {
         return make(new UhAttributes(map));

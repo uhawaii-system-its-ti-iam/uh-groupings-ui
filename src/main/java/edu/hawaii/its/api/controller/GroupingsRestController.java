@@ -12,7 +12,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.owasp.html.PolicyFactory;
 import org.owasp.html.Sanitizers;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
@@ -39,7 +38,7 @@ import edu.hawaii.its.groupings.exceptions.ApiServerHandshakeException;
 public class GroupingsRestController {
 
     private static final Log logger = LogFactory.getLog(GroupingsRestController.class);
-    private final PolicyFactory policy;
+    private final PolicyFactory policy = Sanitizers.FORMATTING;;
 
     @Value("${app.groupings.controller.uuid}")
     private String uuid;
@@ -56,8 +55,7 @@ public class GroupingsRestController {
     @Value("${app.api.handshake.enabled:true}")
     private Boolean API_HANDSHAKE_ENABLED = true;
 
-    @Autowired
-    private UserContextService userContextService;
+    private final UserContextService userContextService;
 
     /*
      * Checks to make sure that the API is running and that there are no issues with the overrides file.
@@ -66,15 +64,15 @@ public class GroupingsRestController {
     @Value("${groupings.api.check}")
     private String CREDENTIAL_CHECK_USER;
 
-    @Autowired
     private HttpRequestService httpRequestService;
 
-    @Autowired
     private Realm realm;
 
     // Constructor.
-    public GroupingsRestController() {
-        policy = Sanitizers.FORMATTING;
+    public GroupingsRestController(UserContextService userContextService, HttpRequestService httpRequestService, Realm realm) {
+        this.userContextService = userContextService;
+        this.httpRequestService = httpRequestService;
+        this.realm = realm;
     }
 
     /*
