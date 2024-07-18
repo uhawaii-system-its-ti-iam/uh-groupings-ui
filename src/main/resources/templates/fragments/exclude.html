@@ -77,6 +77,7 @@
                                ng-click="toggleSingleCheckbox('Exclude', member, $event.keyCode)">
                     </td>
                     <td class="overflow-auto py-1 px-3">
+                            {{member.name}}
                             <span ng-if="member.uid == member.uhUuid">
                                 <i class="d-inline rounded-circle blue-bg text-light fa fa-school fa-xs p-1 ml-1"
                                    role="button"
