@@ -172,7 +172,7 @@
         <dependency>
             <groupId>edu.internet2.middleware.grouper</groupId>
             <artifactId>grouperClient</artifactId>
-            <version>2.3.0</version>
+            <version>2.6.19</version>
             <exclusions>
                 <exclusion>
                     <groupId>log4j</groupId>
@@ -229,7 +229,7 @@
                 <version>3.0-beta-02</version>
                 <configuration>
                     <preloadSources>
-                        <source>classpath/META-INF/resources/webjars/angularjs/${angularjs-version}/angular.min.js">
+                        <source>classpath/META-INF/resources/webjars/angularjs/${angularjs-version}/angular.min.js"&gt;
                         </source>
                         <source>classpath/META-INF/resources/webjars/jquery/${jquery-version}/jquery.min.js</source>
                         <source>classpath/META-INF/resources/webjars/popper.js/${popper.js-version}/umd/popper.min.js</source>
