@@ -25,7 +25,7 @@
         <angular-mocks-version>1.7.9</angular-mocks-version>
         <angular-ui-bootstrap-version>2.2.0</angular-ui-bootstrap-version>
 
-        <angularjs-version>1.7.8</angularjs-version>
+        <angularjs-version>1.8.3</angularjs-version>
         <popper.js-version>1.16.0</popper.js-version>
         <bootstrap-version>4.5.0</bootstrap-version>
 
@@ -229,7 +229,7 @@
                 <version>3.0-beta-02</version>
                 <configuration>
                     <preloadSources>
-                        <source>classpath/META-INF/resources/webjars/angularjs/${angularjs-version}/angular.min.js">
+                        <source>classpath/META-INF/resources/webjars/angularjs/${angularjs-version}/angular.min.js"&gt;
                         </source>
                         <source>classpath/META-INF/resources/webjars/jquery/${jquery-version}/jquery.min.js</source>
                         <source>classpath/META-INF/resources/webjars/popper.js/${popper.js-version}/umd/popper.min.js</source>
