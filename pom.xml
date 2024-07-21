@@ -27,7 +27,7 @@
 
         <angularjs-version>1.7.8</angularjs-version>
         <popper.js-version>1.16.0</popper.js-version>
-        <bootstrap-version>4.5.0</bootstrap-version>
+        <bootstrap-version>4.6.2</bootstrap-version>
 
         <lodash-version>4.17.21</lodash-version>
         <jasmine.test.specs>**/**.test.js</jasmine.test.specs>
@@ -229,7 +229,7 @@
                 <version>3.0-beta-02</version>
                 <configuration>
                     <preloadSources>
-                        <source>classpath/META-INF/resources/webjars/angularjs/${angularjs-version}/angular.min.js">
+                        <source>classpath/META-INF/resources/webjars/angularjs/${angularjs-version}/angular.min.js"&gt;
                         </source>
                         <source>classpath/META-INF/resources/webjars/jquery/${jquery-version}/jquery.min.js</source>
                         <source>classpath/META-INF/resources/webjars/popper.js/${popper.js-version}/umd/popper.min.js</source>
