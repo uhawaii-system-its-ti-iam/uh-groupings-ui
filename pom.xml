@@ -23,7 +23,7 @@
 
         <jquery-version>3.7.1</jquery-version>
         <angular-mocks-version>1.7.9</angular-mocks-version>
-        <angular-ui-bootstrap-version>2.2.0</angular-ui-bootstrap-version>
+        <angular-ui-bootstrap-version>2.5.0</angular-ui-bootstrap-version>
 
         <angularjs-version>1.7.8</angularjs-version>
         <popper.js-version>1.16.0</popper.js-version>
