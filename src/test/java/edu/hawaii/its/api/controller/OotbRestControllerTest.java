@@ -1,11 +1,9 @@
 package edu.hawaii.its.api.controller;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -39,9 +37,11 @@ import org.springframework.web.context.WebApplicationContext;
 import com.nimbusds.jose.shaded.gson.JsonIOException;
 
 import edu.hawaii.its.api.service.HttpRequestService;
+import edu.hawaii.its.api.service.OotbHttpRequestService;
 import edu.hawaii.its.groupings.access.User;
 import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
 import edu.hawaii.its.groupings.service.OotbActiveUserProfileService;
+import edu.hawaii.its.groupings.type.OotbActiveProfile;
 
 @ActiveProfiles("ootb")
 @SpringBootTest(classes = { SpringBootWebApplication.class })
@@ -54,7 +54,7 @@ public class OotbRestControllerTest {
     OotbRestController ootbRestController;
 
     @MockBean
-    private HttpRequestService httpRequestService;
+    private OotbHttpRequestService ootbHttpRequestService;
 
     @Autowired
     private WebApplicationContext context;
@@ -70,7 +70,8 @@ public class OotbRestControllerTest {
                 .apply(springSecurity())
                 .build();
 
-        when(httpRequestService.makeApiRequestWithBody(anyString(), anyString(), anyList(), any(HttpMethod.class)))
+        when(ootbHttpRequestService.makeApiRequestWithActiveProfileBody(anyString(), anyString(),
+                any(OotbActiveProfile.class), any(HttpMethod.class)))
                 .thenReturn(new ResponseEntity(HttpStatus.OK));
         when(ootbActiveUserProfileService.findGivenNameForAdminRole()).thenReturn(ADMIN_GIVEN_NAME);
     }
@@ -98,22 +99,23 @@ public class OotbRestControllerTest {
     }
 
     @Test
-    public void updateActiveProfileTest() throws Exception {
-        Map<String, User> orderedUsers = new LinkedHashMap<>();
-        String adminGivenName = ootbActiveUserProfileService.findGivenNameForAdminRole();
-        orderedUsers.put(adminGivenName, mock(User.class));
+    public void testUpdateActiveDefaultUser() throws Exception {
+        // Given
+        String activeProfile = ADMIN_GIVEN_NAME;
+        String uri = REST_CONTROLLER_BASE + "/" + activeProfile;
+        String currentUserUid = "testUser";
+        OotbActiveProfile profileData = new OotbActiveProfile();
 
-        String uri = REST_CONTROLLER_BASE + "/" + adminGivenName;
-
-        when(ootbActiveUserProfileService.getUsers()).thenReturn(orderedUsers);
-        given(httpRequestService.makeApiRequestWithBody(eq(ADMIN_GIVEN_NAME), anyString(), anyList(),
+        when(ootbActiveUserProfileService.getActiveProfiles()).thenReturn(Map.of(activeProfile, profileData));
+        when(ootbHttpRequestService.makeApiRequestWithActiveProfileBody(eq(currentUserUid), anyString(), eq(profileData),
                 eq(HttpMethod.POST)))
-                .willReturn(new ResponseEntity<>(HttpStatus.OK));
+                .thenReturn(new ResponseEntity<>(profileData, HttpStatus.OK));
 
-        assertNotNull(mockMvc.perform(post(uri).with(csrf()))
-                .andExpect(status().isOk())
-                .andReturn());
+        ResultActions result = mockMvc.perform(post(uri)
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON));
 
-        verify(ootbRestController).updateActiveDefaultUser(ADMIN_GIVEN_NAME);
+        result.andExpect(status().isOk());
+        verify(ootbRestController).updateActiveDefaultUser(activeProfile);
     }
 }

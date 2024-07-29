@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -20,8 +18,12 @@ import edu.hawaii.its.groupings.util.JsonUtil;
 
 @Service
 public class OotbActiveUserProfileService implements UserDetailsService {
-    private static final Log logger = LogFactory.getLog(OotbActiveUserProfileService.class);
+
+    // User is for SecurityContextHolder in AuthenticationFilter in UI project
     private final Map<String, User> users = new LinkedHashMap<>();
+
+    // OotbActiveProfile is for request body to make api request
+    private final Map<String, OotbActiveProfile> activeProfiles = new LinkedHashMap<>();
 
     // Default JSON file for active profiles
     private String profilesFileName = "ootb.active.user.profiles.json";
@@ -39,7 +41,9 @@ public class OotbActiveUserProfileService implements UserDetailsService {
         List<OotbActiveProfile> ootbActiveProfiles =
                 JsonUtil.asList(JsonUtil.readJsonFileToString(profilesFileName), OotbActiveProfile.class);
         ootbActiveProfiles.forEach(profile -> {
-            users.put(profile.getAttributes().get("givenName"), createUserFromProfile(profile));
+            String key = profile.getAttributes().get("givenName");
+            users.put(key, createUserFromProfile(profile));
+            activeProfiles.put(key, profile);
         });
     }
 
@@ -76,5 +80,9 @@ public class OotbActiveUserProfileService implements UserDetailsService {
 
     public Map<String, User> getUsers() {
         return users;
+    }
+
+    public Map<String, OotbActiveProfile> getActiveProfiles() {
+        return activeProfiles;
     }
 }

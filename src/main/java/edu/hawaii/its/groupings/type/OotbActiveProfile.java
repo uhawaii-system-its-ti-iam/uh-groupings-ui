@@ -8,6 +8,15 @@ public class OotbActiveProfile {
     private String uhUuid;
     private List<String> authorities;
     private Map<String, String> attributes;
+    private List<OotbGrouping> groupings;
+
+    public List<OotbGrouping> getGroupings() {
+        return groupings;
+    }
+
+    public void setGroupings(List<OotbGrouping> ootbGroupings) {
+        this.groupings = ootbGroupings;
+    }
 
     public String getUid() {
         return uid;

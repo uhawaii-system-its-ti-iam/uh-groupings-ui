@@ -1,8 +1,6 @@
 package edu.hawaii.its.api.controller;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -11,19 +9,18 @@ import org.owasp.html.Sanitizers;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import edu.hawaii.its.api.service.HttpRequestService;
-import edu.hawaii.its.groupings.access.User;
+import edu.hawaii.its.api.service.OotbHttpRequestService;
 import edu.hawaii.its.groupings.access.UserContextService;
 import edu.hawaii.its.groupings.configuration.OotbStaticUserAuthenticationFilter;
 import edu.hawaii.its.groupings.service.OotbActiveUserProfileService;
+import edu.hawaii.its.groupings.type.OotbActiveProfile;
 
 @RestController
 @RequestMapping("/api/groupings/ootb")
@@ -40,17 +37,18 @@ public class OotbRestController {
 
     private final OotbActiveUserProfileService ootbActiveUserProfileService;
 
-    private final HttpRequestService httpRequestService;
+    private final OotbHttpRequestService ootbHttpRequestService;
+
 
     // Constructor.
     public OotbRestController(UserContextService userContextService,
             OotbStaticUserAuthenticationFilter ootbAuthenticationFilter,
             OotbActiveUserProfileService ootbActiveUserProfileService,
-            HttpRequestService httpRequestService) {
+            OotbHttpRequestService ootbHttpRequestService) {
         this.userContextService = userContextService;
         this.ootbAuthenticationFilter = ootbAuthenticationFilter;
         this.ootbActiveUserProfileService = ootbActiveUserProfileService;
-        this.httpRequestService = httpRequestService;
+        this.ootbHttpRequestService = ootbHttpRequestService;
     }
 
     /*
@@ -65,40 +63,12 @@ public class OotbRestController {
     }
 
     @PostMapping(value = "/{activeProfile}")
-    public ResponseEntity<String> updateActiveDefaultUser(@PathVariable String activeProfile) {
-        logger.info("Entered REST updateActiveUserProfile...");
+    public ResponseEntity<OotbActiveProfile> updateActiveDefaultUser(@PathVariable String activeProfile) {
         String currentUid = policy.sanitize(userContextService.getCurrentUid());
         ootbAuthenticationFilter.setUserProfile(activeProfile);
-        User user = ootbActiveUserProfileService.getUsers().get(activeProfile);
-
-        // Request Body (List<String> - authorities)
-        java.util.Collection<GrantedAuthority> authoritiesCollection = user.getAuthorities();
-        List<String> authorities = authoritiesCollection.stream()
-                .map(GrantedAuthority::getAuthority)
-                .toList();
-
-        // Request Params ( String - uid, uhUuid, name, givenName )
-        Map<String, String> params =
-                mapOotbParameters(user.getUid(), user.getUhUuid(), user.getName(), user.getGivenName());
+        OotbActiveProfile ootbActiveProfile = ootbActiveUserProfileService.getActiveProfiles().get(activeProfile);
         String baseUri = API_2_1_BASE + "/activeProfile/ootb";
-        String uri = buildUriWithParams(baseUri, params);
-        return httpRequestService.makeApiRequestWithBody(currentUid, uri, authorities, HttpMethod.POST);
-    }
-
-    private Map<String, String> mapOotbParameters(String uid, String uhUuid, String name, String givenName) {
-        Map<String, String> params = new HashMap<>();
-        params.put("uid", uid);
-        params.put("uhUuid", uhUuid);
-        params.put("name", name);
-        params.put("givenName", givenName);
-        return params;
-    }
-
-    private String buildUriWithParams(String baseUri, Map<String, String> params) {
-        UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromHttpUrl(baseUri);
-        for (Map.Entry<String, String> entry : params.entrySet()) {
-            uriComponentsBuilder.queryParam(entry.getKey(), entry.getValue());
-        }
-        return uriComponentsBuilder.encode().toUriString();
+        return ootbHttpRequestService.makeApiRequestWithActiveProfileBody(currentUid, baseUri, ootbActiveProfile,
+                HttpMethod.POST);
     }
 }
