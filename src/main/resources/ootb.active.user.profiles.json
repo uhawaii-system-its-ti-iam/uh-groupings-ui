@@ -7,7 +7,65 @@
             "cn": "MEMBER",
             "mail": "member@hawaii.edu",
             "givenName": "DefaultMember"
-        }
+        },
+        "groupings": [
+            {
+                "name": "group1:include",
+                "displayName": "group1:include",
+                "extension": "include",
+                "displayExtension": "include",
+                "description": "This is the first group",
+                "members": [
+                    {
+                      "name": "s",
+                      "uhUuid": "11111112",
+                      "uid": "member2"
+                    }
+                ]
+            },
+            {
+                "name": "group2:exclude",
+                "displayName": "group2:exclude",
+                "extension": "exclude",
+                "displayExtension": "exclude",
+                "description": "This is the second group",
+                "members": [
+                    {
+                      "name": "s",
+                      "uhUuid": "11111112",
+                      "uid": "member2"
+                    }
+                ]
+            },
+            {
+                "name": "shared-groupPath:owners",
+                "displayName": "shared-groupPath:owners",
+                "extension": "owners",
+                "displayExtension": "owners",
+                "description": "This is the shared-groupPath",
+                "members": [
+                    {
+                      "name": "s",
+                      "uhUuid": "11111112",
+                      "uid": "member2"
+                    }
+                ]
+            },
+            {
+                "name": "memberGroup:owners",
+                "displayName": "memberGroup:owners",
+                "extension": "owners",
+                "displayExtension": "owners",
+                "description": "This is the memberGroup",
+                "members": [
+                    {
+                      "name": "s",
+                      "uhUuid": "11111112",
+                      "uid": "member2"
+                    }
+                ]
+            }
+        ]
     },
     {
         "uid": "owner0123",
@@ -17,7 +75,93 @@
             "cn": "OWNER",
             "mail": "owner@hawaii.edu",
             "givenName": "OwnerUser"
-        }
+        },
+        "groupings": [
+            {
+                "name": "group1:include",
+                "displayName": "group1:include",
+                "extension": "include",
+                "displayExtension": "include",
+                "description": "This is the first group",
+                "members": [
+                    {
+                      "name": "s",
+                      "uhUuid": "11111112",
+                      "uid": "member2"
+                    }
+                ]
+            },
+            {
+                "name": "group2:exclude",
+                "displayName": "group2:exclude",
+                "extension": "exclude",
+                "displayExtension": "exclude",
+                "description": "This is the second group",
+                "members": [
+                    {
+                      "name": "s",
+                      "uhUuid": "11111112",
+                      "uid": "member2"
+                    }
+                ]
+            },
+            {
+                "name": "shared-groupPath:owners",
+                "displayName": "shared-groupPath:owners",
+                "extension": "owners",
+                "displayExtension": "owners",
+                "description": "This is the shared-groupPath",
+                "members": [
+                    {
+                      "name": "s",
+                      "uhUuid": "11111112",
+                      "uid": "member2"
+                    }
+                ]
+            },
+            {
+                "name": "shared-groupPath:include",
+                "displayName": "shared-groupPath:include",
+                "extension": "include",
+                "displayExtension": "include",
+                "description": "This is the shared-groupPath",
+                "members": [
+                    {
+                      "name": "s",
+                      "uhUuid": "11111112",
+                      "uid": "member2"
+                    }
+                ]
+            },
+            {
+                "name": "ownerGroup:owners",
+                "displayName": "ownerGroup:owners",
+                "extension": "owners",
+                "displayExtension": "owners",
+                "description": "This is the fourth group",
+                "members": [
+                    {
+                      "name": "s",
+                      "uhUuid": "11111112",
+                      "uid": "member2"
+                    }
+                ]
+            },
+            {
+                "name": "zoommeeting:owners",
+                "displayName": "zoommeeting:owners",
+                "extension": "owners",
+                "displayExtension": "owners",
+                "description": "This is the fourth group",
+                "members": [
+                    {
+                      "name": "s",
+                      "uhUuid": "11111112",
+                      "uid": "member2"
+                    }
+                ]
+            }
+        ]
     },
     {
         "uid": "admin0123",
@@ -27,6 +171,118 @@
             "cn": "ADMIN",
             "mail": "admin@hawaii.edu",
             "givenName": "AdminUser"
-        }
+        },
+        "groupings": [
+            {
+                "name": "group1:include",
+                "displayName": "group1:include",
+                "extension": "include",
+                "displayExtension": "include",
+                "description": "This is the first group",
+                "members": [
+                    {
+                      "name": "s",
+                      "uhUuid": "11111112",
+                      "uid": "member2"
+                    }
+                ]
+            },
+            {
+                "name": "group2:exclude",
+                "displayName": "group2:exclude",
+                "extension": "exclude",
+                "displayExtension": "exclude",
+                "description": "This is the second group",
+                "members": [
+                    {
+                      "name": "s",
+                      "uhUuid": "11111112",
+                      "uid": "member2"
+                    }
+                ]
+            },
+            {
+                "name": "shared-groupPath:owners",
+                "displayName": "shared-groupPath:owners",
+                "extension": "owners",
+                "displayExtension": "owners",
+                "description": "This is the shared-groupPath",
+                "members": [
+                    {
+                      "name": "s",
+                      "uhUuid": "11111112",
+                      "uid": "member2"
+                    }
+                ]
+            },
+            {
+                "name": "adminGroup:owners",
+                "displayName": "adminGroup:owners",
+                "extension": "owners",
+                "displayExtension": "owners",
+                "description": "This is the fourth group",
+                "members": [
+                    {
+                      "name": "s",
+                      "uhUuid": "11111112",
+                      "uid": "member2"
+                    },
+                    {
+                      "name": "AdminUser",
+                      "uid": "admin0123",
+                      "uhUuid": "33333333"
+                    }
+                ]
+            },
+            {
+                "name": "adminGroup:include",
+                "displayName": "adminGroup:include",
+                "extension": "include",
+                "displayExtension": "include",
+                "description": "This is the fourth group",
+                "members": [
+                    {
+                      "name": "s",
+                      "uhUuid": "11111112",
+                      "uid": "member2"
+                    },
+                    {
+                      "name": "AdminUser",
+                      "uid": "admin0123",
+                      "uhUuid": "33333333"
+                    },
+                    {
+                      "name": "OwnerUser",
+                      "uid": "owner0123",
+                      "uhUuid": "22222222"
+                    }
+                ]
+            },
+            {
+                "name": "adminGroup:basis",
+                "displayName": "adminGroup:basis",
+                "extension": "basis",
+                "displayExtension": "basis",
+                "description": "This is the fourth group",
+                "members": [
+                    {
+                      "name": "s",
+                      "uhUuid": "11111112",
+                      "uid": "member2"
+                    },
+                    {
+                      "name": "AdminUser",
+                      "uid": "admin0123",
+                      "uhUuid": "33333333"
+                    },
+                    {
+                      "name": "OwnerUser",
+                      "uid": "owner0123",
+                      "uhUuid": "22222222"
+                    }
+                ]
+            }
+        ]
     }
 ]
+
