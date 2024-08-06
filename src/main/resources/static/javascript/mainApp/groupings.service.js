@@ -107,7 +107,7 @@
              * Get a list of admins.
              */
             getGroupingAdmins(onSuccess, onError) {
-                let endpoint = BASE_URL + "groupingAdmins";
+                let endpoint = BASE_URL + "groupings/admins";
                 dataProvider.loadData(endpoint, onSuccess, onError);
             },
 
@@ -115,7 +115,7 @@
              * Get a list of all groupings.
              */
             getAllGroupings(onSuccess, onError) {
-                let endpoint = BASE_URL + "allGroupings";
+                let endpoint = BASE_URL + "groupings";
                 dataProvider.loadData(endpoint, onSuccess, onError);
             },
 

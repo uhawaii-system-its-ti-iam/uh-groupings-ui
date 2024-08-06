@@ -98,19 +98,19 @@ public class GroupingsRestController {
         return ResponseEntity.ok("University of Hawaii UHGroupings");
     }
 
-    @GetMapping(value = "/groupingAdmins")
+    @GetMapping(value = "/groupings/admins")
     public ResponseEntity<String> groupingAdmins() {
         logger.info("Entered REST groupingAdmins...");
         String currentUid = policy.sanitize(userContextService.getCurrentUid());
-        String uri = API_2_1_BASE + "/grouping-admins";
+        String uri = API_2_1_BASE + "/groupings/admins";
         return httpRequestService.makeApiRequest(currentUid, uri, HttpMethod.GET);
     }
 
-    @GetMapping(value = "/allGroupings")
+    @GetMapping(value = "/groupings")
     public ResponseEntity<String> allGroupings() {
         logger.info("Entered REST allGroupings...");
         String currentUid = policy.sanitize(userContextService.getCurrentUid());
-        String uri = API_2_1_BASE + "/all-groupings";
+        String uri = API_2_1_BASE + "/groupings";
         return httpRequestService.makeApiRequest(currentUid, uri, HttpMethod.GET);
     }
 
@@ -156,11 +156,11 @@ public class GroupingsRestController {
     /**
      * Check if principle is an administrator.
      */
-    @GetMapping(value = "/admins")
+    @GetMapping(value = "/members/is-admin")
     public ResponseEntity<String> hasAdminPrivs(Principal principal) {
         logger.info("Entered REST hasAdminPrivs...");
         String principalName = policy.sanitize(principal.getName());
-        String uri = String.format(API_2_1_BASE + "/admins", principalName);
+        String uri = String.format(API_2_1_BASE + "/members/is-admin", principalName);
         return httpRequestService.makeApiRequest(principalName, uri, HttpMethod.GET);
     }
 
