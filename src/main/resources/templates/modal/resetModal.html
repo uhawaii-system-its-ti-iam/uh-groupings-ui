@@ -6,13 +6,16 @@
       </a>
   </div>
   <div class="modal-body" id="modal-body">
-    <p>
-        <span class="text-dark" th:text="#{screen.message.modal.reset.confirmation}"></span>
-        <span class="text-dark">{{listNames}} in the {{groupReset}} group?</span>
-    </p>
-    <!--<p class="alert alert-warning mt-2" role="alert">
-      <span class="text-dark">For Mac users: Scroll bars may be hidden by default. You may need to scroll down to view the full list of members.</span>
+    <!--<p>
+      <span class="text-dark">{{ resetResults.length }} members are listed.</span>
+      <span class="text-dark" th:text="#{screen.message.modal.reset.confirmation}"></span>
+      <span class="text-dark">{{listNames}} in the {{groupReset}} group?</span>
     </p>-->
+    <p>
+      <span class="text-dark">Are you sure you want to remove the
+        following {{ resetResults.length }} members from the</span>
+      <span class="text-dark">{{listNames}} in the {{groupReset}} group?</span>
+    </p>
     <div class="container modal-table" tabindex="0" id="modalTableContainer">
         <table class="table table-sm table-borderless">
             <thead class="thead-sticky">
@@ -41,7 +44,6 @@
                 </tr>
             </tbody>
         </table>
-        <i class="fa-arrow-circle-down"/>
     </div>
     <p class="alert alert-warning mt-2" role="alert">
         <span class="text-dark" th:text="#{screen.message.common.membership.info}"></span>
@@ -51,31 +53,4 @@
       <button class="btn btn-primary" ng-click="proceedResetGroup()">Yes</button>
       <button class="btn btn-light" ng-click="cancelResetGroup()" data-dismiss="modal">Cancel</button>
   </div>
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const modalTableContainer = document.getElementById('modalTableContainer');
-      const downArrow = document.getElementById('downArrow');
-
-      function checkOverflow() {
-        if (modalTableContainer.scrollHeight > modalTableContainer.clientHeight) {
-          downArrow.style.display = 'block';
-        } else {
-          downArrow.style.display = 'none';
-        }
-      }
-
-      function checkScrollPosition() {
-        if (modalTableContainer.scrollTop + modalTableContainer.clientHeight >= modalTableContainer.scrollHeight) {
-          downArrow.style.display = 'none';
-        } else {
-          downArrow.style.display = 'block';
-        }
-      }
-
-      modalTableContainer.addEventListener('scroll', checkScrollPosition);
-      window.addEventListener('resize', checkOverflow);
-
-      checkOverflow();
-    });
-  </script>
 </html>
