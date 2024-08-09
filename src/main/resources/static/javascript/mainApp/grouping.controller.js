@@ -175,11 +175,11 @@
             await $scope.getGroupingOptAttributes(groupingPath);
             while (!($scope.paginatingComplete) && loadMembersList) {
                 $scope.paginatingProgress = true;
+                $scope.disableResetCheckboxes();
                 await $scope.fetchGrouping(currentPage, paths);
                 currentPage++;
                 $scope.loading = false;
             }
-            $scope.disableResetCheckboxes();
             loadMembersList = false;
         };
 
