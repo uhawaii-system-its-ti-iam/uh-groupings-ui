@@ -6,14 +6,8 @@
       </a>
   </div>
   <div class="modal-body" id="modal-body">
-    <!--<p>
-      <span class="text-dark">{{ resetResults.length }} members are listed.</span>
-      <span class="text-dark" th:text="#{screen.message.modal.reset.confirmation}"></span>
-      <span class="text-dark">{{listNames}} in the {{groupReset}} group?</span>
-    </p>-->
     <p>
-      <span class="text-dark">Are you sure you want to remove the
-        following {{ resetResults.length }} members from the</span>
+      <span class="text-dark" th:text="#{screen.message.modal.reset.confirmation}"></span>
       <span class="text-dark">{{listNames}} in the {{groupReset}} group?</span>
     </p>
     <div class="container modal-table" tabindex="0" id="modalTableContainer">
