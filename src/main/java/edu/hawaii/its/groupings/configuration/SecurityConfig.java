@@ -10,7 +10,6 @@ import org.apereo.cas.client.proxy.ProxyGrantingTicketStorage;
 import org.apereo.cas.client.proxy.ProxyGrantingTicketStorageImpl;
 import org.apereo.cas.client.session.SingleSignOutFilter;
 import org.apereo.cas.client.validation.Saml11TicketValidator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -65,8 +64,11 @@ public class SecurityConfig {
     @Value("${cas.send.renew:false}")
     private boolean casSendRenew;
 
-    @Autowired
-    private UserBuilder userBuilder;
+    private final UserBuilder userBuilder;
+
+    public SecurityConfig(UserBuilder userBuilder) {
+        this.userBuilder = userBuilder;
+    }
 
     @PostConstruct
     public void init() {

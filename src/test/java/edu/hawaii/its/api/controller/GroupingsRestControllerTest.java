@@ -121,7 +121,7 @@ public class GroupingsRestControllerTest {
     @Test
     @WithMockUhUser(uid = "admin")
     public void groupingAdminsTest() throws Exception {
-        String uri = REST_CONTROLLER_BASE + "groupingAdmins";
+        String uri = REST_CONTROLLER_BASE + "groupings/admins";
 
         given(httpRequestService.makeApiRequest(eq(ADMIN_UID), anyString(), eq(HttpMethod.GET)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
@@ -137,7 +137,7 @@ public class GroupingsRestControllerTest {
     @Test
     @WithMockUhUser(uid = "admin")
     public void allGroupingsTest() throws Exception {
-        String uri = REST_CONTROLLER_BASE + "allGroupings";
+        String uri = REST_CONTROLLER_BASE + "groupings";
 
         given(httpRequestService.makeApiRequest(eq(ADMIN_UID), anyString(), eq(HttpMethod.GET)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
@@ -153,7 +153,7 @@ public class GroupingsRestControllerTest {
     @Test
     @WithMockUhUser(uid = "admin")
     public void hasAdminPrivsTest() throws Exception {
-        String uri = REST_CONTROLLER_BASE + "admins";
+        String uri = REST_CONTROLLER_BASE + "members/is-admin";
 
         given(httpRequestService.makeApiRequest(eq(ADMIN_UID), anyString(), eq(HttpMethod.GET)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));

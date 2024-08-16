@@ -147,7 +147,7 @@ describe("GroupingsService", () => {
 
         it("should use the correct path", () => {
             gs.getGroupingAdmins(onSuccess, onError);
-            httpBackend.expectGET(BASE_URL + "groupingAdmins").respond(200);
+            httpBackend.expectGET(BASE_URL + "groupings/admins").respond(200);
             expect(httpBackend.flush).not.toThrow();
         });
     });
@@ -162,7 +162,7 @@ describe("GroupingsService", () => {
 
         it("should use the correct path", () => {
             gs.getAllGroupings(onSuccess, onError);
-            httpBackend.expectGET(BASE_URL + "allGroupings").respond(200);
+            httpBackend.expectGET(BASE_URL + "groupings").respond(200);
             expect(httpBackend.flush).not.toThrow();
         });
     });

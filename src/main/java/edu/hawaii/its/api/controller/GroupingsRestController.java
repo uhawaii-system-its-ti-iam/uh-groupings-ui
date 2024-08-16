@@ -12,7 +12,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.owasp.html.PolicyFactory;
 import org.owasp.html.Sanitizers;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
@@ -39,7 +38,7 @@ import edu.hawaii.its.groupings.exceptions.ApiServerHandshakeException;
 public class GroupingsRestController {
 
     private static final Log logger = LogFactory.getLog(GroupingsRestController.class);
-    private final PolicyFactory policy;
+    private final PolicyFactory policy = Sanitizers.FORMATTING;;
 
     @Value("${app.groupings.controller.uuid}")
     private String uuid;
@@ -56,8 +55,7 @@ public class GroupingsRestController {
     @Value("${app.api.handshake.enabled:true}")
     private Boolean API_HANDSHAKE_ENABLED = true;
 
-    @Autowired
-    private UserContextService userContextService;
+    private final UserContextService userContextService;
 
     /*
      * Checks to make sure that the API is running and that there are no issues with the overrides file.
@@ -66,15 +64,15 @@ public class GroupingsRestController {
     @Value("${groupings.api.check}")
     private String CREDENTIAL_CHECK_USER;
 
-    @Autowired
     private HttpRequestService httpRequestService;
 
-    @Autowired
     private Realm realm;
 
     // Constructor.
-    public GroupingsRestController() {
-        policy = Sanitizers.FORMATTING;
+    public GroupingsRestController(UserContextService userContextService, HttpRequestService httpRequestService, Realm realm) {
+        this.userContextService = userContextService;
+        this.httpRequestService = httpRequestService;
+        this.realm = realm;
     }
 
     /*
@@ -100,19 +98,19 @@ public class GroupingsRestController {
         return ResponseEntity.ok("University of Hawaii UHGroupings");
     }
 
-    @GetMapping(value = "/groupingAdmins")
+    @GetMapping(value = "/groupings/admins")
     public ResponseEntity<String> groupingAdmins() {
         logger.info("Entered REST groupingAdmins...");
         String currentUid = policy.sanitize(userContextService.getCurrentUid());
-        String uri = API_2_1_BASE + "/grouping-admins";
+        String uri = API_2_1_BASE + "/groupings/admins";
         return httpRequestService.makeApiRequest(currentUid, uri, HttpMethod.GET);
     }
 
-    @GetMapping(value = "/allGroupings")
+    @GetMapping(value = "/groupings")
     public ResponseEntity<String> allGroupings() {
         logger.info("Entered REST allGroupings...");
         String currentUid = policy.sanitize(userContextService.getCurrentUid());
-        String uri = API_2_1_BASE + "/all-groupings";
+        String uri = API_2_1_BASE + "/groupings";
         return httpRequestService.makeApiRequest(currentUid, uri, HttpMethod.GET);
     }
 
@@ -158,11 +156,11 @@ public class GroupingsRestController {
     /**
      * Check if principle is an administrator.
      */
-    @GetMapping(value = "/admins")
+    @GetMapping(value = "/members/is-admin")
     public ResponseEntity<String> hasAdminPrivs(Principal principal) {
         logger.info("Entered REST hasAdminPrivs...");
         String principalName = policy.sanitize(principal.getName());
-        String uri = String.format(API_2_1_BASE + "/admins", principalName);
+        String uri = String.format(API_2_1_BASE + "/members/is-admin", principalName);
         return httpRequestService.makeApiRequest(principalName, uri, HttpMethod.GET);
     }
 

@@ -2,7 +2,6 @@ package edu.hawaii.its.groupings.configuration;
 
 import jakarta.annotation.PostConstruct;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 
@@ -11,8 +10,11 @@ import edu.internet2.middleware.grouperClient.util.GrouperClientConfig;
 @Configuration
 public class GrouperPropertyConfigurer {
 
-    @Autowired
-    private Environment env;
+    private final Environment env;
+
+    public GrouperPropertyConfigurer(Environment env) {
+        this.env = env;
+    }
 
     @PostConstruct
     public void init() {

@@ -1,20 +1,19 @@
 package edu.hawaii.its.api.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.util.List;
-
 @Service("httpRequestService")
 public class HttpRequestService {
 
+    private final WebClient webClient;
     @Value("${groupings.api.current_user}")
     private String CURRENT_USER;
-
-    private final WebClient webClient;
 
     public HttpRequestService() {
         webClient = WebClient.builder()
@@ -49,7 +48,7 @@ public class HttpRequestService {
      * Make a http request to the API with path variables and description string in the body.
      */
     public ResponseEntity<String> makeApiRequestWithBody(String currentUser, String uri, String data,
-                                                         HttpMethod method) {
+            HttpMethod method) {
         return webClient.method(method)
                 .uri(uri)
                 .header(CURRENT_USER, currentUser)
@@ -63,7 +62,7 @@ public class HttpRequestService {
      * Make a http request to the API with path variables and description list of strings in the body.
      */
     public ResponseEntity<String> makeApiRequestWithBody(String currentUser, String uri, List<String> data,
-                                                         HttpMethod method) {
+            HttpMethod method) {
         return webClient.method(method)
                 .uri(uri)
                 .header(CURRENT_USER, currentUser)
@@ -72,4 +71,5 @@ public class HttpRequestService {
                 .toEntity(String.class)
                 .block();
     }
+
 }

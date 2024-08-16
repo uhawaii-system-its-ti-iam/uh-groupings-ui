@@ -8,7 +8,6 @@ import jakarta.servlet.http.HttpSession;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -35,11 +34,14 @@ public class HomeController {
     @Value("${cas.logout.url}")
     private String casLogoutUrl;
 
-    @Autowired
-    private EmailService emailService;
+    private final EmailService emailService;
 
-    @Autowired
-    private UserContextService userContextService;
+    private final UserContextService userContextService;
+
+    public HomeController(EmailService emailService, UserContextService userContextService) {
+        this.emailService = emailService;
+        this.userContextService = userContextService;
+    }
 
     // Mapping to home.
     @GetMapping(value = { "/", "/home" })
