@@ -28,6 +28,7 @@
         $scope.selectedOwnedGroupingsNames = [];
         $scope.allGroupingsLoading = false;
         $scope.userGroupingInformationLoading = false;
+        $scope.loadingOwners = false;
 
         let PAGE_SIZE = 20;
 
@@ -427,6 +428,7 @@
          */
         $scope.handleGroupingOwnersOnSuccess = (res) => {
             $scope.loading = false;
+            $scope.loadingOwners = false;
             $scope.owners = [];
 
             res.members.forEach((member) => {
@@ -445,6 +447,7 @@
          */
         $scope.handleGroupingOwnersOnError = () => {
             $scope.loading = false;
+            $scope.loadingOwners = false;
             $scope.displayDynamicModal(Message.Title.DISPLAY_OWNERS_ERROR, Message.Body.DISPLAY_OWNERS_ERROR);
         };
 
@@ -469,6 +472,11 @@
          * @param groupingPath - The path of the grouping to display owners
          */
         $scope.getGroupingOwnersOnClick = (groupingPath) => {
+            // Prevent multiple triggers while loading modal
+            if ($scope.loadingOwners === true) {
+                return;
+            }
+            $scope.loadingOwners = true;
             $scope.ownersModalGroupingPath = groupingPath;
             groupingsService.groupingOwners($scope.ownersModalGroupingPath, $scope.handleGroupingOwnersOnSuccess, $scope.handleGroupingOwnersOnError);
         };
