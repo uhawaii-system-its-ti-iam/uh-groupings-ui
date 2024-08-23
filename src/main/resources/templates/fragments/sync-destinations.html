@@ -30,6 +30,13 @@
                             </span>
                         </div>
                     </div>
+                    <div>
+                        <button class="btn btn-primary btn-sm" type="button"
+                                ng-disabled="!anyCheckboxChecked(syncDestArray)"
+                                ng-click="submitSelectedDestinations()">
+                            Submit
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
