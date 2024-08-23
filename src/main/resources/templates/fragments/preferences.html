@@ -1,63 +1,85 @@
 <th:block th:fragment="preferences">
-
-    <div id="preferences-display" class="tab-pane fade show active">
-      <div class="row">
-          <div class="col-md-8">
-              <h1 class="font-weight-bold text-dark pt-2 mb-0 d-inline-block">Preferences</h1>
-          </div>
+  <div id="preferences-display" class="tab-pane fade show active">
+    <div class="row">
+      <div class="col-md-8">
+        <h1 class="font-weight-bold text-dark pt-2 mb-0 d-inline-block">
+          Preferences
+        </h1>
       </div>
-      <br/>
-      <div th:text="#{screen.message.common.preferences.info}"></div>
+    </div>
+    <br />
+    <div th:text="#{screen.message.common.preferences.info}"></div>
 
-      <div class="row pt-4 pb-5">
-            <div class="col-xl-6 col-12">
-                <h3>User Options</h3>
-                <div>
-                    <div class="form-check">
-                        <input type="checkbox" class="position-relative ml-0" ng-model="allowOptIn" id="allowOptIn"
-                               ng-keydown="clickWithEnter($event)"/>
-                        <label class="form-check-label" for="allowOptIn">
-                            Allow people to add themselves to this group
-                        </label>
-                        <span class="fa fa-question-circle" role="button"
-                              tooltip data-placement="right"
-                              tabindex="0"
-                              th:aria-label="#{screen.message.common.tooltip.preference.allowOptIn}"
-                              th:title="#{screen.message.common.tooltip.preference.allowOptIn}"
-                              th:attr="ng-click='displayDynamicModal(\'Preferences Information\', \'' +
+    <div class="row pt-4 pb-5">
+      <div class="col-xl-6 col-12">
+        <h3>User Options</h3>
+        <div>
+          <div class="form-check">
+            <input
+              type="checkbox"
+              class="position-relative ml-0"
+              ng-model="allowOptIn"
+              id="allowOptIn"
+              ng-keydown="clickWithEnter($event)"
+            />
+            <label class="form-check-label" for="allowOptIn">
+              Allow people to add themselves to this group
+            </label>
+            <span
+              class="fa fa-question-circle"
+              role="button"
+              tooltip
+              data-placement="right"
+              tabindex="0"
+              th:aria-label="#{screen.message.common.tooltip.preference.allowOptIn}"
+              th:title="#{screen.message.common.tooltip.preference.allowOptIn}"
+              th:attr="ng-click='displayDynamicModal(\'Preferences Information\', \'' +
                                 #{screen.message.common.tooltip.preference.allowOptIn} + '\')',
                               ng-keypress='$event.keyCode === 13 ? displayDynamicModal(\'Preferences Information\', ' +
                                           '\'' + #{screen.message.common.tooltip.preference.allowOptIn} +
-                                          '\') : null'">
-                        </span>
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" class="position-relative ml-0" id="allowOptOut" ng-model="allowOptOut"
-                               ng-keydown="clickWithEnter($event)"/>
-                        <label class="form-check-label" for="allowOptOut">
-                            Allow people to remove themselves from this group
-                        </label>
-                        <span class="fa fa-question-circle" role="button"
-                              tooltip data-placement="right"
-                              tabindex="0"
-                              th:aria-label="#{screen.message.common.tooltip.preference.allowOptOut}"
-                              th:title="#{screen.message.common.tooltip.preference.allowOptOut}"
-                              th:attr="ng-click='displayDynamicModal(\'Preferences Information\', \'' +
+                                          '\') : null'"
+            >
+            </span>
+          </div>
+          <div class="form-check">
+            <input
+              type="checkbox"
+              class="position-relative ml-0"
+              id="allowOptOut"
+              ng-model="allowOptOut"
+              ng-keydown="clickWithEnter($event)"
+            />
+            <label class="form-check-label" for="allowOptOut">
+              Allow people to remove themselves from this group
+            </label>
+            <span
+              class="fa fa-question-circle"
+              role="button"
+              tooltip
+              data-placement="right"
+              tabindex="0"
+              th:aria-label="#{screen.message.common.tooltip.preference.allowOptOut}"
+              th:title="#{screen.message.common.tooltip.preference.allowOptOut}"
+              th:attr="ng-click='displayDynamicModal(\'Preferences Information\', \'' +
                                 #{screen.message.common.tooltip.preference.allowOptOut} + '\')',
                               ng-keypress='$event.keyCode === 13 ? displayDynamicModal(\'Preferences Information\', ' +
                                           '\'' + #{screen.message.common.tooltip.preference.allowOptOut} +
-                                          '\') : null'">
-                        </span>
-                    </div>
-                    <div>
-                        <button class="btn btn-primary btn-sm" type="submit"
-                                ng-disabled="!anyOptPreferenceChanged()"
-                                ng-click="submitPreferences()">
-                            Submit
-                        </button>
-                    </div>
-                </div>
-            </div>
+                                          '\') : null'"
+            >
+            </span>
+          </div>
+          <div>
+            <button
+              class="btn btn-primary btn-sm"
+              type="submit"
+              ng-disabled="!anyOptPreferenceChanged()"
+              ng-click="submitPreferences()"
+            >
+              Submit
+            </button>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 </th:block>
