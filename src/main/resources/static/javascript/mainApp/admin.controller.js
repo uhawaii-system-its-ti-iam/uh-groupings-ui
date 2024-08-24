@@ -473,7 +473,7 @@
          */
         $scope.getGroupingOwnersOnClick = (groupingPath) => {
             // Prevent multiple triggers while loading modal
-            if ($scope.loadingOwners === true) {
+            if ($scope.loadingOwners) {
                 return;
             }
             $scope.loadingOwners = true;

@@ -83,6 +83,7 @@
         $scope.membersInList = "";
         $scope.isMultiAdd = false;
         $scope.hasDeptAccount = false;
+        $scope.isAddingMembers = false;
 
         // Remove members
         $scope.multiRemoveResults = [];
@@ -666,12 +667,19 @@
          * @param {Object[]|null} uhIdentifiers
          */
         $scope.addMembers = (listName, uhIdentifiers) => {
+            // Prevent multiple asynchronous calls of addMembers
+            if ($scope.isAddingMembers) {
+                return;
+            }
+            $scope.isAddingMembers = true;
+
             // If uhIdentifiers parameter is null, get member input from $scope.manageMembers
             uhIdentifiers = $scope.sanitizer(uhIdentifiers ?? $scope.parseAddRemoveInputStr($scope.manageMembers));
             $scope.listName = listName;
             // Check if uhIdentifiers/member input is empty
             if (_.isEmpty(uhIdentifiers)) {
                 $scope.emptyInput = true;
+                $scope.isAddingMembers = false;
                 return;
             }
             // Prevent adding more than Threshold.MAX_IMPORT
@@ -679,6 +687,7 @@
                 $scope.displayDynamicModal(
                     Message.Title.IMPORT_OUT_OF_BOUNDS,
                     Message.Body.IMPORT_OUT_OF_BOUNDS);
+                $scope.isAddingMembers = false;
                 return;
             }
             // Check for members already in list, display error when all members to add already exist in the list
@@ -691,6 +700,7 @@
                 } else {
                     $scope.errorDismissed = false;
                 }
+                $scope.isAddingMembers = false;
                 return;
             }
 
@@ -706,6 +716,7 @@
 
             if (_.isEmpty(uhIdentifiers)) {
                 $scope.containsInput = true;
+                $scope.isAddingMembers = false;
                 return;
             }
 
@@ -713,7 +724,7 @@
 
             // Get attributes for each member
             getMemberAttributeResults(uhIdentifiers, (res) => {
-                $scope.waitingForImportResponse = false;
+                $scope.waitingForImportResponse = false; // Small spinner off
                 if (!_.isEmpty(res.invalid)) {
                     $scope.invalidMembers = res.invalid;
                     $scope.addInputError = true;
@@ -721,7 +732,7 @@
                         $scope.displayImportErrorModal();
                         $scope.addInputError = false;
                     }
-                    $scope.waitingForImportResponse = false; // Small spinner off
+                    $scope.isAddingMembers = false;
                     return;
                 }
                 // Display the appropriate modal
@@ -734,11 +745,13 @@
                         listName
                     });
                 }
+                $scope.isAddingMembers = false;
                 }, (res) => {
                     // Display API error modal
                     $scope.waitingForImportResponse = false;
                     $scope.resStatus = res.status;
                     $scope.displayApiErrorModal();
+                    $scope.isAddingMembers = false;
                 });
         };
 
