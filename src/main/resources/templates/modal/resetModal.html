@@ -1,14 +1,14 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
-<div class="modal-header">
-    <h5 class="modal-title" id="reset-modal">Reset Grouping</h5>
-    <a class="close" type="button" ng-click="cancelResetGroup()">
-        <span aria-hidden="true">&times;</span>
-    </a>
-</div>
-<div class="modal-body" id="modal-body">
+  <div class="modal-header">
+      <h5 class="modal-title" id="reset-modal">Reset Grouping</h5>
+      <a class="close" type="button" ng-click="cancelResetGroup()">
+          <span aria-hidden="true">&times;</span>
+      </a>
+  </div>
+  <div class="modal-body" id="modal-body">
     <p>
-        <span class="text-dark" th:text="#{screen.message.modal.reset.confirmation}"></span>
-        <span class="text-dark">{{listNames}} in the {{groupReset}} group?</span>
+      <span class="text-dark" th:text="#{screen.message.modal.reset.confirmation}"></span>
+      <span class="text-dark">{{listNames}} in the {{groupReset}} group?</span>
     </p>
     <div class="container modal-table" tabindex="0">
         <table class="table table-sm table-borderless">
@@ -42,10 +42,9 @@
     <p class="alert alert-warning mt-2" role="alert">
         <span class="text-dark" th:text="#{screen.message.common.membership.info}"></span>
     </p>
-</div>
-<div class="modal-footer">
-    <button class="btn btn-primary" ng-click="proceedResetGroup()">Yes</button>
-    <button class="btn btn-light" ng-click="cancelResetGroup()" data-dismiss="modal">Cancel</button>
-</div>
-
+  </div>
+  <div class="modal-footer">
+      <button class="btn btn-primary" ng-click="proceedResetGroup()">Yes</button>
+      <button class="btn btn-light" ng-click="cancelResetGroup()" data-dismiss="modal">Cancel</button>
+  </div>
 </html>
