@@ -1,9 +1,9 @@
 package edu.hawaii.its.groupings.configuration;
 
-import edu.hawaii.its.groupings.access.CasUserDetailsServiceImpl;
-import edu.hawaii.its.groupings.access.DelegatingAuthenticationFailureHandler;
-import edu.hawaii.its.groupings.access.UserBuilder;
+import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
+
 import jakarta.annotation.PostConstruct;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apereo.cas.client.proxy.ProxyGrantingTicketStorage;
@@ -11,9 +11,9 @@ import org.apereo.cas.client.proxy.ProxyGrantingTicketStorageImpl;
 import org.apereo.cas.client.session.SingleSignOutFilter;
 import org.apereo.cas.client.validation.Saml11TicketValidator;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.cas.ServiceProperties;
 import org.springframework.security.cas.authentication.CasAssertionAuthenticationToken;
@@ -34,37 +34,31 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.util.Assert;
 import org.springframework.ws.config.annotation.DelegatingWsConfiguration;
 
-import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
+import edu.hawaii.its.groupings.access.CasUserDetailsServiceImpl;
+import edu.hawaii.its.groupings.access.DelegatingAuthenticationFailureHandler;
+import edu.hawaii.its.groupings.access.UserBuilder;
 
 @EnableWebSecurity
 @Configuration
-@ConditionalOnProperty(name = "grouping.api.server.type", havingValue = "GROUPER", matchIfMissing = true)
+@Profile("!ootb")
 public class SecurityConfig {
 
     private static final Log logger = LogFactory.getLog(SecurityConfig.class);
-
+    private final UserBuilder userBuilder;
     @Value("${url.base}")
     private String appUrlBase;
-
     @Value("${app.url.home}")
     private String appUrlHome;
-
     @Value("${cas.login.url}")
     private String casLoginUrl;
-
     @Value("${cas.logout.url}")
     private String casLogoutUrl;
-
     @Value("${cas.main.url}")
     private String casMainUrl;
-
     @Value("${cas.saml.tolerance}")
     private long casSamlTolerance;
-
     @Value("${cas.send.renew:false}")
     private boolean casSendRenew;
-
-    private final UserBuilder userBuilder;
 
     public SecurityConfig(UserBuilder userBuilder) {
         this.userBuilder = userBuilder;

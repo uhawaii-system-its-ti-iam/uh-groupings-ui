@@ -1,5 +1,6 @@
 package edu.hawaii.its.groupings.controller;
 
+import java.util.Arrays;
 import java.util.Locale;
 import java.util.Map;
 
@@ -9,6 +10,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import edu.hawaii.its.groupings.access.UserContextService;
+import edu.hawaii.its.groupings.configuration.Realm;
 import edu.hawaii.its.groupings.service.EmailService;
 import edu.hawaii.its.groupings.type.Feedback;
 
@@ -38,15 +41,21 @@ public class HomeController {
 
     private final UserContextService userContextService;
 
-    public HomeController(EmailService emailService, UserContextService userContextService) {
+    private final Realm realmService;
+
+    public HomeController(EmailService emailService, UserContextService userContextService, Realm realmService) {
         this.emailService = emailService;
         this.userContextService = userContextService;
+        this.realmService = realmService;
     }
 
     // Mapping to home.
     @GetMapping(value = { "/", "/home" })
     public String home(Map<String, Locale> locale) {
         logger.info("User at home. The client locale is " + locale);
+        if (realmService.isOotb()) {
+            return "redirect:/login";
+        }
         return "home";
     }
 

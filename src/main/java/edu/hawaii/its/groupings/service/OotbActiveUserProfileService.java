@@ -6,6 +6,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import jakarta.annotation.PostConstruct;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -17,7 +21,11 @@ import edu.hawaii.its.groupings.type.OotbActiveProfile;
 import edu.hawaii.its.groupings.util.JsonUtil;
 
 @Service
+@Profile("ootb")
 public class OotbActiveUserProfileService implements UserDetailsService {
+
+    @Value("${ootb.profiles.filename}")
+    private String profilesFileName;
 
     // User is for SecurityContextHolder in AuthenticationFilter in UI project
     private final Map<String, User> users = new LinkedHashMap<>();
@@ -25,18 +33,12 @@ public class OotbActiveUserProfileService implements UserDetailsService {
     // OotbActiveProfile is for request body to make api request
     private final Map<String, OotbActiveProfile> activeProfiles = new LinkedHashMap<>();
 
-    // Default JSON file for active profiles
-    private String profilesFileName = "ootb.active.user.profiles.json";
-
-    public OotbActiveUserProfileService() {
-        initUsers();
-    }
+    public OotbActiveUserProfileService() {}
 
     public OotbActiveUserProfileService(String profilesFileName) {
         this.profilesFileName = profilesFileName;
-        initUsers();
     }
-
+    @PostConstruct
     private void initUsers() {
         List<OotbActiveProfile> ootbActiveProfiles =
                 JsonUtil.asList(JsonUtil.readJsonFileToString(profilesFileName), OotbActiveProfile.class);

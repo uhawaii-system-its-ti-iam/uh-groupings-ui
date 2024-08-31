@@ -3,21 +3,16 @@ package edu.hawaii.its.groupings.configuration;
 import static org.springframework.security.config.Customizer.withDefaults;
 import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
 
-import java.util.List;
+import jakarta.annotation.PostConstruct;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.ProviderManager;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -25,30 +20,33 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.ws.config.annotation.DelegatingWsConfiguration;
 
+import edu.hawaii.its.api.controller.OotbRestController;
 import edu.hawaii.its.groupings.access.DelegatingAuthenticationFailureHandler;
 import edu.hawaii.its.groupings.service.OotbActiveUserProfileService;
 
 @EnableWebSecurity
 @Configuration
-@ConditionalOnProperty(name = "grouping.api.server.type", havingValue = "OOTB")
+@Profile("ootb")
 public class OotbSecurityConfig {
 
     private static final Log logger = LogFactory.getLog(OotbSecurityConfig.class);
-    private String userProfile;
-
-    @Value("${ootb.profiles.filename}")
-    private String profilesFileName;
-
+    private final OotbRestController ootbRestController;
+    private final OotbStaticUserAuthenticationFilter ootbStaticUserAuthenticationFilter;
+    private final OotbActiveUserProfileService ootbActiveUserProfileService;
     @Value("${url.base}")
     private String appUrlBase;
 
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration,
-            UserDetailsService userDetailsService) throws Exception {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(userDetailsService);
-        provider.setPasswordEncoder(passwordEncoder());
-        return new ProviderManager(List.of(provider));
+    public OotbSecurityConfig(OotbRestController ootbRestController,
+            OotbStaticUserAuthenticationFilter ootbStaticUserAuthenticationFilter,
+            OotbActiveUserProfileService ootbActiveUserProfileService) {
+        this.ootbRestController = ootbRestController;
+        this.ootbStaticUserAuthenticationFilter = ootbStaticUserAuthenticationFilter;
+        this.ootbActiveUserProfileService = ootbActiveUserProfileService;
+    }
+
+    @PostConstruct
+    public void init() {
+        updateActiveDefaultUser();
     }
 
     @Bean
@@ -69,7 +67,7 @@ public class OotbSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .addFilterBefore(ootbStaticUserAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(ootbStaticUserAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests((auths)
                         -> auths
                         .requestMatchers(antMatcher("/")).permitAll()
@@ -102,22 +100,7 @@ public class OotbSecurityConfig {
         return http.build();
     }
 
-    @Bean
-    public OotbStaticUserAuthenticationFilter ootbStaticUserAuthenticationFilter() {
-        return new OotbStaticUserAuthenticationFilter(userDetailsService(), userProfile);
-    }
-
-    @Bean
-    public UserDetailsService userDetailsService() {
-        // Make Profile Service with JSON file that user sets in the properties file
-        OotbActiveUserProfileService ootbActiveUserProfileService = new OotbActiveUserProfileService(profilesFileName);
-
-        // Set the default profile to admin
-        setUserProfile(ootbActiveUserProfileService.findGivenNameForAdminRole());
-        return ootbActiveUserProfileService;
-    }
-
-    public void setUserProfile(String userProfile) {
-        this.userProfile = userProfile;
+    public void updateActiveDefaultUser() {
+        ootbRestController.updateActiveDefaultUser(ootbActiveUserProfileService.findGivenNameForAdminRole());
     }
 }
