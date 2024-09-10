@@ -905,10 +905,12 @@ describe("GroupingController", () => {
         });
 
         it("should set $scope.isBatchImport", () => {
+            scope.isAddingMembers = false;
             scope.isBatchImport = true;
             scope.addMembers("Include", uhIdentifiers);
             expect(scope.isBatchImport).toBeFalse();
 
+            scope.isAddingMembers = false;
             scope.isBatchImport = false;
             const arr = [];
             for (let i = 0; i < 101; i++) {
@@ -916,6 +918,17 @@ describe("GroupingController", () => {
             }
             scope.addMembers("Include", arr);
             expect(scope.isBatchImport).toBeTrue();
+        });
+
+        it("should not call functions within $scope.addMembers if $scope.isAddingMembers is true", () => {
+            scope.isAddingMembers = true;
+
+            spyOn(gs, 'getMemberAttributeResultsAsync');
+            spyOn(gs, 'getMemberAttributeResults');
+            scope.addMembers("Include", uhIdentifiers);
+
+            expect(gs.getMemberAttributeResultsAsync).not.toHaveBeenCalled();
+            expect(gs.getMemberAttributeResults).not.toHaveBeenCalled();
         });
 
         it("should filter out the members to add that already exist in the list", () => {
