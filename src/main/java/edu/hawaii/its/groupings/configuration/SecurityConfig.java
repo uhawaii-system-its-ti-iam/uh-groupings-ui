@@ -186,11 +186,6 @@ public class SecurityConfig {
     }
 
     @Bean
-    public OotbStaticUserAuthenticationFilter ootbStaticUserAuthenticationFilter() {
-        return new OotbStaticUserAuthenticationFilter(null, "");
-    }
-
-    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, CasAuthenticationFilter casAuthenticationFilter)
             throws Exception {
         http.sessionManagement((session) -> session.sessionFixation().migrateSession());
