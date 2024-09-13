@@ -24,6 +24,7 @@ UHGroupingsApp.constant("Message", {
         ADD_MEMBERS: "Add Members",
         REMOVE_MEMBER: "Remove Member",
         REMOVE_MEMBERS: "Remove Members",
+        OWNER_NOT_ADDED: "Owner Was Not Added",
         DISPLAY_OWNERS_ERROR: "Error Displaying Owners",
         INVALID_EMAIL_ERROR: "Invalid Email"
     },
@@ -36,6 +37,7 @@ UHGroupingsApp.constant("Message", {
         ADD_MEMBERS: { with: (listName) => `All members have been added successfully to the ${listName} list.` },
         REMOVE_MEMBER: { with: (member, listName) => `${member} has been successfully removed from the ${listName} list.` },
         REMOVE_MEMBERS: { with: (listName) => `All selected members have been successfully removed from the ${listName} list.` },
+        OWNER_NOT_ADDED: "Department accounts may not be assigned ownership due to accountability and lifecycle issues.  Please contact the IAM team, <its-iam-help@lists.hawaii.edu>, if there are any questions.",
         DISPLAY_OWNERS_ERROR: "There was an error displaying the owners.",
         INVALID_EMAIL_ERROR: "Please enter a valid email address."
     },

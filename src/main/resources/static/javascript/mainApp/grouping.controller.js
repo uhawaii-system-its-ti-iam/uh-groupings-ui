@@ -676,6 +676,7 @@
             // If uhIdentifiers parameter is null, get member input from $scope.manageMembers
             uhIdentifiers = $scope.sanitizer(uhIdentifiers ?? $scope.parseAddRemoveInputStr($scope.manageMembers));
             $scope.listName = listName;
+
             // Check if uhIdentifiers/member input is empty
             if (_.isEmpty(uhIdentifiers)) {
                 $scope.emptyInput = true;
@@ -735,6 +736,18 @@
                     $scope.isAddingMembers = false;
                     return;
                 }
+
+                // Prevent departmental accounts from being added as Owners
+                $scope.hasDeptAccount = $scope.checkForDeptAccount(res.results);
+                if (listName === 'owners' && $scope.hasDeptAccount) {
+                    $scope.displayDynamicModal(
+                        Message.Title.OWNER_NOT_ADDED,
+                        Message.Body.OWNER_NOT_ADDED
+                    );
+                    $scope.isAddingMembers = false;
+                    return;
+                }
+
                 // Display the appropriate modal
                 if ($scope.isBatchImport) {
                     $scope.displayImportConfirmationModal(listName, uhIdentifiers);
@@ -827,15 +840,7 @@
 
             $scope.listName = options.listName;
             $scope.isMultiAdd = uhIdentifiers.length > 1;
-            $scope.hasDeptAccount = false;
-
-            // Check if there is a dept account to be added.
-            for (const member of membersAttributesResults) {
-                if (member['uid'] === member['uhUuid']) {
-                    $scope.hasDeptAccount = true;
-                    break;
-                }
-            }
+            $scope.hasDeptAccount = $scope.checkForDeptAccount(membersAttributesResults);
 
             // Sets information to be displayed in add/multiAdd modal
             $scope.multiAddResults = membersAttributesResults;
@@ -1831,6 +1836,19 @@
                 $scope.excludeDisable = true;
             }
         };
+
+        /**
+         * Helper - addMembers, displayAddModal
+         * Checks if a member is a departmental account
+         * A departmental account is characterized by having the same uid as its uhUuid, or having a blank uhUuid
+         * @param {object[]} membersToAdd - members to add to group
+         * @returns {boolean} - True if a member is a departmental account
+         */
+        $scope.checkForDeptAccount = (membersToAdd) => {
+            return membersToAdd.some(member =>
+                member['uid'] === member['uhUuid'] || member['uhUuid'] === ""
+            );
+        }
     }
 
     function SyncDestModalController($scope, $uibModalInstance, isSynced, syncDestDescription, Message) {

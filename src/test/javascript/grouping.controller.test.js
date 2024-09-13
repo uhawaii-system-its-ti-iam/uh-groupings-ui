@@ -800,6 +800,8 @@ describe("GroupingController", () => {
         const invalid = { resultCode: "FAILURE", invalid: uhIdentifiers, results: [] };
 
         const member = ["testiwta"];
+        const memberDept = ["testiwt2"];
+        const membersDept = ["testiwta", "testiwt2"];
         const members = ["testiwta", "testiwtb"];
         const memberAttributeResultsSingle = {
             resultCode: "SUCCESS",
@@ -1021,7 +1023,7 @@ describe("GroupingController", () => {
                     }
                     scope.addMembers("Include", arr);
 
-                    httpBackend.expectPOST(BASE_URL + "members", arr).respond(200, []);
+                    httpBackend.expectPOST(BASE_URL + "members", arr).respond(200, results);
                     httpBackend.flush();
 
                     expect(scope.displayImportConfirmationModal).toHaveBeenCalled();
@@ -1040,6 +1042,28 @@ describe("GroupingController", () => {
                         uhIdentifiers: member,
                         listName: "Include"
                     });
+                });
+
+                it("should call $scope.displayDynamicModal() when trying to add a single dept account to Owners", () => {
+                    spyOn(scope, 'displayDynamicModal');
+                    scope.addMembers("owners", memberDept);
+
+                    const deptResults = { resultCode: "SUCCESS", invalid: [], results: ['testiwt2'] };
+                    httpBackend.expectPOST(BASE_URL + "members", ['testiwt2']).respond(200, deptResults);
+                    httpBackend.flush();
+
+                    expect(scope.displayDynamicModal).toHaveBeenCalled();
+                });
+
+                it("should call $scope.displayDynamicModal() when trying to add a dept account along with other members to Owners", () => {
+                    spyOn(scope, 'displayDynamicModal');
+                    scope.addMembers("owners", membersDept);
+
+                    const deptResults = { resultCode: "SUCCESS", invalid: [], results: [membersDept] };
+                    httpBackend.expectPOST(BASE_URL + "members", membersDept).respond(200, deptResults);
+                    httpBackend.flush();
+
+                    expect(scope.displayDynamicModal).toHaveBeenCalled();
                 });
             });
 
