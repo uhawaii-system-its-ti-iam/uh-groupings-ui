@@ -7,6 +7,7 @@ import org.apache.commons.logging.LogFactory;
 import org.owasp.html.PolicyFactory;
 import org.owasp.html.Sanitizers;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +24,7 @@ import edu.hawaii.its.groupings.service.OotbActiveUserProfileService;
 import edu.hawaii.its.groupings.type.OotbActiveProfile;
 
 @RestController
+@Profile("ootb")
 @RequestMapping("/api/groupings/ootb")
 public class OotbRestController {
     private static final Log logger = LogFactory.getLog(OotbRestController.class);
