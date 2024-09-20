@@ -10,58 +10,48 @@
         },
         "groupings": [
             {
-                "name": "group1:include",
-                "displayName": "group1:include",
-                "extension": "include",
-                "displayExtension": "include",
-                "description": "This is the first group",
-                "members": [
-                    {
-                      "name": "s",
-                      "uhUuid": "11111112",
-                      "uid": "member2"
-                    }
-                ]
-            },
-            {
-                "name": "group2:exclude",
-                "displayName": "group2:exclude",
+                "name": "admin-include:exclude",
+                "displayName": "admin-include:exclude",
                 "extension": "exclude",
                 "displayExtension": "exclude",
-                "description": "This is the second group",
+                "description": "Admin owned include group",
                 "members": [
                     {
-                      "name": "s",
-                      "uhUuid": "11111112",
-                      "uid": "member2"
+                      "name": "MemberUser",
+                      "uid": "member0123",
+                      "uhUuid": "11111111"
                     }
                 ]
             },
             {
-                "name": "shared-groupPath:owners",
-                "displayName": "shared-groupPath:owners",
+                "name": "member-group:owners",
+                "displayName": "member-group:owners",
                 "extension": "owners",
                 "displayExtension": "owners",
-                "description": "This is the shared-groupPath",
-                "members": [
-                    {
-                      "name": "s",
-                      "uhUuid": "11111112",
-                      "uid": "member2"
-                    }
-                ]
+                "description": "Member owned group",
+                "members": []
             },
             {
-                "name": "memberGroup:owners",
-                "displayName": "memberGroup:owners",
-                "extension": "owners",
-                "displayExtension": "owners",
-                "description": "This is the memberGroup",
+                "name": "member-group:include",
+                "displayName": "member-group:include",
+                "extension": "include",
+                "displayExtension": "include",
+                "description": "Member owned group",
                 "members": [
                     {
-                      "name": "s",
-                      "uhUuid": "11111112",
-                      "uid": "member2"
+                        "name": "complex-member7",
+                        "uhUuid": "19283746",
+                        "uid": "cmember7"
+                    },
+                    {
+                        "name": "complex-member10",
+                        "uhUuid": "01234567",
+                        "uid": "cmember10"
+                    },
+                    {
+                      "name": "AdminUser",
+                      "uid": "admin0123",
+                      "uhUuid": "33333333"
                     }
                 ]
             }
@@ -78,86 +68,59 @@
         },
         "groupings": [
             {
-                "name": "group1:include",
-                "displayName": "group1:include",
+                  "name": "shared-group-in-each-profile:owners",
+                  "displayName": "shared-group-in-each-profile:owners",
+                  "extension": "owners",
+                  "displayExtension": "owners",
+                  "description": "This is a shared group in each profile",
+                  "members": [
+                      {
+                        "name": "shared-owner-2",
+                        "uhUuid": "29325231",
+                        "uid": "sowner2"
+                      }
+                  ]
+            },
+            {
+                "name": "admin-include:include",
+                "displayName": "admin-include:include",
                 "extension": "include",
                 "displayExtension": "include",
-                "description": "This is the first group",
+                "description": "Admin owned include group",
                 "members": [
                     {
-                      "name": "s",
-                      "uhUuid": "11111112",
-                      "uid": "member2"
+                      "name": "OwnerUser",
+                      "uid": "owner0123",
+                      "uhUuid": "22222222"
+                    },
+                    {
+                      "name": "AdminUser",
+                      "uid": "admin0123",
+                      "uhUuid": "33333333"
                     }
                 ]
             },
-            {
-                "name": "group2:exclude",
-                "displayName": "group2:exclude",
+           {
+                "name": "owner-group:exclude",
+                "displayName": "owner-group:exclude",
                 "extension": "exclude",
                 "displayExtension": "exclude",
-                "description": "This is the second group",
+                "description": "Owner owned group",
                 "members": [
                     {
-                      "name": "s",
-                      "uhUuid": "11111112",
-                      "uid": "member2"
-                    }
-                ]
-            },
-            {
-                "name": "shared-groupPath:owners",
-                "displayName": "shared-groupPath:owners",
-                "extension": "owners",
-                "displayExtension": "owners",
-                "description": "This is the shared-groupPath",
-                "members": [
+                        "name": "complex-member3",
+                        "uhUuid": "56473829",
+                        "uid": "cmember3"
+                    },
                     {
-                      "name": "s",
-                      "uhUuid": "11111112",
-                      "uid": "member2"
-                    }
-                ]
-            },
-            {
-                "name": "shared-groupPath:include",
-                "displayName": "shared-groupPath:include",
-                "extension": "include",
-                "displayExtension": "include",
-                "description": "This is the shared-groupPath",
-                "members": [
+                        "name": "complex-member4",
+                        "uhUuid": "45261378",
+                        "uid": "cmember4"
+                    },
                     {
-                      "name": "s",
-                      "uhUuid": "11111112",
-                      "uid": "member2"
-                    }
-                ]
-            },
-            {
-                "name": "ownerGroup:owners",
-                "displayName": "ownerGroup:owners",
-                "extension": "owners",
-                "displayExtension": "owners",
-                "description": "This is the fourth group",
-                "members": [
-                    {
-                      "name": "s",
-                      "uhUuid": "11111112",
-                      "uid": "member2"
-                    }
-                ]
-            },
-            {
-                "name": "zoommeeting:owners",
-                "displayName": "zoommeeting:owners",
-                "extension": "owners",
-                "displayExtension": "owners",
-                "description": "This is the fourth group",
-                "members": [
-                    {
-                      "name": "s",
-                      "uhUuid": "11111112",
-                      "uid": "member2"
+                      "name": "OwnerUser",
+                      "uid": "owner0123",
+                      "uhUuid": "22222222"
                     }
                 ]
             }
@@ -174,102 +137,31 @@
         },
         "groupings": [
             {
-                "name": "group1:include",
-                "displayName": "group1:include",
-                "extension": "include",
-                "displayExtension": "include",
-                "description": "This is the first group",
-                "members": [
-                    {
-                      "name": "s",
-                      "uhUuid": "11111112",
-                      "uid": "member2"
-                    }
-                ]
-            },
-            {
-                "name": "group2:exclude",
-                "displayName": "group2:exclude",
-                "extension": "exclude",
-                "displayExtension": "exclude",
-                "description": "This is the second group",
-                "members": [
-                    {
-                      "name": "s",
-                      "uhUuid": "11111112",
-                      "uid": "member2"
-                    }
-                ]
-            },
-            {
-                "name": "shared-groupPath:owners",
-                "displayName": "shared-groupPath:owners",
-                "extension": "owners",
-                "displayExtension": "owners",
-                "description": "This is the shared-groupPath",
-                "members": [
-                    {
-                      "name": "s",
-                      "uhUuid": "11111112",
-                      "uid": "member2"
-                    }
-                ]
-            },
-            {
-                "name": "adminGroup:owners",
-                "displayName": "adminGroup:owners",
-                "extension": "owners",
-                "displayExtension": "owners",
-                "description": "This is the fourth group",
-                "members": [
-                    {
-                      "name": "s",
-                      "uhUuid": "11111112",
-                      "uid": "member2"
-                    },
-                    {
-                      "name": "AdminUser",
-                      "uid": "admin0123",
-                      "uhUuid": "33333333"
-                    }
-                ]
-            },
-            {
-                "name": "adminGroup:include",
-                "displayName": "adminGroup:include",
-                "extension": "include",
-                "displayExtension": "include",
-                "description": "This is the fourth group",
-                "members": [
-                    {
-                      "name": "s",
-                      "uhUuid": "11111112",
-                      "uid": "member2"
-                    },
-                    {
-                      "name": "AdminUser",
-                      "uid": "admin0123",
-                      "uhUuid": "33333333"
-                    },
-                    {
-                      "name": "OwnerUser",
-                      "uid": "owner0123",
-                      "uhUuid": "22222222"
-                    }
-                ]
-            },
-            {
-                "name": "adminGroup:basis",
-                "displayName": "adminGroup:basis",
+                "name": "shared-group-in-each-profile:basis",
+                "displayName": "shared-group-in-each-profile:basis",
                 "extension": "basis",
                 "displayExtension": "basis",
-                "description": "This is the fourth group",
+                "description": "This is a shared group in each profile",
                 "members": [
                     {
-                      "name": "s",
-                      "uhUuid": "11111112",
-                      "uid": "member2"
+                      "name": "shared-owner-3",
+                      "uhUuid": "29382734",
+                      "uid": "sowner3"
                     },
+                    {
+                      "name": "MemberUser",
+                      "uid": "member0123",
+                      "uhUuid": "11111111"
+                    }
+                ]
+            },
+            {
+                "name": "shared-group-in-groupings:owners",
+                "displayName": "shared-group-in-groupings:owners",
+                "extension": "owners",
+                "displayExtension": "owners",
+                "description": "This is a shared group in admin user groupings",
+                "members": [
                     {
                       "name": "AdminUser",
                       "uid": "admin0123",
@@ -279,6 +171,109 @@
                       "name": "OwnerUser",
                       "uid": "owner0123",
                       "uhUuid": "22222222"
+                    }
+                ]
+            },
+            {
+                "name": "shared-group-in-each-profile:owners",
+                "displayName": "shared-group-in-each-profile:owners",
+                "extension": "owners",
+                "displayExtension": "owners",
+                "description": "This is a shared group in each profile",
+                "members": [
+                    {
+                      "name": "shared-owner-3",
+                      "uhUuid": "29382734",
+                      "uid": "sowner3"
+                    }
+                ]
+            },
+            {
+                "name": "admin-include:owners",
+                "displayName": "admin-include:owners",
+                "extension": "owners",
+                "displayExtension": "owners",
+                "description": "Admin owned include group",
+                "members": []
+            },
+            {
+                "name": "admin-include:include",
+                "displayName": "admin-include:include",
+                "extension": "include",
+                "displayExtension": "include",
+                "description": "Admin owned include group",
+                "members": [
+                    {
+                      "name": "AdminUser",
+                      "uid": "admin0123",
+                      "uhUuid": "33333333"
+                    }
+                ]
+            },
+            {
+                "name": "admin-group:owners",
+                "displayName": "admin-group:owners",
+                "extension": "owners",
+                "displayExtension": "owners",
+                "description": "Admin owned group",
+                "members": []
+            },
+            {
+                "name": "owner-complex:owners",
+                "displayName": "Owner-Complex: Owners",
+                "extension": "owners",
+                "displayExtension": "Owners",
+                "description": "Owner's owned complex group",
+                "members": [
+                    {
+                        "name": "complex-member1",
+                        "uhUuid": "32532314",
+                        "uid": "cmember1"
+                    },
+                    {
+                        "name": "complex-member2",
+                        "uhUuid": "87453218",
+                        "uid": "cmember2"
+                    },
+                    {
+                        "name": "complex-member3",
+                        "uhUuid": "56473829",
+                        "uid": "cmember3"
+                    },
+                    {
+                        "name": "complex-member4",
+                        "uhUuid": "45261378",
+                        "uid": "cmember4"
+                    },
+                    {
+                        "name": "complex-member5",
+                        "uhUuid": "98765432",
+                        "uid": "cmember5"
+                    },
+                    {
+                        "name": "complex-member6",
+                        "uhUuid": "12345678",
+                        "uid": "cmember6"
+                    },
+                    {
+                        "name": "complex-member7",
+                        "uhUuid": "19283746",
+                        "uid": "cmember7"
+                    },
+                    {
+                        "name": "complex-member8",
+                        "uhUuid": "72635489",
+                        "uid": "cmember8"
+                    },
+                    {
+                        "name": "complex-member9",
+                        "uhUuid": "65432109",
+                        "uid": "cmember9"
+                    },
+                    {
+                        "name": "complex-member10",
+                        "uhUuid": "01234567",
+                        "uid": "cmember10"
                     }
                 ]
             }

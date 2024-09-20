@@ -15,9 +15,10 @@ import jakarta.servlet.ServletResponse;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,15 +26,23 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.test.context.ActiveProfiles;
 
+import edu.hawaii.its.api.service.OotbHttpRequestService;
+
 @SpringBootTest(classes = { SpringBootWebApplication.class })
 @ActiveProfiles("ootb")
 public class OotbStaticUserAuthenticationFilterTest {
 
-    @InjectMocks
+    @Autowired
     private OotbStaticUserAuthenticationFilter filter;
+
+    @MockBean
+    private OotbHttpRequestService ootbHttpRequestService;
 
     @Mock
     private UserDetailsService userDetailsService;
+
+    @Mock
+    private UserDetails userDetails;
 
     @Mock
     private ServletRequest request;
@@ -47,14 +56,13 @@ public class OotbStaticUserAuthenticationFilterTest {
     @Mock
     private SecurityContext securityContext;
 
-    @Mock
-    private UserDetails userDetails;
-
     @BeforeEach
     public void setup() {
         SecurityContextHolder.setContext(securityContext);
         when(userDetailsService.loadUserByUsername("ADMIN")).thenReturn(userDetails);
-        filter = new OotbStaticUserAuthenticationFilter(userDetailsService, "ADMIN");
+
+        when(ootbHttpRequestService.makeApiRequestWithActiveProfileBody(any(), any(), any(), any()))
+                .thenReturn(null);
     }
 
     @Test

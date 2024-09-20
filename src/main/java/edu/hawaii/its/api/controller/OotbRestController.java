@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import edu.hawaii.its.api.service.HttpRequestService;
 import edu.hawaii.its.api.service.OotbHttpRequestService;
 import edu.hawaii.its.groupings.access.UserContextService;
 import edu.hawaii.its.groupings.configuration.OotbStaticUserAuthenticationFilter;
@@ -28,29 +27,24 @@ import edu.hawaii.its.groupings.type.OotbActiveProfile;
 @RequestMapping("/api/groupings/ootb")
 public class OotbRestController {
     private static final Log logger = LogFactory.getLog(OotbRestController.class);
-    private final PolicyFactory policy = Sanitizers.FORMATTING;;
+    private final PolicyFactory policy = Sanitizers.FORMATTING;
+    private final UserContextService userContextService;
+    private final OotbActiveUserProfileService ootbActiveUserProfileService;
+    private final OotbHttpRequestService ootbHttpRequestService;
+    private final OotbStaticUserAuthenticationFilter ootbAuthenticationFilter;
 
     @Value("${url.api.2.1.base}")
     private String API_2_1_BASE;
-
-    private final UserContextService userContextService;
-
-    private final OotbStaticUserAuthenticationFilter ootbAuthenticationFilter;
-
-    private final OotbActiveUserProfileService ootbActiveUserProfileService;
-
-    private final OotbHttpRequestService ootbHttpRequestService;
-
 
     // Constructor.
     public OotbRestController(UserContextService userContextService,
             OotbStaticUserAuthenticationFilter ootbAuthenticationFilter,
             OotbActiveUserProfileService ootbActiveUserProfileService,
-            OotbHttpRequestService ootbHttpRequestService) {
+            OotbHttpRequestService ootbHttpRequestService, OotbStaticUserAuthenticationFilter ootbAuthenticationFilter1) {
         this.userContextService = userContextService;
-        this.ootbAuthenticationFilter = ootbAuthenticationFilter;
         this.ootbActiveUserProfileService = ootbActiveUserProfileService;
         this.ootbHttpRequestService = ootbHttpRequestService;
+        this.ootbAuthenticationFilter = ootbAuthenticationFilter1;
     }
 
     /*
@@ -67,8 +61,8 @@ public class OotbRestController {
     @PostMapping(value = "/{activeProfile}")
     public ResponseEntity<OotbActiveProfile> updateActiveDefaultUser(@PathVariable String activeProfile) {
         String currentUid = policy.sanitize(userContextService.getCurrentUid());
-        ootbAuthenticationFilter.setUserProfile(activeProfile);
         OotbActiveProfile ootbActiveProfile = ootbActiveUserProfileService.getActiveProfiles().get(activeProfile);
+        ootbAuthenticationFilter.setUserProfile(activeProfile);
         String baseUri = API_2_1_BASE + "/activeProfile/ootb";
         return ootbHttpRequestService.makeApiRequestWithActiveProfileBody(currentUid, baseUri, ootbActiveProfile,
                 HttpMethod.POST);
