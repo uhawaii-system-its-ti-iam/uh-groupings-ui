@@ -97,7 +97,7 @@ public class HomeController {
         return "memberships";
     }
 
-    //@PreAuthorize("hasRole('ADMIN') || hasRole('OWNER')")
+    @PreAuthorize("hasRole('ADMIN') || hasRole('OWNER')")
     @GetMapping(value = "/groupings")
     public String groupings() {
         logger.info("User at groupings.");
