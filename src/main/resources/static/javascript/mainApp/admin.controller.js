@@ -260,6 +260,12 @@
             }
 
             groupingsService.getMemberAttributeResults([sanitizedAdmin], (res) => {
+                // Prevent departmental accounts from being added as admins
+                $scope.isDeptAccount = $scope.checkForDeptAccount(res.results);
+                if ($scope.isDeptAccount) {
+                    $scope.containsDeptAcc = true;
+                    return;
+                }
                 $scope.displayAddModal({
                     membersAttributes: res,
                     uhIdentifiers: sanitizedAdmin,

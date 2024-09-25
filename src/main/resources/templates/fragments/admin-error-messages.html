@@ -20,6 +20,12 @@
              role="alert">
             <p th:text="#{screen.message.modal.add.preExisting.admin}"></p>
         </div>
+        <!--message for trying to add a departmental account-->
+        <div ng-if="containsDeptAcc"
+             class="float-md-left my-3 px-3 pt-2 rounded alert-danger show"
+             role="alert">
+            <p th:text="#{screen.message.modal.add.deptAccount.admin}"></p>
+        </div>
         <!--message for no groupings result-->
         <div ng-if="resStatus && subjectToLookup.length > 0 && subjectList.length <= 0"
              class="float-md-left my-3 px-3 pt-2 rounded alert-danger show">
