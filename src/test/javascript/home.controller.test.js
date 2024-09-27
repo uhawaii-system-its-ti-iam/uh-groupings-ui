@@ -24,16 +24,38 @@ describe("HomeController", () => {
     });
 
     describe("init", () => {
-        it("should call groupingsService.getNumberOfMemberships", () => {
-            spyOn(gs, "getNumberOfMemberships").and.callThrough();
+        beforeEach(() => {
+            spyOn(gs, "getCurrentUser").and.callFake((callback) => {
+                callback({
+                    data: {
+                        uid: "user123",
+                        uhUuid: "uuid456"
+                    }
+                });
+            });
+            spyOn(gs, "getNumberOfMemberships").and.callFake((callback) => {
+                callback(5);
+            });
+            spyOn(gs, "getNumberOfGroupings").and.callFake((callback) => {
+                callback(3);
+            });
             scope.init();
-            expect(gs.getNumberOfMemberships).toHaveBeenCalled();
         });
 
-        it("should call groupingsService.getNumberOfGroupings", () => {
-            spyOn(gs, "getNumberOfGroupings").and.callThrough();
-            scope.init();
+        it("should initialize currentUser in scope", () => {
+            expect(gs.getCurrentUser).toHaveBeenCalled();
+            expect(scope.currentUser.uid).toEqual("user123");
+            expect(scope.currentUser.uhUuid).toEqual("uuid456");
+        });
+
+        it("should set the number of memberships in the scope", () => {
+            expect(gs.getNumberOfMemberships).toHaveBeenCalled();
+            expect(scope.numberOfMemberships).toEqual(5);
+        });
+
+        it("should set the number of groupings in the scope", () => {
             expect(gs.getNumberOfGroupings).toHaveBeenCalled();
+            expect(scope.numberOfGroupings).toEqual(3);
         });
     });
 });

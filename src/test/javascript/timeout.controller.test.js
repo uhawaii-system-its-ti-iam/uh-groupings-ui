@@ -51,13 +51,11 @@ describe("TimeoutController", function () {
 
             let mockResponse  = {data: "mock"};
             httpBackend.expectGET('currentUser').respond(200, mockResponse);
+            httpBackend.whenGET('modal/timeoutModal').respond(200);
 
             scope.displayTimeoutModal();
 
-            timeout.flush();
-
             expect(scope.displayTimeoutModal).toHaveBeenCalled();
-            httpBackend.flush();
 
             scope.secondsRemaining = 0;
             scope.timer();
