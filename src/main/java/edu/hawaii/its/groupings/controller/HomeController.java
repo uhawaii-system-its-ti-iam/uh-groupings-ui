@@ -42,7 +42,7 @@ public class HomeController {
     private UserContextService userContextService;
 
     // Mapping to home.
-    @GetMapping(value = { "/", "/home" })
+    @GetMapping(value = { "", "/", "/home" })
     public String home(Map<String, Locale> locale) {
         logger.info("User at home. The client locale is " + locale);
         return "home";
