@@ -432,12 +432,25 @@ describe("AdminController", function () {
             expect(scope.containsInput).toBeTrue();
         });
 
-        it("should display the add modal", () => {
-            spyOn(scope, "displayAddModal");
-            scope.adminToAdd = uhIdentifiers;
+        it("should check if the admin to add is a departmental account", () => {
+            scope.containsDeptAcc = false;
+            scope.adminToAdd = "testiwt2";
             scope.addAdmin();
 
-            httpBackend.expectPOST(BASE_URL + "members", [uhIdentifiers]).respond(200, results);
+            httpBackend.expectPOST(BASE_URL + "members", ['testiwt2']).respond(200, results);
+            httpBackend.flush();
+
+            expect(scope.user).toBe(scope.adminToAdd);
+            expect(scope.containsDeptAcc).toBeTrue();
+        });
+
+        it("should display the add modal", () => {
+            spyOn(scope, "displayAddModal");
+            scope.adminToAdd = "testiwta";
+            scope.addAdmin();
+
+            const results = { resultCode: "SUCCESS", invalid: [], results: [{ uid: "testiwta", uhUuid: "99997010" }] };
+            httpBackend.expectPOST(BASE_URL + "members", ['testiwta']).respond(200, results);
             httpBackend.flush();
 
             expect(scope.user).toEqual(scope.adminToAdd);

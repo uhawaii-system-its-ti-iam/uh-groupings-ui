@@ -1836,19 +1836,6 @@
                 $scope.excludeDisable = true;
             }
         };
-
-        /**
-         * Helper - addMembers, displayAddModal
-         * Checks if a member is a departmental account
-         * A departmental account is characterized by having the same uid as its uhUuid, or having a blank uhUuid
-         * @param {object[]} membersToAdd - members to add to group
-         * @returns {boolean} - True if a member is a departmental account
-         */
-        $scope.checkForDeptAccount = (membersToAdd) => {
-            return membersToAdd.some(member =>
-                member['uid'] === member['uhUuid'] || member['uhUuid'] === ""
-            );
-        }
     }
 
     function SyncDestModalController($scope, $uibModalInstance, isSynced, syncDestDescription, Message) {
