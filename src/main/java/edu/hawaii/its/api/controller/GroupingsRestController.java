@@ -311,11 +311,11 @@ public class GroupingsRestController {
     /**
      * Get the number of memberships that the current user is associated with.
      */
-    @GetMapping(value = "/members/memberships/count")
+    @GetMapping(value = "/members/memberships/membershipCount")
     public ResponseEntity<String> getNumberOfMemberships() {
         logger.info("Entered REST getNumberOfMemberships...");
         String currentUid = policy.sanitize(userContextService.getCurrentUid());
-        String uri = String.format(API_2_1_BASE + "/members/%s/memberships/count", currentUid);
+        String uri = String.format(API_2_1_BASE + "/members/%s/memberships/membershipCount", currentUid);
         return httpRequestService.makeApiRequest(currentUid, uri, HttpMethod.GET);
     }
 
@@ -475,11 +475,11 @@ public class GroupingsRestController {
     /**
      * Request the number of grouping paths owned by principal.
      */
-    @GetMapping(value = "/owners/groupings/count")
+    @GetMapping(value = "/owners/groupings/groupingCount")
     public ResponseEntity<String> getNumberOfGroupings() {
         logger.info("Entered REST getNumberOfGroupings...");
         String currentUid = policy.sanitize(userContextService.getCurrentUid());
-        String uri = String.format(API_2_1_BASE + "/owners/%s/groupings/count", currentUid);
+        String uri = String.format(API_2_1_BASE + "/owners/%s/groupings/groupingCount", currentUid);
         return httpRequestService.makeApiRequest(currentUid, uri, HttpMethod.GET);
     }
 

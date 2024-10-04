@@ -454,7 +454,7 @@ describe("GroupingsService", () => {
 
         it("should use the correct path", () => {
             gs.getNumberOfMemberships(onSuccess, onError);
-            httpBackend.expectGET(BASE_URL + "members/memberships/count").respond(200);
+            httpBackend.expectGET(BASE_URL + "members/memberships/membershipCount").respond(200);
             expect(httpBackend.flush).not.toThrow();
         });
 
@@ -632,7 +632,7 @@ describe("GroupingsService", () => {
         });
         it("should use the correct path", () => {
             gs.getNumberOfGroupings(onSuccess, onError);
-            httpBackend.expectGET(BASE_URL + "owners/groupings/count").respond(200);
+            httpBackend.expectGET(BASE_URL + "owners/groupings/groupingCount").respond(200);
             expect(httpBackend.flush).not.toThrow();
         });
     });

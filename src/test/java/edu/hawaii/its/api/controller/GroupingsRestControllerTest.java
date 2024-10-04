@@ -369,7 +369,7 @@ public class GroupingsRestControllerTest {
     @Test
     @WithMockUhUser
     public void getNumberOfMembershipsTest() throws Exception {
-        String uri = REST_CONTROLLER_BASE + "members/memberships/count";
+        String uri = REST_CONTROLLER_BASE + "members/memberships/membershipCount";
 
         given(httpRequestService.makeApiRequest(eq(UID), anyString(), eq(HttpMethod.GET)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
@@ -572,7 +572,7 @@ public class GroupingsRestControllerTest {
     @Test
     @WithMockUhUser
     public void numberOfGroupingsTest() throws Exception {
-        String uri = REST_CONTROLLER_BASE + "owners/groupings/count";
+        String uri = REST_CONTROLLER_BASE + "owners/groupings/groupingCount";
 
         given(httpRequestService.makeApiRequest(eq(UID), anyString(), eq(HttpMethod.GET)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
