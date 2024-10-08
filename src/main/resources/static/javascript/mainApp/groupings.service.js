@@ -391,9 +391,8 @@
             /**
              * Toggle the given sync destination.
              */
-            setSyncDest(path, syncDestId, turnOn, onSuccess, onError) {
-                let endpoint = BASE_URL + "groupings/" + path + "/syncDests/" + syncDestId;
-                endpoint = (turnOn) ? endpoint.concat("/enable") : endpoint.concat("/disable");
+            updateSyncDest(path, syncDestId, turnOn, onSuccess, onError) {
+                let endpoint = `${BASE_URL}groupings/${path}/syncDests/${syncDestId}/${turnOn}`;
                 dataProvider.updateData(endpoint, onSuccess, onError);
             },
 
