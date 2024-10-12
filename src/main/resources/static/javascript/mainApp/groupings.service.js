@@ -187,10 +187,18 @@
             },
 
             /**
-             * Add owners to owners group of grouping
+             * Add owners to owners group of grouping.
              */
             addOwnerships(path, newOwner, onSuccess, onError) {
                 let endpoint = BASE_URL + path + "/" + newOwner + "/addOwnerships";
+                dataProvider.updateData(endpoint, onSuccess, onError);
+            },
+
+            /**
+             * Add group path owners to owners group of grouping.
+             */
+            addGroupPathOwnerships(path, newGroupPathOwner, onSuccess, onError) {
+                let endpoint = BASE_URL + path + "/" + newGroupPathOwner + "/addGroupPathOwnerships";
                 dataProvider.updateData(endpoint, onSuccess, onError);
             },
 
@@ -229,10 +237,18 @@
             },
 
             /**
-             * Remove owners from owners group of grouping
+             * Remove owners from owners group of grouping.
              */
             removeOwnerships(path, owners, onSuccess, onError) {
                 let endpoint = BASE_URL + path + "/" + owners + "/removeOwnerships";
+                dataProvider.updateData(endpoint, onSuccess, onError);
+            },
+
+            /**
+             * Remove group path owners from owners group of grouping.
+             */
+            removeGroupPathOwnerships(path, groupPathToRemove, onSuccess, onError) {
+                let endpoint = BASE_URL + path + "/" + groupPathToRemove + "/removeGroupPathOwnerships";
                 dataProvider.updateData(endpoint, onSuccess, onError);
             },
 

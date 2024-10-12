@@ -39,33 +39,56 @@
                 <tbody>
                 <tr ng-repeat="owner in pagedItemsOwners[currentPageOwners]" class="table table-sm">
                     <td class="overflow-auto py-1 px-3" aria-label="{{owner.name}}">
-                            {{owner.name}}
-                            <span ng-if="owner.uid == owner.uhUuid">
-                                <i class="d-inline rounded-circle blue-bg text-light fa fa-school fa-xs p-1 ml-1"
-                                   role="button"
-                                   aria-hidden="true"
-                                   tooltip data-placement="right"
-                                   th:title="#{screen.message.common.tooltip.isDepartmentalAccount}">
-                                </i>
+                        {{owner.name}}
+                        <span ng-if="owner.uid == owner.uhUuid">
+                            <i class="d-inline rounded-circle blue-bg text-light fa fa-school fa-xs p-1 ml-1"
+                               role="button"
+                               aria-hidden="true"
+                               tooltip data-placement="right"
+                               th:title="#{screen.message.common.tooltip.isDepartmentalAccount}">
+                            </i>
+                        </span>
+                        <span ng-if="groupingOwners.length > 1">
+                            <span ng-if="owner.isOwnerGrouping !== true"
+                                  class="far fa-trash-alt fa-pull-right pt-1 float-right"
+                                  style="margin-right: 1.85rem"
+                                  role="button"
+                                  tooltip data-placement="top"
+                                  tabindex="0" aria-label="Remove {{owner.name}} from the Owner members list"
+                                  th:title="#{screen.message.common.tooltip.remove.owner}"
+                                  ng-keypress="$event.keyCode === 13 ? removeOwnerWithTrashcan(currentPageOwners, $index) : null"
+                                  ng-click="removeOwnerWithTrashcan(currentPageOwners, $index)">
                             </span>
-                            <span ng-if="groupingOwners.length > 1">
-                                <span class="far fa-trash-alt fa-pull-right pt-1" role="button"
+                            <span ng-if="owner.isOwnerGrouping === true"
+                                  class="fa-pull-right">
+                                <span class="far fa-trash-alt"
+                                      style="margin-left: 0.5rem"
+                                      role="button"
                                       tooltip data-placement="top"
-                                      tabindex="0" aria-label="Remove {{owner.name}} from the Owner members list"
+                                      tabindex="0"
+                                      aria-label="Remove {{owner.name}} from the Grouping Owner members list"
                                       th:title="#{screen.message.common.tooltip.remove.owner}"
-                                      ng-keypress="$event.keyCode === 13 ? removeOwnerWithTrashcan(currentPageOwners, $index) : null"
-                                      ng-click="removeOwnerWithTrashcan(currentPageOwners, $index)">
+                                      ng-keypress="$event.keyCode === 13 ? removeOwnerGroupingWithTrashcan(owner.ownerGroupingPath, owner.name) : null"
+                                      ng-click="removeOwnerGroupingWithTrashcan(owner.ownerGroupingPath, owner.name)">
+                                </span>
+                                <span style="margin-left: 0.4rem"
+                                      tabindex="0"
+                                      ng-keypress="$event.keyCode === 13 ? displayOwnerGroupingInNewTab(owner.ownerGroupingPath, owner.name) : null">
+                                    <i class="fa fa-fw fa-external-link-alt clickable"
+                                       tooltip="Navgiate to {{owner.ownerGroupingPath}}"
+                                       ng-click="displayOwnerGroupingInNewTab(owner.ownerGroupingPath, owner.name)"></i>
                                 </span>
                             </span>
-                            <span ng-if="groupingOwners.length === 1">
-                                <span class="far fa-trash-alt fa-pull-right pt-1 fa-trash-alt-disabled" role="button"
-                                      tooltip data-placement="top"
-                                      aria-label="The last owner cannot be removed from the Owner members list"
-                                      th:title="#{screen.message.common.tooltip.remove.warning}">
-                                </span>
+                        </span>
+                        <span ng-if="groupingOwners.length === 1">
+                            <span class="far fa-trash-alt fa-pull-right pt-1 fa-trash-alt-disabled" role="button"
+                                  tooltip data-placement="top"
+                                  aria-label="The last owner cannot be removed from the Owner members list"
+                                  th:title="#{screen.message.common.tooltip.remove.warning}">
                             </span>
+                        </span>
                     </td>
-                    <td class="overflow-auto py-1 px-3">
+                    <td class="overflow-auto py-1">
                         {{owner.uid}}
                         <div ng-if="owner.uid === ''">
                             <span>N/A</span>
