@@ -195,6 +195,14 @@
             },
 
             /**
+             * Add owners to owners group of grouping
+             */
+            addGroupPathOwnerships(path, newGroupPathOwner, onSuccess, onError) {
+                let endpoint = BASE_URL + path + "/" + newGroupPathOwnerOwner + "/addGroupPathOwnerships";
+                dataProvider.updateData(endpoint, onSuccess, onError);
+            },
+
+            /**
              * Add a user to the list of admins.
              */
             addAdmin(adminToAdd, onSuccess, onError) {
