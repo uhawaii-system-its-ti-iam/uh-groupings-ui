@@ -1135,6 +1135,9 @@
             $scope.isMultiRemove = _.isEmpty($scope.multiRemoveResults)
                 ? $scope.membersToRemove.length > 1
                 : $scope.multiRemoveResults.length > 1;
+            if ($scope.isMultiRemove) {
+                $scope.addInBasis($scope.multiRemoveResults);
+            }
 
             // Open remove or multiRemove modal and set modal red when removing yourself (currentUser) from owners
             const templateUrl = $scope.isMultiRemove ? "modal/multiRemoveModal" : "modal/removeModal";
