@@ -39,6 +39,24 @@
             <th th:utext="#{screen.message.modal.remove.uhUserId}"></th>
             <th class="font-weight-normal modal-attributes">{{uhUuid}}</th>
         </tr>
+        <tr ng-if="listName !== 'owners' && groupingBasis.length > 0">
+            <th th:utext="#{screen.message.modal.remove.inBasis}"></th>
+            <th class="font-weight-normal modal-attributes">
+                {{ inBasis }}
+                <span class="fa fa-info-circle clickable" ng-if="inBasis === 'Yes' && listName === 'Include'"
+                      tooltip
+                      th:title="#{screen.message.modal.remove.tooltip.inBasis.include}" aria-hidden="true">
+                </span>
+                <span class="fa fa-info-circle clickable" ng-if="inBasis === 'Yes' && listName === 'Exclude'"
+                      tooltip
+                      th:title="#{screen.message.modal.remove.tooltip.inBasis.exclude}" aria-hidden="true">
+                </span>
+                <span class="fa fa-info-circle clickable" ng-if="inBasis === 'No' && listName === 'Exclude' && allowOptIn"
+                      tooltip
+                      th:title="#{screen.message.modal.remove.tooltip.inBasis.exclude.optIn}" aria-hidden="true">
+                </span>
+            </th>
+        </tr>
     </table>
     <p>
         <span class="modal-black-text">Are you sure you want to remove</span>
