@@ -141,11 +141,9 @@
             if (res === "") {
                 return;
             }
-            let memberToRemove = {
-                uid: res.uid,
-                name: res.name,
-                uhUuid: res.uhUuid
-            };
+
+            const { uid, name, uhUuid } = res.results[0];
+            const memberToRemove = { uid, name, uhUuid };
 
             $scope.soleOwnerGroupingNames = [];
 
@@ -191,7 +189,8 @@
             $scope.createGroupPathsAndNames($scope.pagedItemsSubject[$scope.currentPageSubject], $scope.selectedGroupingsNames, $scope.selectedGroupingsPaths, $scope.selectedOwnedGroupingsNames, $scope.selectedOwnedGroupings);
 
             if ($scope.subjectToLookup != null) {
-                groupingsService.getMemberAttributeResults($scope.subjectToLookup, $scope.checkSoleOwner);
+                const validUser = $scope.sanitizer($scope.subjectToLookup);
+                groupingsService.getMemberAttributeResults([validUser], $scope.checkSoleOwner);
             }
         };
 
@@ -312,38 +311,22 @@
          * @param {object} options.listNames - groups the user is being removed from
          */
         $scope.displayRemoveFromGroupsModal = (options) => {
-            const memberToRemove = options.member.uhUuid;
-            const sanitizedUser = $scope.sanitizer(memberToRemove);
             $scope.memberToRemove = options.member;
             $scope.groupPaths = options.groupPaths;
             $scope.listNames = options.listNames.join(", ");
 
-            const windowClass = $scope.showWarningRemovingSelf() ? "modal-danger" : "";
+            $scope.removeFromGroupsModalInstance = $uibModal.open({
+                templateUrl: "modal/removeFromGroupsModal",
+                windowClass: $scope.showWarningRemovingSelf() ? "modal-danger" : "",
+                scope: $scope,
+                backdrop: "static",
+                keyboard: false,
+                ariaLabelledBy: "remove-from-groups-modal"
+            });
 
-            groupingsService.getMemberAttributeResults(sanitizedUser, (subject) => {
-                if (subject === "") {
-                    return;
-                } else {
-                    $scope.initMemberDisplayName(subject);
-                }
-                $scope.removeFromGroupsModalInstance = $uibModal.open({
-                    templateUrl: "modal/removeFromGroupsModal",
-                    windowClass,
-                    scope: $scope,
-                    backdrop: "static",
-                    keyboard: false,
-                    ariaLabelledBy: "remove-from-groups-modal"
-                });
-
-                $scope.removeFromGroupsModalInstance.result.then(() => {
-                    $scope.loading = true;
-                    let memberToRemove = options.member.uhUuid;
-                    let groupingPath = $scope.groupPaths;
-                    groupingsService.removeFromGroups(groupingPath, memberToRemove, handleRemoveFromGroupsOnSuccess, handleRemoveFromGroupsOnError);
-                }, () => {/* onRejected: handles modal promise rejection */});
-            }, (res) => {
-                $scope.user = memberToRemove;
-                $scope.resStatus = res.status;
+            $scope.removeFromGroupsModalInstance.result.then(() => {
+                $scope.loading = true;
+                groupingsService.removeFromGroups($scope.groupPaths, $scope.memberToRemove.uhUuid, handleRemoveFromGroupsOnSuccess, handleRemoveFromGroupsOnError);
             });
         };
 

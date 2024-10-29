@@ -20,8 +20,8 @@
                         Manage Admins
                     </a>
                 <li class="nav-item" role="presentation">
-                    <a href="#manage-subject" id="manage-subject-tab" data-toggle="tab" class="nav-link tab-color" role="tab">
-                        Manage Subject
+                    <a href="#manage-person" id="manage-subject-tab" data-toggle="tab" class="nav-link tab-color" role="tab">
+                        Manage Person
                     </a>
                 </li>
                 <li th:if="${!@realm.isProduction()}" class="nav-item" role="presentation">
@@ -154,7 +154,7 @@
                     </div>
                 </div>
                 <!-- Manage Person -->
-                <div class="tab-pane fade" id="manage-subject" role="tabpanel">
+                <div class="tab-pane fade" id="manage-person" role="tabpanel">
                     <div class="row m-auto pt-3 pb-3 d-flex">
                         <div class="col-lg-9 col-md-8 col-12 p-0 text-center text-md-left">
                             <h2 class="mt-md-1 mt-0 d-inline-block">Manage Person</h2>
