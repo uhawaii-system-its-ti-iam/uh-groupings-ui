@@ -204,7 +204,7 @@ describe("GeneralController", () => {
             bad4 = "__bad___path_\n";
             bad5 = ":badpath\n";
             bad6 = "badpath:\n";
-            goodFile = "test:test:path\ntest2:test2:test2:path\ntest3:test3:test3:test3:path\n"
+            goodFile = "hawaii.edu:custom:test:listserv-tests:JTTEST-L\ntest2:test2:test2:path\ntest3:test3:test3:test3:path\n"
             badFile = `${bad1}${bad2}${bad3}${bad4}${bad5}${bad6}`;
             parseFile = (file) => {
                 scope.manageMembers = file.split(/[\r\n]+/);
@@ -236,7 +236,7 @@ describe("GeneralController", () => {
         it("should return an array of paths that match the definition of a group path", () => {
             const arrayOfValidPaths = parseFile(goodFile);
             expect(arrayOfValidPaths.length).toEqual(3);
-            expect(arrayOfValidPaths.toString()).toEqual("test:test:path,test2:test2:test2:path,test3:test3:test3:test3:path");
+            expect(arrayOfValidPaths.toString()).toEqual("hawaii.edu:custom:test:listserv-tests:jttest-l,test2:test2:test2:path,test3:test3:test3:test3:path");
         });
     });
 

@@ -85,6 +85,8 @@
         $scope.hasDeptAccount = false;
         $scope.isAddingMembers = false;
 
+        $scope.addModalName = "add-modal"
+
         // Remove members
         $scope.multiRemoveResults = [];
         $scope.membersToRemove = [];
@@ -638,10 +640,20 @@
         /**
          * Adds people to listName (to be used in on-click)
          * @param {String} listName grouping list (i.e. include, exclude, or owners)
+         *
+         * is there ever a case where we will be adding multiple group-paths?
          */
         $scope.addOnClick = (listName) => {
             $scope.resetErrors();
-            if (listName === "Include" || listName === "Exclude" || listName === "owners") {
+            if (listName === "Include" || listName === "Exclude") {
+                $scope.addMembers(listName);
+            }
+            if (listName === "owners") {
+                let userInput = $scope.parseAddRemoveInputStr($scope.manageMembers);
+                if (userInput[0].includes(':')) {
+                    listName = "owner group path"
+                    $scope.addModalName = "add-group-path-modal"
+                }
                 $scope.addMembers(listName);
             }
             $scope.errorDismissed = false;
@@ -673,8 +685,12 @@
             }
             $scope.isAddingMembers = true;
 
-            // If uhIdentifiers parameter is null, get member input from $scope.manageMembers
-            uhIdentifiers = $scope.sanitizer(uhIdentifiers ?? $scope.parseAddRemoveInputStr($scope.manageMembers));
+            if (listName === "owners") {
+                // If uhIdentifiers parameter is null, get member input from $scope.manageMembers
+                uhIdentifiers = $scope.sanitizer(uhIdentifiers ?? $scope.parseAddRemoveInputStr($scope.manageMembers));
+            } else if (listName === "owner group path") {
+                uhIdentifiers = $scope.sanitizerGroupPath(uhIdentifiers ?? $scope.parseAddRemoveInputStr($scope.manageMembers));
+            }
             $scope.listName = listName;
 
             // Check if uhIdentifiers/member input is empty
@@ -721,44 +737,50 @@
                 return;
             }
 
+            $scope.ownerGroupPath = uhIdentifiers[0];
+            $scope.groupingName = $scope.ownerGroupPath.split(':').pop();
+            console.log("Group path: " + $scope.ownerGroupPath);
+            console.log("Grouping name: " + $scope.groupingName);
+
             $scope.waitingForImportResponse = true; // Small spinner on
 
             // Get attributes for each member
-            getMemberAttributeResults(uhIdentifiers, (res) => {
-                $scope.waitingForImportResponse = false; // Small spinner off
-                if (!_.isEmpty(res.invalid)) {
-                    $scope.invalidMembers = res.invalid;
-                    $scope.addInputError = true;
+            if (listName !== "owner group path") {
+                getMemberAttributeResults(uhIdentifiers, (res) => {
+                    $scope.waitingForImportResponse = false; // Small spinner off
+                    if (!_.isEmpty(res.invalid)) {
+                        $scope.invalidMembers = res.invalid;
+                        $scope.addInputError = true;
+                        if ($scope.isBatchImport) {
+                            $scope.displayImportErrorModal();
+                            $scope.addInputError = false;
+                        }
+                        $scope.isAddingMembers = false;
+                        return;
+                    }
+
+                    // Prevent departmental accounts from being added as Owners
+                    $scope.hasDeptAccount = $scope.checkForDeptAccount(res.results);
+                    if (listName === 'owners' && $scope.hasDeptAccount) {
+                        $scope.displayDynamicModal(
+                          Message.Title.OWNER_NOT_ADDED,
+                          Message.Body.OWNER_NOT_ADDED
+                        );
+                        $scope.isAddingMembers = false;
+                        return;
+                    }
+
+                    // Display the appropriate modal
                     if ($scope.isBatchImport) {
-                        $scope.displayImportErrorModal();
-                        $scope.addInputError = false;
+                        $scope.displayImportConfirmationModal(listName, uhIdentifiers);
+                    } else {
+                        $scope.displayAddModal({
+                            membersAttributes: res,
+                            uhIdentifiers,
+                            listName
+                        });
                     }
                     $scope.isAddingMembers = false;
-                    return;
-                }
-
-                // Prevent departmental accounts from being added as Owners
-                $scope.hasDeptAccount = $scope.checkForDeptAccount(res.results);
-                if (listName === 'owners' && $scope.hasDeptAccount) {
-                    $scope.displayDynamicModal(
-                        Message.Title.OWNER_NOT_ADDED,
-                        Message.Body.OWNER_NOT_ADDED
-                    );
-                    $scope.isAddingMembers = false;
-                    return;
-                }
-
-                // Display the appropriate modal
-                if ($scope.isBatchImport) {
-                    $scope.displayImportConfirmationModal(listName, uhIdentifiers);
-                } else {
-                    $scope.displayAddModal({
-                        membersAttributes: res,
-                        uhIdentifiers,
-                        listName
-                    });
-                }
-                $scope.isAddingMembers = false;
                 }, (res) => {
                     // Display API error modal
                     $scope.waitingForImportResponse = false;
@@ -766,6 +788,19 @@
                     $scope.displayApiErrorModal();
                     $scope.isAddingMembers = false;
                 });
+            } else {
+                $scope.waitingForImportResponse = false; // Small spinner off
+                // Display the appropriate modal
+                if ($scope.isBatchImport) {
+                    $scope.displayImportConfirmationModal(listName, uhIdentifiers);
+                } else {
+                    $scope.displayAddModal({
+                        membersAttributes: [],
+                        uhIdentifiers,
+                        listName
+                    });
+                }
+            }
         };
 
         /**
@@ -836,24 +871,28 @@
          */
         $scope.displayAddModal = (options) => {
             const uhIdentifiers = [].concat(options.uhIdentifiers); // Allows either string or array to be passed in
-            const membersAttributesResults = options.membersAttributes.results;
+            const membersAttributesResults = options.membersAttributes.results ?? [];
 
             $scope.listName = options.listName;
             $scope.isMultiAdd = uhIdentifiers.length > 1;
             $scope.hasDeptAccount = $scope.checkForDeptAccount(membersAttributesResults);
 
-            // Sets information to be displayed in add/multiAdd modal
-            $scope.multiAddResults = membersAttributesResults;
-            $scope.addInGroups($scope.multiAddResults);
-            $scope.initMemberDisplayName($scope.multiAddResults[0]);
+            if (membersAttributesResults.length !== 0) {
+                // Sets information to be displayed in add/multiAdd modal
+                $scope.multiAddResults = membersAttributesResults;
+                $scope.addInGroups($scope.multiAddResults);
+                $scope.initMemberDisplayName($scope.multiAddResults[0]);
+            }
 
             // Open add or multiAdd modal
             const templateUrl = $scope.isMultiAdd ? "modal/multiAddModal" : "modal/addModal";
+            console.log("Modal name: " + $scope.addModalName);
+
             $scope.addModalInstance = $uibModal.open({
                 templateUrl,
                 scope: $scope,
                 backdrop: "static",
-                ariaLabelledBy: "add-modal"
+                ariaLabelledBy: "add-group-path-modal",
             });
 
             // On pressing "Yes/Add" in the modal, make API call to add members to the group
@@ -866,6 +905,8 @@
                     await groupingsService.addExcludeMembers(uhIdentifiers, groupingPath, handleSuccessfulAdd, handleUnsuccessfulRequest, displaySlowImportModal);
                 } else if ($scope.listName === "owners") {
                     await groupingsService.addOwnerships(groupingPath, uhIdentifiers, handleSuccessfulAdd, handleUnsuccessfulRequest);
+                } else if ($scope.listName === "owner group path") {
+                    await groupingsService.addGroupPathOwnerships(groupingPath, uhIdentifiers, handleSuccessfulAdd, handleUnsuccessfulRequest);
                 } else if ($scope.listName === "admins") {
                     await groupingsService.addAdmin(uhIdentifiers, handleSuccessfulAdd, handleUnsuccessfulRequest);
                 }

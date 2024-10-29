@@ -187,7 +187,7 @@
             },
 
             /**
-             * Add owners to owners group of grouping
+             * Add owners to owners group of grouping.
              */
             addOwnerships(path, newOwner, onSuccess, onError) {
                 let endpoint = BASE_URL + path + "/" + newOwner + "/addOwnerships";
@@ -195,7 +195,7 @@
             },
 
             /**
-             * Add owners to owners group of grouping
+             * Add group path owners to owners group of grouping.
              */
             addGroupPathOwnerships(path, newGroupPathOwner, onSuccess, onError) {
                 let endpoint = BASE_URL + path + "/" + newGroupPathOwnerOwner + "/addGroupPathOwnerships";
