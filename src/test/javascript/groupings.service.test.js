@@ -574,24 +574,24 @@ describe("GroupingsService", () => {
         });
     });
 
-    describe("setSyncDest", () => {
+    describe("updateSyncDest", () => {
         let syncDestId;
         let turnOn;
         it("should call dataProvider.updateData", () => {
             spyOn(dp, "updateData");
-            gs.setSyncDest(groupingPath, syncDestId, turnOn, onSuccess, onError);
+            gs.updateSyncDest(groupingPath, syncDestId, turnOn, onSuccess, onError);
             expect(dp.updateData).toHaveBeenCalled();
         });
-
+        
         it("should use the correct path for enable", () => {
-            gs.setSyncDest(groupingPath, syncDestId, true, onSuccess, onError);
-            httpBackend.expectPOST(BASE_URL + "groupings/" + groupingPath + "/syncDests/" + syncDestId + "/enable").respond(200);
+            gs.updateSyncDest(groupingPath, syncDestId, true, onSuccess, onError);
+            httpBackend.expectPOST(BASE_URL + "groupings/" + groupingPath + "/syncDests/" + syncDestId + "/true").respond(200);
             expect(httpBackend.flush).not.toThrow();
         });
 
         it("should use the correct path for disable", () => {
-            gs.setSyncDest(groupingPath, syncDestId, false, onSuccess, onError);
-            httpBackend.expectPOST(BASE_URL + "groupings/" + groupingPath + "/syncDests/" + syncDestId + "/disable").respond(200);
+            gs.updateSyncDest(groupingPath, syncDestId, false, onSuccess, onError);
+            httpBackend.expectPOST(BASE_URL + "groupings/" + groupingPath + "/syncDests/" + syncDestId + "/false").respond(200);
             expect(httpBackend.flush).not.toThrow();
         });
     });

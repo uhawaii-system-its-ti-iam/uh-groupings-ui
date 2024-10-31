@@ -1607,7 +1607,7 @@
         $scope.updateSingleSyncDest = (syncDestName) => {
             const groupingPath = $scope.selectedGrouping.path;
             const syncDestOn = $scope.getSyncDestValueInArray(syncDestName);
-            groupingsService.setSyncDest(groupingPath, syncDestName, syncDestOn, handleSuccessfulPreferenceToggle, handleUnsuccessfulRequest);
+            groupingsService.updateSyncDest(groupingPath, syncDestName, syncDestOn, handleSuccessfulPreferenceToggle, handleUnsuccessfulRequest);
         };
 
         /**

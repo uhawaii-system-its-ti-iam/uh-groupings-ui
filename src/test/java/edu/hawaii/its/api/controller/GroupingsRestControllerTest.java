@@ -669,36 +669,30 @@ public class GroupingsRestControllerTest {
 
     @Test
     @WithMockUhUser
-    public void enableSyncDestTest() throws Exception {
-        String uri = REST_CONTROLLER_BASE + "groupings/" + GROUPING + "/syncDests/listserv/enable";
+    public void updateSyncDestTest() throws Exception {
+        String uri = REST_CONTROLLER_BASE + "groupings/" + GROUPING + "/syncDests/listserv/";
 
+        String enableUri = uri + "true";
         given(httpRequestService.makeApiRequest(eq(UID), anyString(), eq(HttpMethod.PUT)))
-                .willReturn(new ResponseEntity(HttpStatus.OK));
+                .willReturn(new ResponseEntity<>(HttpStatus.OK));
 
-        assertNotNull(mockMvc.perform(post(uri).with(csrf()))
+        assertNotNull(mockMvc.perform(post(enableUri).with(csrf()))
                 .andExpect(status().isOk())
                 .andReturn());
 
         verify(httpRequestService, times(1))
                 .makeApiRequest(eq(UID), anyString(), eq(HttpMethod.PUT));
-    }
-
-    @Test
-    @WithMockUhUser
-    public void disableSyncDestTest() throws Exception {
-        String uri = REST_CONTROLLER_BASE + "groupings/" + GROUPING + "/syncDests/listserv/disable";
-
+        String disableUri = uri + "false";
         given(httpRequestService.makeApiRequest(eq(UID), anyString(), eq(HttpMethod.PUT)))
-                .willReturn(new ResponseEntity(HttpStatus.OK));
+                .willReturn(new ResponseEntity<>(HttpStatus.OK));
 
-        assertNotNull(mockMvc.perform(post(uri).with(csrf()))
+        assertNotNull(mockMvc.perform(post(disableUri).with(csrf()))
                 .andExpect(status().isOk())
                 .andReturn());
 
-        verify(httpRequestService, times(1))
+        verify(httpRequestService, times(2))
                 .makeApiRequest(eq(UID), anyString(), eq(HttpMethod.PUT));
     }
-
     @Test
     @WithMockUhUser
     public void setOptInTrueTest() throws Exception {

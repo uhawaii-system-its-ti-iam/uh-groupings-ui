@@ -2508,11 +2508,11 @@ describe("GroupingController", () => {
             };
         });
 
-        it("should call the setSyncDest", () => {
-            spyOn(gs, "setSyncDest");
+        it("should call the updateSyncDest", () => {
+            spyOn(gs, "updateSyncDest");
             scope.syncDestArray.push(testSync);
             scope.updateSingleSyncDest(testSync.name);
-            expect(gs.setSyncDest).toHaveBeenCalled();
+            expect(gs.updateSyncDest).toHaveBeenCalled();
         });
 
         it("should call getSyncDestValueInArray", () => {
