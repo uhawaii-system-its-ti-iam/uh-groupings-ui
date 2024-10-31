@@ -569,71 +569,58 @@ public class GroupingsRestController {
         return httpRequestService.makeApiRequestWithBody(currentUid, uri, description, HttpMethod.PUT);
     }
 
-    /**
-     * Allow an owner of a Grouping to enable that a Grouping connected to a given sync destination.
-     */
-    @PostMapping(value = "/groupings/{path}/syncDests/{syncDestId}/enable")
-    public ResponseEntity<String> enableSyncDest(
-            @PathVariable String path,
-            @PathVariable String syncDestId) {
-        logger.info("Entered REST enableSyncDest...");
-        String currentUid = policy.sanitize(userContextService.getCurrentUid());
-        String safeGrouping = policy.sanitize(path);
-        String safeSyncDestId = policy.sanitize(syncDestId);
-        return changeSyncDest(safeGrouping, currentUid, safeSyncDestId, true);
-    }
 
     /**
-     * This allows an owner of a Grouping to disable that a Grouping connected to a given sync
+     * This allows an owner of a Grouping to enable/disable that a Grouping connected to a given sync
      * destination.
      */
-    @PostMapping(value = "/groupings/{path}/syncDests/{syncDestId}/disable")
-    public ResponseEntity<String> disableSyncDest(
+    @PostMapping(value = "/groupings/{path}/syncDests/{syncDestId}/{status}")
+    public ResponseEntity<String> updateSyncDest(
             @PathVariable String path,
-            @PathVariable String syncDestId) {
-        logger.info("Entered REST disableSyncDest...");
+            @PathVariable String syncDestId,
+            @PathVariable boolean status) {
+        logger.info("Entered REST updateSyncDest...");
         String currentUid = policy.sanitize(userContextService.getCurrentUid());
         String safeGrouping = policy.sanitize(path);
         String safeSyncDestId = policy.sanitize(syncDestId);
-        return changeSyncDest(safeGrouping, currentUid, safeSyncDestId, false);
+        String uri = String.format(API_2_1_BASE + "/groupings/%s/sync-destination/%s/%s", safeGrouping, safeSyncDestId, status);
+        return httpRequestService.makeApiRequest(currentUid, uri, HttpMethod.PUT);
     }
 
     /**
-     * Enable or disable a users ability to optIn to a grouping at groupingPath.
+     * Enable or disable a users ability to OptAttribute to a grouping at groupingPath.
      */
-    @PostMapping(value = "/{groupingPath}/{optInOn}/setOptIn")
-    public ResponseEntity<String> setOptIn(
-            @PathVariable String groupingPath,
-            @PathVariable boolean optInOn) {
-        logger.info("Entered REST setOptIn...");
+    @PostMapping(value = "/groupings/{path}/opt-attribute/IN/{status}")
+    public ResponseEntity<String> updateOptIn(
+            @PathVariable String path,
+            @PathVariable boolean status) {
+        logger.info("Entered REST updateOptIn...");
         String currentUid = policy.sanitize(userContextService.getCurrentUid());
-        String safeGroupingPath = policy.sanitize(groupingPath);
-        return changePreference(safeGroupingPath, currentUid, OPT_IN, optInOn);
+        String safeGroupingPath = policy.sanitize(path);
+        String uri = String.format(API_2_1_BASE + "/groupings/%s/opt-attribute/%s/%s", safeGroupingPath, OPT_IN, status);
+        return httpRequestService.makeApiRequest(currentUid, uri, HttpMethod.PUT);
+    }
+
+    @PostMapping(value = "/groupings/{path}/opt-attribute/OUT/{status}")
+    public ResponseEntity<String> updateOptOut(
+            @PathVariable String path,
+            @PathVariable boolean status) {
+        logger.info("Entered REST updateOptOut...");
+        String currentUid = policy.sanitize(userContextService.getCurrentUid());
+        String safeGroupingPath = policy.sanitize(path);
+        String uri = String.format(API_2_1_BASE + "/groupings/%s/opt-attribute/%s/%s", safeGroupingPath, OPT_OUT, status);
+        return httpRequestService.makeApiRequest(currentUid, uri, HttpMethod.PUT);
     }
 
     /**
-     * Enable or disable a users ability to opt out of grouping at groupingPath.
+     * Get the number of owners of the group path that contains the owner with uhIdentifier
      */
-    @PostMapping(value = "/{grouping}/{optOutOn}/setOptOut")
-    public ResponseEntity<String> setOptOut(
-            @PathVariable String grouping,
-            @PathVariable boolean optOutOn) {
-        logger.info("Entered REST setOptOut...");
+    @GetMapping(value = "/{path:.+}/owners/{uhIdentifier}/count")
+    public ResponseEntity<String> getNumberOfOwners(@PathVariable String path,
+            @PathVariable String uhIdentifier) {
+        logger.info("Entered REST getNumberOfOwners...");
         String currentUid = policy.sanitize(userContextService.getCurrentUid());
-        String safeGrouping = policy.sanitize(grouping);
-        return changePreference(safeGrouping, currentUid, OPT_OUT, optOutOn);
-    }
-
-    /**
-     * Checks if the owner of a grouping is the sole owner
-     */
-    @GetMapping(value = "/{path:.+}/owners/{uidToCheck}")
-    public ResponseEntity<String> isSoleOwner(@PathVariable String path,
-            @PathVariable String uidToCheck) {
-        logger.info("Entered REST isSoleOwner...");
-        String currentUid = policy.sanitize(userContextService.getCurrentUid());
-        String baseUri = String.format(API_2_1_BASE + "/groupings/%s/owners/%s", path, uidToCheck);
-
+        String baseUri = String.format(API_2_1_BASE + "/members/%s/owners/%s/count", path, uhIdentifier);
         return httpRequestService.makeApiRequest(currentUid, baseUri, HttpMethod.GET);
     }
 
@@ -698,25 +685,6 @@ public class GroupingsRestController {
         return uriComponentsBuilder.encode().toUriString();
     }
 
-    private ResponseEntity<String> changePreference(String grouping, String uhIdentifier, String preference,
-            Boolean isOn) {
-        String ending = "disable";
-        if (isOn) {
-            ending = "enable";
-        }
-        String uri = String.format(API_2_1_BASE + "/groupings/%s/preference/%s/%s", grouping, preference, ending);
-        return httpRequestService.makeApiRequest(uhIdentifier, uri, HttpMethod.PUT);
-    }
-
-    private ResponseEntity<String> changeSyncDest(String grouping, String uhIdentifier, String syncDest, Boolean isOn) {
-        String ending = "disable";
-        if (isOn) {
-            ending = "enable";
-        }
-        String uri = String.format(API_2_1_BASE + "/groupings/%s/sync-destination/%s/%s", grouping, syncDest, ending);
-        return httpRequestService.makeApiRequest(uhIdentifier, uri, HttpMethod.PUT);
-    }
-
     protected Boolean shouldDoApiHandshake() {
         if (!API_HANDSHAKE_ENABLED) {
             logger.info("API handshake disabled.");
@@ -736,7 +704,7 @@ public class GroupingsRestController {
                         .getStatusCode()
                         .is2xxSuccessful();
             } catch (Exception e) {
-                logger.debug("API Handshack error: ", e);
+                logger.debug("API handshake error: ", e);
             }
 
             if (!success) {

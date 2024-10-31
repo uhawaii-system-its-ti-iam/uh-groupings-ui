@@ -669,8 +669,50 @@ public class GroupingsRestControllerTest {
 
     @Test
     @WithMockUhUser
-    public void enableSyncDestTest() throws Exception {
-        String uri = REST_CONTROLLER_BASE + "groupings/" + GROUPING + "/syncDests/listserv/enable";
+    public void updateSyncDestTest() throws Exception {
+        String uri = REST_CONTROLLER_BASE + "groupings/" + GROUPING + "/syncDests/listserv/";
+
+        String enableUri = uri + "true";
+        given(httpRequestService.makeApiRequest(eq(UID), anyString(), eq(HttpMethod.PUT)))
+                .willReturn(new ResponseEntity<>(HttpStatus.OK));
+
+        assertNotNull(mockMvc.perform(post(enableUri).with(csrf()))
+                .andExpect(status().isOk())
+                .andReturn());
+
+        verify(httpRequestService, times(1))
+                .makeApiRequest(eq(UID), anyString(), eq(HttpMethod.PUT));
+
+        String disableUri = uri + "false";
+        given(httpRequestService.makeApiRequest(eq(UID), anyString(), eq(HttpMethod.PUT)))
+                .willReturn(new ResponseEntity<>(HttpStatus.OK));
+
+        assertNotNull(mockMvc.perform(post(disableUri).with(csrf()))
+                .andExpect(status().isOk())
+                .andReturn());
+
+        verify(httpRequestService, times(2))
+                .makeApiRequest(eq(UID), anyString(), eq(HttpMethod.PUT));
+    }
+    @Test
+    @WithMockUhUser
+    public void updateOptInTrueTest() throws Exception {
+        String uri = REST_CONTROLLER_BASE +"groupings/"+ GROUPING + "/opt-attribute/IN/true";
+
+        given(httpRequestService.makeApiRequest(eq(UID), anyString(), eq(HttpMethod.PUT)))
+                .willReturn(new ResponseEntity(HttpStatus.OK));
+
+        assertNotNull(mockMvc.perform(post(uri).with(csrf()))
+                .andExpect(status().isOk())
+                .andReturn());
+
+        verify(httpRequestService, times(1))
+                .makeApiRequest(eq(UID), anyString(), eq(HttpMethod.PUT));
+    }
+    @Test
+    @WithMockUhUser
+    public void updateOptInFalseTest() throws Exception {
+        String uri = REST_CONTROLLER_BASE +"groupings/"+ GROUPING + "/opt-attribute/IN/false";
 
         given(httpRequestService.makeApiRequest(eq(UID), anyString(), eq(HttpMethod.PUT)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
@@ -685,8 +727,23 @@ public class GroupingsRestControllerTest {
 
     @Test
     @WithMockUhUser
-    public void disableSyncDestTest() throws Exception {
-        String uri = REST_CONTROLLER_BASE + "groupings/" + GROUPING + "/syncDests/listserv/disable";
+    public void updateOptOutTrueTest() throws Exception {
+        String uri = REST_CONTROLLER_BASE +"groupings/"+ GROUPING + "/opt-attribute/OUT/true";
+
+        given(httpRequestService.makeApiRequest(eq(UID), anyString(), eq(HttpMethod.PUT)))
+                .willReturn(new ResponseEntity(HttpStatus.OK));
+
+        assertNotNull(mockMvc.perform(post(uri).with(csrf()))
+                .andExpect(status().isOk())
+                .andReturn());
+
+        verify(httpRequestService, times(1))
+                .makeApiRequest(eq(UID), anyString(), eq(HttpMethod.PUT));
+    }
+    @Test
+    @WithMockUhUser
+    public void updateOptOutFalseTest() throws Exception {
+        String uri = REST_CONTROLLER_BASE +"groupings/"+ GROUPING + "/opt-attribute/OUT/false";
 
         given(httpRequestService.makeApiRequest(eq(UID), anyString(), eq(HttpMethod.PUT)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
@@ -701,56 +758,8 @@ public class GroupingsRestControllerTest {
 
     @Test
     @WithMockUhUser
-    public void setOptInTrueTest() throws Exception {
-        String uri_true = REST_CONTROLLER_BASE + GROUPING + "/true/setOptIn";
-        given(httpRequestService.makeApiRequest(eq(UID), anyString(), eq(HttpMethod.PUT)))
-                .willReturn(new ResponseEntity(HttpStatus.OK));
-
-        assertNotNull(mockMvc.perform(post(uri_true).with(csrf()))
-                .andExpect(status().isOk())
-                .andReturn());
-
-        verify(httpRequestService, times(1))
-                .makeApiRequest(eq(UID), anyString(), eq(HttpMethod.PUT));
-
-    }
-
-    @Test
-    @WithMockUhUser
-    public void setOptInFalseTest() throws Exception {
-        String uri_false = REST_CONTROLLER_BASE + GROUPING + "/false/setOptIn";
-        given(httpRequestService.makeApiRequest(eq(UID), anyString(), eq(HttpMethod.PUT)))
-                .willReturn(new ResponseEntity(HttpStatus.OK));
-
-        assertNotNull(mockMvc.perform(post(uri_false).with(csrf()))
-                .andExpect(status().isOk())
-                .andReturn());
-
-        verify(httpRequestService, times(1))
-                .makeApiRequest(eq(UID), anyString(), eq(HttpMethod.PUT));
-
-    }
-
-    @Test
-    @WithMockUhUser
-    public void setOptOut() throws Exception {
-        String uri = REST_CONTROLLER_BASE + GROUPING + "/true/setOptOut";
-
-        given(httpRequestService.makeApiRequest(eq(UID), anyString(), eq(HttpMethod.PUT)))
-                .willReturn(new ResponseEntity(HttpStatus.OK));
-
-        assertNotNull(mockMvc.perform(post(uri).with(csrf()))
-                .andExpect(status().isOk())
-                .andReturn());
-
-        verify(httpRequestService, times(1))
-                .makeApiRequest(eq(UID), anyString(), eq(HttpMethod.PUT));
-    }
-
-    @Test
-    @WithMockUhUser
-    public void isSoleOwner() throws Exception {
-        String uri = REST_CONTROLLER_BASE + GROUPING + "/owners/" + UID;
+    public void getNumberOfOwners() throws Exception {
+        String uri = REST_CONTROLLER_BASE + GROUPING + "/owners/" + UID + "/count";
 
         given(httpRequestService.makeApiRequest(eq(UID), anyString(), eq(HttpMethod.GET)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
@@ -761,22 +770,6 @@ public class GroupingsRestControllerTest {
 
         verify(httpRequestService, times(1))
                 .makeApiRequest(eq(UID), anyString(), eq(HttpMethod.GET));
-    }
-
-    @Test
-    @WithMockUhUser
-    public void setOptOutFalseTest() throws Exception {
-        String uri = REST_CONTROLLER_BASE + GROUPING + "/false/setOptOut";
-
-        given(httpRequestService.makeApiRequest(eq(UID), anyString(), eq(HttpMethod.PUT)))
-                .willReturn(new ResponseEntity(HttpStatus.OK));
-
-        assertNotNull(mockMvc.perform(post(uri).with(csrf()))
-                .andExpect(status().isOk())
-                .andReturn());
-
-        verify(httpRequestService, times(1))
-                .makeApiRequest(eq(UID), anyString(), eq(HttpMethod.PUT));
     }
 
     @Test

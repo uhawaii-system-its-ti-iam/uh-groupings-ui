@@ -270,7 +270,12 @@ describe("AdminController", function () {
     });
 
     describe("checkSoleOwner", () => {
-        let res = {uid: "testUid", name: "testName", uhUuid: "testId"};
+        const res = {
+            resultCode: "SUCCESS",
+            invalid: [],
+            results: [{ uid: "testUid", name: "testName", uhUuid: "testId" }]
+        };
+
         it("should empty soleOwnerGroupingNames", () => {
             scope.soleOwnerGroupingNames = ["test1", "test2"];
             scope.selectedOwnedGroupings = ["test"];
@@ -510,13 +515,6 @@ describe("AdminController", function () {
             scope.displayRemoveFromGroupsModal(options);
 
             expect(scope.showWarningRemovingSelf).toHaveBeenCalled();
-        });
-
-        it("should call groupingsService", () => {
-            spyOn(gs, "getMemberAttributeResults").and.callThrough();
-            scope.displayRemoveFromGroupsModal(options);
-
-            expect(gs.getMemberAttributeResults).toHaveBeenCalled();
         });
     });
 
