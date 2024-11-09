@@ -1648,33 +1648,78 @@
             $('#preferences-modal').modal('show');
         };
 
-        /**
-         *When the submit button is clicked, the preferences selected
-         *will be applied
-         */
-        $scope.submitPreferences = function() {
-            // Check if opt-in is selected
-            if ($scope.allowOptIn) {
-                $scope.updateAllowOptIn();  // Call the function to update opt-in status
-            }
-            // Check if opt-out is selected
-            if ($scope.allowOptOut) {
-                $scope.updateAllowOptOut();  // Call the function to update opt-out status
-            }
-
-            // After submitting preferences, display modal
-            $scope.displayDynamicModal('Preferences Updated', $scope.getOptStatus());
+        // Initialize or reset initial preference states
+        $scope.initPreferenceStatuses = () => {
+            $scope.initialAllowOptIn = $scope.allowOptIn;  // Store the initial opt-in status
+            $scope.initialAllowOptOut = $scope.allowOptOut;  // Store the initial opt-out status
         };
 
-        $scope.getOptStatus = function() {
+        // Call this initialization function when the controller loads or data changes
+        $scope.initPreferenceStatuses();
+
+        /**
+         * Function that runs when the submit button is clicked
+         */
+        $scope.submitPreferences = () => {
+            let modalContent = "";
+
+            // Check for changes in preferences
+            const optInChanged = $scope.allowOptIn !== $scope.initialAllowOptIn;
+            const optOutChanged = $scope.allowOptOut !== $scope.initialAllowOptOut;
+
+            // Build the modal content based on changed preferences
+            if (optInChanged) {
+                modalContent += "Opt-In preference has been changed.\n";
+            }
+            if (optOutChanged) {
+                modalContent += "Opt-Out preference has been changed.\n";
+            }
+
+            if (modalContent) {
+                // Open confirmation modal with the list of changed preferences
+                $scope.preferenceModalInstance = $uibModal.open({
+                    templateUrl: "modal/preferencesConfirmationModal",  // Your modal template URL
+                    scope: $scope,
+                    backdrop: "static",
+                    keyboard: false,
+                    ariaLabelledBy: "preferences-confirmation-modal",
+                    resolve: {
+                        preferenceChanges: () => modalContent,
+                    },
+                });
+
+                // Handle the result from the modal
+                $scope.preferenceModalInstance.result.then(() => {
+                    // Apply the changed preferences
+                    if (optInChanged) {
+                        $scope.updateAllowOptIn();  // Call the existing function for opt-in change
+                    }
+                    if (optOutChanged) {
+                        $scope.updateAllowOptOut();  // Call the existing function for opt-out change
+                    }
+
+                    // Update the initial states after successful submission
+                    $scope.initPreferenceStatuses();
+
+                    // Display confirmation modal after applying preferences
+                    $scope.displayDynamicModal('Preferences Updated', $scope.getOptStatus());
+                }).catch((error) => {
+                    console.error("Error updating preferences:", error);
+                });
+            } else {
+                console.log('No changes made to preferences.');
+            }
+        };
+
+        // Function to display the current opt status message
+        $scope.getOptStatus = () => {
             if ($scope.allowOptIn) {
                 return 'You have opted in.';
             } else if ($scope.allowOptOut) {
                 return 'You have opted out.';
             }
-            return 'No changes made.';
+            return 'No changes were made.';
         };
-
 
 
         // Function to check if any checkbox is selected
