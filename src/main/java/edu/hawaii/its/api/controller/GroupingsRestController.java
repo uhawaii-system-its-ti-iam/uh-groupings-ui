@@ -716,7 +716,7 @@ public class GroupingsRestController {
                         .getStatusCode()
                         .is2xxSuccessful();
             } catch (Exception e) {
-                logger.debug("API Handshack error: ", e);
+                logger.debug("API handshake error: ", e);
             }
 
             if (!success) {
