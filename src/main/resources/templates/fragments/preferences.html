@@ -15,7 +15,6 @@
                 <div>
                     <div class="form-check">
                         <input type="checkbox" class="position-relative ml-0" ng-model="allowOptIn" id="allowOptIn"
-                               ng-change="updateAllowOptIn()"
                                ng-keydown="clickWithEnter($event)"/>
                         <label class="form-check-label" for="allowOptIn">
                             Allow people to add themselves to this group
@@ -34,7 +33,6 @@
                     </div>
                     <div class="form-check">
                         <input type="checkbox" class="position-relative ml-0" id="allowOptOut" ng-model="allowOptOut"
-                               ng-change="updateAllowOptOut()"
                                ng-keydown="clickWithEnter($event)"/>
                         <label class="form-check-label" for="allowOptOut">
                             Allow people to remove themselves from this group
@@ -44,7 +42,7 @@
                               tabindex="0"
                               th:aria-label="#{screen.message.common.tooltip.preference.allowOptOut}"
                               th:title="#{screen.message.common.tooltip.preference.allowOptOut}"
-                              th:attr="ng-click='displayDynamicModal(\'Preferences Information\', \'' +
+                              th:attr="ng-click='displayDynamicModal(\Preferences Information\', \'' +
                                 #{screen.message.common.tooltip.preference.allowOptOut} + '\')',
                               ng-keypress='$event.keyCode === 13 ? displayDynamicModal(\'Preferences Information\', ' +
                                           '\'' + #{screen.message.common.tooltip.preference.allowOptOut} +

@@ -1842,6 +1842,110 @@
             });
         };
 
+        $scope.displayPreferencesModal = function(message) {
+            $scope.currentModalTitle = 'Preferences Information';
+            $scope.currentModalBody = message;
+            // Open the modal with the new title and body content
+            $('#preferences-modal').modal('show');
+        };
+
+        /**
+         *When the submit button is clicked, the preferences selected
+         *will be applied
+         */
+        $scope.submitPreferences = function() {
+            // Check if opt-in is selected
+            if ($scope.allowOptIn) {
+                $scope.updateAllowOptIn();  // Call the function to update opt-in status
+            }
+            // Check if opt-out is selected
+            if ($scope.allowOptOut) {
+                $scope.updateAllowOptOut();  // Call the function to update opt-out status
+            }
+
+            // After submitting preferences, display modal
+            $scope.displayDynamicModal('Preferences Updated', $scope.getOptStatus());
+        };
+
+        $scope.getOptStatus = function() {
+            if ($scope.allowOptIn) {
+                return 'You have opted in.';
+            } else if ($scope.allowOptOut) {
+                return 'You have opted out.';
+            }
+            return 'No changes made.';
+        };
+
+
+
+        // Function to check if any checkbox is selected
+        $scope.anyCheckboxChecked = (syncDestArray) => {
+
+            return syncDestArray.some((syncDest) => syncDest.synced);
+
+        };
+
+
+
+        // Initialize or reset each destination's initial sync status
+        $scope.initSyncStatuses = () => {
+            $scope.syncDestArray.forEach(syncDest => {
+                syncDest.initialSynced = syncDest.synced; // Store the initial sync status
+            });
+        };
+
+        // Call this initialization function when the controller loads or data changes
+        $scope.initSyncStatuses();
+
+        // Function that runs when the submit button is clicked
+        $scope.submitSelectedDestinations = () => {
+            let modalContent = "";
+
+            // Gather descriptions of destinations where sync status has changed
+            const changedDestinations = $scope.syncDestArray.filter(syncDest => syncDest.synced !== syncDest.initialSynced);
+
+
+            // Build the modal content only for changed destinations
+            changedDestinations.forEach(syncDest => {
+                modalContent += syncDest.description + "\n";
+            });
+
+            if (modalContent) {
+
+                // Open the confirmation modal with the list of changed destinations
+                $scope.syncDestInstance = $uibModal.open({
+                    templateUrl: "modal/syncDestModal", // Your modal template URL
+                    scope: $scope,
+                    backdrop: "static",
+                    keyboard: false,
+                    ariaLabelledBy: "sync-dest-modal",
+                    controller: "SyncDestModalController",
+                    resolve: {
+                        isSynced: () => true,
+                        syncDestDescription: () => modalContent,
+                    },
+                });
+
+                // Handle the modal result
+                $scope.syncDestInstance.result.then(() => {
+                    // Only update destinations with changed sync status
+                    changedDestinations.forEach(syncDest => {
+                        $scope.updateSingleSyncDest(syncDest.name); // Call API only for changed destinations
+                        syncDest.initialSynced = syncDest.synced; // Update the initial sync status after syncing
+                    });
+
+                    // Display success message after updating
+                    $scope.displayDynamicModal('Sync Confirmation', 'The selected destinations have been synced successfully.');
+                });
+            } else {
+                console.log('No destinations selected for synchronization.');
+            }
+        };
+
+
+
+
+
         /**
          * Copies the members in the current page to an object by UH number
          * that holds true/false value for triggering checkboxes.
