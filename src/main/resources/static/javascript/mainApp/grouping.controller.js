@@ -262,6 +262,7 @@
             return new Promise((resolve) => groupingsService.getGroupingSyncDest(groupPath, (res) => {
                 $scope.syncDestArray = res.syncDestinations;
                 resolve();
+                $scope.initSyncStatuses();
             }, (res) => {
                 $scope.resStatus = res.status;
                 resolve();
@@ -1655,6 +1656,7 @@
         };
 
         // Call this initialization function when the controller loads or data changes
+        // You should call this after you get data from API, not when you load the controller.
         $scope.initPreferenceStatuses();
 
         /**
@@ -1721,15 +1723,10 @@
             return 'No changes were made.';
         };
 
-
-        // Function to check if any checkbox is selected
-        $scope.anyCheckboxChecked = (syncDestArray) => {
-
-            return syncDestArray.some((syncDest) => syncDest.synced);
-
-        };
-
-
+        // Function to check if any sync destinations checkboxes were toggled by a user
+        $scope.anySyncDestsChanged = () => {
+            return $scope.syncDestArray.some((syncDest) => syncDest.initialSynced !== syncDest.synced)
+        }
 
         // Initialize or reset each destination's initial sync status
         $scope.initSyncStatuses = () => {
@@ -1738,12 +1735,9 @@
             });
         };
 
-        // Call this initialization function when the controller loads or data changes
-        $scope.initSyncStatuses();
-
         // Function that runs when the submit button is clicked
         $scope.submitSelectedDestinations = () => {
-            let modalContent = "";
+            let modalContent = [];
 
             // Gather descriptions of destinations where sync status has changed
             const changedDestinations = $scope.syncDestArray.filter(syncDest => syncDest.synced !== syncDest.initialSynced);
@@ -1751,10 +1745,10 @@
 
             // Build the modal content only for changed destinations
             changedDestinations.forEach(syncDest => {
-                modalContent += syncDest.description + "\n";
+                modalContent.push(`${syncDest.synced ? '(ENABLE)' : '(DISABLE)'} ${syncDest.description}`);
             });
 
-            if (modalContent) {
+            if (modalContent.length !== 0) {
 
                 // Open the confirmation modal with the list of changed destinations
                 $scope.syncDestInstance = $uibModal.open({
@@ -1765,7 +1759,7 @@
                     ariaLabelledBy: "sync-dest-modal",
                     controller: "SyncDestModalController",
                     resolve: {
-                        isSynced: () => true,
+                        isSingular: () => changedDestinations.length === 1,
                         syncDestDescription: () => modalContent,
                     },
                 });
@@ -1774,15 +1768,13 @@
                 $scope.syncDestInstance.result.then(() => {
                     // Only update destinations with changed sync status
                     changedDestinations.forEach(syncDest => {
-                        $scope.updateSingleSyncDest(syncDest.name); // Call API only for changed destinations
-                        syncDest.initialSynced = syncDest.synced; // Update the initial sync status after syncing
+                        $scope.updateSingleSyncDest(syncDest.name);
+                        syncDest.initialSynced = syncDest.synced;
                     });
 
                     // Display success message after updating
                     $scope.displayDynamicModal('Sync Confirmation', 'The selected destinations have been synced successfully.');
                 });
-            } else {
-                console.log('No destinations selected for synchronization.');
             }
         };
 
@@ -1990,9 +1982,9 @@
         };
     }
 
-    function SyncDestModalController($scope, $uibModalInstance, isSynced, syncDestDescription, Message) {
+    function SyncDestModalController($scope, $uibModalInstance, isSingular, syncDestDescription, Message) {
         $scope.syncDestDescription = syncDestDescription;
-        $scope.syncDestConfirmationMessage = Message.SyncDestModal.confirmationMessage(isSynced);
+        $scope.syncDestConfirmationMessage = Message.SyncDestModal.confirmationMessage(isSingular);
 
         /**
          * Proceed with the syncDest confirmation
