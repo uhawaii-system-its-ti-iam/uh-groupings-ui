@@ -41,7 +41,7 @@
             $scope.adminsList = _.sortBy(res.members, "name");
             $scope.pagedItemsAdmins = $scope.objToPageArray($scope.adminsList, PAGE_SIZE);
             $scope.loading = false;
-        }
+        };
 
         /**
          * Callback which takes the admin tab data and moves it into groupingsList, the object
@@ -51,7 +51,7 @@
             $scope.groupingsList = _.sortBy(res.groupingPaths, "name");
             $scope.pagedItemsGroupings = $scope.objToPageArray($scope.groupingsList, PAGE_SIZE);
             $scope.allGroupingsLoading = false;
-        }
+        };
 
         /**
          * Complete initialization by fetching a list of admins and list of all groupings.
@@ -79,7 +79,7 @@
             $scope.subjectList = _.sortBy(res.results, "name");
             $scope.filter($scope.subjectList, "pagedItemsSubject", "currentPageSubject", $scope.subjectQuery, true);
             $scope.user = $scope.subjectToLookup;
-            $scope.userGroupingInformationLoading = false
+            $scope.userGroupingInformationLoading = false;
         };
         $scope.searchForUserGroupingInformationOnErrorCallback = (res) => {
             $scope.subjectList = [];
@@ -151,8 +151,8 @@
                 $scope.removeFromGroupsCallbackOnSuccess(memberToRemove);
             }
             _.forEach($scope.selectedOwnedGroupings, (grouping) => {
-                    groupingsService.isSoleOwner(grouping.path, memberToRemove.uid, (res) => {
-                        if (res) {
+                    groupingsService.getNumberOfOwners(grouping.path, memberToRemove.uid, (res) => {
+                        if (res === 1) {
                             $scope.soleOwnerGroupingNames.push(grouping.name);
                         }
                         if (grouping === $scope.selectedOwnedGroupings[$scope.selectedOwnedGroupings.length - 1]) {
@@ -471,10 +471,11 @@
         };
 
         $scope.throwException = () => {
-            groupingsService.throwException(() => {}, () => {
+            groupingsService.throwException(() => {
+            }, () => {
                 $scope.displayApiErrorModal();
             });
-        }
+        };
     }
 
     UHGroupingsApp.controller("AdminJsController", AdminJsController);
