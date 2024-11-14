@@ -743,8 +743,8 @@ public class GroupingsRestControllerTest {
 
     @Test
     @WithMockUhUser
-    public void isSoleOwner() throws Exception {
-        String uri = REST_CONTROLLER_BASE + GROUPING + "/owners/" + UID;
+    public void getNumberOfOwners() throws Exception {
+        String uri = REST_CONTROLLER_BASE + GROUPING + "/owners/" + UID + "/count";
 
         given(httpRequestService.makeApiRequest(eq(UID), anyString(), eq(HttpMethod.GET)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));

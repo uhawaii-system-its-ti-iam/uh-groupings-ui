@@ -614,15 +614,14 @@ public class GroupingsRestController {
     }
 
     /**
-     * Checks if the owner of a grouping is the sole owner
+     * Get the number of owners of the group path that contains the owner with uhIdentifier
      */
-    @GetMapping(value = "/{path:.+}/owners/{uidToCheck}")
-    public ResponseEntity<String> isSoleOwner(@PathVariable String path,
-            @PathVariable String uidToCheck) {
-        logger.info("Entered REST isSoleOwner...");
+    @GetMapping(value = "/{path:.+}/owners/{uhIdentifier}/count")
+    public ResponseEntity<String> getNumberOfOwners(@PathVariable String path,
+            @PathVariable String uhIdentifier) {
+        logger.info("Entered REST getNumberOfOwners...");
         String currentUid = policy.sanitize(userContextService.getCurrentUid());
-        String baseUri = String.format(API_2_1_BASE + "/groupings/%s/owners/%s", path, uidToCheck);
-
+        String baseUri = String.format(API_2_1_BASE + "/members/%s/owners/%s/count", path, uhIdentifier);
         return httpRequestService.makeApiRequest(currentUid, baseUri, HttpMethod.GET);
     }
 
