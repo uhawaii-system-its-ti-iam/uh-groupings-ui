@@ -346,6 +346,7 @@
             return new Promise((resolve) => groupingsService.getGroupingOptAttributes(groupPath, (res) => {
                 $scope.allowOptIn = res.optInOn;
                 $scope.allowOptOut = res.optOutOn;
+                $scope.initOptPreferenceStatuses();
                 resolve();
             }, (res) => {
                 $scope.resStatus = res.status;
@@ -1850,21 +1851,34 @@
             $('#preferences-modal').modal('show');
         };
 
-        // Initialize or reset initial preference states
-        $scope.initPreferenceStatuses = () => {
-            $scope.initialAllowOptIn = $scope.allowOptIn;  // Store the initial opt-in status
-            $scope.initialAllowOptOut = $scope.allowOptOut;  // Store the initial opt-out status
+        /**
+         * Initialize initial preference states
+         */
+        $scope.initOptPreferenceStatuses = () => {
+            $scope.initialAllowOptIn = $scope.allowOptIn;
+            $scope.initialAllowOptOut = $scope.allowOptOut;
         };
 
-        // Call this initialization function when the controller loads or data changes
-        // You should call this after you get data from API, not when you load the controller.
-        $scope.initPreferenceStatuses();
+        /**
+         * Resets opt preference statuses to initial values
+         */
+        $scope.resetOptPreferenceStatuses = () => {
+            $scope.allowOptIn = $scope.initialAllowOptIn;
+            $scope.allowOptOut = $scope.initialAllowOptOut;
+        }
+
+        /**
+         * Function to check if any preferences' checkboxes were toggled by a user
+          */
+        $scope.anyOptPreferenceChanged = () => {
+            return ($scope.initialAllowOptIn !== $scope.allowOptIn || $scope.initialAllowOptOut !== $scope.allowOptOut);
+        }
 
         /**
          * Function that runs when the submit button is clicked
          */
         $scope.submitPreferences = () => {
-            let modalContent = "";
+            let modalContent = [];
 
             // Check for changes in preferences
             const optInChanged = $scope.allowOptIn !== $scope.initialAllowOptIn;
@@ -1872,27 +1886,30 @@
 
             // Build the modal content based on changed preferences
             if (optInChanged) {
-                modalContent += "Opt-In preference has been changed.\n";
+                modalContent.push(`${$scope.allowOptIn ? '(Enable)' : '(Disable)'} Opt-in preference`);
             }
             if (optOutChanged) {
-                modalContent += "Opt-Out preference has been changed.\n";
+                modalContent.push(`${$scope.allowOptIn ? '(Enable)' : '(Disable)'} Opt-out preference`);
             }
 
             if (modalContent) {
                 // Open confirmation modal with the list of changed preferences
-                $scope.preferenceModalInstance = $uibModal.open({
-                    templateUrl: "modal/preferencesConfirmationModal",  // Your modal template URL
+                $scope.optPreferenceModalInstance = $uibModal.open({
+                    templateUrl: "modal/preferencesConfirmationModal",
                     scope: $scope,
                     backdrop: "static",
                     keyboard: false,
                     ariaLabelledBy: "preferences-confirmation-modal",
+                    controller: "OptPreferenceModalController",
                     resolve: {
                         preferenceChanges: () => modalContent,
+                        isSingular: () => modalContent.length === 1,
                     },
                 });
 
                 // Handle the result from the modal
-                $scope.preferenceModalInstance.result.then(() => {
+                $scope.optPreferenceModalInstance.result.then(() => {
+
                     // Apply the changed preferences
                     if (optInChanged) {
                         $scope.updateAllowOptIn();  // Call the existing function for opt-in change
@@ -1902,15 +1919,11 @@
                     }
 
                     // Update the initial states after successful submission
-                    $scope.initPreferenceStatuses();
+                    $scope.initOptPreferenceStatuses();
 
                     // Display confirmation modal after applying preferences
                     $scope.displayDynamicModal('Preferences Updated', $scope.getOptStatus());
-                }).catch((error) => {
-                    console.error("Error updating preferences:", error);
-                });
-            } else {
-                console.log('No changes made to preferences.');
+                }, () => {})
             }
         };
 
@@ -1924,19 +1937,34 @@
             return 'No changes were made.';
         };
 
-        // Function to check if any sync destinations checkboxes were toggled by a user
-        $scope.anySyncDestsChanged = () => {
+        /**
+         * Function to check if any sync destinations checkboxes were toggled by a user
+         */
+        $scope.anySyncDestChanged = () => {
             return $scope.syncDestArray.some((syncDest) => syncDest.initialSynced !== syncDest.synced)
         }
 
-        // Initialize or reset each destination's initial sync status
+        /**
+         * Initialize each destination's initial sync status
+         */
         $scope.initSyncStatuses = () => {
             $scope.syncDestArray.forEach(syncDest => {
-                syncDest.initialSynced = syncDest.synced; // Store the initial sync status
+                syncDest.initialSynced = syncDest.synced;
             });
         };
 
-        // Function that runs when the submit button is clicked
+        /**
+         * Resets toggled sync destinations to their initial values
+         */
+        $scope.resetSyncStatuses = () => {
+            $scope.syncDestArray.forEach(syncDest => {
+                syncDest.synced = syncDest.initialSynced;
+            })
+        }
+
+        /**
+         * Function that runs when the submit button is clicked
+         */
         $scope.submitSelectedDestinations = () => {
             let modalContent = [];
 
@@ -1946,7 +1974,7 @@
 
             // Build the modal content only for changed destinations
             changedDestinations.forEach(syncDest => {
-                modalContent.push(`${syncDest.synced ? '(ENABLE)' : '(DISABLE)'} ${syncDest.description}`);
+                modalContent.push(`${syncDest.synced ? '(Enable)' : '(Disable)'} ${syncDest.description}`);
             });
 
             if (modalContent.length !== 0) {
@@ -1975,13 +2003,9 @@
 
                     // Display success message after updating
                     $scope.displayDynamicModal('Sync Confirmation', 'The selected destinations have been synced successfully.');
-                });
+                }, () => {});
             }
         };
-
-
-
-
 
         /**
          * Copies the members in the current page to an object by UH number
@@ -2183,6 +2207,26 @@
         };
     }
 
+    function OptPreferenceModalController($scope, $uibModalInstance, isSingular, preferenceChanges, Message) {
+        $scope.preferenceChanges = preferenceChanges;
+        $scope.optPreferenceConfirmationMessage = Message.OptPreferencesModal.confirmationMessage(isSingular);
+
+        /**
+         * Close the opt preference modal and proceeds the opt preference change.
+         */
+        $scope.proceedOptPreferenceModal = () =>  {
+            $scope.optPreferenceModalInstance.close();
+        }
+
+        /**
+         * Closes the opt modal.
+         */
+        $scope.closeOptPreferenceModal = () => {
+            $scope.optPreferenceModalInstance.dismiss();
+            $scope.resetOptPreferenceStatuses();
+        }
+    }
+
     function SyncDestModalController($scope, $uibModalInstance, isSingular, syncDestDescription, Message) {
         $scope.syncDestDescription = syncDestDescription;
         $scope.syncDestConfirmationMessage = Message.SyncDestModal.confirmationMessage(isSingular);
@@ -2199,9 +2243,11 @@
          */
         $scope.closeSyncDestModal = () => {
             $uibModalInstance.dismiss();
+            $scope.resetSyncStatuses();
         };
     }
 
     UHGroupingsApp.controller("GroupingJsController", GroupingJsController);
+    UHGroupingsApp.controller("OptPreferenceModalController", OptPreferenceModalController);
     UHGroupingsApp.controller("SyncDestModalController", SyncDestModalController);
 })();
