@@ -51,7 +51,7 @@
                     </div>
                     <div>
                         <button class="btn btn-primary btn-sm" type="submit"
-                                ng-disabled="!allowOptIn && !allowOptOut"
+                                ng-disabled="!anyOptPreferenceChanged()"
                                 ng-click="submitPreferences()">
                             Submit
                         </button>
