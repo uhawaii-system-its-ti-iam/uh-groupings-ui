@@ -488,30 +488,30 @@ describe("GroupingsService", () => {
         });
     });
 
-    describe("setOptIn", () => {
+    describe("updateOptIn", () => {
         let optInOn;
         it("should call dataProvider.updateData", () => {
             spyOn(dp, "updateData");
-            gs.setOptIn(groupingPath, optInOn, onSuccess, onError);
+            gs.updateOptIn(groupingPath, optInOn, onSuccess, onError);
             expect(dp.updateData).toHaveBeenCalled();
         });
         it("should use the correct path", () => {
-            gs.setOptIn(groupingPath, optInOn, onSuccess, onError);
-            httpBackend.expectPOST(BASE_URL + groupingPath + "/" + optInOn + "/setOptIn").respond(200);
+            gs.updateOptIn(groupingPath, optInOn, onSuccess, onError);
+            httpBackend.expectPOST(BASE_URL + "groupings/"+groupingPath + "/opt-attribute/IN/" + optInOn).respond(200);
             expect(httpBackend.flush).not.toThrow();
         });
     });
 
-    describe("setOptOut", () => {
+    describe("updateOptOut", () => {
         let optOutOn;
         it("should call dataProvider.updateData", () => {
             spyOn(dp, "updateData");
-            gs.setOptOut(groupingPath, optOutOn, onSuccess, onError);
+            gs.updateOptOut(groupingPath, optOutOn, onSuccess, onError);
             expect(dp.updateData).toHaveBeenCalled();
         });
         it("should use the correct path", () => {
-            gs.setOptOut(groupingPath, optOutOn, onSuccess, onError);
-            httpBackend.expectPOST(BASE_URL + groupingPath + "/" + optOutOn + "/setOptOut").respond(200);
+            gs.updateOptOut(groupingPath, optOutOn, onSuccess, onError);
+            httpBackend.expectPOST(BASE_URL + "groupings/"+groupingPath + "/opt-attribute/OUT/" + optOutOn).respond(200);
             expect(httpBackend.flush).not.toThrow();
         });
     });

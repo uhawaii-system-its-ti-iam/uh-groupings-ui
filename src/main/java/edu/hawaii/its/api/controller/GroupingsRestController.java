@@ -590,27 +590,29 @@ public class GroupingsRestController {
     /**
      * Enable or disable a users ability to optIn to a grouping at groupingPath.
      */
-    @PostMapping(value = "/{groupingPath}/{optInOn}/setOptIn")
-    public ResponseEntity<String> setOptIn(
-            @PathVariable String groupingPath,
-            @PathVariable boolean optInOn) {
-        logger.info("Entered REST setOptIn...");
+    @PostMapping(value = "/groupings/{path}/opt-attribute/IN/{status}")
+    public ResponseEntity<String> updateOptIn(
+            @PathVariable String path,
+            @PathVariable boolean status) {
+        logger.info("Entered REST updateOptIn...");
         String currentUid = policy.sanitize(userContextService.getCurrentUid());
-        String safeGroupingPath = policy.sanitize(groupingPath);
-        return changePreference(safeGroupingPath, currentUid, OPT_IN, optInOn);
+        String safeGroupingPath = policy.sanitize(path);
+        String uri = String.format(API_2_1_BASE + "/groupings/%s/opt-attribute/%s/%s", safeGroupingPath, OPT_IN, status);
+        return httpRequestService.makeApiRequest(currentUid, uri, HttpMethod.PUT);
     }
 
     /**
      * Enable or disable a users ability to opt out of grouping at groupingPath.
      */
-    @PostMapping(value = "/{grouping}/{optOutOn}/setOptOut")
-    public ResponseEntity<String> setOptOut(
-            @PathVariable String grouping,
-            @PathVariable boolean optOutOn) {
-        logger.info("Entered REST setOptOut...");
+    @PostMapping(value = "/groupings/{path}/opt-attribute/OUT/{status}")
+    public ResponseEntity<String> updateOptOut(
+            @PathVariable String path,
+            @PathVariable boolean status) {
+        logger.info("Entered REST updateOptOut...");
         String currentUid = policy.sanitize(userContextService.getCurrentUid());
-        String safeGrouping = policy.sanitize(grouping);
-        return changePreference(safeGrouping, currentUid, OPT_OUT, optOutOn);
+        String safeGroupingPath = policy.sanitize(path);
+        String uri = String.format(API_2_1_BASE + "/groupings/%s/opt-attribute/%s/%s", safeGroupingPath, OPT_OUT, status);
+        return httpRequestService.makeApiRequest(currentUid, uri, HttpMethod.PUT);
     }
 
     /**

@@ -2394,17 +2394,17 @@ describe("GroupingController", () => {
 
     describe("updateAllowOptOut", () => {
         it("should call groupings service", () => {
-            spyOn(gs, "setOptOut").and.callThrough();
+            spyOn(gs, "updateOptOut").and.callThrough();
             scope.updateAllowOptOut();
-            expect(gs.setOptOut).toHaveBeenCalled();
+            expect(gs.updateOptOut).toHaveBeenCalled();
         });
     });
 
     describe("updateAllowOptIn", () => {
         it("should call groupings service setOptIn", () => {
-            spyOn(gs, "setOptIn").and.callThrough();
+            spyOn(gs, "updateOptIn").and.callThrough();
             scope.updateAllowOptIn();
-            expect(gs.setOptIn).toHaveBeenCalled();
+            expect(gs.updateOptIn).toHaveBeenCalled();
         });
     });
 
