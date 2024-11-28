@@ -1559,7 +1559,7 @@
             const groupingPath = $scope.selectedGrouping.path;
             const allowOptOut = $scope.allowOptOut;
 
-            groupingsService.setOptOut(groupingPath, allowOptOut, handleSuccessfulPreferenceToggle, handleUnsuccessfulRequest);
+            groupingsService.updateOptOut(groupingPath, allowOptOut, handleSuccessfulPreferenceToggle, handleUnsuccessfulRequest);
         };
 
         /**
@@ -1569,7 +1569,7 @@
             const groupingPath = $scope.selectedGrouping.path;
             const allowOptIn = $scope.allowOptIn;
 
-            groupingsService.setOptIn(groupingPath, allowOptIn, handleSuccessfulPreferenceToggle, handleUnsuccessfulRequest);
+            groupingsService.updateOptIn(groupingPath, allowOptIn, handleSuccessfulPreferenceToggle, handleUnsuccessfulRequest);
         };
 
         /**

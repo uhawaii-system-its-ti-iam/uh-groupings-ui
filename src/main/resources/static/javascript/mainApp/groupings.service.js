@@ -324,16 +324,16 @@
             /**
              * Toggle the preference option to allow users to opt into a grouping.
              */
-            setOptIn(path, optInOn, onSuccess, onError) {
-                let endpoint = BASE_URL + path + "/" + optInOn + "/setOptIn";
+            updateOptIn(path, status, onSuccess, onError) {
+                let endpoint = `${BASE_URL}groupings/${path}/opt-attribute/IN/${status}`;
                 dataProvider.updateData(endpoint, onSuccess, onError);
             },
 
             /**
              * Toggle the preference option to allow users to opt out of a grouping.
              */
-            setOptOut(path, optOutOn, onSuccess, onError) {
-                let endpoint = BASE_URL + path + "/" + optOutOn + "/setOptOut";
+            updateOptOut(path, status, onSuccess, onError) {
+                let endpoint = `${BASE_URL}groupings/${path}/opt-attribute/OUT/${status}`;
                 dataProvider.updateData(endpoint, onSuccess, onError);
             },
 
