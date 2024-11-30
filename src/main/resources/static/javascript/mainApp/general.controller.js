@@ -15,8 +15,6 @@
     function GeneralJsController($scope, $controller, $window, $uibModal, groupingsService, dataProvider ) {
         // This is a regex Pattern that contains all valid UH Identifiers which consists of uid (Username) and uhUuid (UH Numbers) chars.
         $scope.uhIdentifierPattern = new RegExp("^[_?a-z-?@?0-9]{2,64}$");
-        $scope.uhGroupPathPattern = new RegExp("^(?!:)[A-Za-z0-9-]+(:[A-Za-z0-9-]+){2,}$");
-        // Create regex for group path here
         $scope.currentUser = {};
 
         $scope.group = "";
@@ -78,19 +76,6 @@
                 }
             }
             return _.isString(names) ? validNames.toString() : validNames;
-        };
-
-        $scope.sanitizerGroupPath = (paths) => {
-            const validPaths = [];
-            for (const path of [].concat(paths)) {
-                if (path) {
-                    const trimmedLowercaseName = path.toLowerCase().trim();
-                    if (trimmedLowercaseName != null && $scope.uhGroupPathPattern.test(trimmedLowercaseName)) {
-                        validPaths.push(trimmedLowercaseName);  // Directly push the valid path
-                    }
-                }
-            }
-            return _.isString(paths) ? validPaths.toString() : validPaths;
         };
 
         /**

@@ -194,52 +194,6 @@ describe("GeneralController", () => {
         });
     });
 
-    describe("sanitizerGroupPath", () => {
-        let goodFile, badFile, parseFile;
-        beforeEach(() => {
-            let bad1, bad2, bad3, bad4, bad5, bad6;
-            bad1 = "'';;[[]]&&\n";
-            bad2 = "asdfjkl\n";
-            bad3 = "qwerty:path\n";
-            bad4 = "__bad___path_\n";
-            bad5 = ":badpath\n";
-            bad6 = "badpath:\n";
-            goodFile = "test:test:path\ntest2:test2:test2:path\ntest3:test3:test3:test3:path\n"
-            badFile = `${bad1}${bad2}${bad3}${bad4}${bad5}${bad6}`;
-            parseFile = (file) => {
-                scope.manageMembers = file.split(/[\r\n]+/);
-                console.log("output: " + scope.manageMembers)
-                return scope.sanitizerGroupPath(scope.manageMembers);
-            };
-        });
-        it("should return an empty string when given a string with harmful input", () => {
-            let invalidPaths = scope.sanitizerGroupPath("https://google.com");
-            expect(invalidPaths).toEqual("");
-
-            invalidPaths = scope.sanitizerGroupPath("<IMG SRC=\"javascript:alert('XSS');\">");
-            expect(invalidPaths).toEqual("");
-
-            invalidPaths = scope.sanitizerGroupPath("uhmanoa@hawaii.edu");
-            expect(invalidPaths).toEqual("");
-        });
-
-        it("should return an empty array when given an array with harmful input", () => {
-            let arrayOfValidPaths = parseFile(badFile);
-            expect(arrayOfValidPaths.length).toEqual(0);
-            expect(arrayOfValidPaths).toEqual([]);
-
-            arrayOfValidPaths = scope.sanitizerGroupPath(["https://google.com", "uhmanoa@hawaii.edu", "test:test:path"]);
-            expect(arrayOfValidPaths.length).toEqual(1);
-            expect(arrayOfValidPaths).toEqual(["test:test:path"]);
-        });
-
-        it("should return an array of paths that match the definition of a group path", () => {
-            const arrayOfValidPaths = parseFile(goodFile);
-            expect(arrayOfValidPaths.length).toEqual(3);
-            expect(arrayOfValidPaths.toString()).toEqual("test:test:path,test2:test2:test2:path,test3:test3:test3:test3:path");
-        });
-    });
-
     describe("sanitizer", () => {
         let goodFile, badFile, parseFile;
         beforeEach(() => {
