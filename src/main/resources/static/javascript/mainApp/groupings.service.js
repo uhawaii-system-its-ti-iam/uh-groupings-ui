@@ -442,7 +442,7 @@
              * Throws an exception
              */
             throwException(onSuccess, onError) {
-                let endpoint = BASE_URL + "testing/" + "exception";
+                let endpoint = "/testing/" + "exception";
                 dataProvider.loadData(endpoint, onSuccess, onError);
             },
         };
