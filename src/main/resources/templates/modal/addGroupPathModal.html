@@ -1,0 +1,48 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<div class="modal-header">
+    <h5 class="modal-title" id="add-group-path-modal">Add Grouping Owners</h5>
+    <a class="close" type="button"  ng-click="cancelAddModal()">
+        <span aria-hidden="true">&times;</span>
+    </a>
+</div>
+
+<div class="modal-body" id="modal-body" tabindex="0">
+    <p class="modal-black-text text-truncate" ng-if="membersInList.length > 0">Already in {{listName}}: {{membersInList}}</p>
+    <p>
+        <span class="modal-black-text" th:text="#{screen.message.modal.add.groupPath.confirmation}"></span>
+        <span class="modal-black-text">{{listName}} list.</span>
+    </p>
+
+    <table>
+        <tr>
+            <th th:utext="#{screen.message.modal.add.groupingName}"></th>
+            <th class="font-weight-normal modal-attributes">{{groupingName}}</th>
+        </tr>
+        <tr>
+            <th th:utext="#{screen.message.modal.add.groupPath}"></th>
+            <th class="font-weight-normal modal-attributes">{{ownerGroupPath}}</th>
+        </tr>
+    </table>
+
+    <p>
+        <span class="modal-black-text">Are you sure you want to add</span>
+        <span class="font-weight-bold">{{groupingName}}</span>
+        <span class="modal-black-text">to the {{listName}} list?</span>
+    </p>
+    <!--
+    <p class="alert alert-warning mt-2" role="alert" ng-if="hasDeptAccount">
+        <span class="text-dark" th:text="#{screen.message.modal.add.deptAccount}"></span>
+    </p>
+
+    do I need to account for departmental accounts that are in the grouping?
+    -->
+    <p class="alert alert-warning mt-2" role="alert">
+        <span class="text-dark" th:text="#{screen.message.common.membership.info}"></span>
+    </p>
+</div>
+
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-click="proceedAddModal()">Yes</button>
+    <button class="btn btn-light" ng-click="cancelAddModal()" data-dismiss="modal">Cancel</button>
+</div>
+</html>

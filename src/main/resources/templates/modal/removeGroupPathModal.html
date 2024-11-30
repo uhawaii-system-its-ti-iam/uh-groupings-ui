@@ -1,0 +1,45 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<div class="modal-header">
+    <h5 class="modal-title" id="remove-group-path-modal">Remove Grouping Owner</h5>
+    <a class="close" type="button" ng-click="cancelRemoveModal()">
+        <span aria-hidden="true">&times;</span>
+    </a>
+</div>
+<div class="modal-body" id="modal-body" tabindex="0">
+    <p class="modal-black-text text-truncate" ng-if="membersNotInList.length > 0">Not in {{listName}}:
+        {{membersNotInList}}</p>
+    <!--Warning message if users try to delete themselves from the admins or owners list -->
+    <div class="alert alert-danger" role="alert" ng-if="showWarningRemovingSelf()" ng-switch="listName">
+        <span class="alert-danger" ng-switch-default th:utext="#{screen.message.modal.remove.warning}">Warning</span>
+        <span class="alert-danger" ng-switch-when="admins" th:utext="#{screen.message.modal.remove.warning.admin}">Warning</span>
+    </div>
+    <p>
+        <span class="modal-black-text" th:text="#{screen.message.modal.remove.groupPath.confirmation}"></span>
+        <span class="modal-black-text">{{listName}} list.</span>
+    </p>
+    <table>
+        <tr>
+            <th th:utext="#{screen.message.modal.remove.groupingName}"></th>
+            <th class="font-weight-normal modal-attributes">{{groupingName}}</th>
+        </tr>
+        <tr>
+            <th th:utext="#{screen.message.modal.remove.groupPath}"></th>
+            <th class="font-weight-normal modal-attributes">{{ownerGroupPath}}</th>
+        </tr>
+    </table>
+    <p>
+        <span class="modal-black-text">Are you sure you want to remove</span>
+        <span class="font-weight-bold">{{groupingName}}</span>
+        <span class="modal-black-text"> from the {{listName}} list?</span>
+    </p>
+    <p class="alert alert-warning mt-2" role="alert">
+        <span class="text-dark" th:text="#{screen.message.common.membership.info}"></span>
+    </p>
+
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-click="proceedRemoveModal()">Yes</button>
+    <button class="btn btn-light" ng-click="cancelRemoveModal()" data-dismiss="modal">Cancel</button>
+</div>
+
+</html>

@@ -22,8 +22,10 @@ UHGroupingsApp.constant("Message", {
         INVALID_FILE: "Invalid File",
         ADD_MEMBER: "Add Member",
         ADD_MEMBERS: "Add Members",
+        ADD_GROUP_PATH: "Add Grouping Owner",
         REMOVE_MEMBER: "Remove Member",
         REMOVE_MEMBERS: "Remove Members",
+        REMOVE_GROUP_PATH: "Remove Grouping Owner",
         OWNER_NOT_ADDED: "Owner Was Not Added",
         DISPLAY_OWNERS_ERROR: "Error Displaying Owners",
         INVALID_EMAIL_ERROR: "Invalid Email"
@@ -35,8 +37,10 @@ UHGroupingsApp.constant("Message", {
         NO_MEMBERS_ADDED: { with: (listName) => `All the members you attempted to add already exist in the ${listName} list.` },
         ADD_MEMBER: { with: (member, listName) => `${member} has been successfully added to the ${listName} list.` },
         ADD_MEMBERS: { with: (listName) => `All members have been added successfully to the ${listName} list.` },
+        ADD_GROUP_PATH: { with: (groupingName, listName) => `${groupingName} has been successfully added to the ${listName} list.` },
         REMOVE_MEMBER: { with: (member, listName) => `${member} has been successfully removed from the ${listName} list.` },
         REMOVE_MEMBERS: { with: (listName) => `All selected members have been successfully removed from the ${listName} list.` },
+        REMOVE_GROUP_PATH: { with: (groupingName, listName) => `${groupingName} has been successfully removed from the ${listName} list.`},
         OWNER_NOT_ADDED: "Department accounts may not be assigned ownership due to accountability and lifecycle issues.  Please contact the IAM team, <its-iam-help@lists.hawaii.edu>, if there are any questions.",
         DISPLAY_OWNERS_ERROR: "There was an error displaying the owners.",
         INVALID_EMAIL_ERROR: "Please enter a valid email address."
