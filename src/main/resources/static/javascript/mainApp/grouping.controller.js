@@ -85,6 +85,12 @@
         $scope.hasDeptAccount = false;
         $scope.isAddingMembers = false;
 
+        // Always initially set to default modal
+        $scope.addModalId = "add-modal"
+        $scope.addModalURL = "modal/addModal"
+        $scope.removeModalId = "remove-modal"
+        $scope.removeModalURL = "modal/removeModal"
+
         // Remove members
         $scope.multiRemoveResults = [];
         $scope.membersToRemove = [];
@@ -166,7 +172,7 @@
         $scope.getGroupingInformation = async () => {
             loadMembersList = true;
             const groupingPath = $scope.selectedGrouping.path;
-            const paths = [groupingPath + ":basis", groupingPath + ":include", groupingPath + ":exclude", groupingPath + ":owners"];
+            const paths = [groupingPath + ":basis", groupingPath + ":include", groupingPath + ":exclude"];
             let currentPage = 1;
             $scope.setPage('First', 'currentPageMembers', 'pagedItemsMembers');
             $scope.loading = true;
@@ -178,6 +184,7 @@
                 $scope.paginatingProgress = true;
                 $scope.disableResetCheckboxes();
                 await $scope.fetchGrouping(currentPage, paths);
+                await $scope.fetchOwners(groupingPath);
                 currentPage++;
                 $scope.loading = false;
             }
@@ -206,9 +213,6 @@
                         $scope.addInBasis($scope.groupingExclude);
                         $scope.filter($scope.groupingExclude, "pagedItemsExclude", "currentPageExclude", $scope.excludeQuery, false);
 
-                        $scope.groupingOwners = putGroupMembers(res.groupingOwners.members, $scope.groupingOwners);
-                        $scope.filter($scope.groupingOwners, "pagedItemsOwners", "currentPageOwners", $scope.ownersQuery, false);
-
                         $scope.groupingMembers = putGroupMembers(res.allMembers.members, $scope.groupingMembers);
                         $scope.filter($scope.groupingMembers, "pagedItemsMembers", "currentPageMembers", $scope.membersQuery, false);
 
@@ -233,6 +237,24 @@
                 });
             });
         };
+
+        $scope.fetchOwners = (groupPath) => {
+            return new Promise((resolve) => {
+                groupingsService.groupingOwners(groupPath, (res) => {
+                    $scope.groupingOwners = res.immediateOwners.members;
+                    $scope.filter($scope.groupingOwners, "pagedItemsOwners", "currentPageOwners", $scope.ownersQuery, false);
+                    resolve();
+                }, (res) => {
+                    if (res.statusCode === 403) {
+                        $scope.displayOwnerErrorModal();
+                    } else {
+                        $scope.displayApiErrorModal();
+                    }
+                    loadMembersList = false;
+                    resolve();
+                });
+            });
+        }
 
 
         /**
@@ -604,6 +626,7 @@
                 case "Exclude":
                     return $scope.groupingExclude;
                 case "owners":
+                case "owner group path":
                     return $scope.groupingOwners;
                 case "admins":
                     return $scope.adminsList;
@@ -641,7 +664,20 @@
          */
         $scope.addOnClick = (listName) => {
             $scope.resetErrors();
-            if (listName === "Include" || listName === "Exclude" || listName === "owners") {
+            if (listName === "Include" || listName === "Exclude") {
+                $scope.addMembers(listName);
+            }
+            if (listName === "owners") {
+                // If the user input has a colon, we can assume that it's a group path
+                if ($scope.manageMembers.includes(':')) {
+                    listName = "owner group path";
+                    $scope.addModalId = "add-group-path-modal";
+                    $scope.addModalURL = "modal/addGroupPathModal";
+                    $scope.ownerGroupPath = $scope.manageMembers;
+                    $scope.groupingName = $scope.manageMembers.split(':').pop();
+                    // We only want to add the owners list of the grouping
+                    $scope.manageMembers = $scope.manageMembers.concat(":owners");
+                }
                 $scope.addMembers(listName);
             }
             $scope.errorDismissed = false;
@@ -653,7 +689,20 @@
          */
         $scope.removeOnClick = (listName) => {
             $scope.resetErrors();
-            if (listName === "Include" || listName === "Exclude" || listName === "owners") {
+            if (listName === "Include" || listName === "Exclude") {
+                $scope.removeMembers(listName);
+            }
+            if (listName === "owners") {
+                // If the user input has a colon, we can assume that it's a group path
+                if ($scope.manageMembers.includes(':')) {
+                    listName = "owner group path";
+                    $scope.removeModalId = "remove-group-path-modal";
+                    $scope.removeModalURL = "modal/removeGroupPathModal";
+                    $scope.ownerGroupPath = $scope.manageMembers;
+                    $scope.groupingName = $scope.manageMembers.split(':').pop();
+                    // We only want to remove the owners list of the grouping
+                    $scope.manageMembers = $scope.manageMembers.concat(":owners");
+                }
                 $scope.removeMembers(listName);
             }
             $scope.errorDismissed = false;
@@ -674,7 +723,12 @@
             $scope.isAddingMembers = true;
 
             // If uhIdentifiers parameter is null, get member input from $scope.manageMembers
-            uhIdentifiers = $scope.sanitizer(uhIdentifiers ?? $scope.parseAddRemoveInputStr($scope.manageMembers));
+            uhIdentifiers = uhIdentifiers ?? $scope.parseAddRemoveInputStr($scope.manageMembers);
+
+            if (listName === "owners") {
+                // Only sanitize if it's a uh identifier, group path sanitization is done on the backend
+                uhIdentifiers = $scope.sanitizer(uhIdentifiers);
+            }
             $scope.listName = listName;
 
             // Check if uhIdentifiers/member input is empty
@@ -683,6 +737,7 @@
                 $scope.isAddingMembers = false;
                 return;
             }
+
             // Prevent adding more than Threshold.MAX_IMPORT
             if (uhIdentifiers.length > Threshold.MAX_IMPORT) {
                 $scope.displayDynamicModal(
@@ -691,6 +746,7 @@
                 $scope.isAddingMembers = false;
                 return;
             }
+
             // Check for members already in list, display error when all members to add already exist in the list
             if ($scope.existsInList(listName, uhIdentifiers)) {
                 // Determine whether to display members already in the list in a modal or add-error-messages.html
@@ -724,41 +780,42 @@
             $scope.waitingForImportResponse = true; // Small spinner on
 
             // Get attributes for each member
-            getMemberAttributeResults(uhIdentifiers, (res) => {
-                $scope.waitingForImportResponse = false; // Small spinner off
-                if (!_.isEmpty(res.invalid)) {
-                    $scope.invalidMembers = res.invalid;
-                    $scope.addInputError = true;
+            if (listName !== "owner group path") {
+                getMemberAttributeResults(uhIdentifiers, (res) => {
+                    $scope.waitingForImportResponse = false; // Small spinner off
+                    if (!_.isEmpty(res.invalid)) {
+                        $scope.invalidMembers = res.invalid;
+                        $scope.addInputError = true;
+                        if ($scope.isBatchImport) {
+                            $scope.displayImportErrorModal();
+                            $scope.addInputError = false;
+                        }
+                        $scope.isAddingMembers = false;
+                        return;
+                    }
+
+                    // Prevent departmental accounts from being added as Owners
+                    $scope.hasDeptAccount = $scope.checkForDeptAccount(res.results);
+                    if (listName === 'owners' && $scope.hasDeptAccount) {
+                        $scope.displayDynamicModal(
+                          Message.Title.OWNER_NOT_ADDED,
+                          Message.Body.OWNER_NOT_ADDED
+                        );
+                        $scope.isAddingMembers = false;
+                        return;
+                    }
+
+                    // Display the appropriate modal
                     if ($scope.isBatchImport) {
-                        $scope.displayImportErrorModal();
-                        $scope.addInputError = false;
+                        $scope.displayImportConfirmationModal(listName, uhIdentifiers);
+                    } else {
+                        $scope.displayAddModal({
+                            membersAttributes: res,
+                            uhIdentifiers,
+                            listName
+                        });
                     }
                     $scope.isAddingMembers = false;
-                    return;
-                }
-
-                // Prevent departmental accounts from being added as Owners
-                $scope.hasDeptAccount = $scope.checkForDeptAccount(res.results);
-                if (listName === 'owners' && $scope.hasDeptAccount) {
-                    $scope.displayDynamicModal(
-                        Message.Title.OWNER_NOT_ADDED,
-                        Message.Body.OWNER_NOT_ADDED
-                    );
-                    $scope.isAddingMembers = false;
-                    return;
-                }
-
-                // Display the appropriate modal
-                if ($scope.isBatchImport) {
-                    $scope.displayImportConfirmationModal(listName, uhIdentifiers);
-                } else {
-                    $scope.displayAddModal({
-                        membersAttributes: res,
-                        uhIdentifiers,
-                        listName
-                    });
-                }
-                $scope.isAddingMembers = false;
                 }, (res) => {
                     // Display API error modal
                     $scope.waitingForImportResponse = false;
@@ -766,6 +823,20 @@
                     $scope.displayApiErrorModal();
                     $scope.isAddingMembers = false;
                 });
+            } else {
+                $scope.waitingForImportResponse = false; // Small spinner off
+                // Display the owner group path modal
+                if ($scope.isBatchImport) {
+                    $scope.displayImportConfirmationModal(listName, uhIdentifiers);
+                } else {
+                    $scope.displayAddModal({
+                        membersAttributes: [],
+                        uhIdentifiers,
+                        listName
+                    });
+                }
+                $scope.isAddingMembers = false;
+            }
         };
 
         /**
@@ -782,10 +853,17 @@
                 $scope.displayDynamicModal(
                     Message.Title.ADD_MEMBERS,
                     Message.Body.ADD_MEMBERS.with($scope.listName));
+            } else if ($scope.listName === "owner group path") {
+                // Revert modals back to default
+                $scope.addModalId = "add-modal";
+                $scope.addModalURL = "modal/addModal";
+                $scope.displayDynamicModal(
+                  Message.Title.ADD_GROUP_PATH,
+                  Message.Body.ADD_GROUP_PATH.with($scope.groupingName, $scope.listName));
             } else {
                 $scope.displayDynamicModal(
-                    Message.Title.ADD_MEMBER,
-                    Message.Body.ADD_MEMBER.with($scope.member, $scope.listName));
+                  Message.Title.ADD_MEMBER,
+                  Message.Body.ADD_MEMBER.with($scope.member, $scope.listName));
             }
 
             // On pressing "Ok" in the Dynamic modal, reload the grouping
@@ -836,24 +914,26 @@
          */
         $scope.displayAddModal = (options) => {
             const uhIdentifiers = [].concat(options.uhIdentifiers); // Allows either string or array to be passed in
-            const membersAttributesResults = options.membersAttributes.results;
+            const membersAttributesResults = options.membersAttributes.results ?? [];
 
             $scope.listName = options.listName;
             $scope.isMultiAdd = uhIdentifiers.length > 1;
             $scope.hasDeptAccount = $scope.checkForDeptAccount(membersAttributesResults);
 
-            // Sets information to be displayed in add/multiAdd modal
-            $scope.multiAddResults = membersAttributesResults;
-            $scope.addInGroups($scope.multiAddResults);
-            $scope.initMemberDisplayName($scope.multiAddResults[0]);
+            if (membersAttributesResults.length > 0) {
+                // Sets information to be displayed in add/multiAdd modal
+                $scope.multiAddResults = membersAttributesResults;
+                $scope.addInGroups($scope.multiAddResults);
+                $scope.initMemberDisplayName($scope.multiAddResults[0]);
+            }
 
             // Open add or multiAdd modal
-            const templateUrl = $scope.isMultiAdd ? "modal/multiAddModal" : "modal/addModal";
+            const templateUrl = $scope.isMultiAdd ? "modal/multiAddModal" : $scope.addModalURL;
             $scope.addModalInstance = $uibModal.open({
                 templateUrl,
                 scope: $scope,
                 backdrop: "static",
-                ariaLabelledBy: "add-modal"
+                ariaLabelledBy: $scope.addModalId,
             });
 
             // On pressing "Yes/Add" in the modal, make API call to add members to the group
@@ -866,6 +946,8 @@
                     await groupingsService.addExcludeMembers(uhIdentifiers, groupingPath, handleSuccessfulAdd, handleUnsuccessfulRequest, displaySlowImportModal);
                 } else if ($scope.listName === "owners") {
                     await groupingsService.addOwnerships(groupingPath, uhIdentifiers, handleSuccessfulAdd, handleUnsuccessfulRequest);
+                } else if ($scope.listName === "owner group path") {
+                    await groupingsService.addGroupPathOwnerships(groupingPath, uhIdentifiers, handleSuccessfulAdd, handleUnsuccessfulRequest);
                 } else if ($scope.listName === "admins") {
                     await groupingsService.addAdmin(uhIdentifiers, handleSuccessfulAdd, handleUnsuccessfulRequest);
                 }
@@ -971,6 +1053,9 @@
             } else {
                 memberToReturn = _.find(currentPage, (member) => member.uid === memberIdentifier);
             }
+            if (listName === "owner group path") {
+                memberToReturn = _.find(currentPage, (member) => member.name === memberIdentifier);
+            }
             return memberToReturn;
         };
 
@@ -1018,21 +1103,27 @@
             $scope.membersToModify = _.isEmpty($scope.manageMembers)
                 ? $scope.extractSelectedUsersFromCheckboxes($scope.membersInCheckboxList)
                 : $scope.manageMembers;
-            let uhIdentifiers = $scope.sanitizer($scope.parseAddRemoveInputStr($scope.membersToModify));
+            let uhIdentifiers = $scope.parseAddRemoveInputStr($scope.membersToModify);
+            // Sanitize only if the input is a uhIdentifier. Group path sanitization is done on the back end
+            if ($scope.listName !== "owner group path") {
+                uhIdentifiers = $scope.sanitizer(uhIdentifiers);
+            }
 
             // Check if members from checkboxes or input box are empty
             if (_.isEmpty($scope.membersToModify)) {
                 $scope.emptyInput = true;
                 return;
             }
+
             // Check if members to remove exist in the list
             if (!$scope.fetchMemberProperties(uhIdentifiers, listName)) {
                 $scope.displayDynamicModal(Message.Title.REMOVE_INPUT_ERROR, Message.Body.REMOVE_INPUT_ERROR);
                 $scope.membersNotInList = "";
                 return;
             }
+
             // Prevent removing all owners
-            if (listName === "owners" && $scope.multiRemoveResults.length === $scope.groupingOwners.length) {
+            if ((listName === "owners" || listName === "owner group path") && $scope.multiRemoveResults.length === $scope.groupingOwners.length) {
                 $scope.displayRemoveErrorModal("owner");
                 clearMemberInput();
                 return;
@@ -1040,6 +1131,12 @@
 
             // Filter out members to remove that do not exist in the group
             uhIdentifiers = uhIdentifiers.filter((member) => !$scope.membersNotInList.includes(member));
+            // Check if array is empty after filtering
+            if (_.isEmpty(uhIdentifiers)) {
+                $scope.containsInput = true;
+                $scope.isAddingMembers = false;
+                return;
+            }
 
             // Display the remove/multiRemove modal
             $scope.displayRemoveModal({
@@ -1062,10 +1159,18 @@
                     Message.Title.REMOVE_MEMBERS,
                     Message.Body.REMOVE_MEMBERS.with($scope.listName)
                 );
+            } else if ($scope.listName === "owner group path") {
+                // Revert modals back to default
+                $scope.removeModalId = "remove-modal";
+                $scope.removeModalURL = "modal/removeModal";
+                $scope.displayDynamicModal(
+                  Message.Title.REMOVE_GROUP_PATH,
+                  Message.Body.REMOVE_GROUP_PATH.with($scope.groupingName, $scope.listName)
+                )
             } else {
                 $scope.displayDynamicModal(
-                    Message.Title.REMOVE_MEMBER,
-                    Message.Body.REMOVE_MEMBER.with($scope.member, $scope.listName)
+                  Message.Title.REMOVE_MEMBER,
+                  Message.Body.REMOVE_MEMBER.with($scope.member, $scope.listName)
                 );
             }
 
@@ -1130,8 +1235,11 @@
             }
 
             // Set information for the remove/multiRemove modal
-            const memberObject = $scope.returnMemberObject($scope.membersToRemove[0], $scope.listName);
-            $scope.initMemberDisplayName(memberObject);
+            if ($scope.listName === "owners") {
+                const memberObject = $scope.returnMemberObject($scope.membersToRemove[0], $scope.listName);
+                $scope.initMemberDisplayName(memberObject);
+            }
+
             $scope.isMultiRemove = _.isEmpty($scope.multiRemoveResults)
                 ? $scope.membersToRemove.length > 1
                 : $scope.multiRemoveResults.length > 1;
@@ -1140,12 +1248,12 @@
             }
 
             // Open remove or multiRemove modal and set modal red when removing yourself (currentUser) from owners
-            const templateUrl = $scope.isMultiRemove ? "modal/multiRemoveModal" : "modal/removeModal";
+            const templateUrl = $scope.isMultiRemove ? "modal/multiRemoveModal" : $scope.removeModalURL;
             $scope.removeModalInstance = $uibModal.open({
                 templateUrl,
                 backdrop: "static",
                 scope: $scope,
-                ariaLabelledBy: "remove-modal"
+                ariaLabelledBy: $scope.removeModalId,
             });
 
             // On pressing "Yes/Remove" in the modal, make API call to remove members from the group
@@ -1158,6 +1266,8 @@
                     groupingsService.removeExcludeMembers(groupingPath, $scope.membersToRemove, handleSuccessfulRemove, handleUnsuccessfulRequest);
                 } else if ($scope.listName === "owners") {
                     groupingsService.removeOwnerships(groupingPath, $scope.membersToRemove, handleOwnerRemove, handleUnsuccessfulRequest);
+                } else if ($scope.listName === "owner group path") {
+                    groupingsService.removeGroupPathOwnerships(groupingPath, $scope.membersToRemove, handleOwnerRemove, handleUnsuccessfulRequest);
                 } else if ($scope.listName === "admins") {
                     groupingsService.removeAdmin($scope.membersToRemove, handleAdminRemove, handleUnsuccessfulRequest);
                 }
