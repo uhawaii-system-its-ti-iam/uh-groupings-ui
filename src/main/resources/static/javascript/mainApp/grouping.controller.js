@@ -647,7 +647,7 @@
         $scope.existsInList = (listName, members) => {
             const currentPage = getCurrentPage(listName);
             const membersInList = members.filter((member) =>
-                _.some(currentPage, {uhUuid: member}) || _.some(currentPage, {uid: member})
+                _.some(currentPage, {uhUuid: member}) || _.some(currentPage, {uid: member}) || _.some(currentPage, {name: member})
             );
             $scope.membersInList = membersInList.join(", ");
 
