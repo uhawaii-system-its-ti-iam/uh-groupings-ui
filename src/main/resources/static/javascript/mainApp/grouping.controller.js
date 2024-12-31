@@ -124,6 +124,18 @@
         };
 
         /**
+         * Expands and displays the owner grouping when clicked in the owners table
+         * @param {String} basePath - the base path of the owner grouping clicked by the user
+         * @param {String} groupingName - the name of the owner grouping clicked by the user
+         */
+        $scope.displayOwnerGrouping = (basePath, groupingName) => {
+            $scope.selectedGrouping = { path: basePath, name: groupingName };
+            $scope.currentPageOwners = 0;
+            $scope.getGroupingInformation();
+            $scope.showGrouping = true;
+        }
+
+        /**
          * Reloads the grouping
          */
         $scope.reloadGrouping = () => {
@@ -242,7 +254,19 @@
             return new Promise((resolve) => {
                 groupingsService.groupingOwners(groupPath, (res) => {
                     $scope.groupingOwners = res.immediateOwners.members;
+                    // Assign field values for grouping owners
+                    $scope.groupingOwners.forEach((owner) => {
+                        if(owner.name.includes(':')) {
+                            const ownerPath = owner.name.split(':');
+                            owner.firstName = "grouping";
+                            // lastName field holds the path of the grouping
+                            owner.lastName = ownerPath.slice(0, ownerPath.length - 1).join(':');
+                            // name field holds the grouping name
+                            owner.name = ownerPath[ownerPath.length - 2];
+                        }
+                    });
                     $scope.filter($scope.groupingOwners, "pagedItemsOwners", "currentPageOwners", $scope.ownersQuery, false);
+                    $scope.loading = false;
                     resolve();
                 }, (res) => {
                     if (res.statusCode === 403) {
@@ -647,7 +671,7 @@
         $scope.existsInList = (listName, members) => {
             const currentPage = getCurrentPage(listName);
             const membersInList = members.filter((member) =>
-                _.some(currentPage, {uhUuid: member}) || _.some(currentPage, {uid: member}) || _.some(currentPage, {name: member})
+                _.some(currentPage, {uhUuid: member}) || _.some(currentPage, {uid: member}) || _.some(currentPage, {name: $scope.groupingName})
             );
             $scope.membersInList = membersInList.join(", ");
 
@@ -675,8 +699,6 @@
                     $scope.addModalURL = "modal/addGroupPathModal";
                     $scope.ownerGroupPath = $scope.manageMembers;
                     $scope.groupingName = $scope.manageMembers.split(':').pop();
-                    // We only want to add the owners list of the grouping
-                    $scope.manageMembers = $scope.manageMembers.concat(":owners");
                 }
                 $scope.addMembers(listName);
             }
@@ -700,8 +722,6 @@
                     $scope.removeModalURL = "modal/removeGroupPathModal";
                     $scope.ownerGroupPath = $scope.manageMembers;
                     $scope.groupingName = $scope.manageMembers.split(':').pop();
-                    // We only want to remove the owners list of the grouping
-                    $scope.manageMembers = $scope.manageMembers.concat(":owners");
                 }
                 $scope.removeMembers(listName);
             }
@@ -947,7 +967,9 @@
                 } else if ($scope.listName === "owners") {
                     await groupingsService.addOwnerships(groupingPath, uhIdentifiers, handleSuccessfulAdd, handleUnsuccessfulRequest);
                 } else if ($scope.listName === "owner group path") {
-                    await groupingsService.addGroupPathOwnerships(groupingPath, uhIdentifiers, handleSuccessfulAdd, handleUnsuccessfulRequest);
+                    // We only want to add the owners group of the grouping owner to be added
+                    const ownerGroupPaths = uhIdentifiers.map(path => path + ":owners");
+                    await groupingsService.addGroupPathOwnerships(groupingPath, ownerGroupPaths, handleSuccessfulAdd, handleUnsuccessfulRequest);
                 } else if ($scope.listName === "admins") {
                     await groupingsService.addAdmin(uhIdentifiers, handleSuccessfulAdd, handleUnsuccessfulRequest);
                 }
@@ -1054,7 +1076,7 @@
                 memberToReturn = _.find(currentPage, (member) => member.uid === memberIdentifier);
             }
             if (listName === "owner group path") {
-                memberToReturn = _.find(currentPage, (member) => member.name === memberIdentifier);
+                memberToReturn = _.find(currentPage, (member) => member.name === $scope.groupingName);
             }
             return memberToReturn;
         };
@@ -1235,11 +1257,10 @@
             }
 
             // Set information for the remove/multiRemove modal
-            if ($scope.listName === "owners") {
+            if ($scope.listName !== "owner group path") {
                 const memberObject = $scope.returnMemberObject($scope.membersToRemove[0], $scope.listName);
                 $scope.initMemberDisplayName(memberObject);
             }
-
             $scope.isMultiRemove = _.isEmpty($scope.multiRemoveResults)
                 ? $scope.membersToRemove.length > 1
                 : $scope.multiRemoveResults.length > 1;
@@ -1267,7 +1288,9 @@
                 } else if ($scope.listName === "owners") {
                     groupingsService.removeOwnerships(groupingPath, $scope.membersToRemove, handleOwnerRemove, handleUnsuccessfulRequest);
                 } else if ($scope.listName === "owner group path") {
-                    groupingsService.removeGroupPathOwnerships(groupingPath, $scope.membersToRemove, handleOwnerRemove, handleUnsuccessfulRequest);
+                    // We only want to remove the owners group of the grouping owner to be removed
+                    const ownerGroupPaths = $scope.membersToRemove.map(path => path + ":owners");
+                    groupingsService.removeGroupPathOwnerships(groupingPath, ownerGroupPaths, handleOwnerRemove, handleUnsuccessfulRequest);
                 } else if ($scope.listName === "admins") {
                     groupingsService.removeAdmin($scope.membersToRemove, handleAdminRemove, handleUnsuccessfulRequest);
                 }

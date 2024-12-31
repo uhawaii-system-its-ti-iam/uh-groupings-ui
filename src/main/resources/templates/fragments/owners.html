@@ -39,7 +39,19 @@
                 <tbody>
                 <tr ng-repeat="owner in pagedItemsOwners[currentPageOwners]" class="table table-sm">
                     <td class="overflow-auto py-1 px-3" aria-label="{{owner.name}}">
-                            {{owner.name}}
+                            <span class="w-35 clickable"
+                                  style="color: black"
+                                  ng-if="owner.firstName === 'grouping'"
+                                  tabindex="0"
+                                  aria-label="Click to Manage {{owner.name}}"
+                                  ng-keypress="$event.keyCode === 13 ? displayOwnerGrouping(owner.lastName, owner.name) : null"
+                                  ng-click="displayOwnerGrouping(owner.lastName, owner.name)">
+                                {{owner.name}}
+                                <i class="far fa-fw fa-edit" aria-hidden="true"></i>
+                            </span>
+                            <span ng-if="owner.firstName !== 'grouping'" style="color: black">
+                                {{owner.name}}
+                            </span>
                             <span ng-if="owner.uid == owner.uhUuid">
                                 <i class="d-inline rounded-circle blue-bg text-light fa fa-school fa-xs p-1 ml-1"
                                    role="button"
