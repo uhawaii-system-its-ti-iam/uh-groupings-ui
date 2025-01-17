@@ -2249,7 +2249,11 @@
               $scope.updateAllowOptIn(); // Call the existing function for opt-in change
             }
             if (optOutChanged) {
-              $scope.updateAllowOptOut(); // Call the existing function for opt-out change
+              modalContent.push(
+                `${
+                  $scope.allowOptOut ? "(Enable)" : "(Disable)"
+                } Opt-out preference`
+              );
             }
 
             // Update the initial states after successful submission
