@@ -1688,7 +1688,7 @@
                 modalContent.push(`${$scope.allowOptIn ? '(Enable)' : '(Disable)'} Opt-in preference`);
             }
             if (optOutChanged) {
-                modalContent.push(`${$scope.allowOptIn ? '(Enable)' : '(Disable)'} Opt-out preference`);
+                modalContent.push(`${$scope.allowOptOut ? '(Enable)' : '(Disable)'} Opt-out preference`);
             }
 
             if (modalContent) {
