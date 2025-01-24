@@ -507,18 +507,21 @@ public class GroupingsRestController {
 
     /**
      * Give ownership of grouping at grouping path to newOwner. A user with owner privileges has
-     * read and write privileges
-     * of a grouping.
+     * read and write privileges of a grouping.
+     * Optional path variable "allowExceedLimit" can be set to true to allow a grouping
+     * exceed limit of maximum allowed groupings.
      */
     @PostMapping(value = "/{groupingPath}/{newOwner}/addOwnerships")
     public ResponseEntity<String> addOwnerships(
             @PathVariable String groupingPath,
-            @PathVariable String newOwner) {
+            @PathVariable String newOwner,
+            @RequestParam (defaultValue = "false") String allowExceedLimit) {
         logger.info("Entered REST addOwnerships...");
         String currentUid = policy.sanitize(userContextService.getCurrentUid());
         String safeGrouping = policy.sanitize(groupingPath);
         String safeNewOwner = policy.sanitize(newOwner);
-        String uri = String.format(API_2_1_BASE + "/groupings/%s/owners/%s", safeGrouping, safeNewOwner);
+        boolean exceedLimit = allowExceedLimit.equalsIgnoreCase("true");
+        String uri = String.format(API_2_1_BASE + "/groupings/%s/owners/%s/%s", safeGrouping, safeNewOwner, exceedLimit);
         return httpRequestService.makeApiRequest(currentUid, uri, HttpMethod.PUT);
     }
 

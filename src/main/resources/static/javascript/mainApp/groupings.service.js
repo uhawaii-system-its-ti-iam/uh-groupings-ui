@@ -189,8 +189,8 @@
             /**
              * Add owners to owners group of grouping
              */
-            addOwnerships(path, newOwner, onSuccess, onError) {
-                let endpoint = BASE_URL + path + "/" + newOwner + "/addOwnerships";
+            addOwnerships(path, newOwner, exceedLimit, onSuccess, onError) {
+                let endpoint = BASE_URL + path + "/" + newOwner + "/addOwnerships" + "?allowExceedLimit=" + exceedLimit;
                 dataProvider.updateData(endpoint, onSuccess, onError);
             },
 
