@@ -60,6 +60,27 @@
         };
 
         /**
+         * Display a modal for warnings in loading data from the API.
+         */
+        $scope.displayApiWarningModal = () => {
+            $scope.loading = false;
+            $scope.apiWarningModalInstance = $uibModal.open({
+                templateUrl: "modal/apiWarningModal",
+                scope: $scope,
+                backdrop: "static",
+                keyboard: false,
+                ariaLabelledBy: "api-warning-modal"
+            });
+        };
+
+        /**
+         * Close the API warning modal.
+         */
+        $scope.closeApiWarning = () => {
+            $scope.apiWarningModalInstance.close();
+        };
+
+        /**
          * Checks that a users name matches the pattern of either a valid uid or a uhUuid.
          * @param {Object[]|string} names - An array of users or string of a single user to validate.
          * @returns {Object[]|string} - An array of valid users or valid string of a user .

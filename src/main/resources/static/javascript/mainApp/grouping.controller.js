@@ -21,6 +21,7 @@
         $scope.paginatingProgress = true;
         $scope.paginatingComplete = false;
         $scope.largeGrouping = false;
+        $scope.exceedLimit = false;
 
         $scope.groupingsList = [];
         $scope.pagedItemsGroupings = [];
@@ -865,8 +866,9 @@
                 } else if ($scope.listName === "Exclude") {
                     await groupingsService.addExcludeMembers(uhIdentifiers, groupingPath, handleSuccessfulAdd, handleUnsuccessfulRequest, displaySlowImportModal);
                 } else if ($scope.listName === "owners") {
-                    await groupingsService.addOwnerships(groupingPath, uhIdentifiers, handleSuccessfulAdd, handleUnsuccessfulRequest);
-                } else if ($scope.listName === "admins") {
+                    await groupingsService.addOwnerships(groupingPath, uhIdentifiers, exceedLimit, handleSuccessfulAdd, handleUnsuccessfulRequest);
+                }
+                else if ($scope.listName === "admins") {
                     await groupingsService.addAdmin(uhIdentifiers, handleSuccessfulAdd, handleUnsuccessfulRequest);
                 }
             }, () => { /* onRejected: handles modal promise rejection */
