@@ -39,43 +39,65 @@
                 <tbody>
                 <tr ng-repeat="owner in pagedItemsOwners[currentPageOwners]" class="table table-sm">
                     <td class="overflow-auto py-1 px-3" aria-label="{{owner.name}}">
-                            <span class="w-35 clickable"
+                        {{owner.name}}
+                        <span ng-if="owner.uid == owner.uhUuid">
+                            <i class="d-inline rounded-circle blue-bg text-light fa fa-school fa-xs p-1 ml-1"
+                               role="button"
+                               aria-hidden="true"
+                               tooltip data-placement="right"
+                               th:title="#{screen.message.common.tooltip.isDepartmentalAccount}">
+                            </i>
+                        </span>
+                        <span ng-if="groupingOwners.length > 1">
+                            <span ng-if="owner.isGroupingOwner !== true"
+                                  class="far fa-trash-alt fa-pull-right pt-1" role="button"
+                                  tooltip data-placement="top"
+                                  tabindex="0" aria-label="Remove {{owner.name}} from the Owner members list"
+                                  th:title="#{screen.message.common.tooltip.remove.owner}"
+                                  ng-keypress="$event.keyCode === 13 ? removeOwnerWithTrashcan(currentPageOwners, $index) : null"
+                                  ng-click="removeOwnerWithTrashcan(currentPageOwners, $index)">
+                            </span>
+                            <span ng-if="owner.isGroupingOwner === true"
+                                  class="fa-pull-right">
+                                <!--
+                                GET RID OF MARGIN RIGHT ON TRASH CANS
+                                WIDTH OF TRASH CAN ICON IS NOT FIXED SO IT CANT BE FLOATED
+                                MAKE THE WIDTH FIXED ON ALL TRASH CAN ICONS
+                                MOVE ALL OTHER TRASH CANS TO THE LEFT TO ALIGN IT WITH THE GROUPING OWNER ONE
+                                -->
+                                <span class="far fa-trash-alt" role="button"
+                                      tooltip data-placement="top"
+                                      tabindex="0"
+                                      aria-label="Remove {{owner.name}} from the Grouping Owner members list"
+                                      th:title="#{screen.message.common.tooltip.remove.owner}"
+                                      ng-keypress="$event.keyCode === 13 ? removeGroupingOwnerWithTrashcan(owner.ownerPath, owner.name) : null"
+                                      ng-click="removeGroupingOwnerWithTrashcan(owner.ownerPath, owner.name)">
+                                </span>
+                                <span ng-if="owner.isGroupingOwner === true"
+                                      tabindex="0"
+                                      ng-keypress="$event.keyCode === 13 ? displayOwnerGrouping(owner.ownerPath, owner.name) : null">
+                                    <i class="fa fa-fw fa-external-link-alt clickable"
+                                       tooltip="Navgiate to {{owner.ownerPath}}"
+                                       ng-click="displayOwnerGrouping(owner.ownerPath, owner.name)"></i>
+                                </span>
+                            </span>
+<!--                            <span class="far fa-trash-alt fa-pull-right clickable"
                                   style="color: black"
-                                  ng-if="owner.firstName === 'grouping'"
+                                  ng-if="owner.isGroupingOwner === true"
                                   tabindex="0"
                                   aria-label="Click to Manage {{owner.name}}"
-                                  ng-keypress="$event.keyCode === 13 ? displayOwnerGrouping(owner.lastName, owner.name) : null"
-                                  ng-click="displayOwnerGrouping(owner.lastName, owner.name)">
-                                {{owner.name}}
-                                <i class="far fa-fw fa-edit" aria-hidden="true"></i>
+                                  ng-keypress="$event.keyCode === 13 ? displayOwnerGrouping(owner.ownerPath, owner.name) : null"
+                                <i class="fa fa-fw fa-external-link-alt clickable" tooltip="Navgiate to {{owner.ownerPath}}"
+                                   ng-click="displayOwnerGrouping(owner.ownerPath, owner.name)"></i>
+                            </span>-->
+                        </span>
+                        <span ng-if="groupingOwners.length === 1">
+                            <span class="far fa-trash-alt fa-pull-right pt-1 fa-trash-alt-disabled" role="button"
+                                  tooltip data-placement="top"
+                                  aria-label="The last owner cannot be removed from the Owner members list"
+                                  th:title="#{screen.message.common.tooltip.remove.warning}">
                             </span>
-                            <span ng-if="owner.firstName !== 'grouping'" style="color: black">
-                                {{owner.name}}
-                            </span>
-                            <span ng-if="owner.uid == owner.uhUuid">
-                                <i class="d-inline rounded-circle blue-bg text-light fa fa-school fa-xs p-1 ml-1"
-                                   role="button"
-                                   aria-hidden="true"
-                                   tooltip data-placement="right"
-                                   th:title="#{screen.message.common.tooltip.isDepartmentalAccount}">
-                                </i>
-                            </span>
-                            <span ng-if="groupingOwners.length > 1">
-                                <span class="far fa-trash-alt fa-pull-right pt-1" role="button"
-                                      tooltip data-placement="top"
-                                      tabindex="0" aria-label="Remove {{owner.name}} from the Owner members list"
-                                      th:title="#{screen.message.common.tooltip.remove.owner}"
-                                      ng-keypress="$event.keyCode === 13 ? removeOwnerWithTrashcan(currentPageOwners, $index) : null"
-                                      ng-click="removeOwnerWithTrashcan(currentPageOwners, $index)">
-                                </span>
-                            </span>
-                            <span ng-if="groupingOwners.length === 1">
-                                <span class="far fa-trash-alt fa-pull-right pt-1 fa-trash-alt-disabled" role="button"
-                                      tooltip data-placement="top"
-                                      aria-label="The last owner cannot be removed from the Owner members list"
-                                      th:title="#{screen.message.common.tooltip.remove.warning}">
-                                </span>
-                            </span>
+                        </span>
                     </td>
                     <td class="overflow-auto py-1 px-3">
                         {{owner.uid}}

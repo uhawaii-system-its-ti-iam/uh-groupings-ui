@@ -15,15 +15,20 @@
          * Initialize function that retrieves the groupings you own.
          */
         $scope.init = () => {
-            $scope.loading = true;
+            const selectedOwnerGrouping = JSON.parse(sessionStorage.getItem("selectedOwnerGrouping"));
+            if (!_.isEmpty(selectedOwnerGrouping)) {
+                $scope.displayOwnerGroupingInNewTab(selectedOwnerGrouping);
+            } else {
+                $scope.loading = true;
 
-            groupingsService.getGroupingsOwned((res) => {
-                $scope.groupingsList = _.sortBy(res.groupingPaths, "name");
-                $scope.pagedItemsGroupings = $scope.groupToPages($scope.groupingsList);
-                $scope.loading = false;
-            }, () => {
-                $scope.displayApiErrorModal();
-            });
+                groupingsService.getGroupingsOwned((res) => {
+                    $scope.groupingsList = _.sortBy(res.groupingPaths, "name");
+                    $scope.pagedItemsGroupings = $scope.groupToPages($scope.groupingsList);
+                    $scope.loading = false;
+                }, () => {
+                    $scope.displayApiErrorModal();
+                });
+            }
         };
     }
 
