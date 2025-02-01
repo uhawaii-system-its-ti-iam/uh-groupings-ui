@@ -50,7 +50,7 @@
                 <!-- Current Membership Tab-->
                 <div ng-if="membershipsList.length !== 0">
                     <div class="table-responsive">
-                        <table class="table manage-groupings table-striped table-hover" aria-live="assertive">
+                        <table class="table manage-groupings table-striped table-hover" aria-atomic="true">
                             <thead class="align-middle">
                             <tr>
                                 <th ng-click="sortBy('membershipsList', 'pagedItemsMemberships', 'name')"
@@ -156,7 +156,7 @@
                 </div>
                 <div ng-if="optInList.length !== 0">
                     <div class="table-responsive">
-                        <table class="table manage-groupings table-striped table-hover" aria-live="assertive">
+                        <table class="table manage-groupings table-striped table-hover" aria-atomic="true">
                             <thead class="align-middle">
                             <tr>
                                 <th ng-click="sortBy('optInList', 'optInList', 'name')"
