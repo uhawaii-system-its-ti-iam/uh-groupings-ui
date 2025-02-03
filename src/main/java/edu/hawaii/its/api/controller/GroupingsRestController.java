@@ -119,11 +119,11 @@ public class GroupingsRestController {
     public ResponseEntity<String> getGrouping(@RequestBody(required = true) List<String> groupPaths,
             @RequestParam(required = true) Integer page,
             @RequestParam(required = true) Integer size,
-            @RequestParam(required = true) String sortString,
+            @RequestParam(required = true) String sortBy,
             @RequestParam(required = true) Boolean isAscending) {
         logger.info("Entered REST getGrouping...");
         String currentUid = policy.sanitize(userContextService.getCurrentUid());
-        Map<String, String> params = mapGroupingParameters(page, size, sortString, isAscending);
+        Map<String, String> params = mapGroupingParameters(page, size, sortBy, isAscending);
         String baseUri = API_2_1_BASE + "/groupings/group";
         String uri = buildUriWithParams(baseUri, params);
         return httpRequestService.makeApiRequestWithBody(currentUid, uri, groupPaths, HttpMethod.POST);
@@ -538,24 +538,6 @@ public class GroupingsRestController {
     }
 
     /**
-     * Fetch a page of the specified Grouping.
-     */
-    @GetMapping(value = "/groupings/{path:.+}")
-    public ResponseEntity<String> getGrouping(@PathVariable String path,
-            @RequestParam(required = true) Integer page,
-            @RequestParam(required = true) Integer size,
-            @RequestParam(required = true) String sortString,
-            @RequestParam(required = true) Boolean isAscending) {
-        logger.info("Entered REST getGrouping...");
-        String currentUid = policy.sanitize(userContextService.getCurrentUid());
-        Map<String, String> params = mapGroupingParameters(page, size, sortString, isAscending);
-        String baseUri = String.format(API_2_1_BASE + "/groupings/%s", path);
-        String uri = buildUriWithParams(baseUri, params);
-
-        return httpRequestService.makeApiRequest(currentUid, uri, HttpMethod.GET);
-    }
-
-    /**
      * Update the description of a grouping at path.
      */
     @PutMapping(value = "/groupings/{path}/description")
@@ -670,12 +652,12 @@ public class GroupingsRestController {
         return sanitizedList;
     }
 
-    public Map<String, String> mapGroupingParameters(Integer page, Integer size, String sortString,
+    public Map<String, String> mapGroupingParameters(Integer page, Integer size, String sortBy,
             Boolean isAscending) {
         Map<String, String> params = new HashMap<>();
         params.put("page", Integer.toString(page));
         params.put("size", Integer.toString(size));
-        params.put("sortString", sortString);
+        params.put("sortBy", sortBy);
         params.put("isAscending", Boolean.toString(isAscending));
         return params;
     }
