@@ -53,25 +53,25 @@ describe("GroupingsService", () => {
     describe("getGrouping", () => {
         let page;
         let size;
-        let sortString;
+        let sortBy;
         let isAscending;
 
         beforeEach(() => {
             page = 0;
             size = 1;
-            sortString = "name";
+            sortBy = "name";
             isAscending = true;
         });
 
         it("should call dataProvider.loadDataWithBodyRetry", () => {
             spyOn(dp, "loadDataWithBodyRetry");
-            gs.getGrouping(groupingPath, page, size, sortString, isAscending, onSuccess, onError);
+            gs.getGrouping(groupingPath, page, size, sortBy, isAscending, onSuccess, onError);
             expect(dp.loadDataWithBodyRetry).toHaveBeenCalled();
         });
 
         it("should call encodeParameterizedQueryString()", () => {
             spyOn(gs, "encodeParameterizedQueryString");
-            gs.getGrouping(groupingPath, page, size, sortString, isAscending, onSuccess, onError);
+            gs.getGrouping(groupingPath, page, size, sortBy, isAscending, onSuccess, onError);
             expect(gs.encodeParameterizedQueryString).toHaveBeenCalled();
         });
     });
@@ -642,11 +642,11 @@ describe("GroupingsService", () => {
             let params = {
                 "page": 1,
                 "size": 2,
-                "sortString": "name",
+                "sortBy": "name",
                 "isAscending": true
             };
             let result = gs.encodeParameterizedQueryString(params);
-            expect(result).toEqual("page=1&size=2&sortString=name&isAscending=true");
+            expect(result).toEqual("page=1&size=2&sortBy=name&isAscending=true");
         });
     });
 

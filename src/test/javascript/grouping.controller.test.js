@@ -186,7 +186,7 @@ describe("GroupingController", () => {
                 groupingPath: "somePath",
                 currentPage: 1,
                 PAGE_SIZE: 1,
-                sortString: "name",
+                sortBy: "name",
                 isAscending: true
             };
         });

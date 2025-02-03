@@ -636,18 +636,20 @@ public class GroupingsRestControllerTest {
     @Test
     @WithMockUhUser
     public void getGroupingTest() throws Exception {
-        String uri =
-                REST_CONTROLLER_BASE + "groupings/" + GROUPING + "?page=2&size=700&sortString=name&isAscending=true";
+        String uri = REST_CONTROLLER_BASE + "groupings/group?page=2&size=700&sortBy=name&isAscending=true";
+        List<String> groupPaths = List.of(GROUPING);
 
-        given(httpRequestService.makeApiRequest(eq(UID), anyString(), eq(HttpMethod.GET)))
+        given(httpRequestService.makeApiRequestWithBody(eq(UID), anyString(), eq(groupPaths), eq(HttpMethod.POST)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
 
-        assertNotNull(mockMvc.perform(get(uri).with(csrf()))
+        assertNotNull(mockMvc.perform(post(uri).with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(JsonUtil.asJson(groupPaths)))
                 .andExpect(status().isOk())
                 .andReturn());
 
         verify(httpRequestService, times(1))
-                .makeApiRequest(eq(UID), anyString(), eq(HttpMethod.GET));
+                .makeApiRequestWithBody(eq(UID), anyString(), eq(groupPaths), eq(HttpMethod.POST));
     }
 
     @Test
@@ -894,8 +896,8 @@ public class GroupingsRestControllerTest {
         assertEquals("1", params.get("page"));
         assertTrue(params.containsKey("size"));
         assertEquals("2", params.get("size"));
-        assertTrue(params.containsKey("sortString"));
-        assertEquals("name", params.get("sortString"));
+        assertTrue(params.containsKey("sortBy"));
+        assertEquals("name", params.get("sortBy"));
         assertTrue(params.containsKey("isAscending"));
         assertEquals("true", params.get("isAscending"));
     }
@@ -905,7 +907,7 @@ public class GroupingsRestControllerTest {
         Map<String, String> params = groupingsRestController.mapGroupingParameters(1, 2, "name", true);
         String uriTemplate = groupingsRestController.buildUriWithParams(API_2_1_BASE, params);
         assertNotNull(uriTemplate);
-        String expectedResult = API_2_1_BASE + "?sortString=name&size=2&page=1&isAscending=true";
+        String expectedResult = API_2_1_BASE + "?size=2&sortBy=name&page=1&isAscending=true";
         assertEquals(expectedResult, uriTemplate);
     }
 
