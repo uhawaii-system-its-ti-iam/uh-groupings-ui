@@ -14,10 +14,10 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     - name: Checkout badges branch dedicated to storing badges only
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
       with:
         ref: badges
         path: badges
