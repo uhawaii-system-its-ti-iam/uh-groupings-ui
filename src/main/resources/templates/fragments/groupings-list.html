@@ -4,7 +4,7 @@
             <thead>
             <tr>
                 <th ng-click="sortBy('groupingsList', 'pagedItemsGroupings', 'name')"
-                    class="w-35 align-middle" role="button">
+                    class="w-35 align-middle" role="button" scope="col">
                     Grouping Name
                     <i class="fa sort-icon"
                        ng-show="columnSort.groupingsList.property === 'name' || !columnSort.groupingsList"
@@ -12,14 +12,14 @@
                 </th>
                 <th ng-click="sortBy('groupingsList', 'pagedItemsGroupingss', 'description')"
                     ng-show="showDescriptionColumn"
-                    class="clickable d-none d-sm-table-cell">
+                    class="clickable d-none d-sm-table-cell" scope="col">
                     Description
                     <i class="fa sort-icon" ng-show="columnSort.groupingsList.property === 'description'"
                        ng-class="{ reverse: columnSort.groupingsList.reverse }"></i>
                 </th>
                 <th ng-click="sortBy('groupingsList', 'pagedItemsGroupings', 'path')"
                     ng-show="showGroupingPathColumn"
-                    class=" d-none d-sm-table-cell" role="button">
+                    class=" d-none d-sm-table-cell" role="button" scope="col">
                     Grouping Path
                     <i class="fa sort-icon" ng-show="columnSort.groupingsList.property === 'path'"
                        ng-class="{ reverse: columnSort.groupingsList.reverse }"></i>
