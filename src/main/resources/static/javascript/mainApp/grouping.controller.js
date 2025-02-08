@@ -86,6 +86,10 @@
         $scope.hasDeptAccount = false;
         $scope.isAddingMembers = false;
 
+        // Maximum allowed number of owners for a grouping.
+        $scope.ownersLimit = 0;
+        $scope.ownersLimitExceeded = false;
+
         // Remove members
         $scope.multiRemoveResults = [];
         $scope.membersToRemove = [];
@@ -187,7 +191,7 @@
 
         $scope.fetchGrouping = (currentPage, groupPaths) => {
             return new Promise((resolve) => {
-                groupingsService.getGrouping(groupPaths, currentPage, PAGE_SIZE, "name", true, (res) => {
+                groupingsService.getGrouping(groupPaths, currentPage, PAGE_SIZE, "name", true, "all", (res) => {
                     if (res.paginationComplete) {
                         $scope.paginatingComplete = true;
                         $scope.paginatingProgress = false;
@@ -215,6 +219,12 @@
 
                         $scope.loading = false;
                     }
+                    // check if number of owners doesn't exceed the allowed limit.
+                    $scope.ownerLimit = res.ownerLimit;
+                    $scope.ownersLimitExceeded = true; // remove in prod
+                    // uncomment in prod
+                    // $scope.ownersLimitExceeded = $scope.groupingOwners.length > $scope.ownerLimit;
+
                     resolve();
 
                 }, (res) => {
@@ -774,6 +784,7 @@
          * Displays the appropriate modal if it was batch-import, multi-add, or single add.
          */
         const handleSuccessfulAdd = (res) => {
+            console.log("handleSuccessfulAdd");
             $scope.waitingForImportResponse = false; // Small spinner off
             // Display the appropriate result modal
             if ($scope.isBatchImport) {
@@ -808,11 +819,18 @@
          * Generic handler for unsuccessful requests to the API.
          */
         const handleUnsuccessfulRequest = (res) => {
+            console.log("handleUnsuccessfulRequest");
+            console.log(res);
             $scope.loading = false;
             $scope.waitingForImportResponse = false;
             $scope.resStatus = res.status;
+            console.log(res.status);
+            console.log(res.message);
+            console.log(res);
             if (res.status === 403) {
                 $scope.displayOwnerErrorModal();
+            } else if (res.status === 409) { // CONFLICT max number of owners exceeded.
+                $scope.displayOwnerLimitWarningModal();
             } else {
                 $scope.displayApiErrorModal();
             }
@@ -866,7 +884,7 @@
                 } else if ($scope.listName === "Exclude") {
                     await groupingsService.addExcludeMembers(uhIdentifiers, groupingPath, handleSuccessfulAdd, handleUnsuccessfulRequest, displaySlowImportModal);
                 } else if ($scope.listName === "owners") {
-                    await groupingsService.addOwnerships(groupingPath, uhIdentifiers, exceedLimit, handleSuccessfulAdd, handleUnsuccessfulRequest);
+                    await groupingsService.addOwnerships(groupingPath, uhIdentifiers, false, handleSuccessfulAdd, handleUnsuccessfulRequest);
                 }
                 else if ($scope.listName === "admins") {
                     await groupingsService.addAdmin(uhIdentifiers, handleSuccessfulAdd, handleUnsuccessfulRequest);
@@ -1760,6 +1778,17 @@
                 backdrop: "static",
                 keyboard: false,
                 ariaLabelledBy: "owner-error-modal"
+            });
+        };
+
+        $scope.displayOwnerLimitWarningModal = () => {
+            $scope.loading = false;
+            $scope.OwnerLimitWarningModalInstance = $uibModal.open({
+                templateUrl: "modal/ownerLimitWarningModal.html",
+                scope: $scope,
+                backdrop: "static",
+                keyboard: false,
+                ariaLabelledBy: "owner-limit-warning-modal"
             });
         };
 

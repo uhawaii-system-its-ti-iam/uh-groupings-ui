@@ -32,18 +32,21 @@
                 <i class="fas fa-user-minus" aria-hidden="true"></i>
             </a>
         </li>
-        <li class="pr-0 pl-0 mt-1 mx-auto pt-0" tooltip data-placement="right"
-            th:title="#{screen.message.common.tooltip.nav.owners}">
+        <li class="d-flex pr-0 pl-0 mt-1 mx-auto pt-0" >
             <a data-toggle="tab" href="#owners" class="nav-link rounded-circle d-flex align-items-center justify-content-center"
                aria-label="Grouping Owners" ng-click="resetFields()">
-                <i class="fa fa-crown fa-fw" aria-hidden="true"></i>
+                <i class="fa fa-crown fa-fw mr-2" aria-hidden="false"
+                   tooltip data-placement="right" th:title="#{screen.message.common.tooltip.nav.owners}"></i>
+                <i ng-if="ownersLimitExceeded" style="color: red" class="fas fa-info-circle" aria-hidden="true" tooltip data-placement="right" th:title="#{screen.message.common.tooltip.nav.owners.limit.warning}"></i>
+<!--                <em style="color: red" aria-hidden="true" ng-if="ownersLimitExceeded" tooltip data-placement="right"-->
+<!--                    th:title="#{screen.message.common.tooltip.nav.owners.limit.warning}">*</em>-->
             </a>
         </li>
         <li class="pr-0 pl-0 mt-1 mx-auto pt-0" tooltip data-placement="right"
             th:title="#{screen.message.common.tooltip.nav.sync-destinations}">
             <a data-toggle="tab" href="#sync-destinations" class="nav-link rounded-circle d-flex align-items-center justify-content-center"
                aria-label="Sync Destinations">
-                <i class="fa fa-share-alt fa-fw" aria-hidden="true"></i>
+                    <i class="fa fa-share-alt fa-fw" aria-hidden="true"></i>
             </a>
         </li>
         <li class="pr-0 pl-0 mt-1 mx-auto pt-0" tooltip data-placement="right"

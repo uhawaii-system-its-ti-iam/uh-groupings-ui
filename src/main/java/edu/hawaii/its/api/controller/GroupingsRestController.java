@@ -26,12 +26,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import edu.hawaii.its.api.service.HttpRequestService;
 import edu.hawaii.its.groupings.access.UserContextService;
 import edu.hawaii.its.groupings.configuration.Realm;
 import edu.hawaii.its.groupings.exceptions.ApiServerHandshakeException;
+import edu.hawaii.its.groupings.exceptions.OwnerLimitExceededException;
 
 @RestController
 @RequestMapping("/api/groupings")
@@ -120,10 +122,11 @@ public class GroupingsRestController {
             @RequestParam(required = true) Integer page,
             @RequestParam(required = true) Integer size,
             @RequestParam(required = true) String sortString,
-            @RequestParam(required = true) Boolean isAscending) {
+            @RequestParam(required = true) Boolean isAscending,
+            @RequestParam(required = true) String filter) {
         logger.info("Entered REST getGrouping...");
         String currentUid = policy.sanitize(userContextService.getCurrentUid());
-        Map<String, String> params = mapGroupingParameters(page, size, sortString, isAscending);
+        Map<String, String> params = mapGroupingParameters(page, size, sortString, isAscending, filter);
         String baseUri = API_2_1_BASE + "/groupings/group";
         String uri = buildUriWithParams(baseUri, params);
         return httpRequestService.makeApiRequestWithBody(currentUid, uri, groupPaths, HttpMethod.POST);
@@ -515,14 +518,21 @@ public class GroupingsRestController {
     public ResponseEntity<String> addOwnerships(
             @PathVariable String groupingPath,
             @PathVariable String newOwner,
-            @RequestParam (defaultValue = "false") String allowExceedLimit) {
+            @RequestParam (required = true) Boolean ignoreLimit) {
         logger.info("Entered REST addOwnerships...");
         String currentUid = policy.sanitize(userContextService.getCurrentUid());
         String safeGrouping = policy.sanitize(groupingPath);
         String safeNewOwner = policy.sanitize(newOwner);
-        boolean exceedLimit = allowExceedLimit.equalsIgnoreCase("true");
-        String uri = String.format(API_2_1_BASE + "/groupings/%s/owners/%s/%s", safeGrouping, safeNewOwner, exceedLimit);
-        return httpRequestService.makeApiRequest(currentUid, uri, HttpMethod.PUT);
+//        Map<String, String> params = mapGroupingParameters(ignoreLimit);
+//        String baseUri = String.format(API_2_1_BASE + "/groupings/%s/owners/%s", safeGrouping, safeNewOwner);
+//        String uri = buildUriWithParams(baseUri, params);
+//        return httpRequestService.makeApiRequest(currentUid, uri, HttpMethod.PUT);
+        String baseUri = String.format(API_2_1_BASE + "/groupings/%s/owners/%s?ignoreLimit=%s", safeGrouping, safeNewOwner, ignoreLimit);
+        try {
+            return httpRequestService.makeApiRequest(currentUid, baseUri, HttpMethod.PUT);
+        } catch (HttpClientErrorException ex) {
+            throw new HttpClientErrorException(ex.getStatusCode());
+        }
     }
 
     /**
@@ -548,10 +558,11 @@ public class GroupingsRestController {
             @RequestParam(required = true) Integer page,
             @RequestParam(required = true) Integer size,
             @RequestParam(required = true) String sortString,
-            @RequestParam(required = true) Boolean isAscending) {
+            @RequestParam(required = true) Boolean isAscending,
+            @RequestParam(defaultValue = "All") String filter) {
         logger.info("Entered REST getGrouping...");
         String currentUid = policy.sanitize(userContextService.getCurrentUid());
-        Map<String, String> params = mapGroupingParameters(page, size, sortString, isAscending);
+        Map<String, String> params = mapGroupingParameters(page, size, sortString, isAscending, filter);
         String baseUri = String.format(API_2_1_BASE + "/groupings/%s", path);
         String uri = buildUriWithParams(baseUri, params);
 
@@ -674,12 +685,19 @@ public class GroupingsRestController {
     }
 
     public Map<String, String> mapGroupingParameters(Integer page, Integer size, String sortString,
-            Boolean isAscending) {
+            Boolean isAscending, String filter) {
         Map<String, String> params = new HashMap<>();
         params.put("page", Integer.toString(page));
         params.put("size", Integer.toString(size));
         params.put("sortString", sortString);
         params.put("isAscending", Boolean.toString(isAscending));
+        params.put("filter", filter);
+        return params;
+    }
+
+    public Map<String, String> mapGroupingParameters(Boolean ignoreLimit) {
+        Map<String, String> params = new HashMap<>();
+        params.put("ignoreLimit", Boolean.toString(ignoreLimit));
         return params;
     }
 

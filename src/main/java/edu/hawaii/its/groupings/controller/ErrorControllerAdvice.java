@@ -7,9 +7,11 @@ import jakarta.mail.MessagingException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.TypeMismatchException;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.context.request.WebRequest;
 
 import edu.hawaii.its.api.type.GroupingsHTTPException;
@@ -32,6 +34,17 @@ public class ErrorControllerAdvice {
     public ErrorControllerAdvice(UserContextService userContextService, EmailService emailService) {
         this.userContextService = userContextService;
         this.emailService = emailService;
+    }
+
+    @ExceptionHandler(HttpClientErrorException.class)
+    public ResponseEntity<GroupingsHTTPException> handleHttpClientErrorException
+            (HttpClientErrorException hcee) {
+        emailService.sendWithStack(hcee, "API Error");
+        if (hcee.getStatusCode() == HttpStatusCode.valueOf(404)) {
+            logger.info("IT IS A 409 CONFLICT + class " + this.getClass());
+            return exceptionResponse("Owner Limit Exceeded", hcee, 409);
+        }
+        return exceptionResponse("API error", hcee, 500);
     }
 
     @ExceptionHandler(GroupingsServiceResultException.class)
