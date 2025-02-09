@@ -35,8 +35,9 @@ public class ErrorControllerAdvice {
 
     @ExceptionHandler(WebClientResponseException.class)
     public ResponseEntity<ApiError> handleWebClientResponseException
-            (WebClientResponseException wcre) {
-        emailService.sendWithStack(wcre, "Web Client Response Exception");
+            (WebClientResponseException wcre, WebRequest request) {
+        String path = request.getDescription(false);
+        emailService.sendWithStack(wcre, "Web Client Response Exception", path);
         ApiError.Builder errorBuilder = new ApiError.Builder()
                 .status((HttpStatus) wcre.getStatusCode())
                 .message("Web Client Response Exception")
@@ -49,7 +50,8 @@ public class ErrorControllerAdvice {
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ApiError> handleIllegalArgumentException(IllegalArgumentException iae, WebRequest request) {
-        emailService.sendWithStack(iae, "Illegal Argument Exception");
+        String path = request.getDescription(false);
+        emailService.sendWithStack(iae, "Illegal Argument Exception", path);
 
         ApiError.Builder errorBuilder = new ApiError.Builder()
                 .status(HttpStatus.NOT_FOUND)
@@ -63,8 +65,9 @@ public class ErrorControllerAdvice {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiError> handleException(Exception exception) {
-        emailService.sendWithStack(exception, "Exception");
+    public ResponseEntity<ApiError> handleException(Exception exception, WebRequest request) {
+        String path = request.getDescription(false);
+        emailService.sendWithStack(exception, "Exception", path);
 
         ApiError.Builder errorBuilder = new ApiError.Builder()
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -79,8 +82,9 @@ public class ErrorControllerAdvice {
 
 
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<ApiError> handleRuntimeException(Exception exception) {
-        emailService.sendWithStack(exception, "Runtime Exception");
+    public ResponseEntity<ApiError> handleRuntimeException(Exception exception, WebRequest request) {
+        String path = request.getDescription(false);
+        emailService.sendWithStack(exception, "Runtime Exception", path);
 
         ApiError.Builder errorBuilder = new ApiError.Builder()
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -94,8 +98,9 @@ public class ErrorControllerAdvice {
     }
 
     @ExceptionHandler({MessagingException.class, IOException.class})
-    public ResponseEntity<ApiError> handleMessagingException(Exception e) {
-        emailService.sendWithStack(e, "Messaging Exception");
+    public ResponseEntity<ApiError> handleMessagingException(Exception e, WebRequest request) {
+        String path = request.getDescription(false);
+        emailService.sendWithStack(e, "Messaging Exception", path);
 
         ApiError.Builder errorBuilder = new ApiError.Builder()
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -109,8 +114,9 @@ public class ErrorControllerAdvice {
     }
 
     @ExceptionHandler(UnsupportedOperationException.class)
-    public ResponseEntity<ApiError> handleUnsupportedOperationException(UnsupportedOperationException nie) {
-        emailService.sendWithStack(nie, "Unsupported Operation Exception");
+    public ResponseEntity<ApiError> handleUnsupportedOperationException(UnsupportedOperationException nie, WebRequest request) {
+        String path = request.getDescription(false);
+        emailService.sendWithStack(nie, "Unsupported Operation Exception", path);
 
         ApiError.Builder errorBuilder = new ApiError.Builder()
                 .status(HttpStatus.NOT_IMPLEMENTED)
@@ -124,7 +130,6 @@ public class ErrorControllerAdvice {
     }
 
     private ResponseEntity<ApiError> buildResponseEntity(ApiError apiError, Throwable cause) {
-
         String uid = null;
         User user = userContextService.getCurrentUser();
         if (user != null) {

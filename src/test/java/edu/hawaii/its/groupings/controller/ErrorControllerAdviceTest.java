@@ -13,9 +13,13 @@ import edu.hawaii.its.api.type.GroupingsServiceResultException;
 import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
 
 import edu.internet2.middleware.grouperClient.ws.GcWebServiceError;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.web.context.request.ServletWebRequest;
+import org.springframework.web.context.request.WebRequest;
 
 @SpringBootTest(classes = { SpringBootWebApplication.class })
 public class ErrorControllerAdviceTest {
+    WebRequest webRequest = new ServletWebRequest(new MockHttpServletRequest());
 
     @Autowired
     private ErrorControllerAdvice errorControllerAdvice;
@@ -28,35 +32,34 @@ public class ErrorControllerAdviceTest {
     @Test
     public void webClientResponseTest() {
         WebClientResponseException wcre = new WebClientResponseException(409, "CONFLICT", null, null, null);
-        String statusCode = errorControllerAdvice.handleWebClientResponseException(wcre).getStatusCode().toString();
+        String statusCode = errorControllerAdvice.handleWebClientResponseException(wcre, webRequest).getStatusCode().toString();
         assertThat(statusCode, is("409 CONFLICT"));
     }
 
     @Test
     public void illegalArgumentTest() {
         IllegalArgumentException iae = new IllegalArgumentException();
-        String statusCode = errorControllerAdvice.handleIllegalArgumentException(iae, null).getStatusCode().toString();
+        String statusCode = errorControllerAdvice.handleIllegalArgumentException(iae, webRequest).getStatusCode().toString();
         assertThat(statusCode, is("404 NOT_FOUND"));
     }
 
     @Test
     public void unsupportedOpTest() {
         UnsupportedOperationException uoe = new UnsupportedOperationException();
-        String statusCode = errorControllerAdvice.handleUnsupportedOperationException(uoe).getStatusCode().toString();
+        String statusCode = errorControllerAdvice.handleUnsupportedOperationException(uoe, webRequest).getStatusCode().toString();
         assertThat(statusCode, is("501 NOT_IMPLEMENTED"));
     }
-
     @Test
     public void runtimeExceptionTest() {
         RuntimeException re = new RuntimeException();
-        String statusCode = errorControllerAdvice.handleException(re).getStatusCode().toString();
+        String statusCode = errorControllerAdvice.handleException(re, webRequest).getStatusCode().toString();
         assertThat(statusCode, is("500 INTERNAL_SERVER_ERROR"));
     }
 
     @Test
     public void exceptionTest() {
         Exception e = new Exception();
-        String statusCode = errorControllerAdvice.handleException(e).getStatusCode().toString();
+        String statusCode = errorControllerAdvice.handleException(e, webRequest).getStatusCode().toString();
         assertThat(statusCode, is("500 INTERNAL_SERVER_ERROR"));
     }
 }
