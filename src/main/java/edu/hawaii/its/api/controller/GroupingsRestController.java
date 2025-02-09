@@ -122,6 +122,9 @@ public class GroupingsRestController {
             @RequestParam(required = true) String sortBy,
             @RequestParam(required = true) Boolean isAscending) {
         logger.info("Entered REST getGrouping...");
+        String groupPathsStr = groupPaths != null ? groupPaths.toString() : "null";
+        logger.info(String.format("Received Parameters - groupPaths: %s, page: %d, size: %d, sortBy: %s, isAscending: %b",
+                groupPathsStr, page, size, sortBy, isAscending));
         String currentUid = policy.sanitize(userContextService.getCurrentUid());
         Map<String, String> params = mapGroupingParameters(page, size, sortBy, isAscending);
         String baseUri = API_2_1_BASE + "/groupings/group";
