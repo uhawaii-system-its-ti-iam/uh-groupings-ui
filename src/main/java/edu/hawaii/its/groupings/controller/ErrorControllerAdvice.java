@@ -1,24 +1,23 @@
 package edu.hawaii.its.groupings.controller;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 import jakarta.mail.MessagingException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.TypeMismatchException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
-import edu.hawaii.its.api.type.GroupingsHTTPException;
-import edu.hawaii.its.api.type.GroupingsServiceResultException;
 import edu.hawaii.its.groupings.access.User;
 import edu.hawaii.its.groupings.access.UserContextService;
 import edu.hawaii.its.groupings.service.EmailService;
-
-import edu.internet2.middleware.grouperClient.ws.GcWebServiceError;
+import edu.hawaii.its.api.type.ApiError;
 
 @ControllerAdvice
 public class ErrorControllerAdvice {
@@ -34,72 +33,106 @@ public class ErrorControllerAdvice {
         this.emailService = emailService;
     }
 
-    @ExceptionHandler(GroupingsServiceResultException.class)
-    public ResponseEntity<GroupingsHTTPException> handleGroupingsServiceResultException(GroupingsServiceResultException gsre) {
-        emailService.sendWithStack(gsre, "Groupings Service Result Exception");
-      return exceptionResponse("Groupings Service resulted in FAILURE", gsre, 400);
-    }
+    @ExceptionHandler(WebClientResponseException.class)
+    public ResponseEntity<ApiError> handleWebClientResponseException
+            (WebClientResponseException wcre) {
+        emailService.sendWithStack(wcre, "Web Client Response Exception");
+        ApiError.Builder errorBuilder = new ApiError.Builder()
+                .status((HttpStatus) wcre.getStatusCode())
+                .message("Web Client Response Exception")
+                .debugMessage(wcre.getMessage())
+                .timestamp(LocalDateTime.now());
 
-    @ExceptionHandler (GcWebServiceError.class)
-    public ResponseEntity<GroupingsHTTPException> handleGcWebServiceError(GcWebServiceError gce) {
-        emailService.sendWithStack(gce, "Gc Web Service Error");
-        return exceptionResponse(gce.getMessage(), gce, 404);
+        ApiError apiError = errorBuilder.build();
+        return buildResponseEntity(apiError, wcre);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<GroupingsHTTPException> handleIllegalArgumentException(IllegalArgumentException iae, WebRequest request) {
+    public ResponseEntity<ApiError> handleIllegalArgumentException(IllegalArgumentException iae, WebRequest request) {
         emailService.sendWithStack(iae, "Illegal Argument Exception");
-        return exceptionResponse("Resource not available", iae, 404);
+
+        ApiError.Builder errorBuilder = new ApiError.Builder()
+                .status(HttpStatus.NOT_FOUND)
+                .message("Resource not available")
+                .debugMessage(iae.getMessage())
+                .timestamp(LocalDateTime.now());
+
+        ApiError apiError = errorBuilder.build();
+
+        return buildResponseEntity(apiError, iae);
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<GroupingsHTTPException> handleException(Exception exception) {
+    public ResponseEntity<ApiError> handleException(Exception exception) {
         emailService.sendWithStack(exception, "Exception");
-        return exceptionResponse("Exception", exception, 500);
+
+        ApiError.Builder errorBuilder = new ApiError.Builder()
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .message("Exception")
+                .debugMessage(exception.getMessage())
+                .timestamp(LocalDateTime.now());
+
+        ApiError apiError = errorBuilder.build();
+
+        return buildResponseEntity(apiError, exception);
     }
 
 
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<GroupingsHTTPException> handleRuntimeException(Exception exception) {
+    public ResponseEntity<ApiError> handleRuntimeException(Exception exception) {
         emailService.sendWithStack(exception, "Runtime Exception");
-      return exceptionResponse("Runtime Exception", exception, 500);
+
+        ApiError.Builder errorBuilder = new ApiError.Builder()
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .message("Runtime Exception")
+                .debugMessage(exception.getMessage())
+                .timestamp(LocalDateTime.now());
+
+        ApiError apiError = errorBuilder.build();
+
+      return buildResponseEntity(apiError, exception);
     }
 
     @ExceptionHandler({MessagingException.class, IOException.class})
-    public ResponseEntity<GroupingsHTTPException> handleMessagingException(Exception e) {
+    public ResponseEntity<ApiError> handleMessagingException(Exception e) {
         emailService.sendWithStack(e, "Messaging Exception");
-      return exceptionResponse("Mail service exception", e, 500);
+
+        ApiError.Builder errorBuilder = new ApiError.Builder()
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .message("Mail service exception")
+                .debugMessage(e.getMessage())
+                .timestamp(LocalDateTime.now());
+
+        ApiError apiError = errorBuilder.build();
+
+      return buildResponseEntity(apiError, e);
     }
 
     @ExceptionHandler(UnsupportedOperationException.class)
-    public ResponseEntity<GroupingsHTTPException> handleUnsupportedOperationException(UnsupportedOperationException nie) {
+    public ResponseEntity<ApiError> handleUnsupportedOperationException(UnsupportedOperationException nie) {
         emailService.sendWithStack(nie, "Unsupported Operation Exception");
-      return exceptionResponse("Method not implemented", nie, 501);
+
+        ApiError.Builder errorBuilder = new ApiError.Builder()
+                .status(HttpStatus.NOT_IMPLEMENTED)
+                .message("Method not implemented")
+                .debugMessage(nie.getMessage())
+                .timestamp(LocalDateTime.now());
+
+        ApiError apiError = errorBuilder.build();
+
+        return buildResponseEntity(apiError, nie);
     }
 
-    //todo this is for the HolidayRestControllerTest test (should we really have this behavior?)
-    @ExceptionHandler(TypeMismatchException.class)
-    public String handleTypeMismatchException(Exception ex) {
+    private ResponseEntity<ApiError> buildResponseEntity(ApiError apiError, Throwable cause) {
+
         String uid = null;
         User user = userContextService.getCurrentUser();
         if (user != null) {
             uid = user.getUid();
         }
-        logger.error("uid: " + uid + "; Exception: ", ex);
-        emailService.sendWithStack(ex, "TypeMismatchException");
-        return "redirect:/error";
-    }
 
-    private ResponseEntity<GroupingsHTTPException> exceptionResponse(String message, Throwable cause, int status) {
-        String uid = null;
-        User user = userContextService.getCurrentUser();
-        if (user != null) {
-            uid = user.getUid();
-        }
+        logger.error("uid: " + uid + "; Exception: ", cause);
 
-        GroupingsHTTPException httpException = new GroupingsHTTPException(message, cause, status);
-
-        logger.error("uid: " + uid + "; Exception: ", httpException.getCause());
-        return ResponseEntity.status(status).body(httpException);
+        return new ResponseEntity<>(apiError, apiError.getStatus());
     }
 }
