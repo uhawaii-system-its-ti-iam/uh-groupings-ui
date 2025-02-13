@@ -141,8 +141,8 @@ public class GroupingsRestController {
 
     @GetMapping(value = "/groupings/{groupPath}/groupings-sync-destinations")
     public ResponseEntity<String> getGroupingSyncDest(Principal principal, @PathVariable String groupPath) {
-        logger.info(String.format("Entered REST getGroupingSyncDest - groupPath: %s", groupPath));
         String principalName = policy.sanitize(principal.getName());
+        logger.info(String.format("Entered REST getGroupingSyncDest - principalName: %s, groupPath: %s", principalName, groupPath));
         String uri = String.format(API_2_1_BASE + "/groupings/%s/groupings-sync-destinations", policy.sanitize(groupPath));
         return httpRequestService.makeApiRequest(principalName, uri, HttpMethod.GET);
     }
@@ -569,7 +569,7 @@ public class GroupingsRestController {
             @RequestBody(required = false) String description) {
         String currentUid = policy.sanitize(userContextService.getCurrentUid());
         logger.info(String.format("Entered REST updateDescription - currentUid: %s, path: %s, description: %s",
-                currentUid, path, description != null ? description : "No description provided"));
+                currentUid, path, description));
         String safePath = policy.sanitize(path);
         String uri = String.format(API_2_1_BASE + "/groupings/%s/description", safePath);
         return httpRequestService.makeApiRequestWithBody(currentUid, uri, description, HttpMethod.PUT);
@@ -629,7 +629,7 @@ public class GroupingsRestController {
     public ResponseEntity<String> getNumberOfOwners(@PathVariable String path,
             @PathVariable String uhIdentifier) {
         String currentUid = policy.sanitize(userContextService.getCurrentUid());
-        logger.info(String.format("Entered REST getNumberOfOwners - currentUid: %s, path: %s, uhIdentifier: %b",
+        logger.info(String.format("Entered REST getNumberOfOwners - currentUid: %s, path: %s, uhIdentifier: %s",
                 currentUid, path, uhIdentifier));
         String baseUri = String.format(API_2_1_BASE + "/members/%s/owners/%s/count", path, uhIdentifier);
         return httpRequestService.makeApiRequest(currentUid, baseUri, HttpMethod.GET);
@@ -641,7 +641,7 @@ public class GroupingsRestController {
     @GetMapping(value = "/groupings/{path}/sync-destinations")
     public ResponseEntity<String> allSyncDestinations(@PathVariable String path) {
         String currentUid = policy.sanitize(userContextService.getCurrentUid());
-        logger.info(String.format("Entered REST getAllSyncDestinations - currentUid: %s, path: %s", currentUid, path));
+        logger.info(String.format("Entered REST allSyncDestinations - currentUid: %s, path: %s", currentUid, path));
         String safePath = policy.sanitize(path);
         String uri = String.format(API_2_1_BASE + "/groupings/%s/sync-destinations", safePath);
         return httpRequestService.makeApiRequest(currentUid, uri, HttpMethod.GET);
