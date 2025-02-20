@@ -153,9 +153,9 @@ public class GroupingsRestControllerTest {
     @Test
     @WithMockUhUser(uid = "admin")
     public void hasAdminPrivsTest() throws Exception {
-        String uri = REST_CONTROLLER_BASE + "members/is-admin";
+        String uri = REST_CONTROLLER_BASE + "members/" + ADMIN_UID + "/is-admin";
 
-        given(httpRequestService.makeApiRequest(eq(ADMIN_UID), anyString(), eq(HttpMethod.GET)))
+        given(httpRequestService.makeApiRequest(anyString(), eq(HttpMethod.GET)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
 
         assertNotNull(mockMvc.perform(get(uri).with(csrf()))
@@ -163,7 +163,7 @@ public class GroupingsRestControllerTest {
                 .andReturn());
 
         verify(httpRequestService, times(1))
-                .makeApiRequest(eq(ADMIN_UID), anyString(), eq(HttpMethod.GET));
+                .makeApiRequest(anyString(), eq(HttpMethod.GET));
     }
 
     @Test
@@ -588,9 +588,9 @@ public class GroupingsRestControllerTest {
     @Test
     @WithMockUhUser
     public void hasOwnerPrivsTest() throws Exception {
-        String uri = REST_CONTROLLER_BASE + "owners";
+        String uri = REST_CONTROLLER_BASE + "members/" + UID + "/is-owner";
 
-        given(httpRequestService.makeApiRequest(eq(UID), anyString(), eq(HttpMethod.GET)))
+        given(httpRequestService.makeApiRequest(anyString(), eq(HttpMethod.GET)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
 
         assertNotNull(mockMvc.perform(get(uri).with(csrf()))
@@ -598,7 +598,7 @@ public class GroupingsRestControllerTest {
                 .andReturn());
 
         verify(httpRequestService, times(1))
-                .makeApiRequest(eq(UID), anyString(), eq(HttpMethod.GET));
+                .makeApiRequest(anyString(), eq(HttpMethod.GET));
     }
 
     @Test

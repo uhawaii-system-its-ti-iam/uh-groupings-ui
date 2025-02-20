@@ -76,9 +76,9 @@ public class UserDetailsServiceTest {
 
         // Mock the role fetching from the Grouper server.
         final Principal p = new SimplePrincipal(uhUuid);
-        given(groupingsRestController.hasOwnerPrivs(p))
+        given(groupingsRestController.hasOwnerPrivs(uhUuid))
                 .willReturn(new ResponseEntity<>("true", HttpStatus.OK));
-        given(groupingsRestController.hasAdminPrivs(p))
+        given(groupingsRestController.hasAdminPrivs(uhUuid))
                 .willReturn(new ResponseEntity<>("true", HttpStatus.OK));
 
         // What we are testing.
@@ -97,8 +97,8 @@ public class UserDetailsServiceTest {
         assertTrue(user.hasRole(Role.ADMIN));
 
         // Make sure the mocks were called.
-        verify(groupingsRestController, times(1)).hasOwnerPrivs(p);
-        verify(groupingsRestController, times(1)).hasAdminPrivs(p);
+        verify(groupingsRestController, times(1)).hasOwnerPrivs(uhUuid);
+        verify(groupingsRestController, times(1)).hasAdminPrivs(uhUuid);
     }
 
     @Test
@@ -115,9 +115,9 @@ public class UserDetailsServiceTest {
 
         // Mock the role fetching from the Grouper server.
         final Principal p = new SimplePrincipal(uhUuid);
-        given(groupingsRestController.hasOwnerPrivs(p))
+        given(groupingsRestController.hasOwnerPrivs(uhUuid))
                 .willReturn(new ResponseEntity<>("true", HttpStatus.OK));
-        given(groupingsRestController.hasAdminPrivs(p))
+        given(groupingsRestController.hasAdminPrivs(uhUuid))
                 .willReturn(new ResponseEntity<>("false", HttpStatus.OK)); // Note.
 
         // What we are testing.
@@ -137,8 +137,8 @@ public class UserDetailsServiceTest {
         assertFalse(user.hasRole(Role.ADMIN));
 
         // Make sure the mocks were called.
-        verify(groupingsRestController, times(1)).hasOwnerPrivs(p);
-        verify(groupingsRestController, times(1)).hasAdminPrivs(p);
+        verify(groupingsRestController, times(1)).hasOwnerPrivs(uhUuid);
+        verify(groupingsRestController, times(1)).hasAdminPrivs(uhUuid);
     }
 
     @Test
