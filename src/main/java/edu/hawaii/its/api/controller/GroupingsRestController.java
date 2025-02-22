@@ -159,12 +159,12 @@ public class GroupingsRestController {
     /**
      * Check if principle is an administrator.
      */
-    @GetMapping(value = "/members/is-admin")
-    public ResponseEntity<String> hasAdminPrivs(Principal principal) {
-        String principalName = policy.sanitize(principal.getName());
-        logger.info(String.format("Entered REST hasAdminPrivs - principalName: %s", principalName));
-        String uri = String.format(API_2_1_BASE + "/members/is-admin", principalName);
-        return httpRequestService.makeApiRequest(principalName, uri, HttpMethod.GET);
+    @GetMapping(value = "/members/{uhIdentifier}/is-admin")
+    public ResponseEntity<String> hasAdminPrivs(@PathVariable String uhIdentifier) {
+        String safeUhIdentifier = policy.sanitize(uhIdentifier);
+        logger.info(String.format("Entered REST hasAdminPrivs - uhIdentifier: %s", safeUhIdentifier));
+        String uri = String.format(API_2_1_BASE + "/members/%s/is-admin", safeUhIdentifier);
+        return httpRequestService.makeApiRequest(uri, HttpMethod.GET);
     }
 
     /**
@@ -506,12 +506,12 @@ public class GroupingsRestController {
     /**
      * Check if principle is an owner, of any grouping.
      */
-    @GetMapping(value = "/owners")
-    public ResponseEntity<String> hasOwnerPrivs(Principal principal) {
-        String principalName = policy.sanitize(principal.getName());
-        logger.info(String.format("Entered REST hasOwnerPrivs - principalName: %s", principalName));
-        String uri = String.format(API_2_1_BASE + "/owners", principalName);
-        return httpRequestService.makeApiRequest(principalName, uri, HttpMethod.GET);
+    @GetMapping(value = "/members/{uhIdentifier}/is-owner")
+    public ResponseEntity<String> hasOwnerPrivs(@PathVariable String uhIdentifier) {
+        String safeUhIdentifier = policy.sanitize(uhIdentifier);
+        logger.info(String.format("Entered REST hasOwnerPrivs - uhIdentifier: %s", safeUhIdentifier));
+        String uri = String.format(API_2_1_BASE + "/members/%s/is-owner", safeUhIdentifier);
+        return httpRequestService.makeApiRequest(uri, HttpMethod.GET);
     }
 
     /**

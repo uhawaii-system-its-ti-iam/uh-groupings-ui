@@ -63,9 +63,9 @@ public class AuthorizationServiceTest {
 
         Principal principal = new SimplePrincipal(uhUuid);
 
-        given(groupingsRestController.hasOwnerPrivs(principal))
+        given(groupingsRestController.hasOwnerPrivs(uhUuid))
                 .willReturn(new ResponseEntity<>(null, HttpStatus.OK));
-        given(groupingsRestController.hasAdminPrivs(principal))
+        given(groupingsRestController.hasAdminPrivs(uhUuid))
                 .willReturn(new ResponseEntity<>(null, HttpStatus.OK));
 
         // What we are testing.
@@ -88,9 +88,9 @@ public class AuthorizationServiceTest {
 
         Principal principal = new SimplePrincipal(uhUuid);
 
-        given(groupingsRestController.hasOwnerPrivs(principal))
+        given(groupingsRestController.hasOwnerPrivs(uhUuid))
                 .willReturn(new ResponseEntity<>("true", HttpStatus.OK));
-        given(groupingsRestController.hasAdminPrivs(principal))
+        given(groupingsRestController.hasAdminPrivs(uhUuid))
                 .willReturn(new ResponseEntity<>("true", HttpStatus.OK));
 
         // What we are testing.
