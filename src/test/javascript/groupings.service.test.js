@@ -276,6 +276,20 @@ describe("GroupingsService", () => {
         });
     });
 
+    describe("addGroupPathOwnerships", () => {
+        let newOwnerGrouping;
+        it("should call dataProvider.updateData", () => {
+            spyOn(dp, "updateData");
+            gs.addGroupPathOwnerships(groupingPath, newOwnerGrouping, onSuccess, onError);
+            expect(dp.updateData).toHaveBeenCalled();
+        });
+        it("should use the correct path", () => {
+            gs.addGroupPathOwnerships(groupingPath, newOwnerGrouping, onSuccess, onError);
+            httpBackend.expectPOST(BASE_URL + groupingPath + "/" + newOwnerGrouping + "/addGroupPathOwnerships").respond(200);
+            expect(httpBackend.flush).not.toThrow();
+        });
+    });
+
     describe("addAdmin", () => {
         let adminToAdd;
         it("should call dataProvider.updateData", () => {
@@ -343,6 +357,20 @@ describe("GroupingsService", () => {
         it("should use the correct path", () => {
             gs.removeOwnerships(groupingPath, ownerToRemove, onSuccess, onError);
             httpBackend.expectPOST(BASE_URL + groupingPath + "/" + ownerToRemove + "/removeOwnerships").respond(200);
+            expect(httpBackend.flush).not.toThrow();
+        });
+    });
+
+    describe("removeGroupPathOwnerships", () => {
+        let ownerGroupingToRemove;
+        it("should call dataProvider.updateData", () => {
+            spyOn(dp, "updateData");
+            gs.removeGroupPathOwnerships(groupingPath, ownerGroupingToRemove, onSuccess, onError);
+            expect(dp.updateData).toHaveBeenCalled();
+        });
+        it("should use the correct path", () => {
+            gs.removeGroupPathOwnerships(groupingPath, ownerGroupingToRemove, onSuccess, onError);
+            httpBackend.expectPOST(BASE_URL + groupingPath + "/" + ownerGroupingToRemove + "/removeGroupPathOwnerships").respond(200);
             expect(httpBackend.flush).not.toThrow();
         });
     });

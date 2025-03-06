@@ -607,7 +607,23 @@ public class GroupingsRestControllerTest {
         String uri = REST_CONTROLLER_BASE + GROUPING + "/user/addOwnerships";
 
         given(httpRequestService.makeApiRequest(eq(UID), anyString(), eq(HttpMethod.PUT)))
-                .willReturn(new ResponseEntity(HttpStatus.OK));
+                .willReturn(new ResponseEntity<>(HttpStatus.OK));
+
+        assertNotNull(mockMvc.perform(post(uri).with(csrf()))
+                .andExpect(status().isOk())
+                .andReturn());
+
+        verify(httpRequestService, times(1))
+                .makeApiRequest(eq(UID), anyString(), eq(HttpMethod.PUT));
+    }
+
+    @Test
+    @WithMockUhUser
+    public void addGroupPathOwnerships() throws Exception {
+        String uri = REST_CONTROLLER_BASE + GROUPING + "/groupPath/addGroupPathOwnerships";
+
+        given(httpRequestService.makeApiRequest(eq(UID), anyString(), eq(HttpMethod.PUT)))
+                .willReturn(new ResponseEntity<>(HttpStatus.OK));
 
         assertNotNull(mockMvc.perform(post(uri).with(csrf()))
                 .andExpect(status().isOk())
@@ -621,6 +637,22 @@ public class GroupingsRestControllerTest {
     @WithMockUhUser
     public void removeOwnershipsTest() throws Exception {
         String uri = REST_CONTROLLER_BASE + GROUPING + "/user/removeOwnerships";
+
+        given(httpRequestService.makeApiRequest(eq(UID), anyString(), eq(HttpMethod.DELETE)))
+                .willReturn(new ResponseEntity<>(HttpStatus.OK));
+
+        assertNotNull(mockMvc.perform(post(uri).with(csrf()))
+                .andExpect(status().isOk())
+                .andReturn());
+
+        verify(httpRequestService, times(1))
+                .makeApiRequest(eq(UID), anyString(), eq(HttpMethod.DELETE));
+    }
+
+    @Test
+    @WithMockUhUser
+    public void removeGroupPathOwnershipsTest() throws Exception {
+        String uri = REST_CONTROLLER_BASE + GROUPING + "/groupPath/removeGroupPathOwnerships";
 
         given(httpRequestService.makeApiRequest(eq(UID), anyString(), eq(HttpMethod.DELETE)))
                 .willReturn(new ResponseEntity<>(HttpStatus.OK));
