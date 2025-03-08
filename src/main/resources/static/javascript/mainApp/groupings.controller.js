@@ -18,17 +18,17 @@
             const selectedOwnerGrouping = JSON.parse(sessionStorage.getItem("selectedOwnerGrouping"));
             if (!_.isEmpty(selectedOwnerGrouping)) {
                 $scope.displayOwnerGrouping(selectedOwnerGrouping);
-            } else {
-                $scope.loading = true;
-
-                groupingsService.getGroupingsOwned((res) => {
-                    $scope.groupingsList = _.sortBy(res.groupingPaths, "name");
-                    $scope.pagedItemsGroupings = $scope.groupToPages($scope.groupingsList);
-                    $scope.loading = false;
-                }, () => {
-                    $scope.displayApiErrorModal();
-                });
+                sessionStorage.removeItem("selectedOwnerGrouping");
             }
+            $scope.loading = true;
+
+            groupingsService.getGroupingsOwned((res) => {
+                $scope.groupingsList = _.sortBy(res.groupingPaths, "name");
+                $scope.pagedItemsGroupings = $scope.groupToPages($scope.groupingsList);
+                $scope.loading = false;
+            }, () => {
+                $scope.displayApiErrorModal();
+            });
         };
     }
 

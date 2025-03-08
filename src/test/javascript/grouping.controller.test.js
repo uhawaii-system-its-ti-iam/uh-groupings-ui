@@ -176,12 +176,6 @@ describe("GroupingController", () => {
                 .toEqual({path: "testPath", name: "testName"});
         });
 
-        it("should remove the selectedOwnerGrouping item from sessionStorage at the end", () => {
-            spyOn(window, "open");
-            scope.displayOwnerGroupingInNewTab("testPath", "testName");
-            expect(sessionStorage.getItem("selectedOwnerGrouping")).toBeNull();
-        });
-
         it("should open a new /groupings tab", () => {
             spyOn(window, "open");
             scope.displayOwnerGroupingInNewTab("testPath", "testName");

@@ -34,5 +34,20 @@ describe("GroupingController", () => {
             expect(scope.loading).toBeTrue();
             expect(gs.getGroupingsOwned).toHaveBeenCalled();
         });
+
+        it("should remove the selectedOwnerGrouping item from sessionStorage at the end", () => {
+            spyOn(window, "open");
+            scope.displayOwnerGroupingInNewTab("testPath", "testName");
+            scope.init();
+            expect(sessionStorage.getItem("selectedOwnerGrouping")).toBeNull();
+        });
+
+        it("should call displayOwnerGrouping if displayOwnerGroupingInNewTab was called", () => {
+            spyOn(window, "open");
+            spyOn(scope, "displayOwnerGrouping");
+            scope.displayOwnerGroupingInNewTab("testPath", "testName");
+            scope.init();
+            expect(scope.displayOwnerGrouping).toHaveBeenCalled();
+        });
     });
 });
