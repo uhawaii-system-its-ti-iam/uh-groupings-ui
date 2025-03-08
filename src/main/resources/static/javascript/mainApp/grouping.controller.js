@@ -132,7 +132,6 @@
         $scope.displayOwnerGroupingInNewTab = (basePath, groupingName) => {
             sessionStorage.setItem("selectedOwnerGrouping", JSON.stringify({ path: basePath, name: groupingName }));
             $window.open("groupings");
-            sessionStorage.removeItem("selectedOwnerGrouping");
         };
 
         /**
