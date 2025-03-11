@@ -3,14 +3,24 @@ package edu.hawaii.its.groupings.controller;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
+import edu.hawaii.its.api.type.GroupingsServiceResultException;
+import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
+import edu.internet2.middleware.grouperClient.ws.GcWebServiceError;
 import jakarta.mail.MessagingException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
@@ -18,6 +28,12 @@ import edu.hawaii.its.groupings.access.User;
 import edu.hawaii.its.groupings.access.UserContextService;
 import edu.hawaii.its.groupings.service.EmailService;
 import edu.hawaii.its.api.type.ApiError;
+
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 
 @ControllerAdvice
 public class ErrorControllerAdvice {
@@ -93,7 +109,6 @@ public class ErrorControllerAdvice {
                 .timestamp(LocalDateTime.now());
 
         ApiError apiError = errorBuilder.build();
-
       return buildResponseEntity(apiError, exception);
     }
 
@@ -109,7 +124,6 @@ public class ErrorControllerAdvice {
                 .timestamp(LocalDateTime.now());
 
         ApiError apiError = errorBuilder.build();
-
       return buildResponseEntity(apiError, e);
     }
 
