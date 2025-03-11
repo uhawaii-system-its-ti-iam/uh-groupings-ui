@@ -62,4 +62,16 @@ public class ErrorControllerAdviceTest {
         String statusCode = errorControllerAdvice.handleException(e, webRequest).getStatusCode().toString();
         assertThat(statusCode, is("500 INTERNAL_SERVER_ERROR"));
     }
+
+    @Test
+    public void handleMessagingTest(){
+        Exception e = new Exception();
+        assertThat(errorControllerAdvice.handleMessagingException(e, webRequest).getStatusCode(), is(HttpStatus.INTERNAL_SERVER_ERROR));
+    }
+
+//    @Test
+//    public void handleRuntimeExceptionTest(){
+//        Exception e = new Exception();
+//        assertThat(errorControllerAdvice.handleRuntimeException(e, webRequest).getStatusCode(), is(HttpStatus.INTERNAL_SERVER_ERROR));
+//    }
 }
