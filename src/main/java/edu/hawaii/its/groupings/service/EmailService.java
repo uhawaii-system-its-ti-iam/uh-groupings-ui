@@ -115,7 +115,7 @@ public class EmailService {
             text += "Cause of Response: The UI threw an exception that has triggered the ErrorControllerAdvice. \n\n";
             text += "Exception Thrown: ErrorControllerAdvice threw the " + exceptionType + ".\n\n";
             text += "Host Name: " + hostname + "\n";
-            text += "Endpoint Path: " + path + "\n";
+            text += "Endpoint Path: " + path.replace("uri=", "") + ".\n";
             if (!recipient.equals("its-iam-web-app-dev-help-l@lists.hawaii.edu")) {
                 text += "Recipient overridden to: " + recipient + "\n";
             }
