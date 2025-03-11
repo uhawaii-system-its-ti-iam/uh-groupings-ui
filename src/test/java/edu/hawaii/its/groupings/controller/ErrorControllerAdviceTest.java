@@ -49,6 +49,7 @@ public class ErrorControllerAdviceTest {
         String statusCode = errorControllerAdvice.handleUnsupportedOperationException(uoe, webRequest).getStatusCode().toString();
         assertThat(statusCode, is("501 NOT_IMPLEMENTED"));
     }
+
     @Test
     public void runtimeExceptionTest() {
         RuntimeException re = new RuntimeException();
@@ -68,10 +69,4 @@ public class ErrorControllerAdviceTest {
         Exception e = new Exception();
         assertThat(errorControllerAdvice.handleMessagingException(e, webRequest).getStatusCode(), is(HttpStatus.INTERNAL_SERVER_ERROR));
     }
-
-//    @Test
-//    public void handleRuntimeExceptionTest(){
-//        Exception e = new Exception();
-//        assertThat(errorControllerAdvice.handleRuntimeException(e, webRequest).getStatusCode(), is(HttpStatus.INTERNAL_SERVER_ERROR));
-//    }
 }
