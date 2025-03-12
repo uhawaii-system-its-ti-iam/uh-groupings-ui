@@ -32,7 +32,6 @@ public class ErrorRestController {
     @GetMapping(value = "/testing/exception")
     public ResponseEntity<String> throwException() {
         logger.info("Entered REST throwException...");
-
         throw new ExceptionForTesting("Exception thrown intentionally");
     }
 }

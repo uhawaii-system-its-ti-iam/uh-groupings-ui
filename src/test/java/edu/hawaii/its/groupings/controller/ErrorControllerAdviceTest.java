@@ -4,16 +4,15 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import edu.hawaii.its.groupings.exceptions.ExceptionForTesting;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
-import edu.hawaii.its.api.type.GroupingsServiceResultException;
 import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
 
-import edu.internet2.middleware.grouperClient.ws.GcWebServiceError;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
@@ -54,7 +53,7 @@ public class ErrorControllerAdviceTest {
     @Test
     public void runtimeExceptionTest() {
         RuntimeException re = new RuntimeException();
-        String statusCode = errorControllerAdvice.handleException(re, webRequest).getStatusCode().toString();
+        String statusCode = errorControllerAdvice.handleRuntimeException(re, webRequest).getStatusCode().toString();
         assertThat(statusCode, is("500 INTERNAL_SERVER_ERROR"));
     }
 
@@ -69,5 +68,11 @@ public class ErrorControllerAdviceTest {
     public void handleMessagingTest(){
         Exception e = new Exception();
         assertThat(errorControllerAdvice.handleMessagingException(e, webRequest).getStatusCode(), is(HttpStatus.INTERNAL_SERVER_ERROR));
+    }
+
+    @Test
+    public void exceptionForTestingTest(){
+        ExceptionForTesting e = new ExceptionForTesting("Exception thrown intentionally");
+        assertThat(errorControllerAdvice.handleExceptionForTesting(e, webRequest).getStatusCode(), is(HttpStatus.INTERNAL_SERVER_ERROR));
     }
 }

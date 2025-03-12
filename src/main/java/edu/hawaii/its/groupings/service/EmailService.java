@@ -123,6 +123,7 @@ public class EmailService {
             text += "UI Stack Trace: \n\n" + exceptionAsString;
             msg.setText(text);
             msg.setSubject(header);
+            logger.info(text);
             try {
                 javaMailSender.send(msg);
             } catch (MailException ex) {
