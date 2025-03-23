@@ -722,14 +722,20 @@
                 // If the user input has a colon, we can assume that it's a group path
                 if ($scope.manageMembers.includes(":")) {
                     if ($scope.selectedGrouping.path === $scope.manageMembers) {
+                        // Prevent a grouping from being able to add itself to its own owners list
                         $scope.displayDynamicModal(Message.Title.OWNER_NOT_ADDED, Message.Body.ADD_CURRENT_PATH_ERROR);
+                        clearMemberInput();
+                        return;
+                    } else if ($scope.manageMembers.includes(",")) {
+                        // Prevent multi-adding owner-groupings
+                        $scope.displayDynamicModal(Message.Title.INVALID_MULTI_ADD, Message.Body.INVALID_MULTI_ADD);
                         clearMemberInput();
                         return;
                     } else {
                         $scope.isOwnerGrouping = true;
                         $scope.addModalId = "add-owner-grouping-modal";
                         $scope.addModalURL = "modal/addOwnerGroupingModal";
-                        // ownerGroupPath is specifically used for the path in the addOwnerGroupingModal
+                        // ownerGroupPath is specifically used for the path displayed in the addOwnerGroupingModal
                         $scope.ownerGroupPath = $scope.manageMembers;
                         $scope.groupingName = $scope.manageMembers.split(":").pop();
                     }
