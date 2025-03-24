@@ -23,6 +23,21 @@
                     <th scope="col">Username</th>
                     <th scope="col">Uh Number</th>
                     <th scope="col">Name</th>
+                    <th scope="col" class="text-center" ng-if="listName !== 'owners' && groupingBasis.length > 0">
+                        Basis
+                        <span class="fa fa-info-circle clickable" ng-if="listName === 'Include'"
+                              tooltip
+                              th:title="#{screen.message.modal.multi.remove.tooltip.inBasis.include}" aria-hidden="true">
+                        </span>
+                        <span class="fa fa-info-circle clickable" ng-if="listName === 'Exclude' && !allowOptIn"
+                              tooltip
+                              th:title="#{screen.message.modal.multi.remove.tooltip.inBasis.exclude}" aria-hidden="true">
+                        </span>
+                        <span class="fa fa-info-circle clickable" ng-if="listName === 'Exclude' && allowOptIn"
+                              tooltip
+                              th:title="#{screen.message.modal.multi.remove.tooltip.inBasis.exclude.optIn}" aria-hidden="true">
+                        </span>
+                    </th>
                 </tr>
             </thead>
             <tbody>
@@ -40,6 +55,9 @@
                     </td>
                     <td>{{ subject['uhUuid'] }}</td>
                     <td>{{ subject['name'] }}</td>
+                    <td class="text-center" ng-if="listName !== 'owners' && groupingBasis.length > 0">
+                        {{ subject['inBasis'] }}
+                    </td>
                 </tr>
             </tbody>
         </table>

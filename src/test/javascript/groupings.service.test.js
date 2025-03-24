@@ -53,25 +53,25 @@ describe("GroupingsService", () => {
     describe("getGrouping", () => {
         let page;
         let size;
-        let sortString;
+        let sortBy;
         let isAscending;
 
         beforeEach(() => {
             page = 0;
             size = 1;
-            sortString = "name";
+            sortBy = "name";
             isAscending = true;
         });
 
         it("should call dataProvider.loadDataWithBodyRetry", () => {
             spyOn(dp, "loadDataWithBodyRetry");
-            gs.getGrouping(groupingPath, page, size, sortString, isAscending, onSuccess, onError);
+            gs.getGrouping(groupingPath, page, size, sortBy, isAscending, onSuccess, onError);
             expect(dp.loadDataWithBodyRetry).toHaveBeenCalled();
         });
 
         it("should call encodeParameterizedQueryString()", () => {
             spyOn(gs, "encodeParameterizedQueryString");
-            gs.getGrouping(groupingPath, page, size, sortString, isAscending, onSuccess, onError);
+            gs.getGrouping(groupingPath, page, size, sortBy, isAscending, onSuccess, onError);
             expect(gs.encodeParameterizedQueryString).toHaveBeenCalled();
         });
     });
@@ -276,6 +276,20 @@ describe("GroupingsService", () => {
         });
     });
 
+    describe("addGroupPathOwnerships", () => {
+        let newOwnerGrouping;
+        it("should call dataProvider.updateData", () => {
+            spyOn(dp, "updateData");
+            gs.addGroupPathOwnerships(groupingPath, newOwnerGrouping, onSuccess, onError);
+            expect(dp.updateData).toHaveBeenCalled();
+        });
+        it("should use the correct path", () => {
+            gs.addGroupPathOwnerships(groupingPath, newOwnerGrouping, onSuccess, onError);
+            httpBackend.expectPOST(BASE_URL + groupingPath + "/" + newOwnerGrouping + "/addGroupPathOwnerships").respond(200);
+            expect(httpBackend.flush).not.toThrow();
+        });
+    });
+
     describe("addAdmin", () => {
         let adminToAdd;
         it("should call dataProvider.updateData", () => {
@@ -343,6 +357,20 @@ describe("GroupingsService", () => {
         it("should use the correct path", () => {
             gs.removeOwnerships(groupingPath, ownerToRemove, onSuccess, onError);
             httpBackend.expectPOST(BASE_URL + groupingPath + "/" + ownerToRemove + "/removeOwnerships").respond(200);
+            expect(httpBackend.flush).not.toThrow();
+        });
+    });
+
+    describe("removeGroupPathOwnerships", () => {
+        let ownerGroupingToRemove;
+        it("should call dataProvider.updateData", () => {
+            spyOn(dp, "updateData");
+            gs.removeGroupPathOwnerships(groupingPath, ownerGroupingToRemove, onSuccess, onError);
+            expect(dp.updateData).toHaveBeenCalled();
+        });
+        it("should use the correct path", () => {
+            gs.removeGroupPathOwnerships(groupingPath, ownerGroupingToRemove, onSuccess, onError);
+            httpBackend.expectPOST(BASE_URL + groupingPath + "/" + ownerGroupingToRemove + "/removeGroupPathOwnerships").respond(200);
             expect(httpBackend.flush).not.toThrow();
         });
     });
@@ -488,30 +516,30 @@ describe("GroupingsService", () => {
         });
     });
 
-    describe("setOptIn", () => {
+    describe("updateOptIn", () => {
         let optInOn;
         it("should call dataProvider.updateData", () => {
             spyOn(dp, "updateData");
-            gs.setOptIn(groupingPath, optInOn, onSuccess, onError);
+            gs.updateOptIn(groupingPath, optInOn, onSuccess, onError);
             expect(dp.updateData).toHaveBeenCalled();
         });
         it("should use the correct path", () => {
-            gs.setOptIn(groupingPath, optInOn, onSuccess, onError);
-            httpBackend.expectPOST(BASE_URL + groupingPath + "/" + optInOn + "/setOptIn").respond(200);
+            gs.updateOptIn(groupingPath, optInOn, onSuccess, onError);
+            httpBackend.expectPOST(BASE_URL + "groupings/"+groupingPath + "/opt-attribute/IN/" + optInOn).respond(200);
             expect(httpBackend.flush).not.toThrow();
         });
     });
 
-    describe("setOptOut", () => {
+    describe("updateOptOut", () => {
         let optOutOn;
         it("should call dataProvider.updateData", () => {
             spyOn(dp, "updateData");
-            gs.setOptOut(groupingPath, optOutOn, onSuccess, onError);
+            gs.updateOptOut(groupingPath, optOutOn, onSuccess, onError);
             expect(dp.updateData).toHaveBeenCalled();
         });
         it("should use the correct path", () => {
-            gs.setOptOut(groupingPath, optOutOn, onSuccess, onError);
-            httpBackend.expectPOST(BASE_URL + groupingPath + "/" + optOutOn + "/setOptOut").respond(200);
+            gs.updateOptOut(groupingPath, optOutOn, onSuccess, onError);
+            httpBackend.expectPOST(BASE_URL + "groupings/"+groupingPath + "/opt-attribute/OUT/" + optOutOn).respond(200);
             expect(httpBackend.flush).not.toThrow();
         });
     });
@@ -574,24 +602,24 @@ describe("GroupingsService", () => {
         });
     });
 
-    describe("setSyncDest", () => {
+    describe("updateSyncDest", () => {
         let syncDestId;
         let turnOn;
         it("should call dataProvider.updateData", () => {
             spyOn(dp, "updateData");
-            gs.setSyncDest(groupingPath, syncDestId, turnOn, onSuccess, onError);
+            gs.updateSyncDest(groupingPath, syncDestId, turnOn, onSuccess, onError);
             expect(dp.updateData).toHaveBeenCalled();
         });
-
+        
         it("should use the correct path for enable", () => {
-            gs.setSyncDest(groupingPath, syncDestId, true, onSuccess, onError);
-            httpBackend.expectPOST(BASE_URL + "groupings/" + groupingPath + "/syncDests/" + syncDestId + "/enable").respond(200);
+            gs.updateSyncDest(groupingPath, syncDestId, true, onSuccess, onError);
+            httpBackend.expectPOST(BASE_URL + "groupings/" + groupingPath + "/syncDests/" + syncDestId + "/true").respond(200);
             expect(httpBackend.flush).not.toThrow();
         });
 
         it("should use the correct path for disable", () => {
-            gs.setSyncDest(groupingPath, syncDestId, false, onSuccess, onError);
-            httpBackend.expectPOST(BASE_URL + "groupings/" + groupingPath + "/syncDests/" + syncDestId + "/disable").respond(200);
+            gs.updateSyncDest(groupingPath, syncDestId, false, onSuccess, onError);
+            httpBackend.expectPOST(BASE_URL + "groupings/" + groupingPath + "/syncDests/" + syncDestId + "/false").respond(200);
             expect(httpBackend.flush).not.toThrow();
         });
     });
@@ -642,11 +670,11 @@ describe("GroupingsService", () => {
             let params = {
                 "page": 1,
                 "size": 2,
-                "sortString": "name",
+                "sortBy": "name",
                 "isAscending": true
             };
             let result = gs.encodeParameterizedQueryString(params);
-            expect(result).toEqual("page=1&size=2&sortString=name&isAscending=true");
+            expect(result).toEqual("page=1&size=2&sortBy=name&isAscending=true");
         });
     });
 

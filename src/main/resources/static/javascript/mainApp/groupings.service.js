@@ -31,7 +31,7 @@
              * @param {String[]} groupPaths - The paths to the grouping.
              * @param {Number} page - The number to fetch.
              * @param {Number} size - The size data chunk to be fetched.
-             * @param {String} sortString - String to base sort off of.
+             * @param {String} sortBy - String to base sort off of.
              * @param isAscending - On true the data returns in ascending order.
              * @param onSuccess - Function to be called if HTTP request returns as a success.
              * @param onError - Function to be called if HTTP request returns an error.
@@ -39,12 +39,12 @@
             getGrouping(groupPaths,
                         page,
                         size,
-                        sortString,
+                        sortBy,
                         isAscending,
                         onSuccess,
                         onError) {
                 let endpoint = BASE_URL + "groupings/group?";
-                let params = { page, size, sortString, isAscending };
+                let params = { page, size, sortBy, isAscending };
                 let query = this.encodeParameterizedQueryString(params);
                 endpoint = endpoint + query;
                 dataProvider.loadDataWithBodyRetry(endpoint, groupPaths, onSuccess, onError);
@@ -187,10 +187,18 @@
             },
 
             /**
-             * Add owners to owners group of grouping
+             * Add owners to owners group of grouping.
              */
             addOwnerships(path, newOwner, onSuccess, onError) {
                 let endpoint = BASE_URL + path + "/" + newOwner + "/addOwnerships";
+                dataProvider.updateData(endpoint, onSuccess, onError);
+            },
+
+            /**
+             * Add group path owners to owners group of grouping.
+             */
+            addGroupPathOwnerships(path, newGroupPathOwner, onSuccess, onError) {
+                let endpoint = BASE_URL + path + "/" + newGroupPathOwner + "/addGroupPathOwnerships";
                 dataProvider.updateData(endpoint, onSuccess, onError);
             },
 
@@ -229,10 +237,18 @@
             },
 
             /**
-             * Remove owners from owners group of grouping
+             * Remove owners from owners group of grouping.
              */
             removeOwnerships(path, owners, onSuccess, onError) {
                 let endpoint = BASE_URL + path + "/" + owners + "/removeOwnerships";
+                dataProvider.updateData(endpoint, onSuccess, onError);
+            },
+
+            /**
+             * Remove group path owners from owners group of grouping.
+             */
+            removeGroupPathOwnerships(path, groupPathToRemove, onSuccess, onError) {
+                let endpoint = BASE_URL + path + "/" + groupPathToRemove + "/removeGroupPathOwnerships";
                 dataProvider.updateData(endpoint, onSuccess, onError);
             },
 
@@ -324,16 +340,16 @@
             /**
              * Toggle the preference option to allow users to opt into a grouping.
              */
-            setOptIn(path, optInOn, onSuccess, onError) {
-                let endpoint = BASE_URL + path + "/" + optInOn + "/setOptIn";
+            updateOptIn(path, status, onSuccess, onError) {
+                let endpoint = `${BASE_URL}groupings/${path}/opt-attribute/IN/${status}`;
                 dataProvider.updateData(endpoint, onSuccess, onError);
             },
 
             /**
              * Toggle the preference option to allow users to opt out of a grouping.
              */
-            setOptOut(path, optOutOn, onSuccess, onError) {
-                let endpoint = BASE_URL + path + "/" + optOutOn + "/setOptOut";
+            updateOptOut(path, status, onSuccess, onError) {
+                let endpoint = `${BASE_URL}groupings/${path}/opt-attribute/OUT/${status}`;
                 dataProvider.updateData(endpoint, onSuccess, onError);
             },
 
@@ -391,9 +407,8 @@
             /**
              * Toggle the given sync destination.
              */
-            setSyncDest(path, syncDestId, turnOn, onSuccess, onError) {
-                let endpoint = BASE_URL + "groupings/" + path + "/syncDests/" + syncDestId;
-                endpoint = (turnOn) ? endpoint.concat("/enable") : endpoint.concat("/disable");
+            updateSyncDest(path, syncDestId, status, onSuccess, onError) {
+                let endpoint = `${BASE_URL}groupings/${path}/syncDests/${syncDestId}/${status}`;
                 dataProvider.updateData(endpoint, onSuccess, onError);
             },
 
@@ -424,8 +439,8 @@
             /**
              * Checks if the owner of a grouping is the sole owner
              */
-            isSoleOwner(path, uidToCheck, onSuccess, onError) {
-                let endpoint = BASE_URL + path + "/owners/" + uidToCheck;
+            getNumberOfOwners(path, uidToCheck, onSuccess, onError) {
+                let endpoint = BASE_URL + path + "/owners/" + uidToCheck + "/count";
                 dataProvider.loadData(endpoint, onSuccess, onError);
             },
 
@@ -443,7 +458,7 @@
              * Throws an exception
              */
             throwException(onSuccess, onError) {
-                let endpoint = BASE_URL + "testing/" + "exception";
+                let endpoint = "/testing/" + "exception";
                 dataProvider.loadData(endpoint, onSuccess, onError);
             },
         };

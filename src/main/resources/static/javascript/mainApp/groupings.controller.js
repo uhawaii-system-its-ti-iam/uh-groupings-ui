@@ -15,6 +15,11 @@
          * Initialize function that retrieves the groupings you own.
          */
         $scope.init = () => {
+            const selectedOwnerGrouping = JSON.parse(sessionStorage.getItem("selectedOwnerGrouping"));
+            if (!_.isEmpty(selectedOwnerGrouping)) {
+                $scope.displayOwnerGrouping(selectedOwnerGrouping);
+                sessionStorage.removeItem("selectedOwnerGrouping");
+            }
             $scope.loading = true;
 
             groupingsService.getGroupingsOwned((res) => {

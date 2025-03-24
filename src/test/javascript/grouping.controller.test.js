@@ -163,6 +163,50 @@ describe("GroupingController", () => {
         });
     });
 
+    describe("displayOwnerGroupingInNewTab", () => {
+        afterEach(() => {
+            sessionStorage.clear();
+        });
+
+        it("should set the items selectedOwnerGrouping", () => {
+            spyOn(window, "open");
+            spyOn(sessionStorage, "removeItem");
+            scope.displayOwnerGroupingInNewTab("testPath", "testName");
+            expect(JSON.parse(sessionStorage.getItem("selectedOwnerGrouping")))
+                .toEqual({path: "testPath", name: "testName"});
+        });
+
+        it("should open a new /groupings tab", () => {
+            spyOn(window, "open");
+            scope.displayOwnerGroupingInNewTab("testPath", "testName");
+            expect(window.open).toHaveBeenCalledWith("groupings");
+        });
+    });
+
+    describe("displayOwnerGrouping", () => {
+        let selectedOwnerGrouping = { path: "testPath", name: "testName" };
+        it("should set selectedGrouping", () => {
+            scope.displayOwnerGrouping(selectedOwnerGrouping);
+            expect(scope.selectedGrouping).toBe(selectedOwnerGrouping);
+        });
+
+        it("should set currentPageOwners to 0", () => {
+            scope.displayOwnerGrouping(selectedOwnerGrouping);
+            expect(scope.currentPageOwners).toBe(0);
+        });
+
+        it("should call getGroupingInformation", () => {
+            spyOn(scope, "getGroupingInformation").and.callThrough();
+            scope.displayOwnerGrouping(selectedOwnerGrouping);
+            expect(scope.getGroupingInformation).toHaveBeenCalled();
+        });
+
+        it("should set showGrouping to true", () => {
+           scope.displayOwnerGrouping(selectedOwnerGrouping);
+           expect(scope.showGrouping).toBeTrue();
+        });
+    });
+
     describe("reloadGrouping", () => {
         it("should call getGroupingInformation when paginating is complete", () => {
             scope.paginatingComplete = true;
@@ -186,7 +230,7 @@ describe("GroupingController", () => {
                 groupingPath: "somePath",
                 currentPage: 1,
                 PAGE_SIZE: 1,
-                sortString: "name",
+                sortBy: "name",
                 isAscending: true
             };
         });
@@ -207,6 +251,12 @@ describe("GroupingController", () => {
             scope.fetchGrouping();
             expect(gs.getGrouping).toHaveBeenCalled();
         });
+
+        it("should call groupingOwners", () => {
+            spyOn(gs, "groupingOwners").and.callThrough();
+            scope.fetchOwners();
+            expect(gs.groupingOwners).toHaveBeenCalled();
+        })
 
         it("should call getGroupingDescription", () => {
             spyOn(gs, "getGroupingDescription").and.callThrough();
@@ -686,11 +736,17 @@ describe("GroupingController", () => {
                 }
             ];
 
-            scope.groupingOwners = [{
-                name: "iamtst05",
-                uhUuid: "iamtst05",
-                uid: "iamtst05"
-            }];
+            scope.groupingOwners = [
+                {
+                    name: "iamtst05",
+                    uhUuid: "iamtst05",
+                    uid: "iamtst05"
+                },
+                {
+                    name: "testOwnerGrouping",
+                    isOwnerGrouping: true
+                }
+            ];
 
             scope.adminsList = [{
                 name: "iamtst06",
@@ -708,6 +764,10 @@ describe("GroupingController", () => {
 
             scope.existsInList("owners", ["iamtst05"]);
             expect(scope.membersInList).toBe("iamtst05");
+
+            scope.groupingName = "testOwnerGrouping";
+            scope.existsInList("owners", ["testOwnerGrouping"]);
+            expect(scope.membersInList).toBe("testOwnerGrouping");
         });
 
         it("should set $scope.membersInList to an empty string when none of the members passed in are in the list", () => {
@@ -753,6 +813,16 @@ describe("GroupingController", () => {
             spyOn(scope, "addMembers");
             scope.addOnClick("owners");
             expect(scope.addMembers).toHaveBeenCalledWith("owners");
+            expect(scope.addModalId).toBe("add-modal");
+            expect(scope.addModalURL).toBe("modal/addModal");
+        });
+
+        it("should recognize a group path input and set the appropriate modals", () => {
+            scope.manageMembers = "test:group:path";
+            scope.addOnClick("owners");
+            expect(scope.addModalId).toBe("add-owner-grouping-modal");
+            expect(scope.addModalURL).toBe("modal/addOwnerGroupingModal");
+            scope.manageMembers = "";
         });
 
         it("should set errorDismissed to false", () => {
@@ -779,6 +849,16 @@ describe("GroupingController", () => {
             spyOn(scope, "removeMembers");
             scope.removeOnClick("owners");
             expect(scope.removeMembers).toHaveBeenCalledWith("owners");
+            expect(scope.removeModalId).toBe("remove-modal");
+            expect(scope.removeModalURL).toBe("modal/removeModal");
+        });
+
+        it("should recognize a group path input and set the appropriate modals", () => {
+            scope.manageMembers = "test:group:path";
+            scope.removeOnClick("owners");
+            expect(scope.removeModalId).toBe("remove-owner-grouping-modal");
+            expect(scope.removeModalURL).toBe("modal/removeOwnerGroupingModal");
+            scope.manageMembers = "";
         });
 
         it("should call removeMembers with Include", () => {
@@ -966,6 +1046,17 @@ describe("GroupingController", () => {
             expect(scope.waitingForImportResponse).toBeTrue();
         });
 
+        it("should call displayAddModal when adding an owner-grouping", () => {
+            spyOn(scope, "displayAddModal").and.callThrough();
+            scope.isOwnerGrouping = true;
+            scope.addMembers("owners", ["test-owner-path"]);
+            expect(scope.displayAddModal).toHaveBeenCalledWith({
+                membersAttributes: [],
+                uhIdentifiers: ["test-owner-path"],
+                listName: "owners"
+            });
+        });
+
         describe("gs.getMemberAttributeResults callbacks", () => {
             beforeEach(() => {
                 httpBackend.whenGET("currentUser").passThrough();
@@ -1086,6 +1177,7 @@ describe("GroupingController", () => {
     });
 
     describe("displayAddModal", () => {
+        const ownerGroupingPath = ["test:grouping:path"];
         const member = ["testiwta"];
         const members = ["testiwta", "testiwtb"];
         const memberDept = ["testiwt2"];
@@ -1239,6 +1331,21 @@ describe("GroupingController", () => {
             expect(scope.initMemberDisplayName).toHaveBeenCalled();
         });
 
+        it("should open addOwnerGroupingModal.html if an owner-grouping is being added", () => {
+            spyOn(uibModal, "open").and.callThrough();
+            scope.addModalId = "add-owner-grouping-modal";
+            scope.addModalURL = "modal/addOwnerGroupingModal";
+            scope.displayAddModal({
+                membersAttributes: [],
+                uhIdentifiers: ownerGroupingPath,
+                listName: "owners"
+            });
+            expect(uibModal.open).toHaveBeenCalledWith(jasmine.objectContaining({
+                templateUrl: "modal/addOwnerGroupingModal",
+                ariaLabelledBy: "add-owner-grouping-modal"
+            }));
+        });
+
         it("should open multiAddModal.html", () => {
             for (const mockResponse of memberAttributeResultsMulti.results) {
                 mockResponse["inBasis"] = "No";
@@ -1305,6 +1412,22 @@ describe("GroupingController", () => {
                 expect(gs.addExcludeMembers).not.toHaveBeenCalled();
                 expect(gs.addOwnerships).not.toHaveBeenCalled();
                 expect(gs.addAdmin).not.toHaveBeenCalled();
+            });
+
+            it("should call gs.addGroupPathOwnerships when the user presses 'add' in addOwnerGroupingModal.html", () => {
+                spyOn(gs, "addGroupPathOwnerships").and.callThrough();
+                spyOn(uibModal, "open").and.returnValue(mockModal);
+                scope.isOwnerGrouping = true;
+                scope.displayAddModal({
+                    membersAttributes: [],
+                    uhIdentifiers: ownerGroupingPath,
+                    listName: "owners"
+                });
+
+                scope.proceedAddModal();
+                expect(scope.waitingForImportResponse).toBeTrue();
+                expect(gs.addGroupPathOwnerships).toHaveBeenCalled();
+                scope.isOwnerGrouping = false;
             });
 
             it("should call gs.addIncludeMembers when the user presses 'add' in addModal.html", () => {
@@ -1568,11 +1691,16 @@ describe("GroupingController", () => {
                 uid: "iamtst02"
             }];
 
-            scope.groupingOwners = [{
-                name: "iamtst03",
-                uhUuid: "iamtst03",
-                uid: "iamtst03"
-            }];
+            scope.groupingOwners = [
+                {
+                    name: "iamtst03",
+                    uhUuid: "iamtst03",
+                    uid: "iamtst03"
+                },
+                {
+                    name: "testOwnerGrouping",
+                }
+            ];
 
             scope.adminsList = [{
                 name: "iamtst04",
@@ -1604,6 +1732,13 @@ describe("GroupingController", () => {
         it("should return undefined with incorrect listName", () => {
             expect(scope.returnMemberObject("iamtst01", "bogus")).toBeUndefined();
         });
+
+        it("should find and return an owner-grouping when searching for one", () => {
+            scope.groupingName = "testOwnerGrouping";
+            scope.isOwnerGrouping = true;
+            expect(scope.returnMemberObject("testOwnerGrouping", "owners")).toEqual(scope.groupingOwners[1]);
+            scope.isOwnerGrouping = false;
+        })
     });
 
     describe("fetchMemberProperties", () => {
@@ -1714,7 +1849,7 @@ describe("GroupingController", () => {
             expect(scope.displayDynamicModal).toHaveBeenCalled();
         });
 
-        it("should call displayRemoveErrorModal when the listName is owners", () => {
+        it("should call displayRemoveErrorModal when the listName is owners and there's only one owner left", () => {
             scope.groupingOwners = [{
                 name: "iamtst03",
                 uid: "iamtst03",
@@ -1857,6 +1992,37 @@ describe("GroupingController", () => {
             scope.proceedRemoveModal();
             expect(gs.removeExcludeMembers).toHaveBeenCalled();
         });
+
+        it("should open the removeOwnerGrouping.html modal when removing an owner-grouping", () => {
+            spyOn(uibModal, "open").and.callThrough();
+            scope.removeModalId = "remove-owner-grouping-modal";
+            scope.removeModalURL = "modal/removeOwnerGroupingModal";
+            scope.isOwnerGrouping = true;
+            scope.displayRemoveModal({
+                membersToRemove: ["test-owner-path"],
+                listName: "owners"
+            });
+            expect(uibModal.open).toHaveBeenCalledWith(jasmine.objectContaining({
+                templateUrl: "modal/removeOwnerGroupingModal",
+                ariaLabelledBy: "remove-owner-grouping-modal"
+            }));
+            scope.isOwnerGrouping = false;
+        });
+
+        it("should call gs.removeGroupPathOwnerships when removing an owner-grouping", () => {
+            spyOn(gs, "removeGroupPathOwnerships").and.callThrough();
+            spyOn(uibModal, "open").and.returnValue(mockModal);
+            scope.isOwnerGrouping = true;
+            scope.displayRemoveModal({
+                membersToRemove: ["test-owner-path"],
+                listName: "owners"
+            });
+
+            scope.proceedRemoveModal();
+            expect(scope.waitingForImportResponse).toBeTrue();
+            expect(gs.removeGroupPathOwnerships).toHaveBeenCalled();
+            scope.isOwnerGrouping = false;
+        });
     });
 
     describe("proceedRemoveModal", () => {
@@ -1942,6 +2108,45 @@ describe("GroupingController", () => {
             }];
             spyOn(scope, "displayRemoveErrorModal");
             scope.removeOwnerWithTrashcan(0, 0);
+            expect(scope.displayRemoveErrorModal).toHaveBeenCalledWith("owner");
+        });
+    });
+
+    describe("removeOwnerGroupingWithTrashcan", () => {
+        it("should display the removeOwnerGroupingModal if groupingOwners length > 1", () => {
+            scope.groupingOwners = [
+                {
+                    name: "iamtst01",
+                    uid: "iamtst01",
+                    uhUuid: "iamtst01"
+                },
+                {
+                    name: "iamtst02",
+                    uid: "iamtst02",
+                    uhUuid: "iamtst02"
+                },
+                {
+                    name: "testOwnerGrouping",
+                    ownerGroupingPath: "test-owner-path"
+                }
+            ];
+            spyOn(scope, "displayRemoveModal");
+            scope.isOwnerGrouping = true;
+            scope.removeOwnerGroupingWithTrashcan("test-owner-path", "testOwnerGrouping");
+            expect(scope.displayRemoveModal).toHaveBeenCalledWith({
+                membersToRemove: ["test-owner-path"],
+                listName: "owners"
+            });
+            scope.isOwnerGrouping = false;
+        });
+
+        it("should display the remove error modal if groupingOwners < 1", () => {
+            scope.groupingOwners = [{
+                name: "testOwnerGrouping",
+                ownerGroupingPath: "test-owner-path"
+            }];
+            spyOn(scope, "displayRemoveErrorModal");
+            scope.removeOwnerGroupingWithTrashcan("test-owner-path", "testOwnerGrouping");
             expect(scope.displayRemoveErrorModal).toHaveBeenCalledWith("owner");
         });
     });
@@ -2394,17 +2599,17 @@ describe("GroupingController", () => {
 
     describe("updateAllowOptOut", () => {
         it("should call groupings service", () => {
-            spyOn(gs, "setOptOut").and.callThrough();
+            spyOn(gs, "updateOptOut").and.callThrough();
             scope.updateAllowOptOut();
-            expect(gs.setOptOut).toHaveBeenCalled();
+            expect(gs.updateOptOut).toHaveBeenCalled();
         });
     });
 
     describe("updateAllowOptIn", () => {
         it("should call groupings service setOptIn", () => {
-            spyOn(gs, "setOptIn").and.callThrough();
+            spyOn(gs, "updateOptIn").and.callThrough();
             scope.updateAllowOptIn();
-            expect(gs.setOptIn).toHaveBeenCalled();
+            expect(gs.updateOptIn).toHaveBeenCalled();
         });
     });
 
@@ -2508,11 +2713,11 @@ describe("GroupingController", () => {
             };
         });
 
-        it("should call the setSyncDest", () => {
-            spyOn(gs, "setSyncDest");
+        it("should call the updateSyncDest", () => {
+            spyOn(gs, "updateSyncDest");
             scope.syncDestArray.push(testSync);
             scope.updateSingleSyncDest(testSync.name);
-            expect(gs.setSyncDest).toHaveBeenCalled();
+            expect(gs.updateSyncDest).toHaveBeenCalled();
         });
 
         it("should call getSyncDestValueInArray", () => {

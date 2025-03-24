@@ -74,9 +74,9 @@ public class UserBuilderTest {
         map.put("uhUuid", userContextService.getCurrentUhUuid());
 
 
-        given(groupingsRestController.hasOwnerPrivs(principal))
+        given(groupingsRestController.hasOwnerPrivs(map.get("uhUuid")))
                 .willReturn(new ResponseEntity<>("true", HttpStatus.OK));
-        given(groupingsRestController.hasAdminPrivs(principal))
+        given(groupingsRestController.hasAdminPrivs(map.get("uhUuid")))
                 .willReturn(new ResponseEntity<>("true", HttpStatus.OK));
 
         User user = userBuilder.make(map);
