@@ -32,25 +32,25 @@
             <table class="table table-striped table-hover" aria-atomic="true">
                 <thead>
                 <tr>
-                    <th id="nameColumn" scope="col" ng-click="sortBy('groupingMembers', 'pagedItemsMembers', 'name')" aria-sort="none">
+                    <th id="name-column" scope="col" ng-click="sortBy('groupingMembers', 'pagedItemsMembers', 'name')" aria-sort="none">
                         Name
                         <i class="fa sort-icon"
                            ng-show="columnSort.groupingMembers.property === 'name' || !columnSort.groupingMembers"
                            ng-class="{ reverse: columnSort.groupingMembers.reverse }"></i>
                     </th>
-                    <th id="uhUuidColumn" scope="col" ng-click="sortBy('groupingMembers', 'pagedItemsMembers', 'uhUuid')"
+                    <th id="uhUuid-column" scope="col" ng-click="sortBy('groupingMembers', 'pagedItemsMembers', 'uhUuid')"
                         aria-sort="none">
                         UH Number
                         <i class="fa sort-icon" ng-show="columnSort.groupingMembers.property === 'uhUuid'"
                            ng-class="{ reverse: columnSort.groupingMembers.reverse }"></i>
                     </th>
-                    <th id="uidColumn" scope="col" ng-click="sortBy('groupingMembers', 'pagedItemsMembers', 'uid')"
+                    <th id="uid-column" scope="col" ng-click="sortBy('groupingMembers', 'pagedItemsMembers', 'uid')"
                         aria-sort="none">
                         UH Username
                         <i class="fa sort-icon" ng-show="columnSort.groupingMembers.property === 'uid'"
                            ng-class="{ reverse: columnSort.groupingMembers.reverse }"></i>
                     </th>
-                    <th id="listingColumn" scope="col" class="basis-column" aria-sort="none"
+                    <th id="listing-column" scope="col" class="basis-column" aria-sort="none"
                         ng-click="sortBy('groupingMembers', 'pagedItemsMembers', 'whereListed')">
                         Listing
                         <i class="fa sort-icon" ng-show="columnSort.groupingMembers.property === 'whereListed'"
@@ -60,10 +60,10 @@
                 </thead>
                 <tbody>
                 <tr ng-if="pagedItemsMembers[currentPageMembers].length === 0">
-                    <td headers="nameColumn" colspan="4">No members found.</td>
+                    <td headers="name-column" colspan="4">No members found.</td>
                 </tr>    
                 <tr ng-repeat="g in pagedItemsMembers[currentPageMembers]" class="table table-sm">
-                    <td headers="nameColumn" class="overflow-auto py-1 px-3">
+                    <td headers="name-column" class="overflow-auto py-1 px-3">
                         <div class="d-flex">
                             {{g.name}}
                             <div ng-if="g.uid == g.uhUuid">
@@ -76,8 +76,8 @@
                             </div>
                         </div>
                     </td>
-                    <td headers="uhUuidColumn" class="overflow-auto py-1 px-3">{{g.uhUuid}}</td>
-                    <td headers="uidColumn" class="overflow-auto py-1 px-3">
+                    <td headers="uhUuid-column" class="overflow-auto py-1 px-3">{{g.uhUuid}}</td>
+                    <td headers="uid-column" class="overflow-auto py-1 px-3">
                         {{g.uid}}
                         <div ng-if="g.uid === ''">
                             <span>N/A</span>
@@ -87,7 +87,7 @@
                             </i>
                         </div>
                     </td>
-                    <td headers="listingColumn" class="basis-column overflow-auto py-1 px-3 text-nowrap">{{ g.whereListed }}</td>
+                    <td headers="listing-column" class="basis-column overflow-auto py-1 px-3 text-nowrap">{{ g.whereListed }}</td>
                 </tr>
                 </tbody>
             </table>
