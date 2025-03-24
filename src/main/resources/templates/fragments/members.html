@@ -1,4 +1,4 @@
-<!-- <th:block th:fragment="members">
+<th:block th:fragment="members">
 
     <div id="all" class="tab-pane fade show active">
         <div class="row">
@@ -93,109 +93,6 @@
             </table>
         </div>
 
-
-        <div class="d-flex justify-content-lg-end justify-content-start">
-            <div th:replace="~{fragments/pagination :: pagination(currentPage='currentPageMembers', pagedItems='pagedItemsMembers')}"></div>
-        </div>
-    </div>
-</th:block> -->
-
-
-
-
-<th:block th:fragment="members">
-    <div id="all" class="tab-pane fade show active">
-        <div class="row">
-            <div class="col-md-8">
-                <h1 class="font-weight-bold text-dark pt-2 mb-0 d-inline-block">All Members
-                    ({{groupingMembers.length}})</h1>
-                <div class="spinner-border ml-1 d-inline-block"
-                     ng-show="paginatingProgress && !loading"
-                     role="status">
-                    <span class="sr-only">Loading...</span>
-                </div>
-                <i class="refresh-button fas fa-sync-alt ml-1 pr-2 d-inline-block"
-                   ng-show="!paginatingProgress && !loading"
-                   ng-click="reloadGrouping();resetFields()"
-                   role="button"
-                   aria-label="Refresh grouping"
-                   tooltip data-placement="right"
-                   th:title="#{screen.message.common.refreshMembers}">
-                </i>
-                <p class=" mb-1" ng-show="largeGrouping" th:text="#{screen.message.common.loading.toolarge}"><i
-                        class="fa fa-check" aria-hidden="true"></i></p>
-            </div>
-            <div class="col-md-4 py-2">
-                <input placeholder="Filter Members..." type="text" title="Filter Members"
-                       ng-model="membersQuery" class="form-control" aria-label="Filter Members..."
-                       ng-change="filter(groupingMembers, 'pagedItemsMembers', 'currentPageMembers', membersQuery, true)"/>
-            </div>
-        </div>
-
-        <div class="table-responsive-sm">
-            <table class="table table-striped table-hover" aria-atomic="true">
-                <thead>
-                <tr>
-                    <th id="nameColumn" scope="col" ng-click="sortBy('groupingMembers', 'pagedItemsMembers', 'name')" aria-sort="none">
-                        Name
-                        <i class="fa sort-icon"
-                           ng-show="columnSort.groupingMembers.property === 'name' || !columnSort.groupingMembers"
-                           ng-class="{ reverse: columnSort.groupingMembers.reverse }"></i>
-                    </th>
-                    <th id="uhUuidColumn" scope="col" ng-click="sortBy('groupingMembers', 'pagedItemsMembers', 'uhUuid')"
-                        aria-sort="none">
-                        UH Number
-                        <i class="fa sort-icon" ng-show="columnSort.groupingMembers.property === 'uhUuid'"
-                           ng-class="{ reverse: columnSort.groupingMembers.reverse }"></i>
-                    </th>
-                    <th id="uidColumn" scope="col" ng-click="sortBy('groupingMembers', 'pagedItemsMembers', 'uid')"
-                        aria-sort="none">
-                        UH Username
-                        <i class="fa sort-icon" ng-show="columnSort.groupingMembers.property === 'uid'"
-                           ng-class="{ reverse: columnSort.groupingMembers.reverse }"></i>
-                    </th>
-                    <th id="listingColumn" scope="col" class="basis-column" aria-sort="none"
-                        ng-click="sortBy('groupingMembers', 'pagedItemsMembers', 'whereListed')">
-                        Listing
-                        <i class="fa sort-icon" ng-show="columnSort.groupingMembers.property === 'whereListed'"
-                           ng-class="{ reverse: columnSort.groupingMembers.reverse }"></i>
-                    </th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr ng-if="pagedItemsMembers[currentPageMembers].length === 0">
-                    <td headers="nameColumn uhUuidColumn uidColumn listingColumn" colspan="4">No members found.</td>
-                </tr>    
-                <tr ng-repeat="g in pagedItemsMembers[currentPageMembers]" class="table table-sm">
-                    <td headers="nameColumn" class="overflow-auto py-1 px-3">
-                        <div class="d-flex">
-                            {{g.name}}
-                            <div ng-if="g.uid == g.uhUuid">
-                                <i class="d-inline rounded-circle blue-bg text-light fa fa-school fa-xs p-1 ml-1"
-                                   role="button"
-                                   aria-hidden="true"
-                                   tooltip data-placement="right"
-                                   th:title="#{screen.message.common.tooltip.isDepartmentalAccount}">
-                                </i>
-                            </div>
-                        </div>
-                    </td>
-                    <td headers="uhUuidColumn" class="overflow-auto py-1 px-3">{{g.uhUuid}}</td>
-                    <td headers="uidColumn" class="overflow-auto py-1 px-3">
-                        {{g.uid}}
-                        <div ng-if="g.uid === ''">
-                            <span>N/A</span>
-                            <i class="fa fa-question-circle" role="button" aria-hidden="true"
-                               tooltip data-placement="right"
-                               th:title="#{screen.message.common.tooltip.uid.notApplicable}">
-                            </i>
-                        </div>
-                    </td>
-                    <td headers="listingColumn" class="basis-column overflow-auto py-1 px-3 text-nowrap">{{ g.whereListed }}</td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
 
         <div class="d-flex justify-content-lg-end justify-content-start">
             <div th:replace="~{fragments/pagination :: pagination(currentPage='currentPageMembers', pagedItems='pagedItemsMembers')}"></div>
