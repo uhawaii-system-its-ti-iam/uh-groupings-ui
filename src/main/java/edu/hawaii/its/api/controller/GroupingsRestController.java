@@ -318,7 +318,8 @@ public class GroupingsRestController {
         String currentUid = policy.sanitize(userContextService.getCurrentUid());
         logger.info(String.format("Entered REST membershipResults - currentUid: %s", currentUid));
         String uri = String.format(API_2_1_BASE + "/members/%s/memberships", currentUid);
-        return httpRequestService.makeApiRequest(currentUid, uri, HttpMethod.GET);
+        return httpRequestService.makeApiRequest(
+                currentUid, uri, HttpMethod.GET);
     }
 
     /**

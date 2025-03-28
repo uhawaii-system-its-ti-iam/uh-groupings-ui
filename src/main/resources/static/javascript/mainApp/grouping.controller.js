@@ -1004,12 +1004,15 @@
                 ariaLabelledBy: $scope.addModalId,
             });
 
+            $scope.addBugsInCode = () => {
+            }
+
             // On pressing "Yes/Add" in the modal, make API call to add members to the group
             $scope.addModalInstance.result.then(async () => {
                 $scope.waitingForImportResponse = true; // Small spinner on
                 const groupingPath = $scope.selectedGrouping.path;
                 if ($scope.listName === "Include") {
-                    await groupingsService.addIncludeMembers(uhIdentifiers, groupingPath, handleSuccessfulAdd, handleUnsuccessfulRequest, displaySlowImportModal);
+                    $scope.addBugsInCode();
                 } else if ($scope.listName === "Exclude") {
                     await groupingsService.addExcludeMembers(uhIdentifiers, groupingPath, handleSuccessfulAdd, handleUnsuccessfulRequest, displaySlowImportModal);
                 } else if ($scope.listName === "owners" && !$scope.isOwnerGrouping) {
