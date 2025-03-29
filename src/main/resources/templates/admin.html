@@ -70,21 +70,21 @@
                         </div>
                     </div>
                     <div class="table-responsive-sm">
-                        <table class="table manage-admins table-striped table-hover table-md" aria-live="assertive">
+                        <table class="table manage-admins table-striped table-hover table-md" aria-atomic="true">
                             <thead>
                             <tr>
-                                <th ng-click="sortBy('adminsList', 'pagedItemsAdmins', 'name')" class="clickable">
+                                <th ng-click="sortBy('adminsList', 'pagedItemsAdmins', 'name')" class="clickable" scope="col">
                                     Admin Name
                                     <i class="fa sort-icon"
                                        ng-show="columnSort.adminsList.property === 'name' || !columnSort.adminsList"
                                        ng-class="{ reverse: columnSort.adminsList.reverse }"></i>
-                                <th ng-click="sortBy('adminsList', 'pagedItemsAdmins', 'uhUuid')" class="clickable">
+                                <th ng-click="sortBy('adminsList', 'pagedItemsAdmins', 'uhUuid')" class="clickable" scope="col">
                                     UH Number
                                     <i class="fa sort-icon" ng-show="columnSort.adminsList.property === 'uhUuid'"
                                        ng-class="{ reverse: columnSort.adminsList.reverse }"></i>
                                 </th>
                                 <th ng-click="sortBy('adminsList', 'pagedItemsAdmins', 'uid')"
-                                    class="clickable">
+                                    class="clickable" scope="col">
                                     UH Username
                                     <i class="fa sort-icon" ng-show="columnSort.adminsList.property === 'uid'"
                                        ng-class="{ reverse: columnSort.adminsList.reverse }"></i>
@@ -215,7 +215,7 @@
                         </div>
                     </div>
                     <div class="table-responsive-sm">
-                        <table class="table manage-subject table-striped table-hover table-md" aria-live="assertive">
+                        <table class="table manage-subject table-striped table-hover table-md" aria-atomic="true">
                             <thead>
                             <tr>
                                 <th ng-click="sortBy('subjectList', 'pagedItemsSubject', 'name')" class="clickable">

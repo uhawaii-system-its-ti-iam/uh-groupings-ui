@@ -1,10 +1,10 @@
 <th:block th:fragment="admin-groupings-list">
     <div class="table-responsive">
-        <table class="table manage-groupings table-striped table-hover table-md" aria-live="assertive">
+        <table class="table manage-groupings table-striped table-hover table-md" aria-atomic="true">
             <thead class="align-middle">
             <tr>
                 <th ng-click="sortBy('groupingsList', 'pagedItemsGroupings', 'name')"
-                    class="w-35 align-middle clickable">
+                    class="w-35 align-middle clickable" scope="col">
                     Grouping Name
                     <i class="fa sort-icon"
                        ng-show="columnSort.groupingsList.property === 'name' || !columnSort.groupingsList"
@@ -12,14 +12,14 @@
                 </th>
                 <th ng-click="sortBy('groupingsList', 'pagedItemsGroupings', 'description')"
                     ng-show="showDescriptionColumn"
-                    class="clickable d-none d-sm-table-cell">
+                    class="clickable d-none d-sm-table-cell" scope="col">
                     Description
                     <i class="fa sort-icon" ng-show="columnSort.groupingsList.property === 'description'"
                        ng-class="{ reverse: columnSort.groupingsList.reverse }"></i>
                 </th>
                 <th ng-click="sortBy('groupingsList', 'pagedItemsGroupings', 'path')"
                     ng-show="showGroupingPathColumn"
-                    class="clickable d-none d-sm-table-cell">
+                    class="clickable d-none d-sm-table-cell" scope="col">
                     Grouping Path
                     <i class="fa sort-icon" ng-show="columnSort.groupingsList.property === 'path'"
                        ng-class="{ reverse: columnSort.groupingsList.reverse }"></i>
