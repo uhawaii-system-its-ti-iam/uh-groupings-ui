@@ -710,6 +710,7 @@
         $scope.addOnClick = (listName) => {
             $scope.resetErrors();
             if (listName === "Include" || listName === "Exclude") {
+                // Prevents adding owner-groupings to include/exclude list
                 if ($scope.manageMembers.includes(":")) {
                     $scope.displayDynamicModal(Message.Title.NO_MEMBERS_ADDED, Message.Body.ADD_GROUP_PATH_ERROR);
                     clearMemberInput();
@@ -726,7 +727,7 @@
                         $scope.displayDynamicModal(Message.Title.OWNER_NOT_ADDED, Message.Body.ADD_CURRENT_PATH_ERROR);
                         clearMemberInput();
                         return;
-                    } else if ($scope.manageMembers.includes(",")) {
+                    } else if ($scope.manageMembers.includes(", ")) {
                         // Prevent multi-adding owner-groupings
                         $scope.displayDynamicModal(Message.Title.INVALID_MULTI_ADD, Message.Body.INVALID_MULTI_ADD);
                         clearMemberInput();
