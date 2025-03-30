@@ -63,6 +63,8 @@ form.seamless button {
     }
 
     &-outline-secondary {
+        color: $uh-dark-gray;
+        border-color: $uh-dark-gray;
         &:hover,
         &:focus,
         &:active { /* Changes the logout color when you hover. */
