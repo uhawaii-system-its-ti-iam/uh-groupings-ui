@@ -2222,7 +2222,7 @@
       }
       if (optOutChanged) {
         modalContent.push(
-          `${$scope.allowOptIn ? "(Enable)" : "(Disable)"} Opt-out preference`
+          `${$scope.allowOptOut ? "(Enable)" : "(Disable)"} Opt-out preference`
         );
       }
 
@@ -2249,11 +2249,7 @@
               $scope.updateAllowOptIn(); // Call the existing function for opt-in change
             }
             if (optOutChanged) {
-              modalContent.push(
-                `${
-                  $scope.allowOptOut ? "(Enable)" : "(Disable)"
-                } Opt-out preference`
-              );
+              $scope.updateAllowOptOut(); // Call the existing function for opt-out change
             }
 
             // Update the initial states after successful submission
