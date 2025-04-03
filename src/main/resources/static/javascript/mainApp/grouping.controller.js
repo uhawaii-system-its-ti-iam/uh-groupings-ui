@@ -1861,7 +1861,7 @@
      */
     $scope.handleGroupingReset = (
       groupingPath,
-      resetIncludeResult,
+      resetIncludeResult,q
       resetExcludeResult
     ) => {
       let wasError = (result) => {
