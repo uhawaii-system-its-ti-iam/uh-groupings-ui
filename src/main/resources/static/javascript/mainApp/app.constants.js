@@ -29,7 +29,8 @@ UHGroupingsApp.constant("Message", {
         OWNER_NOT_ADDED: "Owner Was Not Added",
         DISPLAY_OWNERS_ERROR: "Error Displaying Owners",
         INVALID_EMAIL_ERROR: "Invalid Email",
-        INVALID_MULTI_ADD: "Invalid Multi-Add"
+        INVALID_MULTI_ADD: "Invalid Multi-Add",
+        INVALID_MULTI_REMOVE: "Invalid Multi-Remove"
     },
     Body: {
         IMPORT_OUT_OF_BOUNDS: `Importing more than ${threshold.MAX_IMPORT} users is not allowed.`,
@@ -47,7 +48,8 @@ UHGroupingsApp.constant("Message", {
         DISPLAY_OWNERS_ERROR: "There was an error displaying the owners.",
         INVALID_EMAIL_ERROR: "Please enter a valid email address.",
         ADD_GROUP_PATH_ERROR: "Groupings can only be added to the owners list as owner-groupings",
-        INVALID_MULTI_ADD: "Owner-groupings only can be added one at a time."
+        INVALID_MULTI_ADD: "Only one owner-grouping can be added at a time.",
+        INVALID_MULTI_REMOVE: "Only one owner-grouping can be removed at a time."
     },
     Csv: {
         GROUP_NOT_LOADED: "Export will be available once all members are loaded.",
