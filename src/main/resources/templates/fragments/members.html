@@ -4,7 +4,8 @@
         <div class="row">
             <div class="col-md-8">
                 <h1 class="font-weight-bold text-dark pt-2 mb-0 d-inline-block">All Members
-                    ({{groupingMembers.length}})</h1>
+                    ({{groupingMembers.length}})
+                </h1>
                 <div class="spinner-border ml-1 d-inline-block"
                      ng-show="paginatingProgress && !loading"
                      role="status">
@@ -18,8 +19,9 @@
                    tooltip data-placement="right"
                    th:title="#{screen.message.common.refreshMembers}">
                 </i>
-                <p class=" mb-1" ng-show="largeGrouping" th:text="#{screen.message.common.loading.toolarge}"><i
-                        class="fa fa-check" aria-hidden="true"></i></p>
+                <p class=" mb-1" ng-show="largeGrouping" th:text="#{screen.message.common.loading.toolarge}">
+                      <i class="fa fa-check" aria-hidden="true"></i>
+                </p>
             </div>
             <div class="col-md-4 py-2">
                 <input placeholder="Filter Members..." type="text" title="Filter Members"
@@ -31,41 +33,41 @@
         <div class="table-responsive-sm">
             <table class="table table-striped table-hover" aria-atomic="true">
                 <thead>
-                <tr>
-                    <th id="name-column" scope="col"
-                        ng-click="sortBy('groupingMembers', 'pagedItemsMembers', 'name')"
-                        aria-sort="{{columnSort.groupingMembers.property === 'name' ? (columnSort.groupingMembers.reverse ? 'descending' : 'ascending') : undefined}}">
-                        Name
-                        <i class="fa sort-icon"
-                           ng-show="columnSort.groupingMembers.property === 'name' || !columnSort.groupingMembers"
-                           ng-class="{ reverse: columnSort.groupingMembers.reverse }"></i>
-                    </th>
-                    <th id="uhUuid-column"
-                        scope="col"
-                        ng-click="sortBy('groupingMembers', 'pagedItemsMembers', 'uhUuid')"
-                        aria-sort="{{columnSort.groupingMembers.property === 'uhUuid' ? (columnSort.groupingMembers.reverse ? 'descending' : 'ascending') : undefined}}">
-                        UH Number
-                        <i class="fa sort-icon" ng-show="columnSort.groupingMembers.property === 'uhUuid'"
-                           ng-class="{ reverse: columnSort.groupingMembers.reverse }"></i>
-                    </th>
-                    <th id="uid-column"
-                        scope="col"
-                        ng-click="sortBy('groupingMembers', 'pagedItemsMembers', 'uid')"
-                        aria-sort="{{columnSort.groupingMembers.property === 'uid' ? (columnSort.groupingMembers.reverse ? 'descending' : 'ascending') : undefined}}">
-                        UH Username
-                        <i class="fa sort-icon" ng-show="columnSort.groupingMembers.property === 'uid'"
-                           ng-class="{ reverse: columnSort.groupingMembers.reverse }"></i>
-                    </th>
-                    <th id="listing-column"
-                        scope="col"
-                        class="basis-column"
-                        ng-click="sortBy('groupingMembers', 'pagedItemsMembers', 'whereListed')"
-                        aria-sort="{{columnSort.groupingMembers.property === 'whereListed' ? (columnSort.groupingMembers.reverse ? 'descending' : 'ascending') : undefined}}">
-                        Listing
-                        <i class="fa sort-icon" ng-show="columnSort.groupingMembers.property === 'whereListed'"
-                           ng-class="{ reverse: columnSort.groupingMembers.reverse }"></i>
-                    </th>
-                </tr>
+                  <tr>
+                      <th id="name-column" scope="col"
+                          ng-click="sortBy('groupingMembers', 'pagedItemsMembers', 'name')"
+                          aria-sort="{{columnSort.groupingMembers.property === 'name' ? (columnSort.groupingMembers.reverse ? 'descending' : 'ascending') : undefined}}">
+                          Name
+                          <i class="fa sort-icon"
+                             ng-show="columnSort.groupingMembers.property === 'name' || !columnSort.groupingMembers"
+                             ng-class="{ reverse: columnSort.groupingMembers.reverse }"></i>
+                      </th>
+                      <th id="uhUuid-column"
+                          scope="col"
+                          ng-click="sortBy('groupingMembers', 'pagedItemsMembers', 'uhUuid')"
+                          aria-sort="{{columnSort.groupingMembers.property === 'uhUuid' ? (columnSort.groupingMembers.reverse ? 'descending' : 'ascending') : undefined}}">
+                          UH Number
+                          <i class="fa sort-icon" ng-show="columnSort.groupingMembers.property === 'uhUuid'"
+                             ng-class="{ reverse: columnSort.groupingMembers.reverse }"></i>
+                      </th>
+                      <th id="uid-column"
+                          scope="col"
+                          ng-click="sortBy('groupingMembers', 'pagedItemsMembers', 'uid')"
+                          aria-sort="{{columnSort.groupingMembers.property === 'uid' ? (columnSort.groupingMembers.reverse ? 'descending' : 'ascending') : undefined}}">
+                          UH Username
+                          <i class="fa sort-icon" ng-show="columnSort.groupingMembers.property === 'uid'"
+                             ng-class="{ reverse: columnSort.groupingMembers.reverse }"></i>
+                      </th>
+                      <th id="listing-column"
+                          scope="col"
+                          class="basis-column"
+                          ng-click="sortBy('groupingMembers', 'pagedItemsMembers', 'whereListed')"
+                          aria-sort="{{columnSort.groupingMembers.property === 'whereListed' ? (columnSort.groupingMembers.reverse ? 'descending' : 'ascending') : undefined}}">
+                          Listing
+                          <i class="fa sort-icon" ng-show="columnSort.groupingMembers.property === 'whereListed'"
+                             ng-class="{ reverse: columnSort.groupingMembers.reverse }"></i>
+                      </th>
+                  </tr>
                 </thead>
                 <tbody>
                   <tr ng-if="groupingMembers.length === 0">
