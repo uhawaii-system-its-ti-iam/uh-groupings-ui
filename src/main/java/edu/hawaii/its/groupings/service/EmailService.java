@@ -20,7 +20,7 @@ public class EmailService {
 
     @Value("${email.send.recipient}")
     private String recipient;
-    
+
     @Value("${email.send.from}")
     private String from;
 
@@ -84,7 +84,7 @@ public class EmailService {
         }
     }
 
-    public void sendWithStack(Exception e, String exceptionType) {
+    public void sendWithStack(Exception e, String exceptionType, String path) {
         logger.info("Feedback Error email has been triggered.");
 
         if (!isEnabled) {
@@ -112,9 +112,13 @@ public class EmailService {
             msg.setFrom(from);
             String text = "";
             String header =  "(" + environment + ") UH Groupings UI Error Response";
+            String endpointInfo = (path != null && !path.isEmpty())
+                    ? "Endpoint Path: " + path.replace("uri=", "") + "\n"
+                    : "Endpoint Path: Not available\n";
             text += "Cause of Response: The UI threw an exception that has triggered the ErrorControllerAdvice. \n\n";
             text += "Exception Thrown: ErrorControllerAdvice threw the " + exceptionType + ".\n\n";
             text += "Host Name: " + hostname + ".\n";
+            text += endpointInfo;
             if (!recipient.equals("its-iam-web-app-dev-help-l@lists.hawaii.edu")) {
                 text += "Recipient overridden to: " + recipient + "\n";
             }
@@ -122,6 +126,7 @@ public class EmailService {
             text += "UI Stack Trace: \n\n" + exceptionAsString;
             msg.setText(text);
             msg.setSubject(header);
+            logger.info(text);
             try {
                 javaMailSender.send(msg);
             } catch (MailException ex) {

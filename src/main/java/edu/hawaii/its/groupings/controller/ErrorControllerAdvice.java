@@ -2,6 +2,7 @@ package edu.hawaii.its.groupings.controller;
 
 import java.io.IOException;
 
+
 import jakarta.mail.MessagingException;
 
 import org.apache.commons.logging.Log;
@@ -20,6 +21,7 @@ import edu.hawaii.its.groupings.access.User;
 import edu.hawaii.its.groupings.access.UserContextService;
 import edu.hawaii.its.groupings.service.EmailService;
 import edu.hawaii.its.api.type.ApiError;
+
 
 @ControllerAdvice
 public class ErrorControllerAdvice {
@@ -46,11 +48,23 @@ public class ErrorControllerAdvice {
         return new ResponseEntity<>(apiError, apiError.getStatus());
     }
 
-    @ExceptionHandler(WebClientResponseException.class)
-    public ResponseEntity<ApiError> handleWebClientResponseException(WebClientResponseException wcre) {
-        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+    private String extractValidPath(WebRequest request) {
+        String path = request.getDescription(false);
+        if (path != null && path.startsWith("uri=")) {
+            String uri = path.substring(4);
+            if (!uri.contains("bogus")) {
+                return uri;
+            }
+        }
+        return null;
+    }
 
-        emailService.sendWithStack(wcre, "Web Client Response Exception");
+    @ExceptionHandler(WebClientResponseException.class)
+    public ResponseEntity<ApiError> handleWebClientResponseException(WebClientResponseException wcre, WebRequest request) {
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        String path = extractValidPath(request);
+
+        emailService.sendWithStack(wcre, "Web Client Response Exception", path);
         ApiError.Builder errorBuilder = new ApiError.Builder()
                 .status((HttpStatus) wcre.getStatusCode())
                 .message("Web Client Response Exception")
@@ -65,10 +79,9 @@ public class ErrorControllerAdvice {
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ApiError> handleIllegalArgumentException(IllegalArgumentException iae, WebRequest request) {
-        String path = request.getDescription(false);
+        String path = extractValidPath(request);
 
-
-        emailService.sendWithStack(iae, "Illegal Argument Exception");
+        emailService.sendWithStack(iae, "Illegal Argument Exception", path);
         ApiError.Builder errorBuilder = new ApiError.Builder()
                 .status(HttpStatus.NOT_FOUND)
                 .message("Resource not available")
@@ -81,10 +94,11 @@ public class ErrorControllerAdvice {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiError> handleException(Exception e) {
+    public ResponseEntity<ApiError> handleException(Exception e, WebRequest request) {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        String path = extractValidPath(request);
 
-        emailService.sendWithStack(e, "Exception");
+        emailService.sendWithStack(e, "Exception", path);
         ApiError.Builder errorBuilder = new ApiError.Builder()
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .message("Exception")
@@ -99,10 +113,11 @@ public class ErrorControllerAdvice {
 
 
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<ApiError> handleRuntimeException(Exception re) {
+    public ResponseEntity<ApiError> handleRuntimeException(Exception re, WebRequest request) {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        String path = extractValidPath(request);
 
-        emailService.sendWithStack(re, "Runtime Exception");
+        emailService.sendWithStack(re, "Runtime Exception", path);
         ApiError.Builder errorBuilder = new ApiError.Builder()
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .message("Runtime Exception")
@@ -116,10 +131,11 @@ public class ErrorControllerAdvice {
     }
 
     @ExceptionHandler({MessagingException.class, IOException.class})
-    public ResponseEntity<ApiError> handleMessagingException(Exception me) {
+    public ResponseEntity<ApiError> handleMessagingException(Exception me, WebRequest request) {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        String path = extractValidPath(request);
 
-        emailService.sendWithStack(me, "Messaging Exception");
+        emailService.sendWithStack(me, "Messaging Exception", path);
         ApiError.Builder errorBuilder = new ApiError.Builder()
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .message("Mail service exception")
@@ -133,10 +149,11 @@ public class ErrorControllerAdvice {
     }
 
     @ExceptionHandler(UnsupportedOperationException.class)
-    public ResponseEntity<ApiError> handleUnsupportedOperationException(UnsupportedOperationException ex) {
+    public ResponseEntity<ApiError> handleUnsupportedOperationException(UnsupportedOperationException ex, WebRequest request) {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        String path = extractValidPath(request);
 
-        emailService.sendWithStack(ex, "Unsupported Operation Exception");
+        emailService.sendWithStack(ex, "Unsupported Operation Exception", path);
         ApiError.Builder errorBuilder = new ApiError.Builder()
                 .status(HttpStatus.NOT_IMPLEMENTED)
                 .message("Method not implemented")
