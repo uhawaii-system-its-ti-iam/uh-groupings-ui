@@ -18,14 +18,11 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.context.request.ServletWebRequest;
-import org.springframework.web.context.request.WebRequest;
 
 import edu.hawaii.its.api.type.ApiError;
 
-
 import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
 
-import edu.hawaii.its.groupings.exceptions.ExceptionForTesting;
 
 @SpringBootTest(classes = { SpringBootWebApplication.class })
 public class ErrorControllerAdviceTest {

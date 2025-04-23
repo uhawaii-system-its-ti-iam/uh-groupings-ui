@@ -26,143 +26,143 @@ import edu.hawaii.its.api.type.ApiError;
 @ControllerAdvice
 public class ErrorControllerAdvice {
 
-    private static final Log logger = LogFactory.getLog(ErrorControllerAdvice.class);
-    private final UserContextService userContextService;
-    private final EmailService emailService;
+   private static final Log logger = LogFactory.getLog(ErrorControllerAdvice.class);
+   private final UserContextService userContextService;
+   private final EmailService emailService;
 
-    public ErrorControllerAdvice(UserContextService userContextService, EmailService emailService) {
-        this.userContextService = userContextService;
-        this.emailService = emailService;
-    }
+   public ErrorControllerAdvice(UserContextService userContextService, EmailService emailService) {
+       this.userContextService = userContextService;
+       this.emailService = emailService;
+   }
 
-    public ResponseEntity<ApiError> buildResponseEntity(ApiError apiError, Throwable cause) {
+   public ResponseEntity<ApiError> buildResponseEntity(ApiError apiError, Throwable cause) {
 
-        String uid = null;
-        User user = userContextService.getCurrentUser();
-        if (user != null) {
-            uid = user.getUid();
-        }
+       String uid = null;
+       User user = userContextService.getCurrentUser();
+       if (user != null) {
+           uid = user.getUid();
+       }
 
-        logger.error("uid: " + uid + "; Exception: ", cause);
+       logger.error("uid: " + uid + "; Exception: ", cause);
 
-        return new ResponseEntity<>(apiError, apiError.getStatus());
-    }
+       return new ResponseEntity<>(apiError, apiError.getStatus());
+   }
 
-    private String extractValidPath(WebRequest request) {
-        String path = request.getDescription(false);
-        if (path != null && path.startsWith("uri=")) {
-            String uri = path.substring(4);
-            if (!uri.contains("bogus")) {
-                return uri;
-            }
-        }
-        return null;
-    }
+   private String extractValidPath(WebRequest request) {
+       String path = request.getDescription(false);
+       if (path != null && path.startsWith("uri=")) {
+           String uri = path.substring(4);
+           if (!uri.contains("bogus")) {
+               return uri;
+           }
+       }
+       return null;
+   }
 
-    @ExceptionHandler(WebClientResponseException.class)
-    public ResponseEntity<ApiError> handleWebClientResponseException(WebClientResponseException wcre, WebRequest request) {
-        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        String path = extractValidPath(request);
+   @ExceptionHandler(WebClientResponseException.class)
+   public ResponseEntity<ApiError> handleWebClientResponseException(WebClientResponseException wcre, WebRequest request) {
+       ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+       String path = extractValidPath(request);
 
-        emailService.sendWithStack(wcre, "Web Client Response Exception", path);
-        ApiError.Builder errorBuilder = new ApiError.Builder()
-                .status((HttpStatus) wcre.getStatusCode())
-                .message("Web Client Response Exception")
-                .stackTrace(ExceptionUtils.getStackTrace(wcre))
-                .resultCode("FAILURE")
-                .path(attributes.getRequest().getRequestURI());
-
-
-        ApiError apiError = errorBuilder.build();
-        return buildResponseEntity(apiError, wcre);
-    }
-
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ApiError> handleIllegalArgumentException(IllegalArgumentException iae, WebRequest request) {
-        String path = extractValidPath(request);
-
-        emailService.sendWithStack(iae, "Illegal Argument Exception", path);
-        ApiError.Builder errorBuilder = new ApiError.Builder()
-                .status(HttpStatus.NOT_FOUND)
-                .message("Resource not available")
-                .stackTrace(ExceptionUtils.getStackTrace(iae))
-                .resultCode("FAILURE")
-                .path(path);
-        ApiError apiError = errorBuilder.build();
-
-        return buildResponseEntity(apiError, iae);
-    }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiError> handleException(Exception e, WebRequest request) {
-        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        String path = extractValidPath(request);
-
-        emailService.sendWithStack(e, "Exception", path);
-        ApiError.Builder errorBuilder = new ApiError.Builder()
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .message("Exception")
-                .stackTrace(ExceptionUtils.getStackTrace(e))
-                .resultCode("FAILURE")
-                .path(attributes.getRequest().getRequestURI());
-
-        ApiError apiError = errorBuilder.build();
-
-        return buildResponseEntity(apiError, e);
-    }
+       emailService.sendWithStack(wcre, "Web Client Response Exception", path);
+       ApiError.Builder errorBuilder = new ApiError.Builder()
+               .status((HttpStatus) wcre.getStatusCode())
+               .message("Web Client Response Exception")
+               .stackTrace(ExceptionUtils.getStackTrace(wcre))
+               .resultCode("FAILURE")
+               .path(attributes.getRequest().getRequestURI());
 
 
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<ApiError> handleRuntimeException(Exception re, WebRequest request) {
-        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        String path = extractValidPath(request);
+       ApiError apiError = errorBuilder.build();
+       return buildResponseEntity(apiError, wcre);
+   }
 
-        emailService.sendWithStack(re, "Runtime Exception", path);
-        ApiError.Builder errorBuilder = new ApiError.Builder()
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .message("Runtime Exception")
-                .stackTrace(ExceptionUtils.getStackTrace(re))
-                .resultCode("FAILURE")
-                .path(attributes.getRequest().getRequestURI());
+   @ExceptionHandler(IllegalArgumentException.class)
+   public ResponseEntity<ApiError> handleIllegalArgumentException(IllegalArgumentException iae, WebRequest request) {
+       String path = extractValidPath(request);
 
-        ApiError apiError = errorBuilder.build();
+       emailService.sendWithStack(iae, "Illegal Argument Exception", path);
+       ApiError.Builder errorBuilder = new ApiError.Builder()
+               .status(HttpStatus.NOT_FOUND)
+               .message("Resource not available")
+               .stackTrace(ExceptionUtils.getStackTrace(iae))
+               .resultCode("FAILURE")
+               .path(path);
+       ApiError apiError = errorBuilder.build();
 
-        return buildResponseEntity(apiError, re);
-    }
+       return buildResponseEntity(apiError, iae);
+   }
 
-    @ExceptionHandler({MessagingException.class, IOException.class})
-    public ResponseEntity<ApiError> handleMessagingException(Exception me, WebRequest request) {
-        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        String path = extractValidPath(request);
+   @ExceptionHandler(Exception.class)
+   public ResponseEntity<ApiError> handleException(Exception e, WebRequest request) {
+       ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+       String path = extractValidPath(request);
 
-        emailService.sendWithStack(me, "Messaging Exception", path);
-        ApiError.Builder errorBuilder = new ApiError.Builder()
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .message("Mail service exception")
-                .stackTrace(ExceptionUtils.getStackTrace(me))
-                .resultCode("FAILURE")
-                .path(attributes.getRequest().getRequestURI());
+       emailService.sendWithStack(e, "Exception", path);
+       ApiError.Builder errorBuilder = new ApiError.Builder()
+               .status(HttpStatus.INTERNAL_SERVER_ERROR)
+               .message("Exception")
+               .stackTrace(ExceptionUtils.getStackTrace(e))
+               .resultCode("FAILURE")
+               .path(attributes.getRequest().getRequestURI());
 
-        ApiError apiError = errorBuilder.build();
+       ApiError apiError = errorBuilder.build();
 
-        return buildResponseEntity(apiError, me);
-    }
+       return buildResponseEntity(apiError, e);
+   }
 
-    @ExceptionHandler(UnsupportedOperationException.class)
-    public ResponseEntity<ApiError> handleUnsupportedOperationException(UnsupportedOperationException ex, WebRequest request) {
-        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        String path = extractValidPath(request);
 
-        emailService.sendWithStack(ex, "Unsupported Operation Exception", path);
-        ApiError.Builder errorBuilder = new ApiError.Builder()
-                .status(HttpStatus.NOT_IMPLEMENTED)
-                .message("Method not implemented")
-                .stackTrace(ExceptionUtils.getStackTrace(ex))
-                .resultCode("FAILURE")
-                .path(attributes.getRequest().getRequestURI());;
+   @ExceptionHandler(RuntimeException.class)
+   public ResponseEntity<ApiError> handleRuntimeException(Exception re, WebRequest request) {
+       ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+       String path = extractValidPath(request);
 
-        ApiError apiError = errorBuilder.build();
+       emailService.sendWithStack(re, "Runtime Exception", path);
+       ApiError.Builder errorBuilder = new ApiError.Builder()
+               .status(HttpStatus.INTERNAL_SERVER_ERROR)
+               .message("Runtime Exception")
+               .stackTrace(ExceptionUtils.getStackTrace(re))
+               .resultCode("FAILURE")
+               .path(attributes.getRequest().getRequestURI());
 
-        return buildResponseEntity(apiError, ex);
-    }
+       ApiError apiError = errorBuilder.build();
+
+       return buildResponseEntity(apiError, re);
+   }
+
+   @ExceptionHandler({MessagingException.class, IOException.class})
+   public ResponseEntity<ApiError> handleMessagingException(Exception me, WebRequest request) {
+       ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+       String path = extractValidPath(request);
+
+       emailService.sendWithStack(me, "Messaging Exception", path);
+       ApiError.Builder errorBuilder = new ApiError.Builder()
+               .status(HttpStatus.INTERNAL_SERVER_ERROR)
+               .message("Mail service exception")
+               .stackTrace(ExceptionUtils.getStackTrace(me))
+               .resultCode("FAILURE")
+               .path(attributes.getRequest().getRequestURI());
+
+       ApiError apiError = errorBuilder.build();
+
+       return buildResponseEntity(apiError, me);
+   }
+
+   @ExceptionHandler(UnsupportedOperationException.class)
+   public ResponseEntity<ApiError> handleUnsupportedOperationException(UnsupportedOperationException ex, WebRequest request) {
+       ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+       String path = extractValidPath(request);
+
+       emailService.sendWithStack(ex, "Unsupported Operation Exception", path);
+       ApiError.Builder errorBuilder = new ApiError.Builder()
+               .status(HttpStatus.NOT_IMPLEMENTED)
+               .message("Method not implemented")
+               .stackTrace(ExceptionUtils.getStackTrace(ex))
+               .resultCode("FAILURE")
+               .path(attributes.getRequest().getRequestURI());;
+
+       ApiError apiError = errorBuilder.build();
+
+       return buildResponseEntity(apiError, ex);
+   }
 }
