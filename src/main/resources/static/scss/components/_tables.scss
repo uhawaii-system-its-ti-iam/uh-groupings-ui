@@ -119,6 +119,8 @@ form.seamless {
 
 /* Styles first, last, next and prev in pagination */
 .page-link {
+    min-height: 44px;
+    min-width: 44px;
     color: $text-color;
 }
 
@@ -126,10 +128,28 @@ form.seamless {
 .page-item.active > .page-link {
     background-color: $teal-tint;
     border-color: $teal-tint;
+    color: $text-color;
 }
 
 .row-height {
     height: 2.44em;
+}
+
+/* First, last, next and prev arrow color */
+.arrow {
+    color: $text-color;
+}
+
+/* Search button */
+input[type="search"].form-control {
+    min-height: 44px;
+    min-width: 44px;
+}
+
+/* Table settings button */
+.toolbar-control {
+    min-height: 44px;
+    min-width: 44px;
 }
 
 .dropdown .form-control {

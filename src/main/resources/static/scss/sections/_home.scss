@@ -13,11 +13,13 @@ body {
     min-height: 100vh;
     width: 100vw;
     overflow-x: hidden;
+}
 
-    h1 { /* For the Role: and Welcome *name* */
-        color: $uh-black;
-        font-weight: 700;
-    }
+.user-info { /* For the Role: and Welcome *name* */
+    font-size: 1.75rem;
+    line-height: 1.5;
+    font-weight: 500;
+    color: $uh-black;
 }
 
 /* Holds name and description. */

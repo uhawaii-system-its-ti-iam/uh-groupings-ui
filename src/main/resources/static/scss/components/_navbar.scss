@@ -65,6 +65,8 @@
 
 .nav-link {
     white-space: nowrap;
+    min-height: 44px;
+    min-width: 44px;
 }
 
 .nav-tabs {
@@ -110,6 +112,8 @@
         }
 
         .navbar-brand {
+            min-height: 44px;
+            min-width: 44px;
             padding: 0;
 
             > img {
@@ -162,4 +166,10 @@
     position: relative;
     bottom: 0;
     margin: 3.5px auto;
+}
+
+.login {
+    min-height: 44px;
+    min-width: 44px;
+    font-size: 20px;
 }
