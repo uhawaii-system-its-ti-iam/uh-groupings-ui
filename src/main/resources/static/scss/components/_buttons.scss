@@ -37,13 +37,20 @@ form.seamless button {
         }
     }
 
-    &.btn-primary,
     &.btn-lg {
-        min-width: 44px;
-        min-height: 44px;
+        @include gradient;
         font-size: 20px;
 
+        &:hover,
+        &:focus,
+        &:active {
+            background: $green-blue right center;
+        }
+    }
+
+    &.btn-primary {
         @include gradient;
+        font-size: 20px;
 
         &:hover,
         &:focus,
