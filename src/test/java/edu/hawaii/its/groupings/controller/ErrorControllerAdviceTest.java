@@ -3,6 +3,9 @@ package edu.hawaii.its.groupings.controller;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import jakarta.mail.MessagingException;
 
@@ -89,29 +92,23 @@ public class ErrorControllerAdviceTest {
     }
 
     @Test
-    public void extractValidPathTest() throws Exception {
+    public void testExtractEndpoint() {
+        MockHttpServletRequest mockRequest = new MockHttpServletRequest();
+        mockRequest.setRequestURI("/api/test/endpoint");
+        ServletWebRequest servletWebRequest = new ServletWebRequest(mockRequest);
+        String endpoint = errorControllerAdvice.extractEndpoint(servletWebRequest);
+        assertThat(endpoint, is("/api/test/endpoint"));
 
-        java.lang.reflect.Method method = ErrorControllerAdvice.class.getDeclaredMethod("extractValidPath", WebRequest.class);
-        method.setAccessible(true);
+        assertNull(errorControllerAdvice.extractEndpoint(null));
 
+        WebRequest webRequest = mock(WebRequest.class);
+        when(webRequest.getDescription(false)).thenReturn("uri=/api/description");
+        assertThat(errorControllerAdvice.extractEndpoint(webRequest), is("/api/description"));
 
-        MockHttpServletRequest validRequest = new MockHttpServletRequest();
-        validRequest.setRequestURI("/uhgroupings/api/groups");
-        WebRequest validWebRequest = new ServletWebRequest(validRequest);
-        String validResult = (String) method.invoke(errorControllerAdvice, validWebRequest);
-        assertThat(validResult, is("/uhgroupings/api/groups"));
+        when(webRequest.getDescription(false)).thenReturn("invalid_description");
+        assertNull(errorControllerAdvice.extractEndpoint(webRequest));
 
-
-        MockHttpServletRequest bogusRequest = new MockHttpServletRequest();
-        bogusRequest.setRequestURI("/uhgroupings/bogus");
-        WebRequest bogusWebRequest = new ServletWebRequest(bogusRequest);
-        String bogusResult = (String) method.invoke(errorControllerAdvice, bogusWebRequest);
-        assertThat(bogusResult, is((String) null));
-
-
-        WebRequest nullWebRequest = new ServletWebRequest(new MockHttpServletRequest());
-        String nullResult = (String) method.invoke(errorControllerAdvice, nullWebRequest);
-
-        assertThat(nullResult, is(""));
+        when(webRequest.getDescription(false)).thenReturn(null);
+        assertNull(errorControllerAdvice.extractEndpoint(webRequest));
     }
 }
