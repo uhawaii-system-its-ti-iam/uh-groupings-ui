@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
@@ -48,21 +49,25 @@ public class ErrorControllerAdvice {
        return new ResponseEntity<>(apiError, apiError.getStatus());
    }
 
-   private String extractValidPath(WebRequest request) {
-       String path = request.getDescription(false);
-       if (path != null && path.startsWith("uri=")) {
-           String uri = path.substring(4);
-           if (!uri.contains("bogus")) {
-               return uri;
-           }
-       }
-       return null;
-   }
+    public String extractEndpoint(WebRequest request) {
+        if (request == null) {
+            return null;
+        }
+
+        if (request instanceof ServletWebRequest) {
+            return ((ServletWebRequest) request).getRequest().getRequestURI();
+        }
+
+        String description = request.getDescription(false);
+        return (description != null && description.startsWith("uri="))
+                ? description.substring(4)
+                : null;
+    }
 
    @ExceptionHandler(WebClientResponseException.class)
    public ResponseEntity<ApiError> handleWebClientResponseException(WebClientResponseException wcre, WebRequest request) {
        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-       String path = extractValidPath(request);
+       String path = extractEndpoint(request);
 
        emailService.sendWithStack(wcre, "Web Client Response Exception", path);
        ApiError.Builder errorBuilder = new ApiError.Builder()
@@ -79,7 +84,7 @@ public class ErrorControllerAdvice {
 
    @ExceptionHandler(IllegalArgumentException.class)
    public ResponseEntity<ApiError> handleIllegalArgumentException(IllegalArgumentException iae, WebRequest request) {
-       String path = extractValidPath(request);
+       String path = extractEndpoint(request);
 
        emailService.sendWithStack(iae, "Illegal Argument Exception", path);
        ApiError.Builder errorBuilder = new ApiError.Builder()
@@ -96,7 +101,7 @@ public class ErrorControllerAdvice {
    @ExceptionHandler(Exception.class)
    public ResponseEntity<ApiError> handleException(Exception e, WebRequest request) {
        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-       String path = extractValidPath(request);
+       String path = extractEndpoint(request);
 
        emailService.sendWithStack(e, "Exception", path);
        ApiError.Builder errorBuilder = new ApiError.Builder()
@@ -115,7 +120,7 @@ public class ErrorControllerAdvice {
    @ExceptionHandler(RuntimeException.class)
    public ResponseEntity<ApiError> handleRuntimeException(Exception re, WebRequest request) {
        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-       String path = extractValidPath(request);
+       String path = extractEndpoint(request);
 
        emailService.sendWithStack(re, "Runtime Exception", path);
        ApiError.Builder errorBuilder = new ApiError.Builder()
@@ -133,7 +138,7 @@ public class ErrorControllerAdvice {
    @ExceptionHandler({MessagingException.class, IOException.class})
    public ResponseEntity<ApiError> handleMessagingException(Exception me, WebRequest request) {
        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-       String path = extractValidPath(request);
+       String path = extractEndpoint(request);
 
        emailService.sendWithStack(me, "Messaging Exception", path);
        ApiError.Builder errorBuilder = new ApiError.Builder()
@@ -151,7 +156,7 @@ public class ErrorControllerAdvice {
    @ExceptionHandler(UnsupportedOperationException.class)
    public ResponseEntity<ApiError> handleUnsupportedOperationException(UnsupportedOperationException ex, WebRequest request) {
        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-       String path = extractValidPath(request);
+       String path = extractEndpoint(request);
 
        emailService.sendWithStack(ex, "Unsupported Operation Exception", path);
        ApiError.Builder errorBuilder = new ApiError.Builder()
@@ -165,4 +170,5 @@ public class ErrorControllerAdvice {
 
        return buildResponseEntity(apiError, ex);
    }
+
 }

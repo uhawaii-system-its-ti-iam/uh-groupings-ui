@@ -3,7 +3,6 @@ package edu.hawaii.its.groupings.controller;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.when;
 
 import jakarta.mail.MessagingException;
 
@@ -47,9 +46,17 @@ public class ErrorControllerAdviceTest {
 
     @Test
     public void testIllegalArgument() {
-        IllegalArgumentException iae = new IllegalArgumentException();
-        when(webRequest.getDescription(false)).thenReturn("/ui/test-illegal-arg-exception");
-        ResponseEntity<ApiError> responseEntity = errorControllerAdvice.handleIllegalArgumentException(iae, webRequest);
+        IllegalArgumentException iae = new IllegalArgumentException("Invalid argument");
+
+
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setRequestURI("/ui/test-illegal-arg-exception");
+        WebRequest servletWebRequest = new ServletWebRequest(request);
+
+
+        ResponseEntity<ApiError> responseEntity = errorControllerAdvice.handleIllegalArgumentException(iae, servletWebRequest);
+
+
         assertThat(responseEntity.getStatusCode(), is(HttpStatus.NOT_FOUND));
     }
 
