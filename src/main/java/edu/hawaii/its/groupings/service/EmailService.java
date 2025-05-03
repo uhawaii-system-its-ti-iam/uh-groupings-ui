@@ -15,24 +15,14 @@ import org.springframework.stereotype.Service;
 
 import edu.hawaii.its.groupings.type.Feedback;
 
-@Service
-public class EmailService {
-
-    @Value("${email.send.recipient}")
-    private String recipient;
-    
-    @Value("${email.send.from}")
-    private String from;
-
-    @Value("${email.is.enabled}")
-    private boolean isEnabled;
-
-    @Value("${app.environment}")
-    private String environment;
+@Service public class EmailService {
 
     private static final Log logger = LogFactory.getLog(EmailService.class);
-
     private final JavaMailSender javaMailSender;
+    @Value("${email.send.recipient}") private String recipient;
+    @Value("${email.send.from}") private String from;
+    @Value("${email.is.enabled}") private boolean isEnabled;
+    @Value("${app.environment}") private String environment;
 
     public EmailService(JavaMailSender javaMailSender) {
         this.javaMailSender = javaMailSender;
@@ -84,7 +74,7 @@ public class EmailService {
         }
     }
 
-    public void sendWithStack(Exception e, String exceptionType) {
+    public void sendWithStack(Exception e, String exceptionType, String path) {
         logger.info("Feedback Error email has been triggered.");
 
         if (!isEnabled) {
@@ -111,10 +101,11 @@ public class EmailService {
             msg.setTo(recipient);
             msg.setFrom(from);
             String text = "";
-            String header =  "(" + environment + ") UH Groupings UI Error Response";
+            String header = "(" + environment + ") UH Groupings UI Error Response";
             text += "Cause of Response: The UI threw an exception that has triggered the ErrorControllerAdvice. \n\n";
             text += "Exception Thrown: ErrorControllerAdvice threw the " + exceptionType + ".\n\n";
             text += "Host Name: " + hostname + ".\n";
+            text += "Endpoint Path: " + path + "\n";
             if (!recipient.equals("its-iam-web-app-dev-help-l@lists.hawaii.edu")) {
                 text += "Recipient overridden to: " + recipient + "\n";
             }
@@ -122,6 +113,7 @@ public class EmailService {
             text += "UI Stack Trace: \n\n" + exceptionAsString;
             msg.setText(text);
             msg.setSubject(header);
+            logger.info(text);
             try {
                 javaMailSender.send(msg);
             } catch (MailException ex) {
@@ -130,17 +122,17 @@ public class EmailService {
         }
     }
 
-    public void setEnabled(boolean enabled) {
-        this.isEnabled = enabled;
-    }
-
     public void setRecipient(String recipient) {
         this.recipient = recipient;
     }
 
-    public void setEnvironment(String environment) { this.environment = environment; }
+    public String getEnvironment() {
+        return environment;
+    }
 
-    public String getEnvironment() { return environment; }
+    public void setEnvironment(String environment) {
+        this.environment = environment;
+    }
 
     public InetAddress getLocalHost() throws UnknownHostException {
         return InetAddress.getLocalHost();
@@ -148,6 +140,10 @@ public class EmailService {
 
     public boolean isEnabled() {
         return isEnabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.isEnabled = enabled;
     }
 
 }
