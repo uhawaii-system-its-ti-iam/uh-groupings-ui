@@ -14,85 +14,71 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.web.context.request.ServletWebRequest;
-
 import edu.hawaii.its.api.type.ApiError;
-
 import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
 
+@SpringBootTest(classes = { SpringBootWebApplication.class }) public class ErrorControllerAdviceTest {
 
-@SpringBootTest(classes = { SpringBootWebApplication.class })
-public class ErrorControllerAdviceTest {
+    @Autowired private ErrorControllerAdvice errorControllerAdvice;
 
-    @Autowired
-    private ErrorControllerAdvice errorControllerAdvice;
+    @MockitoBean private WebRequest webRequest;
 
-    @MockitoBean
-    private WebRequest webRequest;
-
-    @Test
-    public void nullTest() {
+    @Test public void nullTest() {
         assertNotNull(errorControllerAdvice);
     }
 
-    @Test
-    public void testWebClientResponse() {
+    @Test public void testWebClientResponse() {
         WebClientResponseException wcre = new WebClientResponseException(409, "CONFLICT", null, null, null);
-        ResponseEntity<ApiError> responseEntity = errorControllerAdvice.handleWebClientResponseException(wcre, webRequest);
+        ResponseEntity<ApiError> responseEntity =
+                errorControllerAdvice.handleWebClientResponseException(wcre, webRequest);
         assertThat(responseEntity.getStatusCode(), is(HttpStatus.CONFLICT));
     }
 
-    @Test
-    public void testIllegalArgument() {
+    @Test public void testIllegalArgument() {
         IllegalArgumentException iae = new IllegalArgumentException("Invalid argument");
-
 
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.setRequestURI("/ui/test-illegal-arg-exception");
         WebRequest servletWebRequest = new ServletWebRequest(request);
 
-
-        ResponseEntity<ApiError> responseEntity = errorControllerAdvice.handleIllegalArgumentException(iae, servletWebRequest);
-
+        ResponseEntity<ApiError> responseEntity =
+                errorControllerAdvice.handleIllegalArgumentException(iae, servletWebRequest);
 
         assertThat(responseEntity.getStatusCode(), is(HttpStatus.NOT_FOUND));
     }
 
-    @Test
-    public void testException() {
+    @Test public void testException() {
         Exception e = new Exception();
         ResponseEntity<ApiError> responseEntity = errorControllerAdvice.handleException(e, webRequest);
         assertThat(responseEntity.getStatusCode(), is(HttpStatus.INTERNAL_SERVER_ERROR));
     }
 
-    @Test
-    public void testRuntimeException() {
+    @Test public void testRuntimeException() {
         RuntimeException re = new RuntimeException();
-        ResponseEntity<ApiError> responseEntity = errorControllerAdvice.handleRuntimeException(re,  webRequest);
+        ResponseEntity<ApiError> responseEntity = errorControllerAdvice.handleRuntimeException(re, webRequest);
         assertThat(responseEntity.getStatusCode(), is(HttpStatus.INTERNAL_SERVER_ERROR));
     }
 
-    @Test
-    public void testMessagingException() {
+    @Test public void testMessagingException() {
         MessagingException me = new MessagingException();
         ResponseEntity<ApiError> responseEntity = errorControllerAdvice.handleMessagingException(me, webRequest);
         assertThat(responseEntity.getStatusCode(), is(HttpStatus.INTERNAL_SERVER_ERROR));
     }
 
-    @Test
-    public void testUnsupportedOp() {
+    @Test public void testUnsupportedOp() {
         UnsupportedOperationException uoe = new UnsupportedOperationException();
-        ResponseEntity<ApiError> responseEntity = errorControllerAdvice.handleUnsupportedOperationException(uoe, webRequest);
+        ResponseEntity<ApiError> responseEntity =
+                errorControllerAdvice.handleUnsupportedOperationException(uoe, webRequest);
         assertThat(responseEntity.getStatusCode(), is(HttpStatus.NOT_IMPLEMENTED));
     }
 
-    @Test
-    public void testExtractEndpoint() {
+    @Test public void testExtractEndpoint() {
         MockHttpServletRequest mockRequest = new MockHttpServletRequest();
         mockRequest.setRequestURI("/api/test/endpoint");
         ServletWebRequest servletWebRequest = new ServletWebRequest(mockRequest);

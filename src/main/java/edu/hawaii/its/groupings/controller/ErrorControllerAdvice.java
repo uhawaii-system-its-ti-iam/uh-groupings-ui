@@ -2,12 +2,11 @@ package edu.hawaii.its.groupings.controller;
 
 import java.io.IOException;
 
-
 import jakarta.mail.MessagingException;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -18,36 +17,34 @@ import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
+import edu.hawaii.its.api.type.ApiError;
 import edu.hawaii.its.groupings.access.User;
 import edu.hawaii.its.groupings.access.UserContextService;
 import edu.hawaii.its.groupings.service.EmailService;
-import edu.hawaii.its.api.type.ApiError;
 
+@ControllerAdvice public class ErrorControllerAdvice {
 
-@ControllerAdvice
-public class ErrorControllerAdvice {
+    private static final Log logger = LogFactory.getLog(ErrorControllerAdvice.class);
+    private final UserContextService userContextService;
+    private final EmailService emailService;
 
-   private static final Log logger = LogFactory.getLog(ErrorControllerAdvice.class);
-   private final UserContextService userContextService;
-   private final EmailService emailService;
+    public ErrorControllerAdvice(UserContextService userContextService, EmailService emailService) {
+        this.userContextService = userContextService;
+        this.emailService = emailService;
+    }
 
-   public ErrorControllerAdvice(UserContextService userContextService, EmailService emailService) {
-       this.userContextService = userContextService;
-       this.emailService = emailService;
-   }
+    public ResponseEntity<ApiError> buildResponseEntity(ApiError apiError, Throwable cause) {
 
-   public ResponseEntity<ApiError> buildResponseEntity(ApiError apiError, Throwable cause) {
+        String uid = null;
+        User user = userContextService.getCurrentUser();
+        if (user != null) {
+            uid = user.getUid();
+        }
 
-       String uid = null;
-       User user = userContextService.getCurrentUser();
-       if (user != null) {
-           uid = user.getUid();
-       }
+        logger.error("uid: " + uid + "; Exception: ", cause);
 
-       logger.error("uid: " + uid + "; Exception: ", cause);
-
-       return new ResponseEntity<>(apiError, apiError.getStatus());
-   }
+        return new ResponseEntity<>(apiError, apiError.getStatus());
+    }
 
     public String extractEndpoint(WebRequest request) {
         if (request == null) {
@@ -59,116 +56,100 @@ public class ErrorControllerAdvice {
         }
 
         String description = request.getDescription(false);
-        return (description != null && description.startsWith("uri="))
-                ? description.substring(4)
-                : null;
+        return (description != null && description.startsWith("uri=")) ? description.substring(4) : null;
     }
 
-   @ExceptionHandler(WebClientResponseException.class)
-   public ResponseEntity<ApiError> handleWebClientResponseException(WebClientResponseException wcre, WebRequest request) {
-       ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-       String path = extractEndpoint(request);
+    @ExceptionHandler(WebClientResponseException.class)
+    public ResponseEntity<ApiError> handleWebClientResponseException(WebClientResponseException wcre,
+            WebRequest request) {
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        String path = extractEndpoint(request);
 
-       emailService.sendWithStack(wcre, "Web Client Response Exception", path);
-       ApiError.Builder errorBuilder = new ApiError.Builder()
-               .status((HttpStatus) wcre.getStatusCode())
-               .message("Web Client Response Exception")
-               .stackTrace(ExceptionUtils.getStackTrace(wcre))
-               .resultCode("FAILURE")
-               .path(attributes.getRequest().getRequestURI());
+        emailService.sendWithStack(wcre, "Web Client Response Exception", path);
+        ApiError.Builder errorBuilder = new ApiError.Builder().status((HttpStatus) wcre.getStatusCode())
+                .message("Web Client Response Exception").stackTrace(ExceptionUtils.getStackTrace(wcre))
+                .resultCode("FAILURE").path(attributes.getRequest().getRequestURI());
 
+        ApiError apiError = errorBuilder.build();
+        return buildResponseEntity(apiError, wcre);
+    }
 
-       ApiError apiError = errorBuilder.build();
-       return buildResponseEntity(apiError, wcre);
-   }
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ApiError> handleIllegalArgumentException(IllegalArgumentException iae, WebRequest request) {
+        String path = extractEndpoint(request);
 
-   @ExceptionHandler(IllegalArgumentException.class)
-   public ResponseEntity<ApiError> handleIllegalArgumentException(IllegalArgumentException iae, WebRequest request) {
-       String path = extractEndpoint(request);
+        emailService.sendWithStack(iae, "Illegal Argument Exception", path);
+        ApiError.Builder errorBuilder =
+                new ApiError.Builder().status(HttpStatus.NOT_FOUND).message("Resource not available")
+                        .stackTrace(ExceptionUtils.getStackTrace(iae)).resultCode("FAILURE").path(path);
+        ApiError apiError = errorBuilder.build();
 
-       emailService.sendWithStack(iae, "Illegal Argument Exception", path);
-       ApiError.Builder errorBuilder = new ApiError.Builder()
-               .status(HttpStatus.NOT_FOUND)
-               .message("Resource not available")
-               .stackTrace(ExceptionUtils.getStackTrace(iae))
-               .resultCode("FAILURE")
-               .path(path);
-       ApiError apiError = errorBuilder.build();
+        return buildResponseEntity(apiError, iae);
+    }
 
-       return buildResponseEntity(apiError, iae);
-   }
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ApiError> handleException(Exception e, WebRequest request) {
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        String path = extractEndpoint(request);
 
-   @ExceptionHandler(Exception.class)
-   public ResponseEntity<ApiError> handleException(Exception e, WebRequest request) {
-       ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-       String path = extractEndpoint(request);
+        emailService.sendWithStack(e, "Exception", path);
+        ApiError.Builder errorBuilder =
+                new ApiError.Builder().status(HttpStatus.INTERNAL_SERVER_ERROR).message("Exception")
+                        .stackTrace(ExceptionUtils.getStackTrace(e)).resultCode("FAILURE")
+                        .path(attributes.getRequest().getRequestURI());
 
-       emailService.sendWithStack(e, "Exception", path);
-       ApiError.Builder errorBuilder = new ApiError.Builder()
-               .status(HttpStatus.INTERNAL_SERVER_ERROR)
-               .message("Exception")
-               .stackTrace(ExceptionUtils.getStackTrace(e))
-               .resultCode("FAILURE")
-               .path(attributes.getRequest().getRequestURI());
+        ApiError apiError = errorBuilder.build();
 
-       ApiError apiError = errorBuilder.build();
+        return buildResponseEntity(apiError, e);
+    }
 
-       return buildResponseEntity(apiError, e);
-   }
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<ApiError> handleRuntimeException(Exception re, WebRequest request) {
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        String path = extractEndpoint(request);
 
+        emailService.sendWithStack(re, "Runtime Exception", path);
+        ApiError.Builder errorBuilder =
+                new ApiError.Builder().status(HttpStatus.INTERNAL_SERVER_ERROR).message("Runtime Exception")
+                        .stackTrace(ExceptionUtils.getStackTrace(re)).resultCode("FAILURE")
+                        .path(attributes.getRequest().getRequestURI());
 
-   @ExceptionHandler(RuntimeException.class)
-   public ResponseEntity<ApiError> handleRuntimeException(Exception re, WebRequest request) {
-       ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-       String path = extractEndpoint(request);
+        ApiError apiError = errorBuilder.build();
 
-       emailService.sendWithStack(re, "Runtime Exception", path);
-       ApiError.Builder errorBuilder = new ApiError.Builder()
-               .status(HttpStatus.INTERNAL_SERVER_ERROR)
-               .message("Runtime Exception")
-               .stackTrace(ExceptionUtils.getStackTrace(re))
-               .resultCode("FAILURE")
-               .path(attributes.getRequest().getRequestURI());
+        return buildResponseEntity(apiError, re);
+    }
 
-       ApiError apiError = errorBuilder.build();
+    @ExceptionHandler({ MessagingException.class, IOException.class })
+    public ResponseEntity<ApiError> handleMessagingException(Exception me, WebRequest request) {
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        String path = extractEndpoint(request);
 
-       return buildResponseEntity(apiError, re);
-   }
+        emailService.sendWithStack(me, "Messaging Exception", path);
+        ApiError.Builder errorBuilder =
+                new ApiError.Builder().status(HttpStatus.INTERNAL_SERVER_ERROR).message("Mail service exception")
+                        .stackTrace(ExceptionUtils.getStackTrace(me)).resultCode("FAILURE")
+                        .path(attributes.getRequest().getRequestURI());
 
-   @ExceptionHandler({MessagingException.class, IOException.class})
-   public ResponseEntity<ApiError> handleMessagingException(Exception me, WebRequest request) {
-       ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-       String path = extractEndpoint(request);
+        ApiError apiError = errorBuilder.build();
 
-       emailService.sendWithStack(me, "Messaging Exception", path);
-       ApiError.Builder errorBuilder = new ApiError.Builder()
-               .status(HttpStatus.INTERNAL_SERVER_ERROR)
-               .message("Mail service exception")
-               .stackTrace(ExceptionUtils.getStackTrace(me))
-               .resultCode("FAILURE")
-               .path(attributes.getRequest().getRequestURI());
+        return buildResponseEntity(apiError, me);
+    }
 
-       ApiError apiError = errorBuilder.build();
+    @ExceptionHandler(UnsupportedOperationException.class)
+    public ResponseEntity<ApiError> handleUnsupportedOperationException(UnsupportedOperationException ex,
+            WebRequest request) {
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        String path = extractEndpoint(request);
 
-       return buildResponseEntity(apiError, me);
-   }
+        emailService.sendWithStack(ex, "Unsupported Operation Exception", path);
+        ApiError.Builder errorBuilder =
+                new ApiError.Builder().status(HttpStatus.NOT_IMPLEMENTED).message("Method not implemented")
+                        .stackTrace(ExceptionUtils.getStackTrace(ex)).resultCode("FAILURE")
+                        .path(attributes.getRequest().getRequestURI());
 
-   @ExceptionHandler(UnsupportedOperationException.class)
-   public ResponseEntity<ApiError> handleUnsupportedOperationException(UnsupportedOperationException ex, WebRequest request) {
-       ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-       String path = extractEndpoint(request);
+        ApiError apiError = errorBuilder.build();
 
-       emailService.sendWithStack(ex, "Unsupported Operation Exception", path);
-       ApiError.Builder errorBuilder = new ApiError.Builder()
-               .status(HttpStatus.NOT_IMPLEMENTED)
-               .message("Method not implemented")
-               .stackTrace(ExceptionUtils.getStackTrace(ex))
-               .resultCode("FAILURE")
-               .path(attributes.getRequest().getRequestURI());;
-
-       ApiError apiError = errorBuilder.build();
-
-       return buildResponseEntity(apiError, ex);
-   }
+        return buildResponseEntity(apiError, ex);
+    }
 
 }
