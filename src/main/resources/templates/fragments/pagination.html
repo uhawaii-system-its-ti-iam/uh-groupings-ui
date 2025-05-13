@@ -1,6 +1,6 @@
 <th:block th:fragment="pagination">
     <nav aria-label="Page Navigation">
-        <ul class="pagination float-right flex-wrap" aria-live="assertive">
+        <ul class="pagination float-right flex-wrap" aria-atomic="true" aria-live="assertive">
             <li class="page-item"
                 th:attr="ng-class='{ disabled: disableFirstAndPrev(' + ${currentPage} + ') }'">
                 <button class="page-link"
