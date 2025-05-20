@@ -7,10 +7,10 @@ import jakarta.mail.MessagingException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.ui.Model;
@@ -32,6 +32,7 @@ public class ErrorControllerAdvice {
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     public String handleIllegalArgumentException(IllegalArgumentException iae, Model model) {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
 
@@ -47,8 +48,9 @@ public class ErrorControllerAdvice {
         return "error";
     }
 
-    @ExceptionHandler({MessagingException.class, IOException.class})
-    public String handleMessagingException(Exception me, Model model) {
+    @ExceptionHandler(MessagingException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public String handleMessagingException(MessagingException me, Model model) {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
 
         log(me);
@@ -63,7 +65,25 @@ public class ErrorControllerAdvice {
         return "error";
     }
 
+    @ExceptionHandler(IOException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public String handleIOException(IOException ioe, Model model) {
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+
+        log(ioe);
+
+        emailService.sendWithStack(ioe, "IO Exception");
+
+        model.addAttribute("status", HttpStatus.INTERNAL_SERVER_ERROR);
+        model.addAttribute("message", "IO exception");
+        model.addAttribute("path", attributes.getRequest().getRequestURI());
+        model.addAttribute("timestamp", LocalDateTime.now());
+
+        return "error";
+    }
+
     @ExceptionHandler(UnsupportedOperationException.class)
+    @ResponseStatus(HttpStatus.NOT_IMPLEMENTED)
     public String handleUnsupportedOperationException(UnsupportedOperationException ex, Model model) {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
 

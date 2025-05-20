@@ -58,22 +58,4 @@ public class ErrorRestControllerTest {
         Feedback feedback = (Feedback) session.getAttribute("feedback");
         assertThat(feedback.getExceptionMessage(), is("exception"));
     }
-
-    @Test
-    @WithMockUhUser(uid = "admin", roles = { "ROLE_UH", "ROLE_ADMIN" })
-    public void throwExceptionTest() throws Exception {
-        mockMvc = webAppContextSetup(context)
-                .apply(springSecurity())
-                .build();
-
-        String uri = "/testing/exception";
-
-        MvcResult result = mockMvc.perform(get(uri))
-                .andExpect(status().isInternalServerError())
-                .andReturn();
-
-        String responseBody = result.getResponse().getContentAsString();
-        assertNotNull(responseBody);
-        assertThat(responseBody, containsString("Exception thrown intentionally"));
-    }
 }

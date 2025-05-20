@@ -27,7 +27,7 @@ import edu.hawaii.its.groupings.access.User;
 import edu.hawaii.its.groupings.access.UserContextService;
 import edu.hawaii.its.groupings.service.EmailService;
 
-class CustomErrorControllerTest {
+class DefaultErrorControllerTest {
 
     @Mock
     private DefaultErrorAttributes errorAttributes;
@@ -38,12 +38,12 @@ class CustomErrorControllerTest {
     @Mock
     private UserContextService userContextService;
 
-    private CustomErrorController controller;
+    private DefaultErrorController controller;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        controller = new CustomErrorController(errorAttributes, emailService, userContextService);
+        controller = new DefaultErrorController(errorAttributes, emailService, userContextService);
     }
 
     @Test
