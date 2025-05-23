@@ -1,23 +1,33 @@
 package edu.hawaii.its.groupings.controller;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+import java.io.IOException;
+import java.time.LocalDateTime;
 
 import jakarta.mail.MessagingException;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
-import edu.hawaii.its.api.type.ApiError;
+import org.springframework.ui.ExtendedModelMap;
+import org.springframework.ui.Model;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import edu.hawaii.its.groupings.access.User;
+import edu.hawaii.its.groupings.access.UserContextService;
 import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
+import edu.hawaii.its.groupings.service.EmailService;
 
 @SpringBootTest(classes = { SpringBootWebApplication.class })
 public class ErrorControllerAdviceTest {
@@ -26,7 +36,23 @@ public class ErrorControllerAdviceTest {
     private ErrorControllerAdvice errorControllerAdvice;
 
     @MockitoBean
-    private WebRequest webRequest;
+    private EmailService emailService;
+
+    @MockitoBean
+    private UserContextService userContextService;
+
+    @BeforeEach
+    void setUp() {
+        // Bind fake request so that the RequestContextHolder returns it
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setRequestURI("/test/bad/request");
+        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
+
+        // Stub out a logged-in user
+        User mockUser = mock(User.class);
+        when(mockUser.getUid()).thenReturn("winnie-pooh");
+        when(userContextService.getCurrentUser()).thenReturn(mockUser);
+    }
 
     @Test
     public void nullTest() {
@@ -34,45 +60,79 @@ public class ErrorControllerAdviceTest {
     }
 
     @Test
-    public void testWebClientResponse() {
-        WebClientResponseException wcre = new WebClientResponseException(409, "CONFLICT", null, null, null);
-        ResponseEntity<ApiError> responseEntity = errorControllerAdvice.handleWebClientResponseException(wcre);
-        assertThat(responseEntity.getStatusCode(), is(HttpStatus.CONFLICT));
-    }
+    public void testIllegalArgumentException() {
+        Model model = new ExtendedModelMap();
 
-    @Test
-    public void testIllegalArgument() {
-        IllegalArgumentException iae = new IllegalArgumentException();
-        when(webRequest.getDescription(false)).thenReturn("/ui/test-illegal-arg-exception");
-        ResponseEntity<ApiError> responseEntity = errorControllerAdvice.handleIllegalArgumentException(iae, webRequest);
-        assertThat(responseEntity.getStatusCode(), is(HttpStatus.NOT_FOUND));
-    }
+        IllegalArgumentException iae = new IllegalArgumentException("illegal argument exception");
 
-    @Test
-    public void testException() {
-        Exception e = new Exception();
-        ResponseEntity<ApiError> responseEntity = errorControllerAdvice.handleException(e);
-        assertThat(responseEntity.getStatusCode(), is(HttpStatus.INTERNAL_SERVER_ERROR));
-    }
+        String view = errorControllerAdvice.handleIllegalArgumentException(iae, model);
 
-    @Test
-    public void testRuntimeException() {
-        RuntimeException re = new RuntimeException();
-        ResponseEntity<ApiError> responseEntity = errorControllerAdvice.handleRuntimeException(re);
-        assertThat(responseEntity.getStatusCode(), is(HttpStatus.INTERNAL_SERVER_ERROR));
+        assertEquals("error", view, "should return the error view name");
+
+        // verify model attributes
+        assertEquals(HttpStatus.NOT_FOUND, model.getAttribute("status"));
+        assertEquals("Resource not available", model.getAttribute("message"));
+        assertEquals("/test/bad/request", model.getAttribute("path"));
+        assertTrue(model.getAttribute("timestamp") instanceof LocalDateTime);
+
+        verify(userContextService).getCurrentUser();
+        verify(emailService).sendWithStack(iae, "Illegal Argument Exception");
     }
 
     @Test
     public void testMessagingException() {
-        MessagingException me = new MessagingException();
-        ResponseEntity<ApiError> responseEntity = errorControllerAdvice.handleMessagingException(me);
-        assertThat(responseEntity.getStatusCode(), is(HttpStatus.INTERNAL_SERVER_ERROR));
+        Model model = new ExtendedModelMap();
+
+        MessagingException me = new MessagingException("messaging exception");
+
+        String view = errorControllerAdvice.handleMessagingException(me, model);
+
+        assertEquals("error", view, "should return the error view name");
+
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR,  model.getAttribute("status"));
+        assertEquals("Mail service exception",  model.getAttribute("message"));
+        assertEquals("/test/bad/request",  model.getAttribute("path"));
+        assertTrue(model.getAttribute("timestamp") instanceof LocalDateTime);
+
+        verify(userContextService).getCurrentUser();
+        verify(emailService).sendWithStack(me, "Messaging Exception");
     }
 
     @Test
-    public void testUnsupportedOp() {
-        UnsupportedOperationException uoe = new UnsupportedOperationException();
-        ResponseEntity<ApiError> responseEntity = errorControllerAdvice.handleUnsupportedOperationException(uoe);
-        assertThat(responseEntity.getStatusCode(), is(HttpStatus.NOT_IMPLEMENTED));
+    public void testIOException() {
+        Model model = new ExtendedModelMap();
+
+        IOException ioe = new IOException("io exception");
+
+        String view = errorControllerAdvice.handleIOException(ioe, model);
+
+        assertEquals("error", view, "should return the error view name");
+
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR,  model.getAttribute("status"));
+        assertEquals("IO exception",  model.getAttribute("message"));
+        assertEquals("/test/bad/request",  model.getAttribute("path"));
+        assertTrue(model.getAttribute("timestamp") instanceof LocalDateTime);
+
+        verify(userContextService).getCurrentUser();
+        verify(emailService).sendWithStack(ioe, "IO Exception");
+    }
+
+    @Test
+    public void testUnsupportedOperationException() {
+        Model model = new ExtendedModelMap();
+
+        UnsupportedOperationException uoe = new UnsupportedOperationException("unsupported operation exception");
+
+        String view = errorControllerAdvice.handleUnsupportedOperationException(uoe, model);
+
+        assertEquals("error", view, "should return the error view name");
+
+        assertEquals(HttpStatus.NOT_IMPLEMENTED,  model.getAttribute("status"));
+        assertEquals("Method not implemented",  model.getAttribute("message"));
+        assertEquals("/test/bad/request",  model.getAttribute("path"));
+        assertTrue(model.getAttribute("timestamp") instanceof LocalDateTime);
+
+        verify(userContextService).getCurrentUser();
+        verify(emailService).sendWithStack(uoe, "Unsupported Operation Exception");
     }
 }
