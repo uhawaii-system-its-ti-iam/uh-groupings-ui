@@ -15,14 +15,24 @@ import org.springframework.stereotype.Service;
 
 import edu.hawaii.its.groupings.type.Feedback;
 
-@Service public class EmailService {
+@Service
+public class EmailService {
+
+    @Value("${email.send.recipient}")
+    private String recipient;
+
+    @Value("${email.send.from}")
+    private String from;
+
+    @Value("${email.is.enabled}")
+    private boolean isEnabled;
+
+    @Value("${app.environment}")
+    private String environment;
 
     private static final Log logger = LogFactory.getLog(EmailService.class);
+
     private final JavaMailSender javaMailSender;
-    @Value("${email.send.recipient}") private String recipient;
-    @Value("${email.send.from}") private String from;
-    @Value("${email.is.enabled}") private boolean isEnabled;
-    @Value("${app.environment}") private String environment;
 
     public EmailService(JavaMailSender javaMailSender) {
         this.javaMailSender = javaMailSender;
@@ -101,7 +111,7 @@ import edu.hawaii.its.groupings.type.Feedback;
             msg.setTo(recipient);
             msg.setFrom(from);
             String text = "";
-            String header = "(" + environment + ") UH Groupings UI Error Response";
+            String header =  "(" + environment + ") UH Groupings UI Error Response";
             text += "Cause of Response: The UI threw an exception that has triggered the ErrorControllerAdvice. \n\n";
             text += "Exception Thrown: ErrorControllerAdvice threw the " + exceptionType + ".\n\n";
             text += "Host Name: " + hostname + ".\n";
@@ -122,17 +132,17 @@ import edu.hawaii.its.groupings.type.Feedback;
         }
     }
 
+    public void setEnabled(boolean enabled) {
+        this.isEnabled = enabled;
+    }
+
     public void setRecipient(String recipient) {
         this.recipient = recipient;
     }
 
-    public String getEnvironment() {
-        return environment;
-    }
+    public void setEnvironment(String environment) { this.environment = environment; }
 
-    public void setEnvironment(String environment) {
-        this.environment = environment;
-    }
+    public String getEnvironment() { return environment; }
 
     public InetAddress getLocalHost() throws UnknownHostException {
         return InetAddress.getLocalHost();
@@ -140,10 +150,6 @@ import edu.hawaii.its.groupings.type.Feedback;
 
     public boolean isEnabled() {
         return isEnabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.isEnabled = enabled;
     }
 
 }

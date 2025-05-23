@@ -1,6 +1,5 @@
 package edu.hawaii.its.groupings.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.doThrow;
@@ -20,7 +19,8 @@ import org.springframework.mail.javamail.JavaMailSender;
 import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
 import edu.hawaii.its.groupings.type.Feedback;
 
-@SpringBootTest(classes = { SpringBootWebApplication.class }) public class EmailServiceTest {
+@SpringBootTest(classes = { SpringBootWebApplication.class })
+public class EmailServiceTest {
 
     private static boolean wasSent;
 
@@ -30,7 +30,8 @@ import edu.hawaii.its.groupings.type.Feedback;
 
     public EmailService mockEmailService;
 
-    @Value("${app.environment}") private String environment;
+    @Value("${app.environment}")
+    private String environment;
 
     @Value("${groupings.api.test.path:/api/groupings/v2.1}") private String testPath;
 
@@ -44,9 +45,11 @@ import edu.hawaii.its.groupings.type.Feedback;
         return feedback;
     }
 
-    @BeforeEach public void setUp() {
+    @BeforeEach
+    public void setUp() {
         JavaMailSender sender = new MockJavaMailSender() {
-            @Override public void send(SimpleMailMessage mailMessage) throws MailException {
+            @Override
+            public void send(SimpleMailMessage mailMessage) throws MailException {
                 wasSent = true;
                 messageSent = mailMessage;
             }
@@ -62,7 +65,8 @@ import edu.hawaii.its.groupings.type.Feedback;
         testPath = "/api/groupings/v2.1";
     }
 
-    @Test public void sendFeedbackWithNoExceptionMessage() {
+    @Test
+    public void sendFeedbackWithNoExceptionMessage() {
         Feedback feedback = createBaseFeedback();
 
         emailService.send(feedback);
@@ -75,7 +79,8 @@ import edu.hawaii.its.groupings.type.Feedback;
         assertFalse(messageSent.getText().contains("Stack Trace:"));
     }
 
-    @Test public void sendFeedbackWithExceptionMessage() {
+    @Test
+    public void sendFeedbackWithExceptionMessage() {
         Feedback feedback = createBaseFeedback();
         feedback.setExceptionMessage("ArrayIndexOutOfBoundsException");
 
@@ -90,9 +95,11 @@ import edu.hawaii.its.groupings.type.Feedback;
         assertTrue(messageSent.getText().contains("ArrayIndexOutOfBoundsException"));
     }
 
-    @Test public void sendFeedbackWithMailExceptionThrown() {
+    @Test
+    public void sendFeedbackWithMailExceptionThrown() {
         JavaMailSender senderWithException = new MockJavaMailSender() {
-            @Override public void send(SimpleMailMessage mailMessage) throws MailException {
+            @Override
+            public void send(SimpleMailMessage mailMessage) throws MailException {
                 wasSent = false;
                 throw new MailSendException("Exception");
             }
@@ -109,7 +116,8 @@ import edu.hawaii.its.groupings.type.Feedback;
         assertFalse(wasSent);
     }
 
-    @Test public void enabled() {
+    @Test
+    public void enabled() {
         emailService.setEnabled(false);
         assertFalse(emailService.isEnabled());
         emailService.sendWithStack(new NullPointerException(), "Null Pointer Exception", testPath);
@@ -131,7 +139,8 @@ import edu.hawaii.its.groupings.type.Feedback;
         assertTrue(wasSent);
     }
 
-    @Test public void overrideRecipient() {
+    @Test
+    public void overrideRecipient() {
         Feedback feedback = createBaseFeedback();
 
         emailService.setRecipient("override@email.com");
@@ -146,13 +155,15 @@ import edu.hawaii.its.groupings.type.Feedback;
         emailService.sendWithStack(new NullPointerException(), "Null Pointer Exception", testPath);
         assertFalse(messageSent.getText().contains("Recipient overridden"));
 
+
         emailService.setEnabled(true);
         emailService.setRecipient("override@email.com");
         emailService.sendWithStack(new NullPointerException(), "Null Pointer Exception", testPath);
         assertTrue(messageSent.getText().contains("Recipient overridden"));
     }
 
-    @Test public void unknownHost() throws UnknownHostException {
+    @Test
+    public void unknownHost() throws UnknownHostException {
         Feedback feedback = createBaseFeedback();
         mockEmailService.setEnabled(true);
         mockEmailService.setRecipient("address");
@@ -165,10 +176,11 @@ import edu.hawaii.its.groupings.type.Feedback;
         assertTrue(messageSent.getText().contains("Unknown Host"));
     }
 
-    @Test public void environmentInSubject() {
+    @Test
+    public void environmentInSubject() {
         emailService.setEnabled(true);
         String environment = emailService.getEnvironment();
-        assertEquals("dev", environment);
+        assertTrue(environment.equals("dev"));
         emailService.sendWithStack(new NullPointerException(), "Null Pointer Exception", testPath);
         assertTrue(messageSent.getSubject().contains("(dev)"));
     }
