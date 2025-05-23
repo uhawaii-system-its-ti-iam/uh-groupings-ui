@@ -33,7 +33,8 @@ public class EmailServiceTest {
     @Value("${app.environment}")
     private String environment;
 
-    @Value("${groupings.api.test.path:/api/groupings/v2.1}") private String testPath;
+    @Value("${groupings.api.test.path:/api/groupings/v2.1}")
+    private String testPath;
 
     private Feedback createBaseFeedback() {
         Feedback feedback = new Feedback();
