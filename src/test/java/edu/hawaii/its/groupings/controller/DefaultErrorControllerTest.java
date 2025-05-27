@@ -50,6 +50,7 @@ class DefaultErrorControllerTest {
     void onError() {
         // Arrange
         MockHttpServletRequest servletRequest = new MockHttpServletRequest();
+        servletRequest.setRequestURI("/some/path");
         Model model = new ExtendedModelMap();
         RuntimeException ex = new RuntimeException("Runtime Exception");
         when(errorAttributes.getError(any(ServletWebRequest.class)))
