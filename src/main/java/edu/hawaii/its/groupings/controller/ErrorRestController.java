@@ -4,7 +4,6 @@ import jakarta.servlet.http.HttpSession;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -30,7 +29,7 @@ public class ErrorRestController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(value = "/testing/exception")
-    public ResponseEntity<String> throwException() {
+    public void throwException() {
         logger.info("Entered REST throwException...");
 
         throw new ExceptionForTesting("Exception thrown intentionally");

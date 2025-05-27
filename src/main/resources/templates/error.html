@@ -1,6 +1,9 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
-<head th:replace="~{header :: copy}"></head>
+<head>
+    <base th:href="@{/}" />
+    <th:block th:replace="~{header :: copy}"></th:block>
+</head>
 <body>
 <nav th:replace="~{menubar :: copy}"></nav>
 
@@ -10,10 +13,6 @@
             <div class='col-xs-offset-1 col-xs-10'>
                 <h1>Error</h1>
 
-                <!--  As we are using Thymeleaf, you might consider using
-                      ${#httpServletRequest.requestURL}. But that returns the path
-                      to this error page.  Hence we explicitly add the url to the
-                      Model in some of the example code. -->
                 <p th:if="${url}">
                     <b>Page:</b> <span th:text="${url}">Page URL</span>
                 </p>
@@ -25,6 +24,14 @@
                 <p th:if="${status}">
                     <b>Response Status:</b> <span th:text="${status}">status-code</span> <span
                         th:if="${error}" th:text="'('+${error}+')'">error ...</span>
+                </p>
+
+                <p th:if="${message}">
+                    <b>Message:</b> <span th:text="${message}">Message</span>
+                </p>
+
+                <p th:if="${path}">
+                    <b>Path:</b> <span th:text="${path}">Path</span>
                 </p>
             </div>
         </div>
