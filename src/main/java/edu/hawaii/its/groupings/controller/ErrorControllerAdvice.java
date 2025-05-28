@@ -45,7 +45,7 @@ public class ErrorControllerAdvice {
 
         model.addAttribute("status", HttpStatus.NOT_FOUND);
         model.addAttribute("message", "Resource not available");
-        model.addAttribute("path", attributes.getRequest().getRequestURI());
+        model.addAttribute("path", path);
         model.addAttribute("timestamp", LocalDateTime.now());
 
         return "error";
@@ -63,7 +63,7 @@ public class ErrorControllerAdvice {
 
         model.addAttribute("status", HttpStatus.INTERNAL_SERVER_ERROR);
         model.addAttribute("message", "Mail service exception");
-        model.addAttribute("path", attributes.getRequest().getRequestURI());
+        model.addAttribute("path", path);
         model.addAttribute("timestamp", LocalDateTime.now());
 
         return "error";
@@ -81,7 +81,7 @@ public class ErrorControllerAdvice {
 
         model.addAttribute("status", HttpStatus.INTERNAL_SERVER_ERROR);
         model.addAttribute("message", "IO exception");
-        model.addAttribute("path", attributes.getRequest().getRequestURI());
+        model.addAttribute("path", path);
         model.addAttribute("timestamp", LocalDateTime.now());
 
         return "error";
@@ -99,7 +99,7 @@ public class ErrorControllerAdvice {
 
         model.addAttribute("status", HttpStatus.NOT_IMPLEMENTED);
         model.addAttribute("message", "Method not implemented");
-        model.addAttribute("path", attributes.getRequest().getRequestURI());
+        model.addAttribute("path", path);
         model.addAttribute("timestamp", LocalDateTime.now());
 
         return "error";
