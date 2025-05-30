@@ -58,6 +58,14 @@ table {
     }
 }
 
+.interactive-td {
+    min-width: 44px;
+    line-height: 35px;
+    padding: 0 20px; /* increase padding to ensure 44px height */
+    cursor: pointer;
+    vertical-align: middle;
+}
+
 /* Arrows for sorting info on table */
 .sort-icon {
     &::after { /* Angle down */
