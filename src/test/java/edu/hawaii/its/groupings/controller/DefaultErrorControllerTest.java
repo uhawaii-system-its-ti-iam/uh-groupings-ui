@@ -50,6 +50,7 @@ class DefaultErrorControllerTest {
     void onError() {
         // Arrange
         MockHttpServletRequest servletRequest = new MockHttpServletRequest();
+        servletRequest.setRequestURI("/some/path");
         Model model = new ExtendedModelMap();
         RuntimeException ex = new RuntimeException("Runtime Exception");
         when(errorAttributes.getError(any(ServletWebRequest.class)))
@@ -83,6 +84,6 @@ class DefaultErrorControllerTest {
 
         // confirm we looked up the user and emailed the exception
         verify(userContextService).getCurrentUser();
-        verify(emailService).sendWithStack(ex, "RuntimeException");
+        verify(emailService).sendWithStack(ex, "RuntimeException", "/some/path");
     }
 }

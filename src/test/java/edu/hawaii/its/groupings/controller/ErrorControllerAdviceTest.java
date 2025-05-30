@@ -23,6 +23,7 @@ import org.springframework.ui.ExtendedModelMap;
 import org.springframework.ui.Model;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.context.request.WebRequest;
 
 import edu.hawaii.its.groupings.access.User;
 import edu.hawaii.its.groupings.access.UserContextService;
@@ -76,7 +77,7 @@ public class ErrorControllerAdviceTest {
         assertTrue(model.getAttribute("timestamp") instanceof LocalDateTime);
 
         verify(userContextService).getCurrentUser();
-        verify(emailService).sendWithStack(iae, "Illegal Argument Exception");
+        verify(emailService).sendWithStack(iae, "Illegal Argument Exception", "/test/bad/request");
     }
 
     @Test
@@ -95,7 +96,7 @@ public class ErrorControllerAdviceTest {
         assertTrue(model.getAttribute("timestamp") instanceof LocalDateTime);
 
         verify(userContextService).getCurrentUser();
-        verify(emailService).sendWithStack(me, "Messaging Exception");
+        verify(emailService).sendWithStack(me, "Messaging Exception", "/test/bad/request");
     }
 
     @Test
@@ -114,7 +115,7 @@ public class ErrorControllerAdviceTest {
         assertTrue(model.getAttribute("timestamp") instanceof LocalDateTime);
 
         verify(userContextService).getCurrentUser();
-        verify(emailService).sendWithStack(ioe, "IO Exception");
+        verify(emailService).sendWithStack(ioe, "IO Exception", "/test/bad/request");
     }
 
     @Test
@@ -133,6 +134,6 @@ public class ErrorControllerAdviceTest {
         assertTrue(model.getAttribute("timestamp") instanceof LocalDateTime);
 
         verify(userContextService).getCurrentUser();
-        verify(emailService).sendWithStack(uoe, "Unsupported Operation Exception");
+        verify(emailService).sendWithStack(uoe, "Unsupported Operation Exception", "/test/bad/request");
     }
 }
