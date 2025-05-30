@@ -50,11 +50,11 @@
                 <!-- Current Membership Tab-->
                 <div ng-if="membershipsList.length !== 0">
                     <div class="table-responsive">
-                        <table class="table manage-groupings table-striped table-hover" aria-live="assertive">
+                        <table class="table manage-groupings table-striped table-hover" aria-atomic="true">
                             <thead class="align-middle">
                             <tr>
                                 <th ng-click="sortBy('membershipsList', 'pagedItemsMemberships', 'name')"
-                                    class="w-35" role="button">
+                                    class="w-35" role="columnheader" scope="col">
                                     Grouping Name
                                     <i class="fa sort-icon"
                                        ng-show="columnSort.membershipsList.property === 'name' || !columnSort.membershipsList"
@@ -62,14 +62,14 @@
                                 </th>
                                 <th ng-click="sortBy('membershipsList', 'pagedItemsMemberships', 'description')"
                                     ng-show="showDescriptionColumn"
-                                    class="d-none d-sm-table-cell" role="button">
+                                    class="d-none d-sm-table-cell" role="columnheader" scope="col">
                                     Description
                                     <i class="fa sort-icon" ng-show="columnSort.membershipsList.property === 'description'"
                                        ng-class="{ reverse: columnSort.membershipsList.reverse }"></i>
                                 </th>
                                 <th ng-click="sortBy('membershipsList', 'pagedItemsMemberships', 'path')"
                                     ng-show="showGroupingPathColumn"
-                                    class="d-none d-sm-table-cell" role="button">
+                                    class="d-none d-sm-table-cell" role="columnheader" scope="col">
                                     Grouping Path
                                     <i class="fa sort-icon" ng-show="columnSort.membershipsList.property === 'path'"
                                        ng-class="{ reverse: columnSort.membershipsList.reverse }"></i>
@@ -156,11 +156,11 @@
                 </div>
                 <div ng-if="optInList.length !== 0">
                     <div class="table-responsive">
-                        <table class="table manage-groupings table-striped table-hover" aria-live="assertive">
+                        <table class="table manage-groupings table-striped table-hover" aria-atomic="true">
                             <thead class="align-middle">
                             <tr>
                                 <th ng-click="sortBy('optInList', 'optInList', 'name')"
-                                    class="w-35" role="button">
+                                    class="w-35" role="columnheader" scope="col">
                                     Grouping Name
                                     <i class="fa sort-icon"
                                        ng-show="columnSort.optInList.property === 'name' || !columnSort.optInList"
@@ -168,14 +168,14 @@
                                 </th>
                                 <th ng-click="sortBy('optInList', 'pagedItemsOptInList', 'description')"
                                     ng-show="showDescriptionColumn"
-                                    class="d-none d-sm-table-cell" role="button">
+                                    class="d-none d-sm-table-cell" role="columnheader" scope="col">
                                     Description
                                     <i class="fa sort-icon" ng-show="columnSort.optInList.property === 'description'"
                                        ng-class="{ reverse: columnSort.optInList.reverse }"></i>
                                 </th>
                                 <th ng-click="sortBy('optInList', 'pagedItemsOptInList', 'path')"
                                     ng-show="showGroupingPathColumn"
-                                    class="d-none d-sm-table-cell" role="button">
+                                    class="d-none d-sm-table-cell" role="columnheader" scope="col">
                                     Grouping Path
                                     <i class="fa sort-icon" ng-show="columnSort.optInList.property === 'path'"
                                        ng-class="{ reverse: columnSort.optInList.reverse }"></i>

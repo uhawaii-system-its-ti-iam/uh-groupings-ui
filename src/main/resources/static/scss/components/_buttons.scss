@@ -37,8 +37,18 @@ form.seamless button {
         }
     }
 
-    &.btn-primary,
     &.btn-lg {
+        @include gradient;
+        font-size: 20px;
+
+        &:hover,
+        &:focus,
+        &:active {
+            background: $green-blue right center;
+        }
+    }
+
+    &.btn-primary {
         @include gradient;
 
         &:hover,
@@ -49,6 +59,10 @@ form.seamless button {
     }
 
     &.btn-bottom { /* Buttons for membership, admin, owner in home page */
+        min-width: 44px;
+        min-height: 44px;
+        font-size: 20px;
+
         @include gradient;
     }
 
@@ -63,8 +77,12 @@ form.seamless button {
     }
 
     &-outline-secondary {
+        min-width: 44px;
+        min-height: 44px;
+        font-size: 20px;
         color: $uh-dark-gray;
         border-color: $uh-dark-gray;
+
         &:hover,
         &:focus,
         &:active { /* Changes the logout color when you hover. */

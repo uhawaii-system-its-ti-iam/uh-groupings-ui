@@ -708,14 +708,15 @@
          * @param {String} listName grouping list (i.e. include, exclude, owners, or owner-grouping)
          */
         $scope.addOnClick = (listName) => {
+            const userInput = $scope.parseAddRemoveInputStr($scope.manageMembers);
             $scope.resetErrors();
             if (listName === "Include" || listName === "Exclude") {
+                // Prevents adding owner-groupings to include/exclude list
                 if ($scope.manageMembers.includes(":")) {
-                    $scope.displayDynamicModal(Message.Title.NO_MEMBERS_ADDED, Message.Body.ADD_GROUP_PATH_ERROR);
+                    $scope.displayDynamicModal(Message.Title.BAD_INPUT_ERROR, Message.Body.ADD_INPUT_ERROR);
                     clearMemberInput();
-                    return;
                 } else {
-                    $scope.addMembers(listName);
+                    $scope.addMembers(listName, userInput);
                 }
             }
             if (listName === "owners") {
@@ -726,7 +727,7 @@
                         $scope.displayDynamicModal(Message.Title.OWNER_NOT_ADDED, Message.Body.ADD_CURRENT_PATH_ERROR);
                         clearMemberInput();
                         return;
-                    } else if ($scope.manageMembers.includes(",")) {
+                    } else if (userInput.length > 1) {
                         // Prevent multi-adding owner-groupings
                         $scope.displayDynamicModal(Message.Title.INVALID_MULTI_ADD, Message.Body.INVALID_MULTI_ADD);
                         clearMemberInput();
@@ -743,7 +744,7 @@
                     $scope.addModalId = "add-modal";
                     $scope.addModalURL = "modal/addModal";
                 }
-                $scope.addMembers(listName);
+                $scope.addMembers(listName, userInput);
             }
             $scope.errorDismissed = false;
         };
@@ -753,6 +754,7 @@
          * @param {String} listName grouping list (i.e. Include, Exclude, owners, or owner-grouping)
          */
         $scope.removeOnClick = (listName) => {
+            const userInput = $scope.parseAddRemoveInputStr($scope.manageMembers);
             $scope.resetErrors();
             if (listName === "Include" || listName === "Exclude") {
                 $scope.removeMembers(listName);
@@ -760,12 +762,19 @@
             if (listName === "owners") {
                 // If the user input has a colon, we can assume that it's a group path
                 if ($scope.manageMembers.includes(":")) {
-                    $scope.isOwnerGrouping = true;
-                    $scope.removeModalId = "remove-owner-grouping-modal";
-                    $scope.removeModalURL = "modal/removeOwnerGroupingModal";
-                    // ownerGroupPath is specifically used for the path in the removeOwnerGroupingModal
-                    $scope.ownerGroupPath = $scope.manageMembers;
-                    $scope.groupingName = $scope.manageMembers.split(":").pop();
+                    if (userInput.length > 1) {
+                        // Prevent multi-adding owner-groupings
+                        $scope.displayDynamicModal(Message.Title.INVALID_MULTI_REMOVE, Message.Body.INVALID_MULTI_REMOVE);
+                        clearMemberInput();
+                        return;
+                    } else {
+                        $scope.isOwnerGrouping = true;
+                        $scope.removeModalId = "remove-owner-grouping-modal";
+                        $scope.removeModalURL = "modal/removeOwnerGroupingModal";
+                        // ownerGroupPath is specifically used for the path in the removeOwnerGroupingModal
+                        $scope.ownerGroupPath = $scope.manageMembers;
+                        $scope.groupingName = $scope.manageMembers.split(":").pop();
+                    }
                 } else {
                     $scope.removeModalId = "remove-modal";
                     $scope.removeModalURL = "modal/removeModal";
@@ -1185,8 +1194,9 @@
 
             // Check if members to remove exist in the list
             if (!$scope.fetchMemberProperties(uhIdentifiers, listName)) {
-                $scope.displayDynamicModal(Message.Title.REMOVE_INPUT_ERROR, Message.Body.REMOVE_INPUT_ERROR);
+                $scope.displayDynamicModal(Message.Title.BAD_INPUT_ERROR, Message.Body.REMOVE_INPUT_ERROR);
                 $scope.membersNotInList = "";
+                clearMemberInput();
                 return;
             }
 
