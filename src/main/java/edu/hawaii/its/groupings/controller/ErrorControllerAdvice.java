@@ -2,20 +2,22 @@ package edu.hawaii.its.groupings.controller;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 import jakarta.mail.MessagingException;
-import jakarta.servlet.ServletRequest;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.ui.Model;
-import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import edu.hawaii.its.groupings.access.User;
 import edu.hawaii.its.groupings.access.UserContextService;
@@ -31,6 +33,28 @@ public class ErrorControllerAdvice {
     public ErrorControllerAdvice(UserContextService userContextService, EmailService emailService) {
         this.userContextService = userContextService;
         this.emailService = emailService;
+    }
+
+    @ExceptionHandler(WebClientResponseException.class)
+    public ResponseEntity<Map<String, Object>> handleWebClientResponseException
+            (WebClientResponseException wcre) {
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        String path = attributes.getRequest().getRequestURI();
+
+        log(wcre);
+
+        emailService.sendWithStack(wcre, "Web Client Response Exception", path);
+
+        logger.info("WebClientResponseException is handled by the controller");
+
+        Map<String, Object> body = new HashMap<>();
+
+        body.put("status", wcre.getStatusCode());
+        body.put("message", "Web Client Response Exception");
+        body.put("path", path);
+        body.put("timestamp", LocalDateTime.now());
+
+        return new ResponseEntity<>(wcre.getStatusCode());
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
