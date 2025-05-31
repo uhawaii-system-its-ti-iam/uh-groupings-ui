@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.Map;
 
 import jakarta.mail.MessagingException;
 
@@ -17,13 +18,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.ui.ExtendedModelMap;
 import org.springframework.ui.Model;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import edu.hawaii.its.groupings.access.User;
 import edu.hawaii.its.groupings.access.UserContextService;
@@ -42,11 +45,13 @@ public class ErrorControllerAdviceTest {
     @MockitoBean
     private UserContextService userContextService;
 
+    private final String testURI = "/test/bad/request";
+
     @BeforeEach
     void setUp() {
         // Bind fake request so that the RequestContextHolder returns it
         MockHttpServletRequest request = new MockHttpServletRequest();
-        request.setRequestURI("/test/bad/request");
+        request.setRequestURI(testURI);
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
 
         // Stub out a logged-in user
@@ -58,6 +63,25 @@ public class ErrorControllerAdviceTest {
     @Test
     public void nullTest() {
         assertNotNull(errorControllerAdvice);
+    }
+
+    @Test
+    public void testWebClientResponseException() {
+
+        WebClientResponseException wcre = new WebClientResponseException(409, "CONFLICT", null, null, null);
+
+        ResponseEntity<Map<String, Object>> responseEntity = errorControllerAdvice.handleWebClientResponseException(wcre);
+        Map<String, Object> body = responseEntity.getBody();
+        HttpStatusCode httpStatusCode = HttpStatusCode.valueOf(409);
+
+        assertEquals(httpStatusCode, responseEntity.getStatusCode());
+        assertEquals(httpStatusCode, body.get("status"));
+        assertEquals("Web Client Response Exception", body.get("message"));
+        assertEquals(testURI, body.get("path"));
+        assertTrue(body.get("timestamp") instanceof LocalDateTime);
+
+        verify(userContextService).getCurrentUser();
+        verify(emailService).sendWithStack(wcre, "Web Client Response Exception", testURI);
     }
 
     @Test
@@ -73,11 +97,11 @@ public class ErrorControllerAdviceTest {
         // verify model attributes
         assertEquals(HttpStatus.NOT_FOUND, model.getAttribute("status"));
         assertEquals("Resource not available", model.getAttribute("message"));
-        assertEquals("/test/bad/request", model.getAttribute("path"));
+        assertEquals(testURI, model.getAttribute("path"));
         assertTrue(model.getAttribute("timestamp") instanceof LocalDateTime);
 
         verify(userContextService).getCurrentUser();
-        verify(emailService).sendWithStack(iae, "Illegal Argument Exception", "/test/bad/request");
+        verify(emailService).sendWithStack(iae, "Illegal Argument Exception", testURI);
     }
 
     @Test
@@ -92,11 +116,11 @@ public class ErrorControllerAdviceTest {
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR,  model.getAttribute("status"));
         assertEquals("Mail service exception",  model.getAttribute("message"));
-        assertEquals("/test/bad/request",  model.getAttribute("path"));
+        assertEquals(testURI,  model.getAttribute("path"));
         assertTrue(model.getAttribute("timestamp") instanceof LocalDateTime);
 
         verify(userContextService).getCurrentUser();
-        verify(emailService).sendWithStack(me, "Messaging Exception", "/test/bad/request");
+        verify(emailService).sendWithStack(me, "Messaging Exception", testURI);
     }
 
     @Test
@@ -111,11 +135,11 @@ public class ErrorControllerAdviceTest {
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR,  model.getAttribute("status"));
         assertEquals("IO exception",  model.getAttribute("message"));
-        assertEquals("/test/bad/request",  model.getAttribute("path"));
+        assertEquals(testURI,  model.getAttribute("path"));
         assertTrue(model.getAttribute("timestamp") instanceof LocalDateTime);
 
         verify(userContextService).getCurrentUser();
-        verify(emailService).sendWithStack(ioe, "IO Exception", "/test/bad/request");
+        verify(emailService).sendWithStack(ioe, "IO Exception", testURI);
     }
 
     @Test
@@ -130,10 +154,10 @@ public class ErrorControllerAdviceTest {
 
         assertEquals(HttpStatus.NOT_IMPLEMENTED,  model.getAttribute("status"));
         assertEquals("Method not implemented",  model.getAttribute("message"));
-        assertEquals("/test/bad/request",  model.getAttribute("path"));
+        assertEquals(testURI,  model.getAttribute("path"));
         assertTrue(model.getAttribute("timestamp") instanceof LocalDateTime);
 
         verify(userContextService).getCurrentUser();
-        verify(emailService).sendWithStack(uoe, "Unsupported Operation Exception", "/test/bad/request");
+        verify(emailService).sendWithStack(uoe, "Unsupported Operation Exception", testURI);
     }
 }
