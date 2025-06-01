@@ -2,7 +2,7 @@
 
     <div class="mt-4">
         <!-- Return to groupings list button -->
-        <button ng-show="!fromManageSubject" class="btn btn-primary" type="submit"
+        <button ng-show="!fromManageSubject" class="btn btn-primary btn-grouping" type="submit"
                 ng-click="returnToGroupingsList(); cancelDescriptionEdit(); toggleShowAdminTab();">
             <i class="fas fa-arrow-left mr-1"></i> Return to Groupings List
         </button>
@@ -13,7 +13,7 @@
 
         <!-- Export to CSV button -->
         <div class="btn-group dropdown" id="csvButton" tooltip data-original-title="{{ getCSVToolTipMessage() }}">
-            <button type="button" class="form-control" data-toggle="dropdown"
+            <button type="button" class="form-control btn-grouping" data-toggle="dropdown"
                     aria-haspopup="true" aria-expanded="false"
                     ng-disabled="!paginatingComplete || isGroupingEmpty()">
                 <i class="fa fa-file-export mr-1"></i>

@@ -91,6 +91,11 @@ form.seamless button {
         }
     }
 
+    &-grouping {
+        min-width: 44px;
+        min-height: 44px;
+    }
+
     &-sm { /* Button for copying path, clipboard, and CSV */
         padding: 0 5px;
 

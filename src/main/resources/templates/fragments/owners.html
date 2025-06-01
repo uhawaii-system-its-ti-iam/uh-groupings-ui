@@ -21,14 +21,14 @@
             <table class="table table-striped table-hover" aria-atomic="true">
                 <thead>
                 <tr>
-                    <th scope="col" role="button"
+                    <th scope="col" role="columnheader"
                         ng-click="sortBy('groupingOwners', 'pagedItemsOwners', 'name')">
                         Name
                         <i class="fa sort-icon"
                            ng-show="columnSort.groupingOwners.property === 'name' || !columnSort.groupingOwners"
                            ng-class="{ reverse: columnSort.groupingOwners.reverse }"></i>
                     </th>
-                    <th scope="col" role="button"
+                    <th scope="col" role="columnheader"
                         ng-click="sortBy('groupingOwners', 'pagedItemsOwners', 'uid')">
                         UH Username
                         <i class="fa sort-icon" ng-show="columnSort.groupingOwners.property === 'uid'"
@@ -116,11 +116,11 @@
                                    id="owner-input"/>
                         </div>
                         <div class="memBtns">
-                            <button class="btn btn-primary add-margin"
+                            <button class="btn btn-primary btn-grouping add-margin"
                                     ng-click="addOnClick('owners')">
                                 Add
                             </button>
-                            <button class="btn btn-remove add-margin"
+                            <button class="btn btn-remove btn-grouping add-margin"
                                     ng-blur="dismissErrors()"
                                     ng-click="removeOnClick('owners')">
                                 Remove
