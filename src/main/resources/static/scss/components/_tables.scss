@@ -132,6 +132,11 @@ form.seamless {
     color: $text-color;
 }
 
+.page-item {
+    min-height: 44px;
+    min-width: 44px;
+}
+
 /* Pagination color. */
 .page-item.active > .page-link {
     background-color: $teal-tint;
