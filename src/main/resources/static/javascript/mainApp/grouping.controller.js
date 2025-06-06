@@ -46,6 +46,7 @@
         $scope.groupingOwners = [];
         $scope.pagedItemsOwners = [];
         $scope.currentPageOwners = 0;
+        $scope.ownerLimit = 0;
 
         $scope.allowOptIn = false;
         $scope.allowOptOut = false;
@@ -274,7 +275,8 @@
         $scope.fetchOwners = (groupPath) => {
             return new Promise((resolve) => {
                 groupingsService.groupingOwners(groupPath, (res) => {
-                    $scope.groupingOwners = res.immediateOwners.members;
+                    $scope.groupingOwners = res.owners.members;
+                    $scope.ownerLimit = res.ownerLimit;
                     // Assign field values for existing owner-groupings
                     $scope.groupingOwners.forEach((owner) => {
                         // Normal member owners cannot have colons in their name
@@ -965,8 +967,11 @@
             $scope.loading = false;
             $scope.waitingForImportResponse = false;
             $scope.resStatus = res.status;
+            $scope.isOwnerGrouping = false;
             if (res.status === 403) {
                 $scope.displayOwnerErrorModal();
+            } else if (res.status === 409) { // CONFLICT max number of owners exceeded.
+                $scope.displayOwnerLimitWarningModal();
             } else {
                 $scope.displayApiErrorModal();
             }
@@ -1970,6 +1975,28 @@
                 keyboard: false,
                 ariaLabelledBy: "owner-error-modal"
             });
+        };
+
+        /**
+         *  Modal shown after a user tries to add more owners than allowed by a rule set in API.
+         *  It explains the rule to the user and lets the user proceed or cancel operation.
+         */
+        $scope.displayOwnerLimitWarningModal = () => {
+            $scope.loading = false;
+            $scope.OwnerLimitWarningModalInstance = $uibModal.open({
+                templateUrl: "modal/ownerLimitWarningModal",
+                scope: $scope,
+                backdrop: "static",
+                keyboard: false,
+                ariaLabelledBy: "owner-limit-warning-modal"
+            });
+        };
+
+        /**
+         * Closes the Owner Limit Warning Modal instance
+         */
+        $scope.closeOwnerLimitWarningModal = () => {
+            $scope.OwnerLimitWarningModalInstance.close();
         };
 
         /**

@@ -528,16 +528,14 @@ public class GroupingsRestController {
 
     /**
      * Give ownership of grouping at grouping path to newOwner. A user with owner privileges has
-     * read and write privileges
-     * of a grouping.
+     * read and write privileges of a grouping.
      */
     @PostMapping(value = "/{groupingPath}/{newOwner}/addOwnerships")
     public ResponseEntity<String> addOwnerships(
             @PathVariable String groupingPath,
             @PathVariable String newOwner) {
         String currentUid = policy.sanitize(userContextService.getCurrentUid());
-        logger.info(String.format("Entered REST addOwnerships - currentUid: %s, groupingPath: %s, newOwner: %s",
-                currentUid, groupingPath, newOwner));
+        logger.info(String.format("Entered REST addOwnerships - currentUid: %s, groupingPath: %s, newOwner: %s", currentUid, groupingPath, newOwner));
         String safeGrouping = policy.sanitize(groupingPath);
         String safeNewOwner = policy.sanitize(newOwner);
         String uri = String.format(API_2_1_BASE + "/groupings/%s/owners/%s", safeGrouping, safeNewOwner);

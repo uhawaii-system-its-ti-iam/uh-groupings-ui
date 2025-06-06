@@ -2768,6 +2768,37 @@ describe("GroupingController", () => {
         });
     });
 
+    describe("displayOwnerLimitWarningModal", () => {
+       it("should set loading to false", () => {
+           scope.loading = true;
+           scope.displayOwnerLimitWarningModal();
+           expect(scope.loading).toBeFalse();
+       });
+
+       it("should check that the displayOwnerLimitWarningModalInstance is displayed", () => {
+           spyOn(uibModal, "open").and.callThrough();
+           scope.displayOwnerLimitWarningModal();
+           expect(uibModal.open).toHaveBeenCalled();
+       })
+    });
+
+    describe("closeOwnerLimitWarningModal", () => {
+        beforeEach(() => {
+            scope.displayOwnerLimitWarningModal();
+
+            it("should close modal", () => {
+                spyOn(scope.OwnerLimitWarningModalInstance, "close").and.callThrough();
+                scope.displayOwnerLimitWarningModal();
+            });
+
+            it("should close modal", () => {
+                spyOn(scope.OwnerLimitWarningModalInstance, "close").and.callThrough();
+                scope.displayOwnerLimitWarningModal();
+                expect(scope.OwnerLimitWarningModalInstance.close).toHaveBeenCalled();
+            });
+        });
+    });
+
     describe("transferMembersFromPageToCheckboxObject", () => {
         let currentPage;
         beforeEach(() => {
