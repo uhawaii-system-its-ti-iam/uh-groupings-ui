@@ -1,6 +1,9 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <div class="modal-header">
     <h5 class="modal-title" id="api-error-modal">Error</h5>
+    <a class="close" type="button"  ng-click="closeApiError()">
+        <span aria-hidden="true">&times;</span>
+    </a>
 </div>
 <div class="modal-body" id="modal-body">
     <p th:text="#{screen.message.modal.access.api.error}"></p>
