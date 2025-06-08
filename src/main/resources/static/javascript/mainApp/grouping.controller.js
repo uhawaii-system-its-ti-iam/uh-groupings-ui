@@ -155,7 +155,8 @@
             }
         };
 
-        /** Remove all nameless members from members and return a sorted object of distinct members.
+        /**
+         * Remove all nameless members from members and return a sorted object of distinct members.
          * @param {object[]} members - the members of the group
          * @returns {object[]} the members of the group, sorted by name and with blank uids filtered out
          */
@@ -170,7 +171,8 @@
             return _.sortBy(members, "name");
         };
 
-        /** Remove all nameless members from membersToAdd then display an object of distinct members as a sorted
+        /**
+         * Remove all nameless members from membersToAdd then display an object of distinct members as a sorted
          *  concatenation of initialMembers and membersToAdd objects.
          * @param {object[]} initialMembers - initial members in group
          * @param {object[]} membersToAdd - members to add to group
@@ -1123,13 +1125,14 @@
 
         /**
          * Helper - displayRemoveModal, fetchMemberProperties
-         * Returns the member object that contains either the provided uid or UH number.
-         * @param memberIdentifier - The uid or UH ID number of the member object to return.
+         * @param memberIdentifier - The uid or UH Number of the member object to return.
          * @param listName - The name of the list to search.
+         * @returns {Object | undefined} Returns the member object that contains either the provided uid or UH Number.
          */
         $scope.returnMemberObject = (memberIdentifier, listName) => {
             const currentPage = getCurrentPage(listName);
             let memberToReturn;
+            // If the user input contains exactly 8 consecutive digits in a row, we can assume it's a uhUuid
             if (/[0-9]{8}/.test(memberIdentifier)) {
                 memberToReturn = _.find(currentPage, (member) => member.uhUuid === memberIdentifier);
             } else {
@@ -1175,13 +1178,13 @@
         };
 
         /**
-         * Extracts the string from $scope.manageMembers input field or members selected from checkboxes
-         * (input field takes precedence) then sends it to the corresponding listName endpoint to perform the removal.
+         * Extracts the list of members to remove then sends it to the corresponding listName endpoint to perform the removal.
          * @param listName {string} - Name of list to remove the members from.
          */
         $scope.removeMembers = (listName) => {
             // Extract members from checkboxes or input box
             $scope.listName = listName;
+            // Use the manageMembers list if it's not empty; otherwise, use members selected from checkboxes
             $scope.membersToModify = _.isEmpty($scope.manageMembers)
                 ? $scope.extractSelectedUsersFromCheckboxes($scope.membersInCheckboxList)
                 : $scope.manageMembers;
@@ -1191,13 +1194,13 @@
                 uhIdentifiers = $scope.sanitizer(uhIdentifiers);
             }
 
-            // Check if members from checkboxes or input box are empty
+            // Check if members from manageMembers list or checkboxes are empty
             if (_.isEmpty($scope.membersToModify)) {
                 $scope.emptyInput = true;
                 return;
             }
 
-            // Check if members to remove exist in the list
+            // Check if members to remove exist in the grouping list
             if (!$scope.fetchMemberProperties(uhIdentifiers, listName)) {
                 $scope.displayDynamicModal(Message.Title.BAD_INPUT_ERROR, Message.Body.REMOVE_INPUT_ERROR);
                 $scope.membersNotInList = "";
