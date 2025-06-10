@@ -1302,12 +1302,6 @@
             $scope.membersToRemove = options.membersToRemove;
             $scope.listName = options.listName;
 
-            console.log("→ displayRemoveModal called with:");
-            console.log("membersToRemove (before processing):", $scope.membersToRemove);
-            console.log("listName:", $scope.listName);
-            console.log("currentUser:", $scope.currentUser);
-
-
             // Display invalid input error message in add-error-messages.html
             if (_.isEmpty($scope.membersToRemove)) {
                 $scope.removeInputError = true;
@@ -1478,15 +1472,6 @@
             const removingSelf = $scope.membersToRemove.includes($scope.currentUser.uhUuid);
             const isSensitiveList = $scope.listName === "admins" || $scope.listName === "owners";
 
-            console.log("showWarningRemovingSelf() evaluation:", {
-                membersToRemove: $scope.membersToRemove,
-                currentUid: $scope.currentUser.uid,
-                currentUhUuid: $scope.currentUser.uhUuid,
-                listName: $scope.listName,
-                removingSelf,
-                isSensitiveList,
-                result: removingSelf && isSensitiveList
-            });
 
             return removingSelf && isSensitiveList;
         };

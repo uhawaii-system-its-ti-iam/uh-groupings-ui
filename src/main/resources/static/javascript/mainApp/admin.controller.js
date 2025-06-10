@@ -302,7 +302,7 @@
                 const userType = "admin";
                 $scope.displayRemoveErrorModal(userType);
             }
-        }
+        };
 
         const handleRemoveFromGroupsOnSuccess = () => {
             $scope.loading = false;
