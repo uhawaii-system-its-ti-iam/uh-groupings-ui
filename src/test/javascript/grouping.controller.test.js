@@ -800,19 +800,19 @@ describe("GroupingController", () => {
         it("should call addMembers with Include", () => {
             spyOn(scope, "addMembers");
             scope.addOnClick("Include");
-            expect(scope.addMembers).toHaveBeenCalledWith("Include");
+            expect(scope.addMembers).toHaveBeenCalledWith("Include", [""]);
         });
 
         it("should call addMembers with Exclude", () => {
             spyOn(scope, "addMembers");
             scope.addOnClick("Exclude");
-            expect(scope.addMembers).toHaveBeenCalledWith("Exclude");
+            expect(scope.addMembers).toHaveBeenCalledWith("Exclude", [""]);
         });
 
         it("should call addMembers with owners", () => {
             spyOn(scope, "addMembers");
             scope.addOnClick("owners");
-            expect(scope.addMembers).toHaveBeenCalledWith("owners");
+            expect(scope.addMembers).toHaveBeenCalledWith("owners", [""]);
             expect(scope.addModalId).toBe("add-modal");
             expect(scope.addModalURL).toBe("modal/addModal");
         });
@@ -1798,6 +1798,8 @@ describe("GroupingController", () => {
                 "iamtst03": true
             };
             scope.manageMembers = "iamtst01, iamtst02";
+            spyOn(scope, "fetchMemberProperties").and.returnValue(true);
+            spyOn(scope, "displayRemoveModal");
             scope.removeMembers(scope.listName);
             expect(scope.membersToModify).toBe(scope.manageMembers);
         });
