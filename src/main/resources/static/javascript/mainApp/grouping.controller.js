@@ -1466,14 +1466,9 @@
          * returns false
          */
         $scope.showWarningRemovingSelf = () => {
-            if (!$scope.membersToRemove || !$scope.currentUser) {
-                return false;
-            }
-            const removingSelf = $scope.membersToRemove.includes($scope.currentUser.uhUuid);
-            const isSensitiveList = $scope.listName === "admins" || $scope.listName === "owners";
-
-
-            return removingSelf && isSensitiveList;
+            return ($scope.membersToRemove.includes($scope.currentUser.uid)
+                    || $scope.membersToRemove.includes($scope.currentUser.uhUuid))
+                    && ($scope.listName === "owners" || $scope.listName === "admins");
         };
 
         /**
