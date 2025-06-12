@@ -7,9 +7,10 @@
 </div>
 <div class="modal-body" id="modal-body">
     <p class="modal-black-text text-truncate" ng-if="membersNotInList.length > 0">Not in {{listName}}: {{membersNotInList}}</p>
-    <!--Warning message if users try to delete themselves from the admins or owners list -->
-    <div class="alert alert-danger" role="alert" ng-if="showWarningRemovingSelf()">
-        <span class="alert-danger" th:utext="#{screen.message.modal.remove.warning}">Warning</span>
+    <!-- Warning message if users try to delete themselves from the admins or owners list -->
+    <div class="alert alert-danger" role="alert" ng-if="showWarningRemovingSelf()" ng-switch="listName">
+        <span class="alert-danger" ng-switch-default th:utext="#{screen.message.modal.remove.warning}">Warning</span>
+        <span class="alert-danger" ng-switch-when="admins" th:utext="#{screen.message.modal.remove.warning.admin}">Warning</span>
     </div>
     <p>
         <span class="modal-black-text" th:text="#{screen.message.modal.multi.remove.message}"></span>
@@ -49,7 +50,7 @@
                             N/A
                             <span class="fa fa-question-circle clickable" aria-hidden="true"
                                tooltip
-                               th:title="#{screen.message.common.tooltip.username.notApplicable}">
+                               th:title="#{screen.message.common.tooltip.uid.notApplicable}">
                             </span>
                         </span>
                     </td>
