@@ -12,6 +12,7 @@
     <div class="alert alert-danger" role="alert" ng-if="showWarningRemovingSelf()" ng-switch="listName">
         <span class="alert-danger" ng-switch-default th:utext="#{screen.message.modal.remove.warning}">Warning</span>
         <span class="alert-danger" ng-switch-when="admins" th:utext="#{screen.message.modal.remove.warning.admin}">Warning</span>
+        <span class="alert-danger" th:utext="#{screen.message.modal.remove.redirect.home}">Warning</span>
     </div>
     <p>
         <span class="modal-black-text" th:text="#{screen.message.modal.remove.confirmation}"></span>

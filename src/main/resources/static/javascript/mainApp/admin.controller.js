@@ -59,21 +59,32 @@
          * from $scope.displayGroupingInNewTab
          */
         $scope.init = () => {
-            const manageSubjectGrouping = JSON.parse(sessionStorage.getItem("manageSubjectGrouping"));
-            if (!_.isEmpty(manageSubjectGrouping)) {
-                $scope.initManageSubjectGrouping(manageSubjectGrouping);
-            } else {
-                $scope.loading = true;
-                $scope.allGroupingsLoading = true;
-                groupingsService.getGroupingAdmins(
-                    $scope.getGroupingAdminsCallbackOnSuccess,
-                    $scope.displayApiErrorModal);
+            groupingsService.getCurrentUser((res) => {
+                $scope.currentUser = {
+                    uid: res.data.uid,
+                    uhUuid: res.data.uhUuid
+                };
+                $scope.feedbackEmail = $scope.currentUser.uid + Message.Csv.EMAIL_SUFFIX;
 
-                groupingsService.getAllGroupings(
-                    $scope.getAllGroupingsCallbackOnSuccess,
-                    $scope.displayApiErrorModal);
-            }
+                const manageSubjectGrouping = JSON.parse(sessionStorage.getItem("manageSubjectGrouping"));
+                if (!_.isEmpty(manageSubjectGrouping)) {
+                    $scope.initManageSubjectGrouping(manageSubjectGrouping);
+                } else {
+                    $scope.loading = true;
+                    $scope.allGroupingsLoading = true;
+                    groupingsService.getGroupingAdmins(
+                        $scope.getGroupingAdminsCallbackOnSuccess,
+                        $scope.displayApiErrorModal
+                    );
+
+                    groupingsService.getAllGroupings(
+                        $scope.getAllGroupingsCallbackOnSuccess,
+                        $scope.displayApiErrorModal
+                    );
+                }
+            });
         };
+
 
         $scope.searchForUserGroupingInformationOnSuccessCallback = (res) => {
             $scope.subjectList = _.sortBy(res.results, "name");

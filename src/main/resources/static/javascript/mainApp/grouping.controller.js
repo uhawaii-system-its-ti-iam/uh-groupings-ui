@@ -1476,7 +1476,7 @@
         $scope.showWarningRemovingSelf = () => {
             return ($scope.membersToRemove.includes($scope.currentUser.uid)
                     || $scope.membersToRemove.includes($scope.currentUser.uhUuid))
-                && ($scope.listName === "owners" || $scope.listName === "admins");
+                    && ($scope.listName === "owners" || $scope.listName === "admins");
         };
 
         /**
