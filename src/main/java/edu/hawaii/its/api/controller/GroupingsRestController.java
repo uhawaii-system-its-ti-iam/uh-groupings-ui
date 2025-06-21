@@ -600,8 +600,9 @@ public class GroupingsRestController {
         logger.info(String.format("Entered REST updateDescription - currentUid: %s, path: %s, description: %s",
                 currentUid, path, description));
         String safePath = policy.sanitize(path);
+        String safeDescription = policy.sanitize(description);
         String uri = String.format(API_2_1_BASE + "/groupings/%s/description", safePath);
-        return httpRequestService.makeApiRequestWithBody(currentUid, uri, description, HttpMethod.PUT);
+        return httpRequestService.makeApiRequestWithBody(currentUid, uri, safeDescription, HttpMethod.PUT);
     }
 
 
