@@ -805,7 +805,7 @@
             // If uhIdentifiers parameter is null, get member input from $scope.manageMembers
             uhIdentifiers = uhIdentifiers ?? $scope.parseAddRemoveInputStr($scope.manageMembers);
 
-            if (listName === "owners" && !$scope.isOwnerGrouping) {
+            if (!$scope.isOwnerGrouping) {
                 // Only sanitize if it's a uh identifier, group path sanitization is done on the backend
                 uhIdentifiers = $scope.sanitizer(uhIdentifiers);
             }
