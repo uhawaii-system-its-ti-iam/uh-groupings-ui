@@ -112,9 +112,14 @@
                 );
                 groupingsService.getMemberAttributeResults([validUser], (res) => {
                     const subject = res.results[0];
-                    $scope.initMemberDisplayName(subject);
-                    $scope.setCurrentManageSubject(subject);
-                });
+                    if (subject) {
+                        $scope.initMemberDisplayName(subject);
+                        $scope.setCurrentManageSubject(subject);
+                    } else {
+                        $scope.currentManageSubject = "";
+                        $scope.invalidInput = true;
+                    }
+                }, () => { /* on promise rejection*/ });
             } else {
                 // sets proper error message
                 if (!$scope.subjectToLookup) {
