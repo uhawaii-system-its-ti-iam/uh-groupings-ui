@@ -1863,7 +1863,7 @@
         };
 
         $scope.displayPreferencesModal = function(message) {
-            $scope.currentModalTitle = 'Preferences Information';
+            $scope.currentModalTitle = "Preferences Information";
             $scope.currentModalBody = message;
             // Open the modal with the new title and body content
             $('#preferences-modal').modal('show');
@@ -1883,7 +1883,7 @@
         $scope.resetOptPreferenceStatuses = () => {
             $scope.allowOptIn = $scope.initialAllowOptIn;
             $scope.allowOptOut = $scope.initialAllowOptOut;
-        }
+        };
 
         /**
          * Function to check if any preferences' checkboxes were toggled by a user
@@ -1904,10 +1904,10 @@
 
             // Build the modal content based on changed preferences
             if (optInChanged) {
-                modalContent.push(`${$scope.allowOptIn ? '(Enable)' : '(Disable)'} Opt-in preference`);
+                modalContent.push(`${$scope.allowOptIn ? "(Enable)" : '(Disable)'} Opt-in preference`);
             }
             if (optOutChanged) {
-                modalContent.push(`${$scope.allowOptOut ? '(Enable)' : '(Disable)'} Opt-out preference`);
+                modalContent.push(`${$scope.allowOptOut ? "(Enable)" : '(Disable)'} Opt-out preference`);
             }
 
             if (modalContent) {
@@ -1940,26 +1940,26 @@
                     $scope.initOptPreferenceStatuses();
 
                     // Display confirmation modal after applying preferences
-                    $scope.displayDynamicModal('Preferences Updated', $scope.getOptStatus());
-                }, () => {})
+                    $scope.displayDynamicModal("Preferences Updated", $scope.getOptStatus());
+                }, () => {});
             }
         };
 
         // Function to display the current opt status message
         $scope.getOptStatus = () => {
             if ($scope.allowOptIn) {
-                return 'You have opted in.';
+                return "You have opted in.";
             } else if ($scope.allowOptOut) {
-                return 'You have opted out.';
+                return "You have opted out.";
             }
-            return 'No changes were made.';
+            return "No changes were made.";
         };
 
         /**
          * Function to check if any sync destinations checkboxes were toggled by a user
          */
         $scope.anySyncDestChanged = () => {
-            return $scope.syncDestArray.some((syncDest) => syncDest.initialSynced !== syncDest.synced)
+            return $scope.syncDestArray.some((syncDest) => syncDest.initialSynced !== syncDest.synced);
         }
 
         /**
@@ -1992,7 +1992,7 @@
 
             // Build the modal content only for changed destinations
             changedDestinations.forEach(syncDest => {
-                modalContent.push(`${syncDest.synced ? '(Enable)' : '(Disable)'} ${syncDest.description}`);
+                modalContent.push(`${syncDest.synced ? "(Enable)" : '(Disable)'} ${syncDest.description}`);
             });
 
             if (modalContent.length !== 0) {
@@ -2020,7 +2020,7 @@
                     });
 
                     // Display success message after updating
-                    $scope.displayDynamicModal('Sync Confirmation', 'The selected destinations have been synced successfully.');
+                    $scope.displayDynamicModal("Sync Confirmation", 'The selected destinations have been synced successfully.');
                 }, () => {});
             }
         };
