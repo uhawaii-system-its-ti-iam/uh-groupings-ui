@@ -1978,7 +1978,7 @@
             $scope.syncDestArray.forEach(syncDest => {
                 syncDest.synced = syncDest.initialSynced;
             });
-        }
+        };
 
         /**
          * Function that runs when the submit button is clicked
