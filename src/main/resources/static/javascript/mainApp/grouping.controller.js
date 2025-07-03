@@ -2256,7 +2256,7 @@
          */
         $scope.proceedOptPreferenceModal = () =>  {
             $scope.optPreferenceModalInstance.close();
-        }
+        };
 
         /**
          * Closes the opt modal.
