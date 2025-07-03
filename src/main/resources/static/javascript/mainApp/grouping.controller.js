@@ -1866,7 +1866,7 @@
             $scope.currentModalTitle = "Preferences Information";
             $scope.currentModalBody = message;
             // Open the modal with the new title and body content
-            $('#preferences-modal').modal('show');
+            $("#preferences-modal").modal('show');
         };
 
         /**
@@ -1890,7 +1890,7 @@
          */
         $scope.anyOptPreferenceChanged = () => {
             return ($scope.initialAllowOptIn !== $scope.allowOptIn || $scope.initialAllowOptOut !== $scope.allowOptOut);
-        }
+        };
 
         /**
          * Function that runs when the submit button is clicked
@@ -1904,10 +1904,10 @@
 
             // Build the modal content based on changed preferences
             if (optInChanged) {
-                modalContent.push(`${$scope.allowOptIn ? "(Enable)" : '(Disable)'} Opt-in preference`);
+                modalContent.push(`${$scope.allowOptIn ? "(Enable)" : "(Disable)"} Opt-in preference`);
             }
             if (optOutChanged) {
-                modalContent.push(`${$scope.allowOptOut ? "(Enable)" : '(Disable)'} Opt-out preference`);
+                modalContent.push(`${$scope.allowOptOut ? "(Enable)" : "(Disable)"} Opt-out preference`);
             }
 
             if (modalContent) {
@@ -1977,7 +1977,7 @@
         $scope.resetSyncStatuses = () => {
             $scope.syncDestArray.forEach(syncDest => {
                 syncDest.synced = syncDest.initialSynced;
-            })
+            });
         }
 
         /**
@@ -1992,7 +1992,7 @@
 
             // Build the modal content only for changed destinations
             changedDestinations.forEach(syncDest => {
-                modalContent.push(`${syncDest.synced ? "(Enable)" : '(Disable)'} ${syncDest.description}`);
+                modalContent.push(`${syncDest.synced ? "(Enable)" : "(Disable)"} ${syncDest.description}`);
             });
 
             if (modalContent.length !== 0) {
@@ -2020,7 +2020,7 @@
                     });
 
                     // Display success message after updating
-                    $scope.displayDynamicModal("Sync Confirmation", 'The selected destinations have been synced successfully.');
+                    $scope.displayDynamicModal("Sync Confirmation", "The selected destinations have been synced successfully.");
                 }, () => {});
             }
         };
