@@ -1866,7 +1866,7 @@
             $scope.currentModalTitle = "Preferences Information";
             $scope.currentModalBody = message;
             // Open the modal with the new title and body content
-            $("#preferences-modal").modal('show');
+            $("#preferences-modal").modal("show");
         };
 
         /**
@@ -1960,7 +1960,7 @@
          */
         $scope.anySyncDestChanged = () => {
             return $scope.syncDestArray.some((syncDest) => syncDest.initialSynced !== syncDest.synced);
-        }
+        };
 
         /**
          * Initialize each destination's initial sync status
