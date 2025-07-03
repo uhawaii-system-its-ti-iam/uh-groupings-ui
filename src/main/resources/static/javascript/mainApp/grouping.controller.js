@@ -2264,7 +2264,7 @@
         $scope.closeOptPreferenceModal = () => {
             $scope.optPreferenceModalInstance.dismiss();
             $scope.resetOptPreferenceStatuses();
-        }
+        };
     }
 
     function SyncDestModalController($scope, $uibModalInstance, isSingular, syncDestDescription, Message) {
