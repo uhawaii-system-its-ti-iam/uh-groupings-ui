@@ -9,6 +9,7 @@ describe("AdminController", function () {
     let controller;
     let BASE_URL;
     let gs;
+    let us;
     let httpBackend;
     let uibModal;
     let window;
@@ -30,7 +31,7 @@ describe("AdminController", function () {
         }
     };
 
-    beforeEach(inject(($rootScope, $controller, $uibModal, _BASE_URL_, _$httpBackend_, groupingsService, _$window_) => {
+    beforeEach(inject(($rootScope, $controller, $uibModal, _BASE_URL_, _$httpBackend_, groupingsService, userService, _$window_) => {
         scope = $rootScope.$new(true);
         window = {
             location: {
@@ -45,6 +46,7 @@ describe("AdminController", function () {
         });
         BASE_URL = _BASE_URL_;
         gs = groupingsService;
+        us = userService;
         httpBackend = _$httpBackend_;
         uibModal = $uibModal;
         spyOn($uibModal, "open").and.returnValue(fakeModal);

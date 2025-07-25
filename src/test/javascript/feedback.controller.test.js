@@ -5,9 +5,14 @@ describe("FeedbackController", () => {
 
     let scope;
     let controller;
+    const mockUser = {
+        uid: "testiwta",
+        uhUuid: "99997010"
+    };
 
     beforeEach(inject(($rootScope, $controller) => {
         scope = $rootScope.$new(true);
+        scope.currentUser = mockUser;
         controller = $controller("FeedbackJsController", {
             $scope: scope
         });

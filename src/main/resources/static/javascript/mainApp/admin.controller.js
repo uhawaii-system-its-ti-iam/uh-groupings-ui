@@ -59,14 +59,6 @@
          * from $scope.displayGroupingInNewTab
          */
         $scope.init = () => {
-            groupingsService.getCurrentUser((res) => {
-                $scope.currentUser = {
-                    uid: res.data.uid,
-                    uhUuid: res.data.uhUuid
-                };
-                $scope.feedbackEmail = $scope.currentUser.uid + Message.Csv.EMAIL_SUFFIX;
-            });
-
             const manageSubjectGrouping = JSON.parse(sessionStorage.getItem("manageSubjectGrouping"));
             if (!_.isEmpty(manageSubjectGrouping)) {
                 $scope.initManageSubjectGrouping(manageSubjectGrouping);

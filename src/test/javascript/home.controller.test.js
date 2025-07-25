@@ -25,14 +25,6 @@ describe("HomeController", () => {
 
     describe("init", () => {
         beforeEach(() => {
-            spyOn(gs, "getCurrentUser").and.callFake((callback) => {
-                callback({
-                    data: {
-                        uid: "user123",
-                        uhUuid: "uuid456"
-                    }
-                });
-            });
             spyOn(gs, "getNumberOfMemberships").and.callFake((callback) => {
                 callback(5);
             });
@@ -40,12 +32,6 @@ describe("HomeController", () => {
                 callback(3);
             });
             scope.init();
-        });
-
-        it("should initialize currentUser in scope", () => {
-            expect(gs.getCurrentUser).toHaveBeenCalled();
-            expect(scope.currentUser.uid).toEqual("user123");
-            expect(scope.currentUser.uhUuid).toEqual("uuid456");
         });
 
         it("should set the number of memberships in the scope", () => {

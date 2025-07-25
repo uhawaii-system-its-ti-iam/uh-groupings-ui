@@ -16,17 +16,6 @@
         $scope.init = () => {
 
             /**
-             * Get the uid of the current user, set the uid to the scope in general controller
-             */
-            groupingsService.getCurrentUser((res) => {
-                $scope.currentUser = {
-                    uid: res.data.uid,
-                    uhUuid: res.data.uhUuid
-                };
-                $scope.feedbackEmail = $scope.currentUser.uid + Message.Csv.EMAIL_SUFFIX;
-            });
-
-            /**
              * Get the number of memberships that the current user is associated with.
              */
             groupingsService.getNumberOfMemberships((res) => {

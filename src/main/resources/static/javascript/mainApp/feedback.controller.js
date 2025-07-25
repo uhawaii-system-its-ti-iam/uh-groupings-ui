@@ -11,8 +11,7 @@
     function FeedbackJsController($scope, $controller, Message) {
         // regex pattern for email to follow recipient@domain.TLD format
         $scope.emailPattern = new RegExp("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}");
-        // assigned value in groupingsService.getCurrentUser
-        $scope.feedbackEmail = '';
+        $scope.feedbackEmail = "";
 
         angular.extend(this, $controller("GeneralJsController", { $scope }));
 
