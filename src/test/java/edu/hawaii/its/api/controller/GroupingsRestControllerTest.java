@@ -619,8 +619,8 @@ public class GroupingsRestControllerTest {
 
     @Test
     @WithMockUhUser
-    public void addGroupPathOwnerships() throws Exception {
-        String uri = REST_CONTROLLER_BASE + GROUPING + "/groupPath/addGroupPathOwnerships";
+    public void addOwnerGroupingsTest() throws Exception {
+        String uri = REST_CONTROLLER_BASE + GROUPING + "/groupPath/addOwnerGroupings";
 
         given(httpRequestService.makeApiRequest(eq(UID), anyString(), eq(HttpMethod.PUT)))
                 .willReturn(new ResponseEntity<>(HttpStatus.OK));
@@ -651,8 +651,8 @@ public class GroupingsRestControllerTest {
 
     @Test
     @WithMockUhUser
-    public void removeGroupPathOwnershipsTest() throws Exception {
-        String uri = REST_CONTROLLER_BASE + GROUPING + "/groupPath/removeGroupPathOwnerships";
+    public void removeOwnerGroupingsTest() throws Exception {
+        String uri = REST_CONTROLLER_BASE + GROUPING + "/groupPath/removeOwnerGroupings";
 
         given(httpRequestService.makeApiRequest(eq(UID), anyString(), eq(HttpMethod.DELETE)))
                 .willReturn(new ResponseEntity<>(HttpStatus.OK));
