@@ -8,8 +8,9 @@ describe("HomeController", () => {
     let httpBackend;
     let BASE_URL;
     let gs;
+    let us;
 
-    beforeEach(inject(($rootScope, $controller, _BASE_URL_, _$httpBackend_, groupingsService) => {
+    beforeEach(inject(($rootScope, $controller, _BASE_URL_, _$httpBackend_, groupingsService, userService) => {
         scope = $rootScope.$new(true);
         controller = $controller("HomeJsController", {
             $scope: scope,
@@ -17,6 +18,7 @@ describe("HomeController", () => {
         httpBackend = _$httpBackend_;
         BASE_URL = _BASE_URL_;
         gs = groupingsService;
+        us = userService;
     }));
 
     it("should define the home controller", () => {
@@ -25,6 +27,7 @@ describe("HomeController", () => {
 
     describe("init", () => {
         beforeEach(() => {
+            spyOn(us, "refresh").and.callThrough();
             spyOn(gs, "getNumberOfMemberships").and.callFake((callback) => {
                 callback(5);
             });
@@ -32,6 +35,10 @@ describe("HomeController", () => {
                 callback(3);
             });
             scope.init();
+        });
+
+        it("should call userService.refresh()", () => {
+            expect(us.refresh).toHaveBeenCalled();
         });
 
         it("should set the number of memberships in the scope", () => {

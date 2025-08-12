@@ -6,14 +6,19 @@
      * This controller contains functions specific to the home page.
      * @param $scope - binding between controller and HTML page
      * @param $controller - service for instantiating controllers
+     * @param userService - service for accessing logged-in user's data.
      * @param groupingsService - service for creating requests to the groupings API
-     * @param Message - display messages
      */
-    function HomeJsController($scope, $controller, groupingsService, Message) {
+    function HomeJsController($scope, $controller, userService, groupingsService) {
 
         angular.extend(this, $controller('GeneralJsController', {$scope}));
 
         $scope.init = () => {
+
+            /**
+             * Refresh current user info.
+             */
+            userService.refresh();
 
             /**
              * Get the number of memberships that the current user is associated with.

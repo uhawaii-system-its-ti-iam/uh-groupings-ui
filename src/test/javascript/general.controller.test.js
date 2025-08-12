@@ -15,6 +15,10 @@ describe("GeneralController", () => {
     let mockUserService;
     let currentUserPromise;
     let q;
+    const mockUser = {
+        uid: "testiwta",
+        uhUuid: "99997010"
+    };
 
     beforeEach(inject(($rootScope, $controller, _BASE_URL_, _$httpBackend_, _$q_, groupingsService, $uibModal, _$window_) => {
         scope = $rootScope.$new(true);
@@ -43,15 +47,9 @@ describe("GeneralController", () => {
     }));
 
     it ("should set the currentUser on the scope after promise resolves", () => {
-        const mockUser = {
-            uid: "testiwta",
-            uhUuid: "99997010"
-        };
-
         scope.$apply(() => {
             currentUserPromise.resolve({data: mockUser});
         });
-
         expect(scope.currentUser).toEqual(mockUser);
     });
 

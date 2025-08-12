@@ -16,6 +16,8 @@ describe("UserService", function () {
         uhUuid: "99997010"
     };
 
+    const USER_STORAGE_KEY = "currentUserDataSession";
+
     beforeEach(inject((_groupingsService_, _$q_, _$rootScope_, _$window_, _$injector_) => {
         groupingsService = _groupingsService_;
         $q = _$q_;
@@ -28,11 +30,13 @@ describe("UserService", function () {
         });
 
         spyOn($window.sessionStorage, "setItem").and.callThrough();
+        spyOn($window.sessionStorage, "removeItem").and.callThrough();
     }));
 
     beforeEach(() => {
-        $window.sessionStorage.removeItem("currentUserDataSession");
+        $window.sessionStorage.removeItem(USER_STORAGE_KEY);
         $window.sessionStorage.setItem.calls.reset();
+        $window.sessionStorage.removeItem.calls.reset();
         groupingsService.getCurrentUser.calls.reset();
     });
 
@@ -58,7 +62,7 @@ describe("UserService", function () {
                 userService.getCurrentUser();
                 $rootScope.$apply(); // Resolve the promise
 
-                expect($window.sessionStorage.setItem).toHaveBeenCalledWith("currentUserDataSession", JSON.stringify(mockUser));
+                expect($window.sessionStorage.setItem).toHaveBeenCalledWith(USER_STORAGE_KEY, JSON.stringify(mockUser));
             });
 
             it("should only call the API once for concurrent requests", () => {
@@ -101,7 +105,7 @@ describe("UserService", function () {
 
             // Get a fresh instance, which will automatically load from sessionStorage.
             beforeEach(() => {
-                $window.sessionStorage.setItem("currentUserDataSession", JSON.stringify(mockUser));
+                $window.sessionStorage.setItem(USER_STORAGE_KEY, JSON.stringify(mockUser));
                 userService = $injector.get("userService");
             });
 
@@ -115,6 +119,26 @@ describe("UserService", function () {
                 expect(resolvedUser).toEqual(mockUser);
                 done();
             });
+        });
+    });
+
+    describe("refresh()", () => {
+
+        beforeEach(() => {
+            userService = $injector.get("userService");
+            // ensure a user is loaded and cached
+            userService.getCurrentUser();
+            $rootScope.$apply();
+            groupingsService.getCurrentUser.calls.reset();
+        });
+
+        it("should clear session storage and re-fetch the user", () => {
+            userService.refresh();
+            expect($window.sessionStorage.removeItem).toHaveBeenCalledWith(USER_STORAGE_KEY);
+
+            // Verify the new API call was made to get the user.
+            expect(groupingsService.getCurrentUser).toHaveBeenCalled();
+            expect(groupingsService.getCurrentUser.calls.count()).toBe(1);
         });
     });
 });

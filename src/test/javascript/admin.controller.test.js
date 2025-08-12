@@ -9,10 +9,16 @@ describe("AdminController", function () {
     let controller;
     let BASE_URL;
     let gs;
-    let us;
     let httpBackend;
     let uibModal;
     let window;
+    let mockUserService;
+    const mockUser = {
+        data: {
+            uid: "testiwta",
+            uhUuid: "99997010"
+        }
+    };
 
     let fakeModal = {
         result: {
@@ -31,7 +37,17 @@ describe("AdminController", function () {
         }
     };
 
-    beforeEach(inject(($rootScope, $controller, $uibModal, _BASE_URL_, _$httpBackend_, groupingsService, userService, _$window_) => {
+    beforeEach(() => {
+        mockUserService = {
+            getCurrentUser: jasmine.createSpy("getCurrentUser")
+        };
+
+        module(($provide) => {
+            $provide.value("userService", mockUserService);
+        });
+    });
+
+    beforeEach(inject(($rootScope, $controller, $uibModal, _BASE_URL_, _$httpBackend_, groupingsService, _$window_, _$q_) => {
         scope = $rootScope.$new(true);
         window = {
             location: {
@@ -40,15 +56,16 @@ describe("AdminController", function () {
             },
             open(href) {}
         };
+        mockUserService.getCurrentUser.and.returnValue(_$q_.when(mockUser));
         controller = $controller("AdminJsController", {
             $scope: scope,
             $window: window
         });
         BASE_URL = _BASE_URL_;
         gs = groupingsService;
-        us = userService;
         httpBackend = _$httpBackend_;
         uibModal = $uibModal;
+        scope.$apply();
         spyOn($uibModal, "open").and.returnValue(fakeModal);
     }));
 
@@ -419,7 +436,7 @@ describe("AdminController", function () {
         const invalid = { resultCode: "FAILURE", invalid: uhIdentifiers, results: [] };
 
         beforeEach(() => {
-            httpBackend.whenGET("currentUser").passThrough();
+            expect(mockUserService.getCurrentUser).toHaveBeenCalled();
         });
 
         it("should check if the admin to add is empty", () => {

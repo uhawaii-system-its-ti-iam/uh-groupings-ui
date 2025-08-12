@@ -53,6 +53,16 @@
 
                 return userPromise;
             },
+
+            /**
+             * Refresh information about the current user.
+             */
+            refresh() {
+                currentUser = null;
+                userPromise = null;
+                $window.sessionStorage.removeItem(USER_STORAGE_KEY);
+                this.getCurrentUser();
+            }
         };
     });
 })();

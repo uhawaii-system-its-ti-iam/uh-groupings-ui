@@ -12,9 +12,27 @@ describe("GroupingController", () => {
     let uibModal;
     let threshold;
     let message;
+    let mockUserService;
+    const mockUser = {
+        data: {
+            uid: "testiwta",
+            uhUuid: "99997010"
+        }
+    };
 
-    beforeEach(inject(($rootScope, $controller, _BASE_URL_, _$httpBackend_, groupingsService, $uibModal, Threshold, Message) => {
+    beforeEach(() => {
+        mockUserService = {
+            getCurrentUser: jasmine.createSpy("getCurrentUser")
+        };
+
+        module(($provide) => {
+            $provide.value("userService", mockUserService);
+        })
+    })
+
+    beforeEach(inject(($rootScope, $controller, _BASE_URL_, _$httpBackend_, _$q_, groupingsService, $uibModal, Threshold, Message) => {
         scope = $rootScope.$new(true);
+        mockUserService.getCurrentUser.and.returnValue(_$q_.when(mockUser));
         controller = $controller("GroupingJsController", {
             $scope: scope
         });
@@ -24,6 +42,7 @@ describe("GroupingController", () => {
         uibModal = $uibModal;
         threshold = Threshold;
         message = Message;
+        scope.$apply();
     }));
 
     it("should define the owner controller", () => {
@@ -1059,7 +1078,7 @@ describe("GroupingController", () => {
 
         describe("gs.getMemberAttributeResults callbacks", () => {
             beforeEach(() => {
-                httpBackend.whenGET("currentUser").passThrough();
+                expect(mockUserService.getCurrentUser).toHaveBeenCalled();
                 httpBackend.whenGET("modal/addModal").passThrough();
                 httpBackend.whenGET("modal/importConfirmationModal").passThrough();
                 httpBackend.whenGET("modal/importErrorModal").passThrough();
