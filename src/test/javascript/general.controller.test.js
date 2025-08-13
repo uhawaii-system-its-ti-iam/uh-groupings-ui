@@ -12,8 +12,15 @@ describe("GeneralController", () => {
     let gs;
     let uibModal;
     let window;
+    let mockUserService;
+    let currentUserPromise;
+    let q;
+    const mockUser = {
+        uid: "testiwta",
+        uhUuid: "99997010"
+    };
 
-    beforeEach(inject(($rootScope, $controller, _BASE_URL_, _$httpBackend_, groupingsService, $uibModal, _$window_) => {
+    beforeEach(inject(($rootScope, $controller, _BASE_URL_, _$httpBackend_, _$q_, groupingsService, $uibModal, _$window_) => {
         scope = $rootScope.$new(true);
         window = {
             location: {
@@ -21,15 +28,30 @@ describe("GeneralController", () => {
                 href: _$window_
             }
         };
-        controller = $controller("GeneralJsController", {
-            $scope: scope,
-            $window: window
-        });
         httpBackend = _$httpBackend_;
         BASE_URL = _BASE_URL_;
         gs = groupingsService;
         uibModal = $uibModal;
+        q = _$q_;
+        currentUserPromise = q.defer();
+        mockUserService = {
+            getCurrentUser() {
+                return currentUserPromise.promise;
+            },
+        };
+        controller = $controller("GeneralJsController", {
+            $scope: scope,
+            $window: window,
+            userService: mockUserService
+        });
     }));
+
+    it ("should set the currentUser on the scope after promise resolves", () => {
+        scope.$apply(() => {
+            currentUserPromise.resolve({data: mockUser});
+        });
+        expect(scope.currentUser).toEqual(mockUser);
+    });
 
     it("should define the general controller", () => {
         expect(controller).toBeDefined();
