@@ -1433,8 +1433,8 @@ describe("GroupingController", () => {
                 expect(gs.addAdmin).not.toHaveBeenCalled();
             });
 
-            it("should call gs.addGroupPathOwnerships when the user presses 'add' in addOwnerGroupingModal.html", () => {
-                spyOn(gs, "addGroupPathOwnerships").and.callThrough();
+            it("should call gs.addOwnerGroupings when the user presses 'add' in addOwnerGroupingModal.html", () => {
+                spyOn(gs, "addOwnerGroupings").and.callThrough();
                 spyOn(uibModal, "open").and.returnValue(mockModal);
                 scope.isOwnerGrouping = true;
                 scope.displayAddModal({
@@ -1445,7 +1445,7 @@ describe("GroupingController", () => {
 
                 scope.proceedAddModal();
                 expect(scope.waitingForImportResponse).toBeTrue();
-                expect(gs.addGroupPathOwnerships).toHaveBeenCalled();
+                expect(gs.addOwnerGroupings).toHaveBeenCalled();
                 scope.isOwnerGrouping = false;
             });
 
@@ -2030,8 +2030,8 @@ describe("GroupingController", () => {
             scope.isOwnerGrouping = false;
         });
 
-        it("should call gs.removeGroupPathOwnerships when removing an owner-grouping", () => {
-            spyOn(gs, "removeGroupPathOwnerships").and.callThrough();
+        it("should call gs.removeOwnerGroupings when removing an owner-grouping", () => {
+            spyOn(gs, "removeOwnerGroupings").and.callThrough();
             spyOn(uibModal, "open").and.returnValue(mockModal);
             scope.isOwnerGrouping = true;
             scope.displayRemoveModal({
@@ -2041,7 +2041,7 @@ describe("GroupingController", () => {
 
             scope.proceedRemoveModal();
             expect(scope.waitingForImportResponse).toBeTrue();
-            expect(gs.removeGroupPathOwnerships).toHaveBeenCalled();
+            expect(gs.removeOwnerGroupings).toHaveBeenCalled();
             scope.isOwnerGrouping = false;
         });
     });

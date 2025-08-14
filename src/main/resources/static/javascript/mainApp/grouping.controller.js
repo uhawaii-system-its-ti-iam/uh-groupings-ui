@@ -1031,7 +1031,7 @@
                 } else if ($scope.listName === "owners" && !$scope.isOwnerGrouping) {
                     await groupingsService.addOwnerships(groupingPath, uhIdentifiers, handleSuccessfulAdd, handleUnsuccessfulRequest);
                 } else if ($scope.isOwnerGrouping) {
-                    await groupingsService.addGroupPathOwnerships(groupingPath, uhIdentifiers, handleSuccessfulAdd, handleUnsuccessfulRequest);
+                    await groupingsService.addOwnerGroupings(groupingPath, uhIdentifiers, handleSuccessfulAdd, handleUnsuccessfulRequest);
                 } else if ($scope.listName === "admins") {
                     await groupingsService.addAdmin(uhIdentifiers, handleSuccessfulAdd, handleUnsuccessfulRequest);
                 }
@@ -1353,7 +1353,7 @@
                 } else if ($scope.listName === "owners" && !$scope.isOwnerGrouping) {
                     groupingsService.removeOwnerships(groupingPath, $scope.membersToRemove, handleOwnerRemove, handleUnsuccessfulRequest);
                 } else if ($scope.isOwnerGrouping) {
-                    groupingsService.removeGroupPathOwnerships(groupingPath, $scope.membersToRemove, handleOwnerRemove, handleUnsuccessfulRequest);
+                    groupingsService.removeOwnerGroupings(groupingPath, $scope.membersToRemove, handleOwnerRemove, handleUnsuccessfulRequest);
                 } else if ($scope.listName === "admins") {
                     groupingsService.removeAdmin($scope.membersToRemove, handleAdminRemove, handleUnsuccessfulRequest);
                 }
