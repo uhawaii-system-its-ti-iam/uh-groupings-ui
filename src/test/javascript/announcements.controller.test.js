@@ -79,7 +79,7 @@ describe("AnnouncementsJsController", function () {
 
             expect(mockUserService.getCurrentUser).toHaveBeenCalled();
             httpBackend.expectGET("announcements").respond(200, announcementsRes);
-            httpBackend.flush()
+            httpBackend.flush();
 
             expect(scope.handleActiveAnnouncements).toHaveBeenCalledWith(announcementsRes.announcements);
             expect(scope.activeAnnouncements).toBe(scope.handleActiveAnnouncements(announcementsRes.announcements))
