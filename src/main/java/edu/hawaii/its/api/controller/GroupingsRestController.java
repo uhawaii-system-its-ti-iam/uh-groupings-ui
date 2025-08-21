@@ -506,6 +506,18 @@ public class GroupingsRestController {
     }
 
     /**
+     * Request the number of all owners (direct + indirect) in a grouping.
+     */
+    @GetMapping(value = "/groupings/{path:[\\w-:.]+}/owners/count")
+    public ResponseEntity<String> getNumberOfAllOwners(@PathVariable String path) {
+        String currentUid = policy.sanitize(userContextService.getCurrentUid());
+        logger.info(String.format("Entered REST getNumberOfAllOwners - currentUid: %s, path: %s", currentUid, path));
+
+        String uri = String.format(API_2_1_BASE + "/groupings/%s/owners/count", path);
+        return httpRequestService.makeApiRequest(currentUid, uri, HttpMethod.GET);
+    }
+
+    /**
      * Check if principle is an owner, of any grouping.
      */
     @GetMapping(value = "/members/{uhIdentifier}/is-owner")

@@ -3,7 +3,16 @@
     <div id="owners-display" class="tab-pane fade show active">
         <div class="row">
             <div class="col-md-8">
-                <h1 class="font-weight-bold text-dark pt-2 mb-0 d-inline-block">Owners ({{groupingOwners.length}})</h1>
+                <div class="pt-2 mb-0">
+                    <h1 class="font-weight-bold text-dark mb-1">
+                        All Owners: {{allOwnersCount}}
+                    </h1>
+                    <small class="text-secondary">
+                        Immediate Owners: {{groupingOwners.length}}
+                    </small>
+                </div>
+
+
                 <div class="spinner-border ml-1 d-inline-block"
                      ng-hide="paginatingComplete"
                      role="status">

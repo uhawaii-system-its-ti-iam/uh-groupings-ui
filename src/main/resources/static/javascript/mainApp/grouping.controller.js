@@ -210,6 +210,7 @@
                 $scope.disableResetCheckboxes();
                 await $scope.fetchGrouping(currentPage, paths);
                 await $scope.fetchOwners(groupingPath);
+                await $scope.fetchAllOwnersCount(groupingPath);
                 currentPage++;
                 $scope.loading = false;
             }
@@ -301,6 +302,23 @@
                         $scope.displayApiErrorModal();
                     }
                     loadMembersList = false;
+                    resolve();
+                });
+            });
+        };
+
+        /**
+         * Fetches the number of all owners (direct + indirect) for a specified group path
+         * Only used for the header count; the owners table still shows immediate members only
+         * @param groupPath - path of the grouping to retrieve all-owners count from
+         */
+        $scope.fetchAllOwnersCount = (groupPath) => {
+            return new Promise((resolve) => {
+                groupingsService.getNumberOfAllOwners(groupPath, (res) => {
+                    $scope.allOwnersCount = +res;
+                    resolve();
+                }, (err) => {
+                    $scope.allOwnersCount = ($scope.groupingOwners && $scope.groupingOwners.length) ? $scope.groupingOwners.length : 0;
                     resolve();
                 });
             });

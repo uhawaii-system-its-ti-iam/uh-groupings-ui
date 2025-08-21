@@ -437,6 +437,15 @@
             },
 
             /**
+             * Get the number of all owners (direct + indirect) in a grouping.
+             */
+            getNumberOfAllOwners(groupingPath, onSuccess, onError) {
+                let endpoint = BASE_URL + "groupings/" + groupingPath + "/owners/count";
+                dataProvider.loadData(endpoint, onSuccess, onError);
+            },
+
+
+            /**
              * Checks if the owner of a grouping is the sole owner
              */
             getNumberOfOwners(path, uidToCheck, onSuccess, onError) {
