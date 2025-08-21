@@ -199,7 +199,7 @@
             const groupingPath = $scope.selectedGrouping.path;
             const paths = [groupingPath + ":basis", groupingPath + ":include", groupingPath + ":exclude"];
             let currentPage = 1;
-            $scope.setPage('First', 'currentPageMembers', 'pagedItemsMembers');
+            $scope.setPage("First", "currentPageMembers", "pagedItemsMembers");
             $scope.loading = true;
             $scope.paginatingComplete = false;
             await $scope.getGroupingDescription(groupingPath);
@@ -210,6 +210,8 @@
                 $scope.disableResetCheckboxes();
                 await $scope.fetchGrouping(currentPage, paths);
                 await $scope.fetchOwners(groupingPath);
+                await $scope.fetchAllOwnersCount(groupingPath);
+                await $scope.fetchAllMemberCount(groupingPath);
                 currentPage++;
                 $scope.loading = false;
             }
@@ -274,24 +276,73 @@
          * Handles owner-groupings as well
          * @param groupPath - path of the grouping to retrieve owners from
          */
+        /**
+         * Fetches just the owners of a specified group path
+         * Because only immediate members should be shown in the owners table, this has to be its own separate function
+         * Handles owner-groupings as well
+         * @param groupPath - path of the grouping to retrieve owners from
+         */
         $scope.fetchOwners = (groupPath) => {
             return new Promise((resolve) => {
-                groupingsService.groupingOwners(groupPath, (res) => {
+                groupingsService.groupingOwners(groupPath, async (res) => {
                     $scope.groupingOwners = res.owners.members;
                     $scope.ownerLimit = res.ownerLimit;
-                    // Assign field values for existing owner-groupings
+
+                    const immediateTotal = $scope.groupingOwners.length;
+                    let totalGroupingMembers = 0;
+
+                    // ① 并发任务容器：每个 owner-grouping 的成员数请求
+                    const jobs = [];
+
+                    // ② 同步并发：全部 owners（直系+间接）的总数
+                    const allOwnersCountJob = new Promise((r) => {
+                        groupingsService.getNumberOfAllOwners(groupPath, (n) => r(+n));
+                    });
+
+                    // 遍历 owners：识别 owner-grouping，清洗名字，并收集成员数请求
                     $scope.groupingOwners.forEach((owner) => {
-                        // Normal member owners cannot have colons in their name
-                        if(owner.name.includes(":")) {
+                        if (owner.name.includes(":")) {
                             owner.isOwnerGrouping = true;
-                            // Name field in owner-groupings initially holds the group path
                             owner.ownerGroupingPath = owner.name;
                             const splitOwnerPath = owner.name.split(":");
-                            // Isolate the grouping name from the path
                             owner.name = splitOwnerPath[splitOwnerPath.length - 1];
+
+                            jobs.push(
+                                new Promise((r) => {
+                                    groupingsService.getNumberOfGroupingMembers(
+                                        owner.ownerGroupingPath,
+                                        (n) => {
+                                            const count = +n;
+                                            owner.memberCount = count;
+                                            totalGroupingMembers += count;
+                                            r();
+                                        }
+                                    );
+                                })
+                            );
                         }
                     });
-                    $scope.filter($scope.groupingOwners, "pagedItemsOwners", "currentPageOwners", $scope.ownersQuery, false);
+
+                    // 等待：所有 owner-grouping 的成员数 + 全部 owners 总数
+                    const results = await Promise.all([
+                        ...jobs,
+                        allOwnersCountJob.then((n) => n),
+                    ]);
+
+                    // 最后一个是 allOwnersCount（前面的都是 void 任务）
+                    $scope.allOwnersCount = results[results.length - 1];
+
+                    $scope.hasDuplicateOwners =
+                        (immediateTotal + totalGroupingMembers) !== $scope.allOwnersCount;
+
+                    $scope.filter(
+                        $scope.groupingOwners,
+                        "pagedItemsOwners",
+                        "currentPageOwners",
+                        $scope.ownersQuery,
+                        false
+                    );
+
                     $scope.loading = false;
                     resolve();
                 }, (res) => {
@@ -300,11 +351,14 @@
                     } else {
                         $scope.displayApiErrorModal();
                     }
+                    // 与原逻辑一致
+                    // eslint-disable-next-line no-undef
                     loadMembersList = false;
                     resolve();
                 });
             });
         };
+
 
 
         /**
@@ -337,7 +391,7 @@
             }, (res) => {
                 $scope.resStatus = res.status;
                 resolve();
-            }))
+            }));
         };
 
         /**
@@ -353,7 +407,7 @@
             }, (res) => {
                 $scope.resStatus = res.status;
                 resolve();
-            }))
+            }));
         };
 
         /**
@@ -876,7 +930,7 @@
 
                     // Prevent departmental accounts from being added as Owners
                     $scope.hasDeptAccount = $scope.checkForDeptAccount(res.results);
-                    if (listName === 'owners' && $scope.hasDeptAccount) {
+                    if (listName === "owners" && $scope.hasDeptAccount) {
                         $scope.displayDynamicModal(
                           Message.Title.OWNER_NOT_ADDED,
                           Message.Body.OWNER_NOT_ADDED

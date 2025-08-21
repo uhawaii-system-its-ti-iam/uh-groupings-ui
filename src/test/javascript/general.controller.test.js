@@ -522,15 +522,15 @@ describe("GeneralController", () => {
             const expectedProfiles = [ "ADMIN", "OWNER", "MEMBER" ];
             httpBackend.expectGET(BASE_URL + 'ootb/availableProfiles').respond(200, expectedProfiles);
 
-            spyOn(console, 'error');
+            spyOn(console, "error");
             scope.loadAvailableProfiles();
 
             expect(scope.availableProfiles).toEqual(expectedProfiles);
             expect(gs.getAvailableOotbActiveProfiles).toHaveBeenCalledWith(jasmine.any(Function), jasmine.any(Function));
         });
 
-        it('should handle errors when loading available profiles fails', () => {
-            const errorResponse = { status: 404, message: 'Not found' };
+        it("should handle errors when loading available profiles fails", () => {
+            const errorResponse = { status: 404, message: "Not found" };
             httpBackend.expectGET(BASE_URL + 'ootb/availableProfiles').respond(404, errorResponse);
 
             spyOn(console, 'error');

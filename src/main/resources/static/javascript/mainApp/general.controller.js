@@ -301,9 +301,9 @@
          */
         $scope.checkForDeptAccount = (membersToAdd) => {
             return membersToAdd.some(member =>
-                member['uid'] === member['uhUuid'] || member['uhUuid'] === ""
+                member["uid"] === member['uhUuid'] || member['uhUuid'] === ""
             );
-        }
+        };
     }
 
     UHGroupingsApp.controller("GeneralJsController", GeneralJsController);
