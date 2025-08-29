@@ -318,7 +318,7 @@ public class GroupingsRestController {
     public ResponseEntity<String> membershipResults() {
         String currentUid = policy.sanitize(userContextService.getCurrentUid());
         logger.info(String.format("Entered REST membershipResults - currentUid: %s", currentUid));
-        String uri = String.format(API_2_1_BASE + "/members/%s/memberships", currentUid);
+        String uri = String.format(API_2_1_BASE + "/members/memberships");
         return httpRequestService.makeApiRequest(currentUid, uri, HttpMethod.GET);
     }
 
@@ -329,7 +329,7 @@ public class GroupingsRestController {
     public ResponseEntity<String> getNumberOfMemberships() {
         String currentUid = policy.sanitize(userContextService.getCurrentUid());
         logger.info(String.format("Entered REST getNumberOfMemberships - currentUid: %s", currentUid));
-        String uri = String.format(API_2_1_BASE + "/members/%s/memberships/count", currentUid);
+        String uri = String.format(API_2_1_BASE + "/members/memberships/count");
         return httpRequestService.makeApiRequest(currentUid, uri, HttpMethod.GET);
     }
 
