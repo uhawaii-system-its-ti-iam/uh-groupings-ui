@@ -557,7 +557,7 @@ public class GroupingsRestController {
         String currentUid = policy.sanitize(userContextService.getCurrentUid());
         String safeGrouping = policy.sanitize(groupingPath);
         String safeNewOwner = policy.sanitize(newOwner);
-        String uri = String.format(API_2_1_BASE + "/groupings/%s/owners/owner-grouping/%s", safeGrouping, safeNewOwner);
+        String uri = String.format(API_2_1_BASE + "/groupings/%s/owners/owner-groupings/%s", safeGrouping, safeNewOwner);
         return httpRequestService.makeApiRequest(currentUid, uri, HttpMethod.PUT);
     }
 
@@ -588,7 +588,7 @@ public class GroupingsRestController {
         String currentUid = policy.sanitize(userContextService.getCurrentUid());
         String safeGrouping = policy.sanitize(groupingPath);
         String safeOwnerToRemove = policy.sanitize(ownerToRemove);
-        String uri = String.format(API_2_1_BASE + "/groupings/%s/owners/owner-grouping/%s", safeGrouping, safeOwnerToRemove);
+        String uri = String.format(API_2_1_BASE + "/groupings/%s/owners/owner-groupings/%s", safeGrouping, safeOwnerToRemove);
         return httpRequestService.makeApiRequest(currentUid, uri, HttpMethod.DELETE);
     }
 
