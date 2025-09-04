@@ -549,15 +549,15 @@ public class GroupingsRestController {
      * Give owner privileges of the grouping at groupingPath to the owner-grouping (newOwner). A user with owner privileges has
      * read and write privileges of a grouping.
      */
-    @PostMapping(value = "/{groupingPath}/{newOwner}/addGroupPathOwnerships")
-    public ResponseEntity<String> addGroupPathOwnerships(
+    @PostMapping(value = "/{groupingPath}/{newOwner}/addOwnerGroupings")
+    public ResponseEntity<String> addOwnerGroupings(
             @PathVariable String groupingPath,
             @PathVariable String newOwner) {
-        logger.info("Entered REST addGroupPathOwnerships...");
+        logger.info("Entered REST addOwnerGroupings...");
         String currentUid = policy.sanitize(userContextService.getCurrentUid());
         String safeGrouping = policy.sanitize(groupingPath);
         String safeNewOwner = policy.sanitize(newOwner);
-        String uri = String.format(API_2_1_BASE + "/groupings/%s/owners/path-owner/%s", safeGrouping, safeNewOwner);
+        String uri = String.format(API_2_1_BASE + "/groupings/%s/owners/owner-groupings/%s", safeGrouping, safeNewOwner);
         return httpRequestService.makeApiRequest(currentUid, uri, HttpMethod.PUT);
     }
 
@@ -580,15 +580,15 @@ public class GroupingsRestController {
     /**
      * Cancel owner privileges of the owner-grouping (ownerToRemove) for the grouping at groupingPath.
      */
-    @PostMapping(value = "/{groupingPath}/{ownerToRemove}/removeGroupPathOwnerships")
-    public ResponseEntity<String> removeGroupPathOwnerships(
+    @PostMapping(value = "/{groupingPath}/{ownerToRemove}/removeOwnerGroupings")
+    public ResponseEntity<String> removeOwnerGroupings(
             @PathVariable String groupingPath,
             @PathVariable String ownerToRemove) {
-        logger.info("Entered REST removeGroupPathOwnerships...");
+        logger.info("Entered REST removeOwnerGroupings...");
         String currentUid = policy.sanitize(userContextService.getCurrentUid());
         String safeGrouping = policy.sanitize(groupingPath);
         String safeOwnerToRemove = policy.sanitize(ownerToRemove);
-        String uri = String.format(API_2_1_BASE + "/groupings/%s/owners/path-owner/%s", safeGrouping, safeOwnerToRemove);
+        String uri = String.format(API_2_1_BASE + "/groupings/%s/owners/owner-groupings/%s", safeGrouping, safeOwnerToRemove);
         return httpRequestService.makeApiRequest(currentUid, uri, HttpMethod.DELETE);
     }
 
