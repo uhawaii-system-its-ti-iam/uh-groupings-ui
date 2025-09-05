@@ -199,7 +199,7 @@
             const groupingPath = $scope.selectedGrouping.path;
             const paths = [groupingPath + ":basis", groupingPath + ":include", groupingPath + ":exclude"];
             let currentPage = 1;
-            $scope.setPage('First', 'currentPageMembers', 'pagedItemsMembers');
+            $scope.setPage("First", "currentPageMembers", "pagedItemsMembers");
             $scope.loading = true;
             $scope.paginatingComplete = false;
             await $scope.getGroupingDescription(groupingPath);
@@ -210,6 +210,8 @@
                 $scope.disableResetCheckboxes();
                 await $scope.fetchGrouping(currentPage, paths);
                 await $scope.fetchOwners(groupingPath);
+                await $scope.fetchAllOwnersCount(groupingPath);
+                await $scope.fetchAllMemberCount(groupingPath);
                 currentPage++;
                 $scope.loading = false;
             }
@@ -276,21 +278,31 @@
          */
         $scope.fetchOwners = (groupPath) => {
             return new Promise((resolve) => {
-                groupingsService.groupingOwners(groupPath, (res) => {
+                groupingsService.groupingOwners(groupPath, async (res) => {
                     $scope.groupingOwners = res.owners.members;
                     $scope.ownerLimit = res.ownerLimit;
+                    const immediateTotal = $scope.groupingOwners.length;
+                    let totalGroupingMembers = 0;
+                    const jobs = [];
                     // Assign field values for existing owner-groupings
                     $scope.groupingOwners.forEach((owner) => {
                         // Normal member owners cannot have colons in their name
-                        if(owner.name.includes(":")) {
+                        if (owner.name.includes(":")) {
                             owner.isOwnerGrouping = true;
                             // Name field in owner-groupings initially holds the group path
                             owner.ownerGroupingPath = owner.name;
                             const splitOwnerPath = owner.name.split(":");
                             // Isolate the grouping name from the path
                             owner.name = splitOwnerPath[splitOwnerPath.length - 1];
+                            const p = $scope.fetchAllMemberCount(owner.ownerGroupingPath).then(() => {
+                                owner.memberCount = $scope.allMembersCount;
+                                totalGroupingMembers += owner.memberCount;
+                            });
+                            jobs.push(p);
                         }
                     });
+                    await Promise.all(jobs);
+                    $scope.hasDuplicateOwners = ((immediateTotal + totalGroupingMembers) !== $scope.allOwnersCount);
                     $scope.filter($scope.groupingOwners, "pagedItemsOwners", "currentPageOwners", $scope.ownersQuery, false);
                     $scope.loading = false;
                     resolve();
@@ -306,6 +318,33 @@
             });
         };
 
+        /**
+         * Fetches the number of all owners (direct + indirect) for a specified group path
+         * Only used for the header count; the owners table still shows immediate members only
+         * @param groupPath - path of the grouping to retrieve all-owners count from
+         */
+        $scope.fetchAllOwnersCount = (groupPath) => {
+            return new Promise((resolve) => {
+                groupingsService.getNumberOfAllOwners(groupPath, (res) => {
+                    $scope.allOwnersCount = +res;
+                    resolve();
+                });
+            });
+        };
+
+        /**
+         * Fetches the number of all members for a specified group path
+         * Used for showing how many members are in an owner-grouping
+         * @param groupPath - path of the grouping to retrieve member count from
+         */
+        $scope.fetchAllMemberCount = (groupPath) => {
+            return new Promise((resolve) => {
+                groupingsService.getNumberOfGroupingMembers(groupPath, (res) => {
+                    $scope.allMembersCount = +res;
+                    resolve();
+                });
+            });
+        };
 
         /**
          * Get a grouping's description
@@ -337,7 +376,7 @@
             }, (res) => {
                 $scope.resStatus = res.status;
                 resolve();
-            }))
+            }));
         };
 
         /**
@@ -353,7 +392,7 @@
             }, (res) => {
                 $scope.resStatus = res.status;
                 resolve();
-            }))
+            }));
         };
 
         /**
@@ -876,7 +915,7 @@
 
                     // Prevent departmental accounts from being added as Owners
                     $scope.hasDeptAccount = $scope.checkForDeptAccount(res.results);
-                    if (listName === 'owners' && $scope.hasDeptAccount) {
+                    if (listName === "owners" && $scope.hasDeptAccount) {
                         $scope.displayDynamicModal(
                           Message.Title.OWNER_NOT_ADDED,
                           Message.Body.OWNER_NOT_ADDED
