@@ -37,14 +37,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.web.context.WebApplicationContext;
 
 import edu.hawaii.its.api.service.HttpRequestService;
@@ -67,7 +68,7 @@ public class GroupingsRestControllerTest {
     @Value("${url.api.2.1.base}")
     private String API_2_1_BASE;
 
-    @MockBean
+    @MockitoBean
     private HttpRequestService httpRequestService;
 
     @Autowired
@@ -87,7 +88,7 @@ public class GroupingsRestControllerTest {
                 .apply(springSecurity())
                 .build();
 
-        when(httpRequestService.makeApiRequest(anyString(), anyString(), any(HttpMethod.class)))
+        when(httpRequestService.makeApiRequest(anyString(), any(HttpMethod.class)))
                 .thenReturn(new ResponseEntity(HttpStatus.BAD_REQUEST));
     }
 
@@ -123,7 +124,7 @@ public class GroupingsRestControllerTest {
     public void groupingAdminsTest() throws Exception {
         String uri = REST_CONTROLLER_BASE + "groupings/admins";
 
-        given(httpRequestService.makeApiRequest(eq(ADMIN_UID), anyString(), eq(HttpMethod.GET)))
+        given(httpRequestService.makeApiRequest(anyString(), eq(HttpMethod.GET)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
 
         assertNotNull(mockMvc.perform(get(uri).with(csrf()))
@@ -131,7 +132,7 @@ public class GroupingsRestControllerTest {
                 .andReturn());
 
         verify(httpRequestService, times(1))
-                .makeApiRequest(eq(ADMIN_UID), anyString(), eq(HttpMethod.GET));
+                .makeApiRequest(anyString(), eq(HttpMethod.GET));
     }
 
     @Test
@@ -139,7 +140,7 @@ public class GroupingsRestControllerTest {
     public void allGroupingsTest() throws Exception {
         String uri = REST_CONTROLLER_BASE + "groupings";
 
-        given(httpRequestService.makeApiRequest(eq(ADMIN_UID), anyString(), eq(HttpMethod.GET)))
+        given(httpRequestService.makeApiRequest(anyString(), eq(HttpMethod.GET)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
 
         assertNotNull(mockMvc.perform(get(uri).with(csrf()))
@@ -147,7 +148,7 @@ public class GroupingsRestControllerTest {
                 .andReturn());
 
         verify(httpRequestService, times(1))
-                .makeApiRequest(eq(ADMIN_UID), anyString(), eq(HttpMethod.GET));
+                .makeApiRequest(anyString(), eq(HttpMethod.GET));
     }
 
     @Test
@@ -171,7 +172,7 @@ public class GroupingsRestControllerTest {
     public void addAdminTest() throws Exception {
         String uri = REST_CONTROLLER_BASE + "newAdmin/addAdmin";
 
-        given(httpRequestService.makeApiRequest(eq(ADMIN_UID), anyString(), eq(HttpMethod.POST)))
+        given(httpRequestService.makeApiRequest(anyString(), eq(HttpMethod.POST)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
 
         assertNotNull(mockMvc.perform(post(uri).with(csrf()))
@@ -179,7 +180,7 @@ public class GroupingsRestControllerTest {
                 .andReturn());
 
         verify(httpRequestService, times(1))
-                .makeApiRequest(eq(ADMIN_UID), anyString(), eq(HttpMethod.POST));
+                .makeApiRequest(anyString(), eq(HttpMethod.POST));
     }
 
     @Test
@@ -187,7 +188,7 @@ public class GroupingsRestControllerTest {
     public void removeAdminTest() throws Exception {
         String uri = REST_CONTROLLER_BASE + "newAdmin/removeAdmin";
 
-        given(httpRequestService.makeApiRequest(eq(ADMIN_UID), anyString(), eq(HttpMethod.DELETE)))
+        given(httpRequestService.makeApiRequest(anyString(), eq(HttpMethod.DELETE)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
 
         assertNotNull(mockMvc.perform(post(uri).with(csrf()))
@@ -195,7 +196,7 @@ public class GroupingsRestControllerTest {
                 .andReturn());
 
         verify(httpRequestService, times(1))
-                .makeApiRequest(eq(ADMIN_UID), anyString(), eq(HttpMethod.DELETE));
+                .makeApiRequest(anyString(), eq(HttpMethod.DELETE));
     }
 
     @Test
@@ -203,7 +204,7 @@ public class GroupingsRestControllerTest {
     public void removeFromGroupsTest() throws Exception {
         String uri = REST_CONTROLLER_BASE + GROUPING2 + "/user/removeFromGroups";
 
-        given(httpRequestService.makeApiRequest(eq(ADMIN_UID), anyString(), eq(HttpMethod.DELETE)))
+        given(httpRequestService.makeApiRequest(anyString(), eq(HttpMethod.DELETE)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
 
         assertNotNull(mockMvc.perform(post(uri).with(csrf()))
@@ -211,7 +212,7 @@ public class GroupingsRestControllerTest {
                 .andReturn());
 
         verify(httpRequestService, times(1))
-                .makeApiRequest(eq(ADMIN_UID), anyString(), eq(HttpMethod.DELETE));
+                .makeApiRequest(anyString(), eq(HttpMethod.DELETE));
     }
 
     @Test
@@ -219,7 +220,7 @@ public class GroupingsRestControllerTest {
     public void resetIncludeGroupTest() throws Exception {
         String uri = REST_CONTROLLER_BASE + GROUPING + "/resetIncludeGroup";
 
-        given(httpRequestService.makeApiRequest(eq(ADMIN_UID), anyString(), eq(HttpMethod.DELETE)))
+        given(httpRequestService.makeApiRequest(anyString(), eq(HttpMethod.DELETE)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
 
         assertNotNull(mockMvc.perform(post(uri).with(csrf()))
@@ -227,7 +228,7 @@ public class GroupingsRestControllerTest {
                 .andReturn());
 
         verify(httpRequestService, times(1))
-                .makeApiRequest(eq(ADMIN_UID), anyString(), eq(HttpMethod.DELETE));
+                .makeApiRequest(anyString(), eq(HttpMethod.DELETE));
     }
 
     @Test
@@ -235,7 +236,7 @@ public class GroupingsRestControllerTest {
     public void resetIncludeGroupAsyncTest() throws Exception {
         String uri = REST_CONTROLLER_BASE + GROUPING + "/resetIncludeGroupAsync";
 
-        given(httpRequestService.makeApiRequest(eq(ADMIN_UID), anyString(), eq(HttpMethod.DELETE)))
+        given(httpRequestService.makeApiRequest(anyString(), eq(HttpMethod.DELETE)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
 
         assertNotNull(mockMvc.perform(post(uri).with(csrf()))
@@ -243,7 +244,7 @@ public class GroupingsRestControllerTest {
                 .andReturn());
 
         verify(httpRequestService, times(1))
-                .makeApiRequest(eq(ADMIN_UID), anyString(), eq(HttpMethod.DELETE));
+                .makeApiRequest(anyString(), eq(HttpMethod.DELETE));
     }
 
     @Test
@@ -251,7 +252,7 @@ public class GroupingsRestControllerTest {
     public void resetExcludeGroupTest() throws Exception {
         String uri = REST_CONTROLLER_BASE + GROUPING + "/resetExcludeGroup";
 
-        given(httpRequestService.makeApiRequest(eq(ADMIN_UID), anyString(), eq(HttpMethod.DELETE)))
+        given(httpRequestService.makeApiRequest(anyString(), eq(HttpMethod.DELETE)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
 
         assertNotNull(mockMvc.perform(post(uri).with(csrf()))
@@ -259,7 +260,7 @@ public class GroupingsRestControllerTest {
                 .andReturn());
 
         verify(httpRequestService, times(1))
-                .makeApiRequest(eq(ADMIN_UID), anyString(), eq(HttpMethod.DELETE));
+                .makeApiRequest(anyString(), eq(HttpMethod.DELETE));
     }
 
     @Test
@@ -267,7 +268,7 @@ public class GroupingsRestControllerTest {
     public void resetExcludeGroupAsyncTest() throws Exception {
         String uri = REST_CONTROLLER_BASE + GROUPING + "/resetExcludeGroupAsync";
 
-        given(httpRequestService.makeApiRequest(eq(ADMIN_UID), anyString(), eq(HttpMethod.DELETE)))
+        given(httpRequestService.makeApiRequest(anyString(), eq(HttpMethod.DELETE)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
 
         assertNotNull(mockMvc.perform(post(uri).with(csrf()))
@@ -275,7 +276,7 @@ public class GroupingsRestControllerTest {
                 .andReturn());
 
         verify(httpRequestService, times(1))
-                .makeApiRequest(eq(ADMIN_UID), anyString(), eq(HttpMethod.DELETE));
+                .makeApiRequest(anyString(), eq(HttpMethod.DELETE));
     }
 
     @Test
@@ -283,7 +284,7 @@ public class GroupingsRestControllerTest {
     public void resetGroupTest() throws Exception {
         String uri = REST_CONTROLLER_BASE + GROUPING + "/user1/user2" + "/resetGroup";
 
-        given(httpRequestService.makeApiRequest(eq(ADMIN_UID), anyString(), eq(HttpMethod.DELETE)))
+        given(httpRequestService.makeApiRequest(anyString(), eq(HttpMethod.DELETE)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
 
         assertNotNull(mockMvc.perform(post(uri).with(csrf()))
@@ -291,7 +292,7 @@ public class GroupingsRestControllerTest {
                 .andReturn());
 
         verify(httpRequestService, times(1))
-                .makeApiRequest(eq(ADMIN_UID), anyString(), eq(HttpMethod.DELETE));
+                .makeApiRequest(anyString(), eq(HttpMethod.DELETE));
     }
 
     @Test
@@ -301,7 +302,7 @@ public class GroupingsRestControllerTest {
         List<String> members = new ArrayList<>();
         members.add(UID);
 
-        given(httpRequestService.makeApiRequestWithBody(eq(UID), anyString(), anyList(), eq(HttpMethod.POST)))
+        given(httpRequestService.makeApiRequestWithBody(anyString(), anyList(), eq(HttpMethod.POST)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
 
         assertNotNull(mockMvc.perform(post(uri).with(csrf())
@@ -311,7 +312,7 @@ public class GroupingsRestControllerTest {
                 .andReturn());
 
         verify(httpRequestService, times(1))
-                .makeApiRequestWithBody(eq(UID), anyString(), anyList(), eq(HttpMethod.POST));
+                .makeApiRequestWithBody(anyString(), anyList(), eq(HttpMethod.POST));
     }
 
     @Test
@@ -321,7 +322,7 @@ public class GroupingsRestControllerTest {
         List<String> members = new ArrayList<>();
         members.add(UID);
 
-        given(httpRequestService.makeApiRequestWithBody(eq(UID), anyString(), anyList(), eq(HttpMethod.POST)))
+        given(httpRequestService.makeApiRequestWithBody(anyString(), anyList(), eq(HttpMethod.POST)))
                 .willReturn(new ResponseEntity(HttpStatus.ACCEPTED));
 
         assertNotNull(mockMvc.perform(post(uri).with(csrf())
@@ -331,7 +332,7 @@ public class GroupingsRestControllerTest {
                 .andReturn());
 
         verify(httpRequestService, times(1))
-                .makeApiRequestWithBody(eq(UID), anyString(), anyList(), eq(HttpMethod.POST));
+                .makeApiRequestWithBody(anyString(), anyList(), eq(HttpMethod.POST));
     }
 
     @Test
@@ -339,7 +340,7 @@ public class GroupingsRestControllerTest {
     public void membershipResultsTest() throws Exception {
         String uri = REST_CONTROLLER_BASE + "members/memberships";
 
-        given(httpRequestService.makeApiRequest(eq(UID), anyString(), eq(HttpMethod.GET)))
+        given(httpRequestService.makeApiRequest(anyString(), eq(HttpMethod.GET)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
 
         assertNotNull(mockMvc.perform(get(uri))
@@ -347,7 +348,7 @@ public class GroupingsRestControllerTest {
                 .andReturn());
 
         verify(httpRequestService, times(1))
-                .makeApiRequest(eq(UID), anyString(), eq(HttpMethod.GET));
+                .makeApiRequest(anyString(), eq(HttpMethod.GET));
     }
 
     @Test
@@ -355,7 +356,7 @@ public class GroupingsRestControllerTest {
     public void manageSubjectResultsTest() throws Exception {
         String uri = REST_CONTROLLER_BASE + "members/0000/groupings";
 
-        given(httpRequestService.makeApiRequest(eq(UID), anyString(), eq(HttpMethod.GET)))
+        given(httpRequestService.makeApiRequest(anyString(), eq(HttpMethod.GET)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
 
         assertNotNull(mockMvc.perform(get(uri))
@@ -363,7 +364,7 @@ public class GroupingsRestControllerTest {
                 .andReturn());
 
         verify(httpRequestService, times(1))
-                .makeApiRequest(eq(UID), anyString(), eq(HttpMethod.GET));
+                .makeApiRequest(anyString(), eq(HttpMethod.GET));
     }
 
     @Test
@@ -371,7 +372,7 @@ public class GroupingsRestControllerTest {
     public void getNumberOfMembershipsTest() throws Exception {
         String uri = REST_CONTROLLER_BASE + "members/memberships/count";
 
-        given(httpRequestService.makeApiRequest(eq(UID), anyString(), eq(HttpMethod.GET)))
+        given(httpRequestService.makeApiRequest(anyString(), eq(HttpMethod.GET)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
 
         assertNotNull(mockMvc.perform(get(uri).with(csrf()))
@@ -379,7 +380,7 @@ public class GroupingsRestControllerTest {
                 .andReturn());
 
         verify(httpRequestService, times(1))
-                .makeApiRequest(eq(UID), anyString(), eq(HttpMethod.GET));
+                .makeApiRequest(anyString(), eq(HttpMethod.GET));
     }
 
     @Test
@@ -387,7 +388,7 @@ public class GroupingsRestControllerTest {
     public void optInGroupsTest() throws Exception {
         String uri = REST_CONTROLLER_BASE + "groupings/optInGroups";
 
-        given(httpRequestService.makeApiRequest(eq(ADMIN_UID), anyString(), eq(HttpMethod.GET)))
+        given(httpRequestService.makeApiRequest(anyString(), eq(HttpMethod.GET)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
 
         assertNotNull(mockMvc.perform(get(uri)
@@ -396,7 +397,7 @@ public class GroupingsRestControllerTest {
                 .andReturn());
 
         verify(httpRequestService, times(1))
-                .makeApiRequest(eq(ADMIN_UID), anyString(), eq(HttpMethod.GET));
+                .makeApiRequest(anyString(), eq(HttpMethod.GET));
     }
 
     @Test
@@ -404,7 +405,7 @@ public class GroupingsRestControllerTest {
     public void optInTest() throws Exception {
         String uri = REST_CONTROLLER_BASE + GROUPING + "/optIn";
 
-        given(httpRequestService.makeApiRequest(eq(UID), anyString(), eq(HttpMethod.PUT)))
+        given(httpRequestService.makeApiRequest(anyString(), eq(HttpMethod.PUT)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
 
         assertNotNull(mockMvc.perform(post(uri).with(csrf()))
@@ -412,7 +413,7 @@ public class GroupingsRestControllerTest {
                 .andReturn());
 
         verify(httpRequestService, times(1))
-                .makeApiRequest(eq(UID), anyString(), eq(HttpMethod.PUT));
+                .makeApiRequest(anyString(), eq(HttpMethod.PUT));
     }
 
     @Test
@@ -420,7 +421,7 @@ public class GroupingsRestControllerTest {
     public void optOutTest() throws Exception {
         String uri = REST_CONTROLLER_BASE + GROUPING + "/optOut";
 
-        given(httpRequestService.makeApiRequest(eq(UID), anyString(), eq(HttpMethod.PUT)))
+        given(httpRequestService.makeApiRequest(anyString(), eq(HttpMethod.PUT)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
 
         assertNotNull(mockMvc.perform(post(uri).with(csrf()))
@@ -428,7 +429,7 @@ public class GroupingsRestControllerTest {
                 .andReturn());
 
         verify(httpRequestService, times(1))
-                .makeApiRequest(eq(UID), anyString(), eq(HttpMethod.PUT));
+                .makeApiRequest(anyString(), eq(HttpMethod.PUT));
     }
 
     @Test
@@ -438,17 +439,19 @@ public class GroupingsRestControllerTest {
         List<String> usersToAdd = new ArrayList<>();
         usersToAdd.add(UID);
 
-        given(httpRequestService.makeApiRequestWithBody(eq(UID), anyString(), anyList(), eq(HttpMethod.PUT)))
+        given(httpRequestService.makeApiRequestWithBody(anyString(), anyList(), eq(HttpMethod.PUT)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
 
-        assertNotNull(mockMvc.perform(put(uri).with(csrf())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(JsonUtil.asJson(usersToAdd)))
+        ResultActions result = mockMvc.perform(put(uri).with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.asJson(usersToAdd)));
+
+        assertNotNull(result
                 .andExpect(status().isOk())
                 .andReturn());
 
         verify(httpRequestService, times(1))
-                .makeApiRequestWithBody(eq(UID), anyString(), anyList(), eq(HttpMethod.PUT));
+                .makeApiRequestWithBody(anyString(), anyList(), eq(HttpMethod.PUT));
 
     }
 
@@ -459,7 +462,7 @@ public class GroupingsRestControllerTest {
         List<String> usersToAdd = new ArrayList<>();
         usersToAdd.add(UID);
 
-        given(httpRequestService.makeApiRequestWithBody(eq(UID), anyString(), anyList(), eq(HttpMethod.PUT)))
+        given(httpRequestService.makeApiRequestWithBody(anyString(), anyList(), eq(HttpMethod.PUT)))
                 .willReturn(new ResponseEntity(HttpStatus.ACCEPTED));
 
         assertNotNull(mockMvc.perform(put(uri).with(csrf())
@@ -469,7 +472,7 @@ public class GroupingsRestControllerTest {
                 .andReturn());
 
         verify(httpRequestService, times(1))
-                .makeApiRequestWithBody(eq(UID), anyString(), anyList(), eq(HttpMethod.PUT));
+                .makeApiRequestWithBody(anyString(), anyList(), eq(HttpMethod.PUT));
 
     }
 
@@ -480,7 +483,7 @@ public class GroupingsRestControllerTest {
         List<String> usersToAdd = new ArrayList<>();
         usersToAdd.add(UID);
 
-        given(httpRequestService.makeApiRequestWithBody(eq(UID), anyString(), anyList(), eq(HttpMethod.PUT)))
+        given(httpRequestService.makeApiRequestWithBody(anyString(), anyList(), eq(HttpMethod.PUT)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
 
         assertNotNull(mockMvc.perform(put(uri).with(csrf())
@@ -490,7 +493,7 @@ public class GroupingsRestControllerTest {
                 .andReturn());
 
         verify(httpRequestService, times(1))
-                .makeApiRequestWithBody(eq(UID), anyString(), anyList(), eq(HttpMethod.PUT));
+                .makeApiRequestWithBody(anyString(), anyList(), eq(HttpMethod.PUT));
     }
 
     @Test
@@ -500,7 +503,7 @@ public class GroupingsRestControllerTest {
         List<String> usersToAdd = new ArrayList<>();
         usersToAdd.add(UID);
 
-        given(httpRequestService.makeApiRequestWithBody(eq(UID), anyString(), anyList(), eq(HttpMethod.PUT)))
+        given(httpRequestService.makeApiRequestWithBody(anyString(), anyList(), eq(HttpMethod.PUT)))
                 .willReturn(new ResponseEntity(HttpStatus.ACCEPTED));
 
         assertNotNull(mockMvc.perform(put(uri).with(csrf())
@@ -510,7 +513,7 @@ public class GroupingsRestControllerTest {
                 .andReturn());
 
         verify(httpRequestService, times(1))
-                .makeApiRequestWithBody(eq(UID), anyString(), anyList(), eq(HttpMethod.PUT));
+                .makeApiRequestWithBody(anyString(), anyList(), eq(HttpMethod.PUT));
     }
 
     @Test
@@ -520,7 +523,7 @@ public class GroupingsRestControllerTest {
         List<String> usersToRemove = new ArrayList<>();
         usersToRemove.add(UID);
 
-        given(httpRequestService.makeApiRequestWithBody(eq(UID), anyString(), anyList(), eq(HttpMethod.DELETE)))
+        given(httpRequestService.makeApiRequestWithBody(anyString(), anyList(), eq(HttpMethod.DELETE)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
 
         assertNotNull(mockMvc.perform(put(uri).with(csrf())
@@ -530,7 +533,7 @@ public class GroupingsRestControllerTest {
                 .andReturn());
 
         verify(httpRequestService, times(1))
-                .makeApiRequestWithBody(eq(UID), anyString(), anyList(), eq(HttpMethod.DELETE));
+                .makeApiRequestWithBody(anyString(), anyList(), eq(HttpMethod.DELETE));
     }
 
     @Test
@@ -540,7 +543,7 @@ public class GroupingsRestControllerTest {
         List<String> usersToRemove = new ArrayList<>();
         usersToRemove.add(UID);
 
-        given(httpRequestService.makeApiRequestWithBody(eq(UID), anyString(), anyList(), eq(HttpMethod.DELETE)))
+        given(httpRequestService.makeApiRequestWithBody(anyString(), anyList(), eq(HttpMethod.DELETE)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
 
         assertNotNull(mockMvc.perform(put(uri).with(csrf())
@@ -550,7 +553,7 @@ public class GroupingsRestControllerTest {
                 .andReturn());
 
         verify(httpRequestService, times(1))
-                .makeApiRequestWithBody(eq(UID), anyString(), anyList(), eq(HttpMethod.DELETE));
+                .makeApiRequestWithBody(anyString(), anyList(), eq(HttpMethod.DELETE));
     }
 
     @Test
@@ -558,7 +561,7 @@ public class GroupingsRestControllerTest {
     public void ownerGroupingsTest() throws Exception {
         String uri = REST_CONTROLLER_BASE + "owners/groupings";
 
-        given(httpRequestService.makeApiRequest(eq(UID), anyString(), eq(HttpMethod.GET)))
+        given(httpRequestService.makeApiRequest(anyString(), eq(HttpMethod.GET)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
 
         assertNotNull(mockMvc.perform(get(uri).with(csrf()))
@@ -566,7 +569,7 @@ public class GroupingsRestControllerTest {
                 .andReturn());
 
         verify(httpRequestService, times(1))
-                .makeApiRequest(eq(UID), anyString(), eq(HttpMethod.GET));
+                .makeApiRequest(anyString(), eq(HttpMethod.GET));
     }
 
     @Test
@@ -574,7 +577,7 @@ public class GroupingsRestControllerTest {
     public void numberOfGroupingsTest() throws Exception {
         String uri = REST_CONTROLLER_BASE + "owners/groupings/count";
 
-        given(httpRequestService.makeApiRequest(eq(UID), anyString(), eq(HttpMethod.GET)))
+        given(httpRequestService.makeApiRequest(anyString(), eq(HttpMethod.GET)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
 
         assertNotNull(mockMvc.perform(get(uri).with(csrf()))
@@ -582,7 +585,7 @@ public class GroupingsRestControllerTest {
                 .andReturn());
 
         verify(httpRequestService, times(1))
-                .makeApiRequest(eq(UID), anyString(), eq(HttpMethod.GET));
+                .makeApiRequest(anyString(), eq(HttpMethod.GET));
     }
 
     @Test
@@ -590,7 +593,7 @@ public class GroupingsRestControllerTest {
     public void getNumberOfAllOwnersTest() throws Exception {
         String uri = REST_CONTROLLER_BASE + "groupings/groupingPath/owners/count";
 
-        given(httpRequestService.makeApiRequest(eq(UID), anyString(), eq(HttpMethod.GET)))
+        given(httpRequestService.makeApiRequest(anyString(), eq(HttpMethod.GET)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
 
         assertNotNull(mockMvc.perform(get(uri).with(csrf()))
@@ -598,7 +601,7 @@ public class GroupingsRestControllerTest {
                 .andReturn());
 
         verify(httpRequestService, times(1))
-                .makeApiRequest(eq(UID), anyString(), eq(HttpMethod.GET));
+                .makeApiRequest(anyString(), eq(HttpMethod.GET));
     }
 
     @Test
@@ -606,7 +609,7 @@ public class GroupingsRestControllerTest {
     public void getNumberOfGroupingMembersTest() throws Exception {
         String uri = REST_CONTROLLER_BASE + "/groupings/groupingPath/count";
 
-        given(httpRequestService.makeApiRequest(eq(UID), anyString(), eq(HttpMethod.GET)))
+        given(httpRequestService.makeApiRequest(anyString(), eq(HttpMethod.GET)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
 
         assertNotNull(mockMvc.perform(get(uri).with(csrf()))
@@ -614,7 +617,7 @@ public class GroupingsRestControllerTest {
                 .andReturn());
 
         verify(httpRequestService, times(1))
-                .makeApiRequest(eq(UID), anyString(), eq(HttpMethod.GET));
+                .makeApiRequest(anyString(), eq(HttpMethod.GET));
     }
 
 
@@ -655,7 +658,7 @@ public class GroupingsRestControllerTest {
     public void assignOwnershipTest() throws Exception {
         String uri = REST_CONTROLLER_BASE + GROUPING + "/user/addOwnerships";
 
-        given(httpRequestService.makeApiRequest(eq(UID), anyString(), eq(HttpMethod.PUT)))
+        given(httpRequestService.makeApiRequest(anyString(), eq(HttpMethod.PUT)))
                 .willReturn(new ResponseEntity<>(HttpStatus.OK));
 
         assertNotNull(mockMvc.perform(post(uri).with(csrf()))
@@ -663,7 +666,7 @@ public class GroupingsRestControllerTest {
                 .andReturn());
 
         verify(httpRequestService, times(1))
-                .makeApiRequest(eq(UID), anyString(), eq(HttpMethod.PUT));
+                .makeApiRequest(anyString(), eq(HttpMethod.PUT));
     }
 
     @Test
@@ -671,7 +674,7 @@ public class GroupingsRestControllerTest {
     public void addOwnerGroupingsTest() throws Exception {
         String uri = REST_CONTROLLER_BASE + GROUPING + "/groupPath/addOwnerGroupings";
 
-        given(httpRequestService.makeApiRequest(eq(UID), anyString(), eq(HttpMethod.PUT)))
+        given(httpRequestService.makeApiRequest(anyString(), eq(HttpMethod.PUT)))
                 .willReturn(new ResponseEntity<>(HttpStatus.OK));
 
         assertNotNull(mockMvc.perform(post(uri).with(csrf()))
@@ -679,7 +682,7 @@ public class GroupingsRestControllerTest {
                 .andReturn());
 
         verify(httpRequestService, times(1))
-                .makeApiRequest(eq(UID), anyString(), eq(HttpMethod.PUT));
+                .makeApiRequest(anyString(), eq(HttpMethod.PUT));
     }
 
     @Test
@@ -687,7 +690,7 @@ public class GroupingsRestControllerTest {
     public void removeOwnershipsTest() throws Exception {
         String uri = REST_CONTROLLER_BASE + GROUPING + "/user/removeOwnerships";
 
-        given(httpRequestService.makeApiRequest(eq(UID), anyString(), eq(HttpMethod.DELETE)))
+        given(httpRequestService.makeApiRequest(anyString(), eq(HttpMethod.DELETE)))
                 .willReturn(new ResponseEntity<>(HttpStatus.OK));
 
         assertNotNull(mockMvc.perform(post(uri).with(csrf()))
@@ -695,7 +698,7 @@ public class GroupingsRestControllerTest {
                 .andReturn());
 
         verify(httpRequestService, times(1))
-                .makeApiRequest(eq(UID), anyString(), eq(HttpMethod.DELETE));
+                .makeApiRequest(anyString(), eq(HttpMethod.DELETE));
     }
 
     @Test
@@ -703,7 +706,7 @@ public class GroupingsRestControllerTest {
     public void removeOwnerGroupingsTest() throws Exception {
         String uri = REST_CONTROLLER_BASE + GROUPING + "/groupPath/removeOwnerGroupings";
 
-        given(httpRequestService.makeApiRequest(eq(UID), anyString(), eq(HttpMethod.DELETE)))
+        given(httpRequestService.makeApiRequest(anyString(), eq(HttpMethod.DELETE)))
                 .willReturn(new ResponseEntity<>(HttpStatus.OK));
 
         assertNotNull(mockMvc.perform(post(uri).with(csrf()))
@@ -711,7 +714,7 @@ public class GroupingsRestControllerTest {
                 .andReturn());
 
         verify(httpRequestService, times(1))
-                .makeApiRequest(eq(UID), anyString(), eq(HttpMethod.DELETE));
+                .makeApiRequest(anyString(), eq(HttpMethod.DELETE));
     }
 
     @Test
@@ -720,7 +723,7 @@ public class GroupingsRestControllerTest {
         String uri = REST_CONTROLLER_BASE + "groupings/group?page=2&size=700&sortBy=name&isAscending=true";
         List<String> groupPaths = List.of(GROUPING);
 
-        given(httpRequestService.makeApiRequestWithBody(eq(UID), anyString(), eq(groupPaths), eq(HttpMethod.POST)))
+        given(httpRequestService.makeApiRequestWithBody(anyString(), eq(groupPaths), eq(HttpMethod.POST)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
 
         assertNotNull(mockMvc.perform(post(uri).with(csrf())
@@ -730,7 +733,7 @@ public class GroupingsRestControllerTest {
                 .andReturn());
 
         verify(httpRequestService, times(1))
-                .makeApiRequestWithBody(eq(UID), anyString(), eq(groupPaths), eq(HttpMethod.POST));
+                .makeApiRequestWithBody(anyString(), eq(groupPaths), eq(HttpMethod.POST));
     }
 
     @Test
@@ -786,7 +789,7 @@ public class GroupingsRestControllerTest {
     public void updateDescriptionTest() throws Exception {
         String uri = REST_CONTROLLER_BASE + "groupings/path/description";
 
-        given(httpRequestService.makeApiRequestWithBody(eq(UID), anyString(), nullable(String.class),
+        given(httpRequestService.makeApiRequestWithBody(anyString(), nullable(String.class),
                 eq(HttpMethod.PUT)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
 
@@ -795,7 +798,7 @@ public class GroupingsRestControllerTest {
                 .andReturn());
 
         verify(httpRequestService, times(1))
-                .makeApiRequestWithBody(eq(UID), anyString(), nullable(String.class), eq(HttpMethod.PUT));
+                .makeApiRequestWithBody(anyString(), nullable(String.class), eq(HttpMethod.PUT));
     }
 
     @Test
@@ -804,7 +807,7 @@ public class GroupingsRestControllerTest {
         String uri = REST_CONTROLLER_BASE + "groupings/" + GROUPING + "/syncDests/listserv/";
 
         String enableUri = uri + "true";
-        given(httpRequestService.makeApiRequest(eq(UID), anyString(), eq(HttpMethod.PUT)))
+        given(httpRequestService.makeApiRequest(anyString(), eq(HttpMethod.PUT)))
                 .willReturn(new ResponseEntity<>(HttpStatus.OK));
 
         assertNotNull(mockMvc.perform(post(enableUri).with(csrf()))
@@ -812,9 +815,10 @@ public class GroupingsRestControllerTest {
                 .andReturn());
 
         verify(httpRequestService, times(1))
-                .makeApiRequest(eq(UID), anyString(), eq(HttpMethod.PUT));
+                .makeApiRequest(anyString(), eq(HttpMethod.PUT));
+
         String disableUri = uri + "false";
-        given(httpRequestService.makeApiRequest(eq(UID), anyString(), eq(HttpMethod.PUT)))
+        given(httpRequestService.makeApiRequest(anyString(), eq(HttpMethod.PUT)))
                 .willReturn(new ResponseEntity<>(HttpStatus.OK));
 
         assertNotNull(mockMvc.perform(post(disableUri).with(csrf()))
@@ -822,14 +826,14 @@ public class GroupingsRestControllerTest {
                 .andReturn());
 
         verify(httpRequestService, times(2))
-                .makeApiRequest(eq(UID), anyString(), eq(HttpMethod.PUT));
+                .makeApiRequest(anyString(), eq(HttpMethod.PUT));
     }
     @Test
     @WithMockUhUser
     public void updateOptInTrueTest() throws Exception {
         String uri = REST_CONTROLLER_BASE +"groupings/"+ GROUPING + "/opt-attribute/IN/true";
 
-        given(httpRequestService.makeApiRequest(eq(UID), anyString(), eq(HttpMethod.PUT)))
+        given(httpRequestService.makeApiRequest(anyString(), eq(HttpMethod.PUT)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
 
         assertNotNull(mockMvc.perform(post(uri).with(csrf()))
@@ -837,7 +841,7 @@ public class GroupingsRestControllerTest {
                 .andReturn());
 
         verify(httpRequestService, times(1))
-                .makeApiRequest(eq(UID), anyString(), eq(HttpMethod.PUT));
+                .makeApiRequest(anyString(), eq(HttpMethod.PUT));
     }
 
     @Test
@@ -845,7 +849,7 @@ public class GroupingsRestControllerTest {
     public void updateOptInFalseTest() throws Exception {
         String uri = REST_CONTROLLER_BASE +"groupings/"+ GROUPING + "/opt-attribute/IN/false";
 
-        given(httpRequestService.makeApiRequest(eq(UID), anyString(), eq(HttpMethod.PUT)))
+        given(httpRequestService.makeApiRequest(anyString(), eq(HttpMethod.PUT)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
 
         assertNotNull(mockMvc.perform(post(uri).with(csrf()))
@@ -853,7 +857,7 @@ public class GroupingsRestControllerTest {
                 .andReturn());
 
         verify(httpRequestService, times(1))
-                .makeApiRequest(eq(UID), anyString(), eq(HttpMethod.PUT));
+                .makeApiRequest(anyString(), eq(HttpMethod.PUT));
     }
 
     @Test
@@ -861,7 +865,7 @@ public class GroupingsRestControllerTest {
     public void updateOptOutTrueTest() throws Exception {
         String uri = REST_CONTROLLER_BASE +"groupings/"+ GROUPING + "/opt-attribute/OUT/true";
 
-        given(httpRequestService.makeApiRequest(eq(UID), anyString(), eq(HttpMethod.PUT)))
+        given(httpRequestService.makeApiRequest(anyString(), eq(HttpMethod.PUT)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
 
         assertNotNull(mockMvc.perform(post(uri).with(csrf()))
@@ -869,7 +873,7 @@ public class GroupingsRestControllerTest {
                 .andReturn());
 
         verify(httpRequestService, times(1))
-                .makeApiRequest(eq(UID), anyString(), eq(HttpMethod.PUT));
+                .makeApiRequest(anyString(), eq(HttpMethod.PUT));
     }
 
     @Test
@@ -877,7 +881,7 @@ public class GroupingsRestControllerTest {
     public void updateOptOutFalseTest() throws Exception {
         String uri = REST_CONTROLLER_BASE +"groupings/"+ GROUPING + "/opt-attribute/OUT/false";
 
-        given(httpRequestService.makeApiRequest(eq(UID), anyString(), eq(HttpMethod.PUT)))
+        given(httpRequestService.makeApiRequest(anyString(), eq(HttpMethod.PUT)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
 
         assertNotNull(mockMvc.perform(post(uri).with(csrf()))
@@ -885,7 +889,7 @@ public class GroupingsRestControllerTest {
                 .andReturn());
 
         verify(httpRequestService, times(1))
-                .makeApiRequest(eq(UID), anyString(), eq(HttpMethod.PUT));
+                .makeApiRequest(anyString(), eq(HttpMethod.PUT));
     }
 
     @Test
@@ -893,7 +897,7 @@ public class GroupingsRestControllerTest {
     public void getNumberOfOwners() throws Exception {
         String uri = REST_CONTROLLER_BASE + GROUPING + "/owners/count";
 
-        given(httpRequestService.makeApiRequest(eq(UID), anyString(), eq(HttpMethod.GET)))
+        given(httpRequestService.makeApiRequest(anyString(), eq(HttpMethod.GET)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
 
         assertNotNull(mockMvc.perform(get(uri).with(csrf()))
@@ -901,7 +905,7 @@ public class GroupingsRestControllerTest {
                 .andReturn());
 
         verify(httpRequestService, times(1))
-                .makeApiRequest(eq(UID), anyString(), eq(HttpMethod.GET));
+                .makeApiRequest(anyString(), eq(HttpMethod.GET));
     }
 
     @Test
@@ -909,7 +913,7 @@ public class GroupingsRestControllerTest {
     public void allSyncDestinationsTest() throws Exception {
         String uri = REST_CONTROLLER_BASE + "/groupings/" + GROUPING + "/sync-destinations";
 
-        given(httpRequestService.makeApiRequest(eq(UID), anyString(), eq(HttpMethod.GET)))
+        given(httpRequestService.makeApiRequest(anyString(), eq(HttpMethod.GET)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
 
         assertNotNull(mockMvc.perform(get(uri).with(csrf()))
@@ -917,14 +921,14 @@ public class GroupingsRestControllerTest {
                 .andReturn());
 
         verify(httpRequestService, times(1))
-                .makeApiRequest(eq(UID), anyString(), eq(HttpMethod.GET));
+                .makeApiRequest(anyString(), eq(HttpMethod.GET));
     }
 
     @Test
     @WithMockUhUser
     public void getAsyncJobResultTest() throws Exception {
         String uri = REST_CONTROLLER_BASE + "jobs/0";
-        given(httpRequestService.makeApiRequest(eq(UID), anyString(), eq(HttpMethod.GET)))
+        given(httpRequestService.makeApiRequest(anyString(), eq(HttpMethod.GET)))
                 .willReturn(new ResponseEntity(HttpStatus.ACCEPTED));
 
         assertNotNull(mockMvc.perform(get(uri).with(csrf()))
@@ -932,7 +936,7 @@ public class GroupingsRestControllerTest {
                 .andReturn());
 
         verify(httpRequestService, times(1))
-                .makeApiRequest(eq(UID), anyString(), eq(HttpMethod.GET));
+                .makeApiRequest(anyString(), eq(HttpMethod.GET));
     }
 
     @Test
