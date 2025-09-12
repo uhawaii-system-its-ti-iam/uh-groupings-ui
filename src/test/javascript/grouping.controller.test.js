@@ -3167,6 +3167,9 @@ describe("GroupingController", () => {
 describe("SyncDestModalController", () => {
     beforeEach(module("UHGroupingsApp"));
     beforeEach(module("ngMockE2E"));
+    beforeEach(module(($provide) => {
+        $provide.value("isSingular", false);
+    }));
 
     let scope;
     let controller;
@@ -3174,6 +3177,7 @@ describe("SyncDestModalController", () => {
 
     beforeEach(inject(($rootScope, $controller, Message) => {
         scope = $rootScope.$new(true);
+        scope.resetSyncStatuses = jasmine.createSpy("resetSyncStatuses");
         uibModalInstance = jasmine.createSpyObj("syncDestInstance", ["dismiss", "close"]);
         controller = $controller("SyncDestModalController", {
             $scope: scope,
