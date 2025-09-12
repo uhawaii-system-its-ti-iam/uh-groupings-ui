@@ -3204,7 +3204,7 @@ describe("SyncDestModalController", () => {
         });
 
         it("should set the confirmation based on sync state", () => {
-            expect(scope.syncDestConfirmationMessage).toContain("enable")
+            expect(scope.syncDestConfirmationMessage).toContain("enable");
         });
     })
 });
