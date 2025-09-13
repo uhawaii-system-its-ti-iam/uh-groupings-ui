@@ -1948,11 +1948,11 @@
         // Function to display the current opt status message
         $scope.getOptStatus = () => {
             if ($scope.allowOptIn && $scope.allowOptOut) {
-                return "Both options are enabled. You may opt yourself in and out.";
+                return "Both options are enabled. Members may opt themselves in and out.";
             } else if ($scope.allowOptIn) {
-                return "You have opted in.";
+                return "Members may opt in.";
             } else if ($scope.allowOptOut) {
-                return "You have opted out.";
+                return "Members may opt out.";
             }
             return "No changes were made.";
         };
