@@ -83,7 +83,7 @@ UHGroupingsApp.constant("Message", {
         ]
     },
     SyncDestModal: {
-        confirmationMessage: (isSynced) => `Are you sure you want to ${isSynced ? 'enable' : 'disable'} the synchronization destination?:`
+        confirmationMessage: (isSynced) => `Are you sure you want to ${isSynced ? "enable" : 'disable'} the synchronization destination?:`
     }
 });
 UHGroupingsApp.constant("BASE_URL", "api/groupings/");
