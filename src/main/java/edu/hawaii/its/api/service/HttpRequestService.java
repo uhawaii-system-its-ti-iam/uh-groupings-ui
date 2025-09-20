@@ -37,6 +37,7 @@ public class HttpRequestService {
     public ResponseEntity<String> makeApiRequest(String currentUser, String uri, HttpMethod method) {
         User user = userContextService.getCurrentUser();
         String jwt = jwtService.generateToken(user);
+        System.out.println("JWT: " + jwt);
         return webClient.method(method)
                 .uri(uri)
                 .header("Authorization", "Bearer " + jwt)
