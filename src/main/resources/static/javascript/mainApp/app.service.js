@@ -10,6 +10,9 @@
         const timeLimit = 20000;
         const maxRetries = 3;
 
+        // Just touched this file.
+
+
         /**
          * Polls to getAsyncJobResult API endpoint until the async job has completed with a result
          * @param {number} jobId - the jobId returned from the response of an async endpoint
