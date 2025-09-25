@@ -50,8 +50,11 @@ public class HttpRequestService {
      * Make a http request to the API with path variables and without CURRENT_USER in http header.
      */
     public ResponseEntity<String> makeApiRequest(String uri, HttpMethod method) {
+        User user = userContextService.getCurrentUser();
+        String jwt = jwtService.generateToken(user);
         return webClient.method(method)
                 .uri(uri)
+                .header("Authorization", "Bearer " + jwt)
                 .retrieve()
                 .toEntity(String.class)
                 .block();
