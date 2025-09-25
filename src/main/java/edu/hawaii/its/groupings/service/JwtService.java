@@ -38,7 +38,7 @@ public class JwtService {
 
         UserDetails userDetails = userContextService.getCurrentUser();
 
-        logger.info(String.format("JwtService: generating token for %s", userDetails.getUsername()));
+        logger.info("JwtService: generating JWT token");
 
         long expirationTime = 1000L * EXPIRATION_TIME; // convert seconds to milliseconds.
 
