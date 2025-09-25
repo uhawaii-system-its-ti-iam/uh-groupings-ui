@@ -30,6 +30,8 @@
         $scope.availableProfiles = [];
 
         angular.extend(this, $controller("TableJsController", { $scope }));
+        // Just touched this file.
+
 
         /**
          * Shows/hides admin tabs: Manage Groupings, Manage Admins, Manage Subject

@@ -149,6 +149,8 @@
             }
         };
 
+        // Just touched this file.
+
         /**
          * Helper - removeFromGroups
          * Checks if the user being removed is a sole owner of any grouping before proceeding
