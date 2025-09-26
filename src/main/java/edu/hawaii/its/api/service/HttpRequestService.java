@@ -34,27 +34,22 @@ public class HttpRequestService {
     /*
      * Make a http request to the API with path variables.
      */
-    public ResponseEntity<String> makeApiRequest(String currentUser, String uri, HttpMethod method) {
-        User user = userContextService.getCurrentUser();
-        String jwt = jwtService.generateToken(user);
-        System.out.println("JWT: " + jwt);
+    public ResponseEntity<String> makeApiRequest(String uri, HttpMethod method) {
         return webClient.method(method)
                 .uri(uri)
-                .header("Authorization", "Bearer " + jwt)
+                .header("Authorization", "Bearer " + generateJWT())
                 .retrieve()
                 .toEntity(String.class)
                 .block();
     }
 
     /*
-     * Make a http request to the API with path variables and without CURRENT_USER in http header.
+     * Make a http request to the API with path variables.
      */
-    public ResponseEntity<String> makeApiRequest(String uri, HttpMethod method) {
-        User user = userContextService.getCurrentUser();
-        String jwt = jwtService.generateToken(user);
+    public ResponseEntity<String> makeApiRequest(String currentUser, String uri, HttpMethod method) {
         return webClient.method(method)
                 .uri(uri)
-                .header("Authorization", "Bearer " + jwt)
+                .header(CURRENT_USER, currentUser)
                 .retrieve()
                 .toEntity(String.class)
                 .block();
@@ -63,11 +58,11 @@ public class HttpRequestService {
     /*
      * Make a http request to the API with path variables and description string in the body.
      */
-    public ResponseEntity<String> makeApiRequestWithBody(String currentUser, String uri, String data,
+    public ResponseEntity<String> makeApiRequestWithBody(String uri, String data,
             HttpMethod method) {
         return webClient.method(method)
                 .uri(uri)
-                .header(CURRENT_USER, currentUser)
+                .header("Authorization", "Bearer " + generateJWT())
                 .bodyValue(data)
                 .retrieve()
                 .toEntity(String.class)
@@ -77,15 +72,19 @@ public class HttpRequestService {
     /*
      * Make a http request to the API with path variables and description list of strings in the body.
      */
-    public ResponseEntity<String> makeApiRequestWithBody(String currentUser, String uri, List<String> data,
+    public ResponseEntity<String> makeApiRequestWithBody(String uri, List<String> data,
             HttpMethod method) {
         return webClient.method(method)
                 .uri(uri)
-                .header(CURRENT_USER, currentUser)
+                .header("Authorization", "Bearer " + generateJWT())
                 .bodyValue(data)
                 .retrieve()
                 .toEntity(String.class)
                 .block();
     }
 
+    private String generateJWT() {
+        User user = userContextService.getCurrentUser();
+        return jwtService.generateToken(user);
+    }
 }
