@@ -1947,8 +1947,8 @@
 
         // Function to display the current opt status message
         $scope.getOptStatus = () => {
-            if (typeof $scope.initialAllowOptIn  === 'boolean' &&
-                typeof $scope.initialAllowOptOut === 'boolean') {
+            if (typeof $scope.initialAllowOptIn  === "boolean" &&
+                typeof $scope.initialAllowOptOut === "boolean") {
 
                 const inChanged  = $scope.allowOptIn  !== $scope.initialAllowOptIn;
                 const outChanged = $scope.allowOptOut !== $scope.initialAllowOptOut;
