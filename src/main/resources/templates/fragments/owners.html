@@ -3,7 +3,12 @@
     <div id="owners-display" class="tab-pane fade show active">
         <div class="row">
             <div class="col-md-8">
-                <h1 class="font-weight-bold text-dark pt-2 mb-0 d-inline-block">Owners ({{groupingOwners.length}})</h1>
+                <div class="pt-2 mb-0">
+                    <h1 class="font-weight-bold text-dark mb-1">
+                        Owners ({{allOwnersCount}})
+                    </h1>
+                </div>
+
                 <div class="spinner-border ml-1 d-inline-block"
                      ng-hide="paginatingComplete"
                      role="status">
@@ -40,6 +45,15 @@
                 <tr ng-repeat="owner in pagedItemsOwners[currentPageOwners]" class="table table-sm">
                     <td class="overflow-auto py-1 px-3" aria-label="{{owner.name}}">
                         {{owner.name}}
+                        <span ng-if="owner.isOwnerGrouping">
+                        ({{owner.totalOwnerGroupingMembers}} owners)
+                        <i class="fa fa-info-circle"
+                            ng-if="hasDuplicateOwners"
+                            aria-hidden="true"
+                            tooltip data-placement="right"
+                            th:title="#{screen.message.common.tooltip.uid.duplicate}">
+                        </i>
+                        </span>
                         <span ng-if="owner.uid == owner.uhUuid">
                             <i class="d-inline rounded-circle blue-bg text-light fa fa-school fa-xs p-1 ml-1"
                                role="button"

@@ -461,7 +461,7 @@ describe("AdminController", function () {
             scope.adminToAdd = "testiwt2";
             scope.addAdmin();
 
-            httpBackend.expectPOST(BASE_URL + "members", ['testiwt2']).respond(200, results);
+            httpBackend.expectPOST(BASE_URL + "members", ["testiwt2"]).respond(200, results);
             httpBackend.flush();
 
             expect(scope.user).toBe(scope.adminToAdd);
