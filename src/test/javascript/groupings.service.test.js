@@ -665,6 +665,36 @@ describe("GroupingsService", () => {
         });
     });
 
+    describe("getNumberOfAllOwners", () => {
+        it("should call dataProvider.loadData", () => {
+            spyOn(dp, "loadData");
+            gs.getNumberOfAllOwners(onSuccess, onError);
+            expect(dp.loadData).toHaveBeenCalled();
+        });
+        it("should use the correct path", () => {
+            gs.getNumberOfAllOwners(groupingPath, onSuccess, onError);
+            httpBackend.expectGET(BASE_URL + "groupings/" + groupingPath + "/owners/count").respond(200);
+            expect(httpBackend.flush).not.toThrow();
+        });
+    });
+
+    describe("getNumberOfGroupingMembers", () => {
+        it("should call dataProvider.loadData", () => {
+            spyOn(dp, "loadData");
+            const groupingPath = "some-path";
+            gs.getNumberOfGroupingMembers(groupingPath, onSuccess, onError);
+            expect(dp.loadData).toHaveBeenCalled();
+        });
+        it("should use the correct path", () => {
+            const groupingPath = "some-path";
+            gs.getNumberOfGroupingMembers(groupingPath, onSuccess, onError);
+            httpBackend.expectGET(BASE_URL + "groupings/" + groupingPath + "/count").respond(200);
+            expect(httpBackend.flush).not.toThrow();
+        });
+    });
+
+
+
     describe("encodeParameterizedQueryString", () => {
         it("should encode a parameterized query string", () => {
             let params = {

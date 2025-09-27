@@ -199,7 +199,7 @@
             const groupingPath = $scope.selectedGrouping.path;
             const paths = [groupingPath + ":basis", groupingPath + ":include", groupingPath + ":exclude"];
             let currentPage = 1;
-            $scope.setPage('First', 'currentPageMembers', 'pagedItemsMembers');
+            $scope.setPage("First", "currentPageMembers", "pagedItemsMembers");
             $scope.loading = true;
             $scope.paginatingComplete = false;
             await $scope.getGroupingDescription(groupingPath);
@@ -276,21 +276,40 @@
          */
         $scope.fetchOwners = (groupPath) => {
             return new Promise((resolve) => {
-                groupingsService.groupingOwners(groupPath, (res) => {
+                groupingsService.groupingOwners(groupPath, async (res) => {
                     $scope.groupingOwners = res.owners.members;
                     $scope.ownerLimit = res.ownerLimit;
-                    // Assign field values for existing owner-groupings
+                    const immediateOwnersCount = $scope.groupingOwners.length;
+                    let totalOwnerGroupingMembers = 0;
+                    const jobs = [];
+                    let allOwnersCount = 0;
+                    const allOwnersCountJob = new Promise((r) => {
+                        groupingsService.getNumberOfAllOwners(groupPath, (n) => {
+                            allOwnersCount = n;
+                            r();
+                        });
+                    });
                     $scope.groupingOwners.forEach((owner) => {
-                        // Normal member owners cannot have colons in their name
-                        if(owner.name.includes(":")) {
+                        if (owner.name && owner.name.includes(":")) {
                             owner.isOwnerGrouping = true;
-                            // Name field in owner-groupings initially holds the group path
                             owner.ownerGroupingPath = owner.name;
                             const splitOwnerPath = owner.name.split(":");
-                            // Isolate the grouping name from the path
                             owner.name = splitOwnerPath[splitOwnerPath.length - 1];
+                            jobs.push(
+                                new Promise((r) => {
+                                    groupingsService.getNumberOfGroupingMembers(owner.ownerGroupingPath, (n) => {
+                                        const count = n;
+                                        owner.totalOwnerGroupingMembers = count;
+                                        totalOwnerGroupingMembers += count;
+                                        r();
+                                    });
+                                })
+                            );
                         }
                     });
+                    await Promise.all([...jobs, allOwnersCountJob]);
+                    $scope.allOwnersCount = allOwnersCount;
+                    $scope.hasDuplicateOwners = (immediateOwnersCount + totalOwnerGroupingMembers) !== $scope.allOwnersCount;
                     $scope.filter($scope.groupingOwners, "pagedItemsOwners", "currentPageOwners", $scope.ownersQuery, false);
                     $scope.loading = false;
                     resolve();
@@ -305,7 +324,6 @@
                 });
             });
         };
-
 
         /**
          * Get a grouping's description
@@ -338,7 +356,7 @@
             }, (res) => {
                 $scope.resStatus = res.status;
                 resolve();
-            }))
+            }));
         };
 
         /**
@@ -355,7 +373,7 @@
             }, (res) => {
                 $scope.resStatus = res.status;
                 resolve();
-            }))
+            }));
         };
 
         /**
@@ -878,7 +896,7 @@
 
                     // Prevent departmental accounts from being added as Owners
                     $scope.hasDeptAccount = $scope.checkForDeptAccount(res.results);
-                    if (listName === 'owners' && $scope.hasDeptAccount) {
+                    if (listName === "owners" && $scope.hasDeptAccount) {
                         $scope.displayDynamicModal(
                           Message.Title.OWNER_NOT_ADDED,
                           Message.Body.OWNER_NOT_ADDED

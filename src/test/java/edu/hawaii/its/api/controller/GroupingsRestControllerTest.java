@@ -587,6 +587,39 @@ public class GroupingsRestControllerTest {
 
     @Test
     @WithMockUhUser
+    public void getNumberOfAllOwnersTest() throws Exception {
+        String uri = REST_CONTROLLER_BASE + "groupings/groupingPath/owners/count";
+
+        given(httpRequestService.makeApiRequest(eq(UID), anyString(), eq(HttpMethod.GET)))
+                .willReturn(new ResponseEntity(HttpStatus.OK));
+
+        assertNotNull(mockMvc.perform(get(uri).with(csrf()))
+                .andExpect(status().isOk())
+                .andReturn());
+
+        verify(httpRequestService, times(1))
+                .makeApiRequest(eq(UID), anyString(), eq(HttpMethod.GET));
+    }
+
+    @Test
+    @WithMockUhUser
+    public void getNumberOfGroupingMembersTest() throws Exception {
+        String uri = REST_CONTROLLER_BASE + "/groupings/groupingPath/count";
+
+        given(httpRequestService.makeApiRequest(eq(UID), anyString(), eq(HttpMethod.GET)))
+                .willReturn(new ResponseEntity(HttpStatus.OK));
+
+        assertNotNull(mockMvc.perform(get(uri).with(csrf()))
+                .andExpect(status().isOk())
+                .andReturn());
+
+        verify(httpRequestService, times(1))
+                .makeApiRequest(eq(UID), anyString(), eq(HttpMethod.GET));
+    }
+
+
+    @Test
+    @WithMockUhUser
     public void hasOwnerPrivsTest() throws Exception {
         String uri = REST_CONTROLLER_BASE + "members/" + UID + "/is-owner";
 

@@ -298,6 +298,21 @@ describe("GroupingController", () => {
         });
     });
 
+    describe("fetchOwners",()=> {
+        it("should call groupingOwners", () => {
+            spyOn(gs, "groupingOwners").and.callThrough();
+            scope.fetchOwners().then((res) => expect(gs.groupingOwners).toHaveBeenCalled());
+        });
+        it("should call getNumberOfAllOwners ", () => {
+            spyOn(gs, "getNumberOfAllOwners").and.callThrough();
+            scope.fetchOwners().then((res) => expect(gs.getNumberOfAllOwners).toHaveBeenCalled());
+        });
+        it("should call getNumberOfGroupingMembers", () => {
+            spyOn(gs, "getNumberOfGroupingMembers").and.callThrough();
+            scope.fetchOwners().then((res) => expect(gs.getNumberOfGroupingMembers).toHaveBeenCalled());
+        });
+    });
+
     // For reference (in index order):
     // Members: User One, User Two, User Three, User Seven, User Eight
     // Basis: User One, User Four, User Seven
