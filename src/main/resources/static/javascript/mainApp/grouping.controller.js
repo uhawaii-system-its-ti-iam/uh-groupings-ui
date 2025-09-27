@@ -1936,26 +1936,46 @@
                         $scope.updateAllowOptOut();
                     }
 
-                    // Update the initial states after successful submission
-                    $scope.initOptPreferenceStatuses();
-
                     // Display confirmation modal after applying preferences
                     $scope.displayDynamicModal("Preferences Updated", $scope.getOptStatus());
+
+                    // Update the initial states after successful submission
+                    $scope.initOptPreferenceStatuses();
                 }, () => {});
             }
         };
 
         // Function to display the current opt status message
         $scope.getOptStatus = () => {
+            if (typeof $scope.initialAllowOptIn  === 'boolean' &&
+                typeof $scope.initialAllowOptOut === 'boolean') {
+
+                const inChanged  = $scope.allowOptIn  !== $scope.initialAllowOptIn;
+                const outChanged = $scope.allowOptOut !== $scope.initialAllowOptOut;
+
+                if (inChanged && !outChanged) {
+                    return $scope.allowOptIn
+                        ? "Opt-in has been enabled. Members may opt in."
+                        : "Opt-in has been disabled. Members may not opt in.";
+                }
+                if (!inChanged && outChanged) {
+                    return $scope.allowOptOut
+                        ? "Opt-out has been enabled. Members may opt out."
+                        : "Opt-out has been disabled. Members may not opt out.";
+                }
+            }
+
             if ($scope.allowOptIn && $scope.allowOptOut) {
                 return "Both options are enabled. Members may opt themselves in and out.";
+            } else if (!$scope.allowOptIn && !$scope.allowOptOut) {
+                return "Both options are disabled. Members may not opt themselves in and out.";
             } else if ($scope.allowOptIn) {
                 return "Members may opt in.";
             } else if ($scope.allowOptOut) {
                 return "Members may opt out.";
             }
-            return "No changes were made.";
         };
+
 
         /**
          * Function to check if any sync destinations checkboxes were toggled by a user
