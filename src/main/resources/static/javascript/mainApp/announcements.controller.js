@@ -29,5 +29,7 @@
 
     }
 
+    // Just touched this file.
+
     UHGroupingsApp.controller("AnnouncementsJsController", AnnouncementsJsController);
 })();

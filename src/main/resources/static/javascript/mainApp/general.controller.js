@@ -31,6 +31,8 @@
         $scope.availableProfiles = [];
 
         angular.extend(this, $controller("TableJsController", { $scope }));
+        // Just touched this file.
+
 
         userService.getCurrentUser().then((res) => {
             $scope.currentUser = {
