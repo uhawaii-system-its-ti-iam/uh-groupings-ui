@@ -20,8 +20,6 @@ public class HttpRequestService {
     private final JwtService jwtService;
     private final UserContextService userContextService;
     private final WebClient webClient;
-    @Value("${groupings.api.current_user}")
-    private String CURRENT_USER;
 
     public HttpRequestService(JwtService jwtService, UserContextService userContextService) {
         this.userContextService = userContextService;
@@ -38,18 +36,6 @@ public class HttpRequestService {
         return webClient.method(method)
                 .uri(uri)
                 .header("Authorization", "Bearer " + generateJWT())
-                .retrieve()
-                .toEntity(String.class)
-                .block();
-    }
-
-    /*
-     * Make a http request to the API with path variables.
-     */
-    public ResponseEntity<String> makeApiRequest(String currentUser, String uri, HttpMethod method) {
-        return webClient.method(method)
-                .uri(uri)
-                .header(CURRENT_USER, currentUser)
                 .retrieve()
                 .toEntity(String.class)
                 .block();
