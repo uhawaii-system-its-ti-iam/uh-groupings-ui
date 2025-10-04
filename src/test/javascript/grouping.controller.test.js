@@ -2075,12 +2075,6 @@ describe("GroupingController", () => {
             scope.proceedRemoveModal();
             expect(scope.removeModalInstance.close).toHaveBeenCalled();
         });
-
-        it("should clear multiRemoveResults", () => {
-            scope.multiRemoveResults = [{uid: "testiwta", uhUuid: "99997010", name: "Testf-iwt-a TestIAM-staff"}];
-            scope.proceedRemoveModal();
-            expect(scope.multiRemoveResults).toEqual([]);
-        });
     });
 
     describe("cancelRemoveModal", () => {
@@ -2105,6 +2099,12 @@ describe("GroupingController", () => {
             _.forOwn(scope.membersInCheckboxList, (value) => {
                 expect(value).toBeFalse()});
             expect(scope.pageSelected).toBeFalse();
+        });
+
+        it("should clear multiRemoveResults", () => {
+            scope.multiRemoveResults = [{uid: "testiwta", uhUuid: "99997010", name: "Testf-iwt-a TestIAM-staff"}];
+            scope.cancelRemoveModal();
+            expect(scope.multiRemoveResults).toEqual([]);
         });
     });
 
@@ -2825,12 +2825,33 @@ describe("GroupingController", () => {
             it("should close modal", () => {
                 spyOn(scope.OwnerLimitWarningModalInstance, "close").and.callThrough();
                 scope.displayOwnerLimitWarningModal();
+                expect(scope.OwnerLimitWarningModalInstance.close).toHaveBeenCalled();
             });
+        });
+    });
+
+    describe("displayDirectOwnerRemoveWarningModal", () => {
+        it("should set loading to false", () => {
+            scope.loading = true;
+            scope.displayDirectOwnerRemoveWarningModal();
+            expect(scope.loading).toBeFalse();
+        });
+
+        it("should check that the displayDirectOwnerRemoveWarningModal is displayed", () => {
+            spyOn(uibModal, "open").and.callThrough();
+            scope.displayDirectOwnerRemoveWarningModal();
+            expect(uibModal.open).toHaveBeenCalled();
+        })
+    });
+
+    describe("closeDirectOwnerRemoveWarningModal", () => {
+        beforeEach(() => {
+            scope.displayDirectOwnerRemoveWarningModal();
 
             it("should close modal", () => {
-                spyOn(scope.OwnerLimitWarningModalInstance, "close").and.callThrough();
-                scope.displayOwnerLimitWarningModal();
-                expect(scope.OwnerLimitWarningModalInstance.close).toHaveBeenCalled();
+                spyOn(scope.DirectOwnerRemoveWarningModalInstance, "close").and.callThrough();
+                scope.displayDirectOwnerRemoveWarningModal();
+                expect(scope.DirectOwnerRemoveWarningModalInstance.close).toHaveBeenCalled();
             });
         });
     });
