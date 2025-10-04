@@ -500,6 +500,7 @@
          */
         const clearMemberInput = () => {
             $scope.manageMembers = "";
+            $scope.groupingName = "";
             $scope.membersNotInList = "";
             $scope.membersInList = "";
             $scope.multiRemoveResults = [];
@@ -508,6 +509,7 @@
 
         $scope.resetFields = () => {
             $scope.manageMembers = "";
+            $scope.groupingName = "";
             $scope.paginationPageChange = true;
             $scope.checkedBoxes = 0;
             $scope.waitingForImportResponse = false;
@@ -787,7 +789,7 @@
                 // If the user input has a colon, we can assume that it's a group path
                 if ($scope.manageMembers.includes(":")) {
                     if (userInput.length > 1) {
-                        // Prevent multi-adding owner-groupings
+                        // Prevent multi-removing owner-groupings
                         $scope.displayDynamicModal(Message.Title.INVALID_MULTI_REMOVE, Message.Body.INVALID_MULTI_REMOVE);
                         clearMemberInput();
                         return;
@@ -994,9 +996,12 @@
                 $scope.displayOwnerErrorModal();
             } else if (res.status === 409) { // CONFLICT max number of owners exceeded.
                 $scope.displayOwnerLimitWarningModal();
+            } else if (res.status === 422) { // Unprocessable Content: last direct owner was removed.
+                $scope.displayDirectOwnerRemoveWarningModal();
             } else {
                 $scope.displayApiErrorModal();
             }
+            clearMemberInput();
         };
 
         /**
@@ -1385,7 +1390,6 @@
          * Closes the remove modal instance.
          */
         $scope.proceedRemoveModal = () => {
-            clearMemberInput();
             $scope.removeModalInstance.close();
         };
 
@@ -2186,7 +2190,6 @@
 
         /**
          *  Modal shown after a user tries to add more owners than allowed by a rule set in API.
-         *  It explains the rule to the user and lets the user proceed or cancel operation.
          */
         $scope.displayOwnerLimitWarningModal = () => {
             $scope.loading = false;
@@ -2204,6 +2207,27 @@
          */
         $scope.closeOwnerLimitWarningModal = () => {
             $scope.OwnerLimitWarningModalInstance.close();
+        };
+
+        /**
+         *  Modal shown after a user tries to remove direct owner(s), leaving a grouping without a direct owner.
+         */
+        $scope.displayDirectOwnerRemoveWarningModal = () => {
+            $scope.loading = false;
+            $scope.DirectOwnerRemoveWarningModalInstance = $uibModal.open({
+                templateUrl: "modal/directOwnerRemoveWarningModal",
+                scope: $scope,
+                backdrop: "static",
+                keyboard: false,
+                ariaLabelledBy: "direct-owner-remove-warning-modal"
+            });
+        };
+
+        /**
+         * Closes the Direct Owner Remove Warning Modal instance
+         */
+        $scope.closeDirectOwnerRemoveWarningModal = () => {
+            $scope.DirectOwnerRemoveWarningModalInstance.close();
         };
 
         /**

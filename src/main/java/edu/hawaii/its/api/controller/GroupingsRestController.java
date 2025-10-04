@@ -682,15 +682,13 @@ public class GroupingsRestController {
     /**
      * Get the number of owners of the group path that contains the owner with uhIdentifier
      */
-    @GetMapping(value = "/{path:.+}/owners/{uhIdentifier}/count")
-    public ResponseEntity<String> getNumberOfOwners(@PathVariable String path,
-            @PathVariable String uhIdentifier) {
+    @GetMapping(value = "/{path:.+}/owners/count")
+    public ResponseEntity<String> getNumberOfOwners(@PathVariable String path) {
         String currentUid = policy.sanitize(userContextService.getCurrentUid());
-        logger.info(String.format("Entered REST getNumberOfOwners - currentUid: %s, path: %s, uhIdentifier: %s",
-                currentUid, path, uhIdentifier));
+        logger.info(String.format("Entered REST getNumberOfOwners - currentUid: %s, path: %s",
+                currentUid, path));
         String safePath = policy.sanitize(path);
-        String safeUhIdentifier = policy.sanitize(uhIdentifier);
-        String baseUri = String.format(API_2_1_BASE + "/members/%s/owners/%s/count", safePath, safeUhIdentifier);
+        String baseUri = String.format(API_2_1_BASE + "/members/%s/owners/count", safePath);
         return httpRequestService.makeApiRequest(currentUid, baseUri, HttpMethod.GET);
     }
 

@@ -159,7 +159,7 @@
                 $scope.removeFromGroupsCallbackOnSuccess(memberToRemove);
             }
             _.forEach($scope.selectedOwnedGroupings, (grouping) => {
-                    groupingsService.getNumberOfOwners(grouping.path, memberToRemove.uid, (res) => {
+                    groupingsService.getNumberOfOwners(grouping.path, (res) => {
                         if (res === 1) {
                             $scope.soleOwnerGroupingNames.push(grouping.name);
                         }
