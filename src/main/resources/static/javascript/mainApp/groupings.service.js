@@ -455,8 +455,8 @@
             /**
              * Checks if the owner of a grouping is the sole owner
              */
-            getNumberOfOwners(path, uidToCheck, onSuccess, onError) {
-                let endpoint = BASE_URL + path + "/owners/" + uidToCheck + "/count";
+            getNumberOfOwners(path, onSuccess, onError) {
+                let endpoint = BASE_URL + path + "/owners/count";
                 dataProvider.loadData(endpoint, onSuccess, onError);
             },
 
