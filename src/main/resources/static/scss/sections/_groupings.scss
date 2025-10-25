@@ -1,3 +1,5 @@
+@use "../components/mixins";
+
 /* In admin, memberships, and groupings. */
 .manage-groupings {
     tr {
@@ -59,7 +61,7 @@
         }
     }
 
-    @include media-breakpoint(max-landscape-phone) {
+    @include mixins.media-breakpoint(max-landscape-phone) {
         &-title {
             text-align: center;
 
@@ -92,7 +94,8 @@
     padding-right: 4px;
     width: 50%;
 }
-@include media-breakpoint(max-landscape-phone) {
+
+@include mixins.media-breakpoint(max-landscape-phone) {
     .memBtns {
         position: relative;
         top: 50px;
@@ -112,7 +115,7 @@
  * button, so on mobile, the button sits on top of the
  * grouping name, eliminating whitespace.
  */
-@include media-breakpoint(max-landscape-phone) {
+@include mixins.media-breakpoint(max-landscape-phone) {
     #selectedGroupHeader {
         display: table;
         margin: auto;
@@ -132,7 +135,7 @@
 }
 
 /* Exports to CSV button */
-@include media-breakpoint(min-mobile) {
+@include mixins.media-breakpoint(min-mobile) {
     #csvButton {
         float: right;
 

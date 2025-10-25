@@ -1,3 +1,7 @@
+@use "sass:map";
+@use "sass:meta";
+@use "../customs" as *;
+
 @mixin gradient($text-color: #fff, $bg-color: #6fa9be, $top-gradient: #7db1c4, $btm-gradient: #5a9cb4) {
   color: $text-color;
   filter: progid:dximagetransform.microsoft.gradient(enabled=false);
@@ -33,7 +37,7 @@
   @each $breakpoint in $breakpoints {
     //If key exits in map
     $conditions: (
-            #{inspect(map-get($media-queries, $breakpoint))},
+            #{meta.inspect(map.get($media-queries, $breakpoint))},
     );
   }
 

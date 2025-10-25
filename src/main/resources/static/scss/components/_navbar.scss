@@ -1,3 +1,6 @@
+@use "mixins";
+@use "../customs" as *;
+
 .nav-pills .nav-link.active,
 .nav-pills .show > .nav-link {
     background: white;
@@ -28,7 +31,7 @@
     }
 }
 
-@include media-breakpoint(max-landscape-phone) {
+@include mixins.media-breakpoint(max-landscape-phone) {
     .nav-pills .nav-link.active::after {
         border-width: 0 10px 10px 10px;
         border-color: transparent transparent #fff transparent;
@@ -37,7 +40,7 @@
     }
 }
 
-@include media-breakpoint(min-tablet) {
+@include mixins.media-breakpoint(min-tablet) {
     .nav-pills .nav-link.active::after {
         border-width: 10px 10px 10px 0;
         border-color: transparent #fff transparent transparent;
@@ -46,13 +49,13 @@
     }
 }
 
-@include media-breakpoint(min-desktop) {
+@include mixins.media-breakpoint(min-desktop) {
     .nav-pills .nav-link.active::after {
         right: -18px;
     }
 }
 
-@include media-breakpoint(min-large-desktop) {
+@include mixins.media-breakpoint(min-large-desktop) {
     .nav-pills .nav-link.active::after {
         right: -24px;
     }
@@ -105,7 +108,7 @@
         }
     }
 
-    @include media-breakpoint(min-desktop) {
+    @include mixins.media-breakpoint(min-desktop) {
         .nav {
             padding: 2.5rem 1.25rem 0 0;
             background-color: white;
@@ -134,7 +137,7 @@
 .tooltip {
     pointer-events: none;
 
-    @include media-breakpoint(max-tablet) {
+    @include mixins.media-breakpoint(max-tablet) {
         .tooltip {
             display: none;
         }
@@ -154,7 +157,7 @@
 .nav-item.mx-auto .nav-link.rounded-circle .side-nav {
     align-items: center;
 
-    @include media-breakpoint(max-portrait-phone) {
+    @include mixins.media-breakpoint(max-portrait-phone) {
         border: none;
         background-color: #e3f2ef;
         padding: 0 0 2px 0;

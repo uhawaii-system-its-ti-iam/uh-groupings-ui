@@ -1,3 +1,6 @@
+@use "../components/mixins";
+@use "../customs" as *;
+
 html {
     position: relative;
     min-height: 100%;
@@ -45,7 +48,7 @@ main,
 }
 
 td.uh-pre {
-    @include prefix((
+    @include mixins.prefix((
         white-space: pre-wrap
     ), webkit moz o hp);
 

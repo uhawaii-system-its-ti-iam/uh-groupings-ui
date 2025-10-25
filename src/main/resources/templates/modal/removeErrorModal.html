@@ -1,6 +1,6 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <div class="modal-header">
-    <h5 class="modal-title" id="remove-error-modal">Error Removing User</h5>
+    <h1 class="h5 modal-title" id="remove-error-modal">Error Removing User</h1>
     <a class="close" type="button" ng-click="closeRemoveErrorModal()">
         <span aria-hidden="true">&times;</span>
     </a>
@@ -10,6 +10,6 @@
     <p ng-if="soleOwnerGroupingNames.length >= 1" th:text="#{screen.message.modal.soleowner.remove.error}"></p>
 </div>
 <div class="modal-footer">
-    <button class="btn btn-primary" ng-click="closeRemoveErrorModal()">Close</button>
+    <button class="btn btn-primary btn-sized" ng-click="closeRemoveErrorModal()">Close</button>
 </div>
 </html>

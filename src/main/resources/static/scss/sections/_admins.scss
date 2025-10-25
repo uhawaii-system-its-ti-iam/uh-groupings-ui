@@ -1,3 +1,5 @@
+@use "../customs" as *;
+
 .manage-admins td:first-child {
     align-items: center;
     display: flex;
