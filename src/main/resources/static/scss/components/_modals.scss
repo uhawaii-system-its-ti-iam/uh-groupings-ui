@@ -1,7 +1,10 @@
+@use "mixins";
+@use "../customs" as *;
+
 .modal-open .modal {
   overflow: hidden;
 
-  @include media-breakpoint(max-portrait-phone) {
+  @include mixins.media-breakpoint(max-portrait-phone) {
     overflow-y: auto;
   }
 }
@@ -23,7 +26,7 @@
     content: "";
   }
 
-  @include media-breakpoint(min-mobile) {
+  @include mixins.media-breakpoint(min-mobile) {
     .modal-dialog {
       min-height: calc(100% - (1.75rem * 2));
     }

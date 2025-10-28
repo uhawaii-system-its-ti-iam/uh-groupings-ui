@@ -1,4 +1,5 @@
-@import 'mixins';
+@use 'mixins';
+@use '../customs' as *;
 
 form.seamless button {
     border-top-left-radius: 0;
@@ -28,7 +29,7 @@ form.seamless button {
         margin-left: 2px;
         margin-right: 2px;
 
-        @include btn-rmv;
+        @include mixins.btn-rmv;
 
         &:hover,
         &:focus,
@@ -38,7 +39,7 @@ form.seamless button {
     }
 
     &.btn-lg {
-        @include gradient;
+        @include mixins.gradient;
         font-size: 20px;
 
         &:hover,
@@ -49,12 +50,18 @@ form.seamless button {
     }
 
     &.btn-primary {
-        @include gradient;
+        @include mixins.gradient;
 
         &:hover,
         &:focus,
         &:active {
             background: $green-blue right center;
+        }
+
+        &.btn-sized {
+            font-size: 20px;
+            min-width: 44px;
+            min-height: 44px;
         }
     }
 
@@ -63,7 +70,7 @@ form.seamless button {
         min-height: 44px;
         font-size: 20px;
 
-        @include gradient;
+        @include mixins.gradient;
     }
 
     &-bottom {
@@ -73,7 +80,7 @@ form.seamless button {
     }
 
     &-default { /* Default button */
-        @include gradient;
+        @include mixins.gradient;
     }
 
     &-outline-secondary {
@@ -108,9 +115,14 @@ form.seamless button {
         }
     }
 
-    &-light:hover {
-        color: white;
-        background-color: $uh-blue4;
+    &-light {
+        min-height: 44px;
+        font-size: 20px;
+
+        &.hover {
+            color: white;
+            background-color: $uh-blue4;
+        }
     }
 }
 
@@ -167,3 +179,9 @@ form.seamless button {
 .refresh-button {
     font-size: 2rem;
 }
+
+.navbar-toggler-icon {
+    min-width: 44px;
+    min-height: 44px;
+}
+

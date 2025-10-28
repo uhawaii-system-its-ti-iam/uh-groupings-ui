@@ -1,6 +1,6 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <div class="modal-header">
-    <h5 class="modal-title" id="role-error-modal">Restricted Action</h5>
+    <h1 class="h5 modal-title" id="role-error-modal">Restricted Action</h1>
 </div>
 <div class="modal-body" id="modal-body">
     <p th:text="#{screen.message.modal.access.restricted}"></p>
@@ -11,6 +11,6 @@
 </div>
 
 <div class="modal-footer">
-    <button class="btn btn-primary" ng-click="proceedLogoutUser()">Ok</button>
+    <button class="btn btn-primary btn-sized" ng-click="proceedLogoutUser()">Ok</button>
 </div>
 </html>

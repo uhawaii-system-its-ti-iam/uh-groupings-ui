@@ -1,4 +1,6 @@
-@include media-breakpoint(max-portrait-phone) {
+@use "../components/mixins";
+
+@include mixins.media-breakpoint(max-portrait-phone) {
     .img-fluid {
         width: 210px;
     }
