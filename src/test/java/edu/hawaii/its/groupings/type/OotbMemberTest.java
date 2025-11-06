@@ -25,30 +25,30 @@ public class OotbMemberTest {
     @Test
     public void name() {
         assertNull(member.getName());
-        member.setName("testiwa");
-        assertThat(member.getName(), is("testiwa"));
+        member.setName("tst01name");
+        assertThat(member.getName(), is("tst01name"));
     }
 
     @Test
     public void uhUuid() {
         assertNull(member.getUhUuid());
-        member.setUhUuid("12345678");
-        assertThat(member.getUhUuid(), is("12345678"));
+        member.setUhUuid("99997010");
+        assertThat(member.getUhUuid(), is("99997010"));
     }
 
     @Test
     public void uid() {
         assertNull(member.getUid());
-        member.setUid("tw1234");
-        assertThat(member.getUid(), is("tw1234"));
+        member.setUid("testiwta");
+        assertThat(member.getUid(), is("testiwta"));
     }
 
     @Test
     public void allArgsConstructor() {
-        OotbMember member = new OotbMember("testiwa", "87654321", "tw1234");
-        assertThat(member.getName(), is("testiwa"));
-        assertThat(member.getUhUuid(), is("87654321"));
-        assertThat(member.getUid(), is("tw1234"));
+        OotbMember member = new OotbMember("tst01name", "99997010", "testiwta");
+        assertThat(member.getName(), is("tst01name"));
+        assertThat(member.getUhUuid(), is("99997010"));
+        assertThat(member.getUid(), is("testiwta"));
     }
 
     @Test

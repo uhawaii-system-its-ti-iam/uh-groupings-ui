@@ -66,13 +66,13 @@ public class UserDetailsServiceTest {
 
     @Test
     public void testAdminUser() {
-        final String uhUuid = "89999999";
+        final String uhUuid = "99997056";
 
         // Make up a user.
         Map<String, Object> map = new HashMap<>();
-        map.put("uid", "testiwe");
+        map.put("uid", "testiwte");
         map.put("uhUuid", uhUuid);
-        AttributePrincipal principal = new AttributePrincipalImpl("testiwe", map);
+        AttributePrincipal principal = new AttributePrincipalImpl("testiwte", map);
         Assertion assertion = new AssertionImpl(principal);
         CasUserDetailsServiceImpl userDetailsService = new CasUserDetailsServiceImpl(userBuilder);
 
@@ -87,9 +87,9 @@ public class UserDetailsServiceTest {
         User user = (User) userDetailsService.loadUserDetails(assertion);
 
         // Basics.
-        assertThat(user.getUid(), is("testiwe"));
-        assertThat(user.getUid(), is("testiwe"));
-        assertThat(user.getUhUuid(), is("89999999"));
+        assertThat(user.getUid(), is("testiwte"));
+        assertThat(user.getUid(), is("testiwte"));
+        assertThat(user.getUhUuid(), is("99997056"));
 
         // Granted Authorities.
         assertThat(user.getAuthorities().size(), is(4));
@@ -105,13 +105,13 @@ public class UserDetailsServiceTest {
 
     @Test
     public void testOwner() {
-        final String uid = "testiwd";
-        final String uhUuid = "90000000";
+        final String uid = "testiwtd";
+        final String uhUuid = "99997043";
         Map<String, Object> map = new HashMap<>();
         map.put("uid", uid);
         map.put("uhUuid", uhUuid);
 
-        AttributePrincipal principal = new AttributePrincipalImpl("testiwd", map);
+        AttributePrincipal principal = new AttributePrincipalImpl("testiwtd", map);
         Assertion assertion = new AssertionImpl(principal);
         CasUserDetailsServiceImpl userDetailsService = new CasUserDetailsServiceImpl(userBuilder);
 
@@ -126,9 +126,9 @@ public class UserDetailsServiceTest {
         User user = (User) userDetailsService.loadUserDetails(assertion);
 
         // Basics.
-        assertThat(user.getUid(), is("testiwd"));
-        assertThat(user.getUid(), is("testiwd"));
-        assertThat(user.getUhUuid(), is("90000000"));
+        assertThat(user.getUid(), is("testiwtd"));
+        assertThat(user.getUid(), is("testiwtd"));
+        assertThat(user.getUhUuid(), is("99997043"));
 
         // Granted Authorities.
         assertThat(user.getAuthorities().size(), is(3));

@@ -47,8 +47,8 @@ public class UserTest {
     @Test
     public void accessors() {
         Map<Object, Object> map = new HashMap<>();
-        map.put("uid", "testiwc");
-        map.put("uhUuid", "666666");
+        map.put("uid", "testiwtc");
+        map.put("uhUuid", "99997033");
         map.put("cn", "IamtstC1");
         map.put("givenName", "IamtstC");
         map.put("mail", "iamtstc@example.com");
@@ -58,7 +58,7 @@ public class UserTest {
         User user = new User("a", authorities);
         user.setAttributes(new UhAttributes(map));
 
-        assertThat(user.getAttribute("uid"), is("testiwc"));
+        assertThat(user.getAttribute("uid"), is("testiwtc"));
         assertThat(user.getName(), is("IamtstC1"));
         assertThat(user.getGivenName(), is("IamtstC"));
         assertThat(user.toString(), containsString("uid=a"));
@@ -68,16 +68,16 @@ public class UserTest {
     @Test
     public void testBuilderConstruction() {
         // Create user with builder
-        User user = new User.Builder("testuid")
-                .uhUuid("1234")
+        User user = new User.Builder("testiwtc")
+                .uhUuid("99997033")
                 .addAttribute("givenName", "IamtstC")
                 .addAttribute("cn", "IamtstC1")
                 .addAuthorities("ROLE_UH")
                 .addAuthorities(Arrays.asList("ROLE_ADMIN", "ROLE_OWNER"))
                 .build();
 
-        assertThat(user.getUid(), is("testuid"));
-        assertThat(user.getUhUuid(), is("1234"));
+        assertThat(user.getUid(), is("testiwtc"));
+        assertThat(user.getUhUuid(), is("99997033"));
         assertThat(user.getGivenName(), is("IamtstC"));
         assertThat(user.getName(), is("IamtstC1"));
 
@@ -89,13 +89,13 @@ public class UserTest {
     @Test
     public void testBuilderAttributes() {
 
-        User user = new User.Builder("anotheruid")
-                .addAttribute("cn", "IamtstC1")
-                .addAttribute("givenName", "IamtstC")
+        User user = new User.Builder("testiwtd")
+                .addAttribute("cn", "IamtstD1")
+                .addAttribute("givenName", "IamtstD")
                 .build();
 
-        assertThat(user.getAttribute("cn"), is("IamtstC1"));
-        assertThat(user.getAttribute("givenName"), is("IamtstC"));
+        assertThat(user.getAttribute("cn"), is("IamtstD1"));
+        assertThat(user.getAttribute("givenName"), is("IamtstD"));
     }
 
     @Test
