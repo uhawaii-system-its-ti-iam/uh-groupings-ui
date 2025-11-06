@@ -636,6 +636,22 @@ public class GroupingsRestControllerTest {
 
     @Test
     @WithMockUhUser
+    public void groupingOwnersTest() throws Exception {
+        String uri = REST_CONTROLLER_BASE + "grouping/" + GROUPING + "/owners";
+
+        given(httpRequestService.makeApiRequest(eq(UID), anyString(), eq(HttpMethod.GET)))
+                .willReturn(new ResponseEntity(HttpStatus.OK));
+
+        assertNotNull(mockMvc.perform(get(uri).with(csrf()))
+                .andExpect(status().isOk())
+                .andReturn());
+
+        verify(httpRequestService, times(1))
+                .makeApiRequest(eq(UID), anyString(), eq(HttpMethod.GET));
+    }
+
+    @Test
+    @WithMockUhUser
     public void assignOwnershipTest() throws Exception {
         String uri = REST_CONTROLLER_BASE + GROUPING + "/user/addOwnerships";
 
@@ -715,6 +731,54 @@ public class GroupingsRestControllerTest {
 
         verify(httpRequestService, times(1))
                 .makeApiRequestWithBody(eq(UID), anyString(), eq(groupPaths), eq(HttpMethod.POST));
+    }
+
+    @Test
+    @WithMockUhUser
+    public void getGroupingDescriptionTest() throws Exception {
+        String uri = REST_CONTROLLER_BASE + "groupings/" + GROUPING + "/description";
+
+        given(httpRequestService.makeApiRequest(eq(UID), anyString(), eq(HttpMethod.GET)))
+                .willReturn(new ResponseEntity(HttpStatus.OK));
+
+        assertNotNull(mockMvc.perform(get(uri).with(csrf()))
+                .andExpect(status().isOk())
+                .andReturn());
+
+        verify(httpRequestService, times(1))
+                .makeApiRequest(eq(UID), anyString(), eq(HttpMethod.GET));
+    }
+
+    @Test
+    @WithMockUhUser
+    public void getGroupingSyncDestTest() throws Exception {
+        String uri = REST_CONTROLLER_BASE + "groupings/" + GROUPING + "/groupings-sync-destinations";
+
+        given(httpRequestService.makeApiRequest(eq(UID), anyString(), eq(HttpMethod.GET)))
+                .willReturn(new ResponseEntity(HttpStatus.OK));
+
+        assertNotNull(mockMvc.perform(get(uri).with(csrf()))
+                .andExpect(status().isOk())
+                .andReturn());
+
+        verify(httpRequestService, times(1))
+                .makeApiRequest(eq(UID), anyString(), eq(HttpMethod.GET));
+    }
+
+    @Test
+    @WithMockUhUser
+    public void getGroupingOptAttributesTest() throws Exception {
+        String uri = REST_CONTROLLER_BASE + "groupings/" + GROUPING + "/opt-attributes";
+
+        given(httpRequestService.makeApiRequest(eq(UID), anyString(), eq(HttpMethod.GET)))
+                .willReturn(new ResponseEntity(HttpStatus.OK));
+
+        assertNotNull(mockMvc.perform(get(uri).with(csrf()))
+                .andExpect(status().isOk())
+                .andReturn());
+
+        verify(httpRequestService, times(1))
+                .makeApiRequest(eq(UID), anyString(), eq(HttpMethod.GET));
     }
 
     @Test
@@ -974,6 +1038,37 @@ public class GroupingsRestControllerTest {
         assertNotNull(uriTemplate);
         String expectedResult = API_2_1_BASE + "?size=2&sortBy=name&page=1&isAscending=true";
         assertEquals(expectedResult, uriTemplate);
+    }
+
+    @Test
+    @WithMockUhUser
+    public void changePreferenceTest() throws Exception {
+        GroupingsRestController controller = applicationContext.getBean(GroupingsRestController.class);
+
+        // Mock service to return OK for PUT requests.
+        given(httpRequestService.makeApiRequest(eq(UID), anyString(), eq(HttpMethod.PUT)))
+                .willReturn(new ResponseEntity(HttpStatus.OK));
+
+        // Access private method via reflection.
+        java.lang.reflect.Method method = controller.getClass()
+                .getDeclaredMethod("changePreference", String.class, String.class, String.class, Boolean.class);
+        method.setAccessible(true);
+
+        // Invoke for enable (isOn = true).
+        @SuppressWarnings("unchecked")
+        ResponseEntity<String> respEnable = (ResponseEntity<String>) method.invoke(controller, GROUPING, UID, "myPref", Boolean.TRUE);
+        assertNotNull(respEnable);
+        assertEquals(HttpStatus.OK, respEnable.getStatusCode());
+        String expectedEnableUri = API_2_1_BASE + "/groupings/" + GROUPING + "/preference/" + "myPref" + "/enable";
+        verify(httpRequestService, times(1)).makeApiRequest(eq(UID), eq(expectedEnableUri), eq(HttpMethod.PUT));
+
+        // Invoke for disable (isOn = false).
+        @SuppressWarnings("unchecked")
+        ResponseEntity<String> respDisable = (ResponseEntity<String>) method.invoke(controller, GROUPING, UID, "otherPref", Boolean.FALSE);
+        assertNotNull(respDisable);
+        assertEquals(HttpStatus.OK, respDisable.getStatusCode());
+        String expectedDisableUri = API_2_1_BASE + "/groupings/" + GROUPING + "/preference/" + "otherPref" + "/disable";
+        verify(httpRequestService, times(1)).makeApiRequest(eq(UID), eq(expectedDisableUri), eq(HttpMethod.PUT));
     }
 
     @Test
