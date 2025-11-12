@@ -4,8 +4,6 @@ import java.security.Key;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,12 +20,10 @@ public class JwtService {
 
     private final UserContextService userContextService;
 
-    private static final Log logger = LogFactory.getLog(JwtService.class);
-
     @Value("${jwt.expiration-time}")
     private Integer EXPIRATION_TIME;
 
-    @Value("${jwt.secret-key}")
+    @Value("${jwt.secret.key}")
     private String SECRET_KEY;
 
     public JwtService(UserContextService userContextService) {
@@ -37,8 +33,6 @@ public class JwtService {
     public String generateToken() {
 
         UserDetails userDetails = userContextService.getCurrentUser();
-
-        logger.info("JwtService: generating JWT token");
 
         long expirationTime = 1000L * EXPIRATION_TIME; // convert seconds to milliseconds.
 

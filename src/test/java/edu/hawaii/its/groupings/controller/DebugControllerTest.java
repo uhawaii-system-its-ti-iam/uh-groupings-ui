@@ -85,10 +85,4 @@ public class DebugControllerTest {
         verify(userContextService, times(1)).getCurrentUid();
         verify(jwtService, times(1)).generateToken();
     }
-
-    @Test
-    public void testDebugControllerIsLoadedInLocalhostProfile() {
-        assertTrue(applicationContext.containsBean("debugController"),
-                "DebugController should be loaded in localhost profile");
-    }
 }

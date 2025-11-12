@@ -30,7 +30,7 @@ import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
 import edu.hawaii.its.groupings.type.OotbActiveProfile;
 
 @SpringBootTest(classes = { SpringBootWebApplication.class })
-@ActiveProfiles("ootb")
+@ActiveProfiles({"ootb", "localTest"})
 class OotbActiveUserProfileServiceTest {
 
     @MockBean

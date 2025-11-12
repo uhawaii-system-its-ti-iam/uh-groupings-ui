@@ -38,7 +38,7 @@ public class JwtServiceTest {
     @Value("${jwt.expiration-time}")
     private long EXPIRATION_TIME;
 
-    @Value("${jwt.secret-key}")
+    @Value("${jwt.secret.key}")
     private String SECRET_KEY;
 
     private final String TEST_USER = "testiwta";
