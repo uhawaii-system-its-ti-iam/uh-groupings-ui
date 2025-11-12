@@ -600,8 +600,8 @@ public class GroupingsRestController {
     public ResponseEntity<String> removeOwnerGroupings(
             @PathVariable String groupingPath,
             @PathVariable String ownerToRemove) {
-        logger.info("Entered REST removeOwnerGroupings...");
         String currentUid = userContextService.getCurrentUid();
+        logger.info(String.format("Entered REST removeOwnerGroupings - currentUid: %s", currentUid));
         String safeGrouping = policy.sanitize(groupingPath);
         String safeOwnerToRemove = policy.sanitize(ownerToRemove);
         String uri = String.format(API_2_1_BASE + "/groupings/%s/owners/owner-groupings/%s", safeGrouping, safeOwnerToRemove);
