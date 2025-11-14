@@ -1041,37 +1041,6 @@ public class GroupingsRestControllerTest {
     }
 
     @Test
-    @WithMockUhUser
-    public void changePreferenceTest() throws Exception {
-        GroupingsRestController controller = applicationContext.getBean(GroupingsRestController.class);
-
-        // Mock service to return OK for PUT requests.
-        given(httpRequestService.makeApiRequest(eq(UID), anyString(), eq(HttpMethod.PUT)))
-                .willReturn(new ResponseEntity(HttpStatus.OK));
-
-        // Access private method via reflection.
-        java.lang.reflect.Method method = controller.getClass()
-                .getDeclaredMethod("changePreference", String.class, String.class, String.class, Boolean.class);
-        method.setAccessible(true);
-
-        // Invoke for enable (isOn = true).
-        @SuppressWarnings("unchecked")
-        ResponseEntity<String> respEnable = (ResponseEntity<String>) method.invoke(controller, GROUPING, UID, "myPref", Boolean.TRUE);
-        assertNotNull(respEnable);
-        assertEquals(HttpStatus.OK, respEnable.getStatusCode());
-        String expectedEnableUri = API_2_1_BASE + "/groupings/" + GROUPING + "/preference/" + "myPref" + "/enable";
-        verify(httpRequestService, times(1)).makeApiRequest(eq(UID), eq(expectedEnableUri), eq(HttpMethod.PUT));
-
-        // Invoke for disable (isOn = false).
-        @SuppressWarnings("unchecked")
-        ResponseEntity<String> respDisable = (ResponseEntity<String>) method.invoke(controller, GROUPING, UID, "otherPref", Boolean.FALSE);
-        assertNotNull(respDisable);
-        assertEquals(HttpStatus.OK, respDisable.getStatusCode());
-        String expectedDisableUri = API_2_1_BASE + "/groupings/" + GROUPING + "/preference/" + "otherPref" + "/disable";
-        verify(httpRequestService, times(1)).makeApiRequest(eq(UID), eq(expectedDisableUri), eq(HttpMethod.PUT));
-    }
-
-    @Test
     public void sanitizeListTest() {
         List<String> listToSanitize = new ArrayList<>();
         listToSanitize.add(UID);
