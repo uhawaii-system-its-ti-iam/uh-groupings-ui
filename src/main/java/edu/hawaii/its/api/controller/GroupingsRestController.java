@@ -753,16 +753,6 @@ public class GroupingsRestController {
         return uriComponentsBuilder.encode().toUriString();
     }
 
-    private ResponseEntity<String> changePreference(String grouping, String uhIdentifier, String preference,
-            Boolean isOn) {
-        String ending = "disable";
-        if (isOn) {
-            ending = "enable";
-        }
-        String uri = String.format(API_2_1_BASE + "/groupings/%s/preference/%s/%s", grouping, preference, ending);
-        return httpRequestService.makeApiRequest(uhIdentifier, uri, HttpMethod.PUT);
-    }
-
     protected Boolean shouldDoApiHandshake() {
         if (!API_HANDSHAKE_ENABLED) {
             logger.info("API handshake disabled.");
