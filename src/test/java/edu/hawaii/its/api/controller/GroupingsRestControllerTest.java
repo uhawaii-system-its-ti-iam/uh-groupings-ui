@@ -636,6 +636,22 @@ public class GroupingsRestControllerTest {
 
     @Test
     @WithMockUhUser
+    public void groupingOwnersTest() throws Exception {
+        String uri = REST_CONTROLLER_BASE + "grouping/" + GROUPING + "/owners";
+
+        given(httpRequestService.makeApiRequest(eq(UID), anyString(), eq(HttpMethod.GET)))
+                .willReturn(new ResponseEntity(HttpStatus.OK));
+
+        assertNotNull(mockMvc.perform(get(uri).with(csrf()))
+                .andExpect(status().isOk())
+                .andReturn());
+
+        verify(httpRequestService, times(1))
+                .makeApiRequest(eq(UID), anyString(), eq(HttpMethod.GET));
+    }
+
+    @Test
+    @WithMockUhUser
     public void assignOwnershipTest() throws Exception {
         String uri = REST_CONTROLLER_BASE + GROUPING + "/user/addOwnerships";
 
@@ -715,6 +731,54 @@ public class GroupingsRestControllerTest {
 
         verify(httpRequestService, times(1))
                 .makeApiRequestWithBody(eq(UID), anyString(), eq(groupPaths), eq(HttpMethod.POST));
+    }
+
+    @Test
+    @WithMockUhUser
+    public void getGroupingDescriptionTest() throws Exception {
+        String uri = REST_CONTROLLER_BASE + "groupings/" + GROUPING + "/description";
+
+        given(httpRequestService.makeApiRequest(eq(UID), anyString(), eq(HttpMethod.GET)))
+                .willReturn(new ResponseEntity(HttpStatus.OK));
+
+        assertNotNull(mockMvc.perform(get(uri).with(csrf()))
+                .andExpect(status().isOk())
+                .andReturn());
+
+        verify(httpRequestService, times(1))
+                .makeApiRequest(eq(UID), anyString(), eq(HttpMethod.GET));
+    }
+
+    @Test
+    @WithMockUhUser
+    public void getGroupingSyncDestTest() throws Exception {
+        String uri = REST_CONTROLLER_BASE + "groupings/" + GROUPING + "/groupings-sync-destinations";
+
+        given(httpRequestService.makeApiRequest(eq(UID), anyString(), eq(HttpMethod.GET)))
+                .willReturn(new ResponseEntity(HttpStatus.OK));
+
+        assertNotNull(mockMvc.perform(get(uri).with(csrf()))
+                .andExpect(status().isOk())
+                .andReturn());
+
+        verify(httpRequestService, times(1))
+                .makeApiRequest(eq(UID), anyString(), eq(HttpMethod.GET));
+    }
+
+    @Test
+    @WithMockUhUser
+    public void getGroupingOptAttributesTest() throws Exception {
+        String uri = REST_CONTROLLER_BASE + "groupings/" + GROUPING + "/opt-attributes";
+
+        given(httpRequestService.makeApiRequest(eq(UID), anyString(), eq(HttpMethod.GET)))
+                .willReturn(new ResponseEntity(HttpStatus.OK));
+
+        assertNotNull(mockMvc.perform(get(uri).with(csrf()))
+                .andExpect(status().isOk())
+                .andReturn());
+
+        verify(httpRequestService, times(1))
+                .makeApiRequest(eq(UID), anyString(), eq(HttpMethod.GET));
     }
 
     @Test
