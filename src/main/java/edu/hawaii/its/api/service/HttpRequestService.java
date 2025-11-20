@@ -2,6 +2,7 @@ package edu.hawaii.its.api.service;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,9 @@ import edu.hawaii.its.groupings.service.JwtService;
 
 @Service("httpRequestService")
 public class HttpRequestService {
+
+    @Value("${groupings.api.service.key}")
+    private String serviceApiKey;
 
     private final JwtService jwtService;
     private final WebClient webClient;
@@ -57,6 +61,19 @@ public class HttpRequestService {
                 .uri(uri)
                 .header("Authorization", "Bearer " + jwtService.generateToken())
                 .bodyValue(data)
+                .retrieve()
+                .toEntity(String.class)
+                .block();
+    }
+
+    /*
+     * Make a http request to the API using service API key.
+     * This is used during API handshake and user authentication when roles need to be determined.
+     */
+    public ResponseEntity<String> makeServiceApiRequest(String uri, HttpMethod method) {
+        return webClient.method(method)
+                .uri(uri)
+                .header("X-Service-API-Key", serviceApiKey)
                 .retrieve()
                 .toEntity(String.class)
                 .block();

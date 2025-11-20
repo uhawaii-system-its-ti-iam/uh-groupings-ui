@@ -157,7 +157,7 @@ public class GroupingsRestController {
         String safeUhIdentifier = policy.sanitize(uhIdentifier);
         logger.info(String.format("Entered REST hasAdminPrivs - uhIdentifier: %s", safeUhIdentifier));
         String uri = String.format(API_2_1_BASE + "/members/%s/is-admin", safeUhIdentifier);
-        return httpRequestService.makeApiRequest(uri, HttpMethod.GET);
+        return httpRequestService.makeServiceApiRequest(uri, HttpMethod.GET);
     }
 
     /**
@@ -529,7 +529,7 @@ public class GroupingsRestController {
         String safeUhIdentifier = policy.sanitize(uhIdentifier);
         logger.info(String.format("Entered REST hasOwnerPrivs - uhIdentifier: %s", safeUhIdentifier));
         String uri = String.format(API_2_1_BASE + "/members/%s/is-owner", safeUhIdentifier);
-        return httpRequestService.makeApiRequest(uri, HttpMethod.GET);
+        return httpRequestService.makeServiceApiRequest(uri, HttpMethod.GET);
     }
 
     /**
@@ -759,7 +759,7 @@ public class GroupingsRestController {
             boolean success = false;
             try {
                 final String url = API_2_1_BASE + "/";
-                success = httpRequestService.makeApiRequest(url, HttpMethod.GET)
+                success = httpRequestService.makeServiceApiRequest(url, HttpMethod.GET)
                         .getStatusCode()
                         .is2xxSuccessful();
             } catch (Exception e) {
