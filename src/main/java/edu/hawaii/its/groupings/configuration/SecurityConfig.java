@@ -207,6 +207,7 @@ public class SecurityConfig {
                         .requestMatchers(antMatcher("/uhuuid-error")).permitAll()
                         .requestMatchers(antMatcher("/error")).permitAll()
                         .requestMatchers(antMatcher("/testing/**")).hasRole("ADMIN")
+                        .requestMatchers(antMatcher("/development/**")).hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .addFilter(casAuthenticationFilter)
                 .addFilterBefore(logoutFilter(), LogoutFilter.class)

@@ -41,7 +41,7 @@ import edu.hawaii.its.groupings.service.OotbActiveUserProfileService;
 import edu.hawaii.its.groupings.type.OotbActiveProfile;
 
 @SpringBootTest(classes = { SpringBootWebApplication.class })
-@ActiveProfiles("ootb")
+@ActiveProfiles({"ootb", "localTest"})
 public class OotbRestControllerTest {
     private static final String REST_CONTROLLER_BASE = "/api/groupings/ootb";
 
