@@ -15,17 +15,12 @@
          */
         $scope.init = () => {
             groupingsService.getAnnouncements((res) => {
-                    $scope.activeAnnouncements = $scope.handleActiveAnnouncements(res.announcements);
+                    $scope.activeAnnouncements = res.announcements.map((announcement) => announcement.message);
                 }, () =>{
                     $scope.displayApiErrorModal();
                 }
             );
         };
-
-        $scope.handleActiveAnnouncements = (announcements) =>
-            announcements
-                .filter((announcement) => announcement.state === "Active")
-                .map((announcement) => announcement.message);
 
     }
 
