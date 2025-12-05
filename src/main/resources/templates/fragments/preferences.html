@@ -15,7 +15,7 @@
                 <div>
                     <div class="form-check">
                         <input type="checkbox" class="position-relative ml-0" ng-model="allowOptIn" id="allowOptIn"
-                               ng-change="updateAllowOptIn()"
+                               ng-model="updateAllowOptIn()"
                                ng-keydown="clickWithEnter($event)"/>
                         <label class="form-check-label" for="allowOptIn">
                             Allow people to add themselves to this group
@@ -34,7 +34,7 @@
                     </div>
                     <div class="form-check">
                         <input type="checkbox" class="position-relative ml-0" id="allowOptOut" ng-model="allowOptOut"
-                               ng-change="updateAllowOptOut()"
+                               ng-model="updateAllowOptOut()"
                                ng-keydown="clickWithEnter($event)"/>
                         <label class="form-check-label" for="allowOptOut">
                             Allow people to remove themselves from this group
