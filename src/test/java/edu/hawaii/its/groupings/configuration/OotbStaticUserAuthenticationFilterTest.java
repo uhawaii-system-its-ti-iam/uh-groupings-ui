@@ -29,7 +29,7 @@ import org.springframework.test.context.ActiveProfiles;
 import edu.hawaii.its.api.service.OotbHttpRequestService;
 
 @SpringBootTest(classes = { SpringBootWebApplication.class })
-@ActiveProfiles("ootb")
+@ActiveProfiles({"ootb", "localTest"})
 public class OotbStaticUserAuthenticationFilterTest {
 
     @Autowired

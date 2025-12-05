@@ -10,7 +10,7 @@ import org.springframework.security.test.context.support.WithSecurityContext;
 public @interface WithMockUhAdmin {
     String uid() default "admin";
 
-    String[] roles() default {"ROLE_UH", "ROLE_ADMINISTRATOR"};
+    String[] roles() default {"ROLE_UH", "ROLE_ADMIN"};
 
     String uhuuid() default "12345679";
 

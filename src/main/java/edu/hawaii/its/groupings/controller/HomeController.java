@@ -1,6 +1,5 @@
 package edu.hawaii.its.groupings.controller;
 
-import java.util.Arrays;
 import java.util.Locale;
 import java.util.Map;
 
@@ -10,7 +9,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.env.Environment;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
