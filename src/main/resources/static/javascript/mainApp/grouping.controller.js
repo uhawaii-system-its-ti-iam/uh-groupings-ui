@@ -210,6 +210,8 @@
                 $scope.disableResetCheckboxes();
                 await $scope.fetchGrouping(currentPage, paths);
                 await $scope.fetchOwners(groupingPath);
+                await $scope.fetchCompareOwners(groupingPath);
+                await $scope.fetchDuplicateOwnerPaths(groupingPath);
                 currentPage++;
                 $scope.loading = false;
             }
@@ -322,6 +324,52 @@
                     loadMembersList = false;
                     resolve();
                 });
+            });
+        };
+
+        $scope.fetchCompareOwners = (groupPath) => {
+            return new Promise((resolve) => {
+                $scope.compareLoading = true;
+
+                groupingsService.compareOwnerGroupings(
+                    groupPath,
+                    (res) => {
+                        $scope.compareResults = res;       // data already parsed
+                        $scope.compareLoading = false;
+                        resolve();
+                    },
+                    (err) => {
+                        $scope.compareResults = [];
+                        $scope.compareLoading = false;
+
+                        $scope.displayApiErrorModal();
+
+                        resolve();
+                    }
+                );
+            });
+        };
+
+        $scope.fetchDuplicateOwnerPaths = (groupPath) => {
+            return new Promise((resolve) => {
+                $scope.compareLoading = true;
+
+                groupingsService.fetchDuplicateOwnerPaths(
+                    groupPath,
+                    (res) => {
+                        $scope.fetchDuplicateOwnerPaths = res;       // data already parsed
+                        $scope.compareLoading = false;
+                        resolve();
+                    },
+                    (err) => {
+                        $scope.fetchDuplicateOwnerPaths = [];
+                        $scope.compareLoading = false;
+
+                        $scope.displayApiErrorModal();
+
+                        resolve();
+                    }
+                );
             });
         };
 
