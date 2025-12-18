@@ -1,6 +1,6 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <div class="modal-header">
-    <h5 class="modal-title" id="import-confirmation-modal">Import</h5>
+    <h1 class="h5 modal-title" id="import-confirmation-modal">Import</h1>
     <a class="close" type="button" ng-click="cancelImportConfirmationModal()">
         <span aria-hidden="true">&times;</span>
     </a>
@@ -10,7 +10,7 @@
     <p th:utext="#{screen.message.import.modal.confirmation}"></p>
 </div>
 <div class="modal-footer">
-    <button class="btn btn-primary" ng-click="proceedImportConfirmationModal()">Yes</button>
+    <button class="btn btn-primary btn-sized" ng-click="proceedImportConfirmationModal()">Yes</button>
     <button class="btn btn-light" ng-click="cancelImportConfirmationModal()" data-dismiss="modal">Cancel</button>
 </div>
 </html>

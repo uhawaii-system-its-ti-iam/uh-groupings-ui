@@ -67,13 +67,16 @@
                 $scope.allGroupingsLoading = true;
                 groupingsService.getGroupingAdmins(
                     $scope.getGroupingAdminsCallbackOnSuccess,
-                    $scope.displayApiErrorModal);
+                    $scope.displayApiErrorModal
+                );
 
                 groupingsService.getAllGroupings(
                     $scope.getAllGroupingsCallbackOnSuccess,
-                    $scope.displayApiErrorModal);
+                    $scope.displayApiErrorModal
+                );
             }
         };
+
 
         $scope.searchForUserGroupingInformationOnSuccessCallback = (res) => {
             $scope.subjectList = _.sortBy(res.results, "name");
@@ -101,9 +104,14 @@
                 );
                 groupingsService.getMemberAttributeResults([validUser], (res) => {
                     const subject = res.results[0];
-                    $scope.initMemberDisplayName(subject);
-                    $scope.setCurrentManageSubject(subject);
-                });
+                    if (subject) {
+                        $scope.initMemberDisplayName(subject);
+                        $scope.setCurrentManageSubject(subject);
+                    } else {
+                        $scope.currentManageSubject = "";
+                        $scope.invalidInput = true;
+                    }
+                }, () => { /* on promise rejection*/ });
             } else {
                 // sets proper error message
                 if (!$scope.subjectToLookup) {
@@ -151,7 +159,7 @@
                 $scope.removeFromGroupsCallbackOnSuccess(memberToRemove);
             }
             _.forEach($scope.selectedOwnedGroupings, (grouping) => {
-                    groupingsService.getNumberOfOwners(grouping.path, memberToRemove.uid, (res) => {
+                    groupingsService.getNumberOfOwners(grouping.path, (res) => {
                         if (res === 1) {
                             $scope.soleOwnerGroupingNames.push(grouping.name);
                         }

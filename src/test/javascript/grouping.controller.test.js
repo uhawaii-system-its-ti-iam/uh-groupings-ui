@@ -12,9 +12,27 @@ describe("GroupingController", () => {
     let uibModal;
     let threshold;
     let message;
+    let mockUserService;
+    const mockUser = {
+        data: {
+            uid: "testiwta",
+            uhUuid: "99997010"
+        }
+    };
 
-    beforeEach(inject(($rootScope, $controller, _BASE_URL_, _$httpBackend_, groupingsService, $uibModal, Threshold, Message) => {
+    beforeEach(() => {
+        mockUserService = {
+            getCurrentUser: jasmine.createSpy("getCurrentUser")
+        };
+
+        module(($provide) => {
+            $provide.value("userService", mockUserService);
+        })
+    })
+
+    beforeEach(inject(($rootScope, $controller, _BASE_URL_, _$httpBackend_, _$q_, groupingsService, $uibModal, Threshold, Message) => {
         scope = $rootScope.$new(true);
+        mockUserService.getCurrentUser.and.returnValue(_$q_.when(mockUser));
         controller = $controller("GroupingJsController", {
             $scope: scope
         });
@@ -24,6 +42,7 @@ describe("GroupingController", () => {
         uibModal = $uibModal;
         threshold = Threshold;
         message = Message;
+        scope.$apply();
     }));
 
     it("should define the owner controller", () => {
@@ -176,12 +195,6 @@ describe("GroupingController", () => {
                 .toEqual({path: "testPath", name: "testName"});
         });
 
-        it("should remove the selectedOwnerGrouping item from sessionStorage at the end", () => {
-            spyOn(window, "open");
-            scope.displayOwnerGroupingInNewTab("testPath", "testName");
-            expect(sessionStorage.getItem("selectedOwnerGrouping")).toBeNull();
-        });
-
         it("should open a new /groupings tab", () => {
             spyOn(window, "open");
             scope.displayOwnerGroupingInNewTab("testPath", "testName");
@@ -282,6 +295,21 @@ describe("GroupingController", () => {
         it("should call disableResetCheckboxes", () => {
              spyOn(scope, "disableResetCheckboxes").and.callThrough();
             scope.getGroupingInformation().then((res) => expect(scope.disableResetCheckboxes).toHaveBeenCalled());
+        });
+    });
+
+    describe("fetchOwners",()=> {
+        it("should call groupingOwners", () => {
+            spyOn(gs, "groupingOwners").and.callThrough();
+            scope.fetchOwners().then((res) => expect(gs.groupingOwners).toHaveBeenCalled());
+        });
+        it("should call getNumberOfAllOwners ", () => {
+            spyOn(gs, "getNumberOfAllOwners").and.callThrough();
+            scope.fetchOwners().then((res) => expect(gs.getNumberOfAllOwners).toHaveBeenCalled());
+        });
+        it("should call getNumberOfGroupingMembers", () => {
+            spyOn(gs, "getNumberOfGroupingMembers").and.callThrough();
+            scope.fetchOwners().then((res) => expect(gs.getNumberOfGroupingMembers).toHaveBeenCalled());
         });
     });
 
@@ -806,19 +834,19 @@ describe("GroupingController", () => {
         it("should call addMembers with Include", () => {
             spyOn(scope, "addMembers");
             scope.addOnClick("Include");
-            expect(scope.addMembers).toHaveBeenCalledWith("Include");
+            expect(scope.addMembers).toHaveBeenCalledWith("Include", [""]);
         });
 
         it("should call addMembers with Exclude", () => {
             spyOn(scope, "addMembers");
             scope.addOnClick("Exclude");
-            expect(scope.addMembers).toHaveBeenCalledWith("Exclude");
+            expect(scope.addMembers).toHaveBeenCalledWith("Exclude", [""]);
         });
 
         it("should call addMembers with owners", () => {
             spyOn(scope, "addMembers");
             scope.addOnClick("owners");
-            expect(scope.addMembers).toHaveBeenCalledWith("owners");
+            expect(scope.addMembers).toHaveBeenCalledWith("owners", [""]);
             expect(scope.addModalId).toBe("add-modal");
             expect(scope.addModalURL).toBe("modal/addModal");
         });
@@ -1065,7 +1093,7 @@ describe("GroupingController", () => {
 
         describe("gs.getMemberAttributeResults callbacks", () => {
             beforeEach(() => {
-                httpBackend.whenGET("currentUser").passThrough();
+                expect(mockUserService.getCurrentUser).toHaveBeenCalled();
                 httpBackend.whenGET("modal/addModal").passThrough();
                 httpBackend.whenGET("modal/importConfirmationModal").passThrough();
                 httpBackend.whenGET("modal/importErrorModal").passThrough();
@@ -1420,8 +1448,8 @@ describe("GroupingController", () => {
                 expect(gs.addAdmin).not.toHaveBeenCalled();
             });
 
-            it("should call gs.addGroupPathOwnerships when the user presses 'add' in addOwnerGroupingModal.html", () => {
-                spyOn(gs, "addGroupPathOwnerships").and.callThrough();
+            it("should call gs.addOwnerGroupings when the user presses 'add' in addOwnerGroupingModal.html", () => {
+                spyOn(gs, "addOwnerGroupings").and.callThrough();
                 spyOn(uibModal, "open").and.returnValue(mockModal);
                 scope.isOwnerGrouping = true;
                 scope.displayAddModal({
@@ -1432,7 +1460,7 @@ describe("GroupingController", () => {
 
                 scope.proceedAddModal();
                 expect(scope.waitingForImportResponse).toBeTrue();
-                expect(gs.addGroupPathOwnerships).toHaveBeenCalled();
+                expect(gs.addOwnerGroupings).toHaveBeenCalled();
                 scope.isOwnerGrouping = false;
             });
 
@@ -1804,6 +1832,8 @@ describe("GroupingController", () => {
                 "iamtst03": true
             };
             scope.manageMembers = "iamtst01, iamtst02";
+            spyOn(scope, "fetchMemberProperties").and.returnValue(true);
+            spyOn(scope, "displayRemoveModal");
             scope.removeMembers(scope.listName);
             expect(scope.membersToModify).toBe(scope.manageMembers);
         });
@@ -2015,8 +2045,8 @@ describe("GroupingController", () => {
             scope.isOwnerGrouping = false;
         });
 
-        it("should call gs.removeGroupPathOwnerships when removing an owner-grouping", () => {
-            spyOn(gs, "removeGroupPathOwnerships").and.callThrough();
+        it("should call gs.removeOwnerGroupings when removing an owner-grouping", () => {
+            spyOn(gs, "removeOwnerGroupings").and.callThrough();
             spyOn(uibModal, "open").and.returnValue(mockModal);
             scope.isOwnerGrouping = true;
             scope.displayRemoveModal({
@@ -2026,7 +2056,7 @@ describe("GroupingController", () => {
 
             scope.proceedRemoveModal();
             expect(scope.waitingForImportResponse).toBeTrue();
-            expect(gs.removeGroupPathOwnerships).toHaveBeenCalled();
+            expect(gs.removeOwnerGroupings).toHaveBeenCalled();
             scope.isOwnerGrouping = false;
         });
     });
@@ -2044,12 +2074,6 @@ describe("GroupingController", () => {
             spyOn(scope.removeModalInstance, "close").and.callThrough();
             scope.proceedRemoveModal();
             expect(scope.removeModalInstance.close).toHaveBeenCalled();
-        });
-
-        it("should clear multiRemoveResults", () => {
-            scope.multiRemoveResults = [{uid: "testiwta", uhUuid: "99997010", name: "Testf-iwt-a TestIAM-staff"}];
-            scope.proceedRemoveModal();
-            expect(scope.multiRemoveResults).toEqual([]);
         });
     });
 
@@ -2075,6 +2099,12 @@ describe("GroupingController", () => {
             _.forOwn(scope.membersInCheckboxList, (value) => {
                 expect(value).toBeFalse()});
             expect(scope.pageSelected).toBeFalse();
+        });
+
+        it("should clear multiRemoveResults", () => {
+            scope.multiRemoveResults = [{uid: "testiwta", uhUuid: "99997010", name: "Testf-iwt-a TestIAM-staff"}];
+            scope.cancelRemoveModal();
+            expect(scope.multiRemoveResults).toEqual([]);
         });
     });
 
@@ -2774,6 +2804,58 @@ describe("GroupingController", () => {
         });
     });
 
+    describe("displayOwnerLimitWarningModal", () => {
+       it("should set loading to false", () => {
+           scope.loading = true;
+           scope.displayOwnerLimitWarningModal();
+           expect(scope.loading).toBeFalse();
+       });
+
+       it("should check that the displayOwnerLimitWarningModalInstance is displayed", () => {
+           spyOn(uibModal, "open").and.callThrough();
+           scope.displayOwnerLimitWarningModal();
+           expect(uibModal.open).toHaveBeenCalled();
+       })
+    });
+
+    describe("closeOwnerLimitWarningModal", () => {
+        beforeEach(() => {
+            scope.displayOwnerLimitWarningModal();
+
+            it("should close modal", () => {
+                spyOn(scope.OwnerLimitWarningModalInstance, "close").and.callThrough();
+                scope.displayOwnerLimitWarningModal();
+                expect(scope.OwnerLimitWarningModalInstance.close).toHaveBeenCalled();
+            });
+        });
+    });
+
+    describe("displayDirectOwnerRemoveWarningModal", () => {
+        it("should set loading to false", () => {
+            scope.loading = true;
+            scope.displayDirectOwnerRemoveWarningModal();
+            expect(scope.loading).toBeFalse();
+        });
+
+        it("should check that the displayDirectOwnerRemoveWarningModal is displayed", () => {
+            spyOn(uibModal, "open").and.callThrough();
+            scope.displayDirectOwnerRemoveWarningModal();
+            expect(uibModal.open).toHaveBeenCalled();
+        })
+    });
+
+    describe("closeDirectOwnerRemoveWarningModal", () => {
+        beforeEach(() => {
+            scope.displayDirectOwnerRemoveWarningModal();
+
+            it("should close modal", () => {
+                spyOn(scope.DirectOwnerRemoveWarningModalInstance, "close").and.callThrough();
+                scope.displayDirectOwnerRemoveWarningModal();
+                expect(scope.DirectOwnerRemoveWarningModalInstance.close).toHaveBeenCalled();
+            });
+        });
+    });
+
     describe("transferMembersFromPageToCheckboxObject", () => {
         let currentPage;
         beforeEach(() => {
@@ -3121,6 +3203,9 @@ describe("GroupingController", () => {
 describe("SyncDestModalController", () => {
     beforeEach(module("UHGroupingsApp"));
     beforeEach(module("ngMockE2E"));
+    beforeEach(module(($provide) => {
+        $provide.value("isSingular", false);
+    }));
 
     let scope;
     let controller;
@@ -3128,6 +3213,7 @@ describe("SyncDestModalController", () => {
 
     beforeEach(inject(($rootScope, $controller, Message) => {
         scope = $rootScope.$new(true);
+        scope.resetSyncStatuses = jasmine.createSpy("resetSyncStatuses");
         uibModalInstance = jasmine.createSpyObj("syncDestInstance", ["dismiss", "close"]);
         controller = $controller("SyncDestModalController", {
             $scope: scope,
@@ -3154,7 +3240,7 @@ describe("SyncDestModalController", () => {
         });
 
         it("should set the confirmation based on sync state", () => {
-            expect(scope.syncDestConfirmationMessage).toContain("enable")
+            expect(scope.syncDestConfirmationMessage).toContain("enable");
         });
     })
 });

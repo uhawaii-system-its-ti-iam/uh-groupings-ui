@@ -1,6 +1,6 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <div class="modal-header">
-    <h5 class="modal-title" id="import-error-modal">No Members Were Added</h5>
+    <h1 class="h5 modal-title" id="import-error-modal">No Members Were Added</h1>
     <a class="close" type="button" ng-click="closeImportErrorModal()">
         <span aria-hidden="true">&times;</span>
     </a>
@@ -15,6 +15,6 @@
     <p th:text="#{screen.message.modal.add.ensureValid}"></p>
 </div>
 <div class="modal-footer">
-    <button class="btn btn-primary" ng-click="closeImportErrorModal()">OK</button>
+    <button class="btn btn-primary btn-sized" ng-click="closeImportErrorModal()">OK</button>
 </div>
 </html>

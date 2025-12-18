@@ -1,21 +1,22 @@
-@import 'customs';
+@use 'customs';
 
 //import the components
-@import 'components/buttons';
-@import 'components/mixins';
-@import 'components/backgrounds';
-@import 'components/typography';
-@import 'components/fonts';
-@import 'components/navbar';
-@import 'components/tables';
-@import 'components/modals';
-@import 'components/error';
-@import 'components/spinner';
+@use 'components/alerts';
+@use 'components/buttons';
+@use 'components/mixins';
+@use 'components/backgrounds';
+@use 'components/typography';
+@use 'components/fonts';
+@use 'components/navbar';
+@use 'components/tables';
+@use 'components/modals';
+@use 'components/error';
+@use 'components/spinner';
 
 //import the sections
-@import 'sections/groupings';
-@import 'sections/admins';
-@import 'sections/footer';
-@import 'sections/feedback';
-@import 'sections/home';
+@use 'sections/groupings';
+@use 'sections/admins';
+@use 'sections/footer';
+@use 'sections/feedback';
+@use 'sections/home';
 

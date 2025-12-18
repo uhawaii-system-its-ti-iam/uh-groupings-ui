@@ -1,6 +1,6 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <div class="modal-header">
-    <h5 class="modal-title" id="import-modal" th:utext="#{screen.message.import.modal.importFile}"></h5>
+    <h1 class="h5 modal-title" id="import-modal" th:utext="#{screen.message.import.modal.importFile}"></h1>
     <a class="close" type="button" ng-click="cancelImportModal()">
         <span aria-hidden="true">&times;</span>
     </a>
@@ -9,18 +9,19 @@
     <div class="mb-3">
         <div class="row justify-content-start container">
             <input type="file" ng-model="inputFile" aria-label="Choose File" file-model="inputFile" accept="text/plain, .csv">
-            <button class="btn btn-primary ml-1" ng-click="readTextFile(inputFile); cancelImportModal()">
+            <button class="btn btn-primary btn-sized ml-1" ng-click="readTextFile(inputFile); cancelImportModal()">
                 Import
             </button>
         </div>
         <div class="row container mt-2">
-            <h3>Instructions</h3>
+            <h2 class="h3">Instructions</h2>
         </div>
         <div class="row mb-3 container instructions">
             <p th:utext="#{screen.message.import.modal.instruction}"></p>
-            <div class="col-md-4 pl-0">
+            <div class="col-md-6 pl-0">
                 <div type="button" role="link" aria-expanded="false" class="card-header collapsed" data-toggle="collapse" data-target=".text-file-example" th:utext="#{screen.message.import.modal.importTextFileGuide}">
-                </div><br>
+                </div>
+<!--                <div class="collapse text-file-example">-->
                 <div class="collapse text-file-example">
                     <ul class="list-styling">
                         <li>iamtst01</li>
@@ -39,7 +40,7 @@
             </div>
             <div class="col-md-6 pl-0">
                 <div type="button" role="link" aria-expanded="false" data-toggle="collapse" data-target=".csv-file-example" class="card-header collapsed" th:utext="#{screen.message.import.modal.importCSVFileGuide}">
-                </div><br>
+                </div>
                 <div class="card-body list-styling text-nowrap csv-file-example collapse" role="list">
                     <ul class="list-styling">
                         <li>Last,First,Username,UH Number,Email</li>
@@ -55,4 +56,3 @@
 <div class="modal-footer">
 </div>
 </html>
-

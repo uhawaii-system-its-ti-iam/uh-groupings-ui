@@ -12,6 +12,13 @@ describe("AdminController", function () {
     let httpBackend;
     let uibModal;
     let window;
+    let mockUserService;
+    const mockUser = {
+        data: {
+            uid: "testiwta",
+            uhUuid: "99997010"
+        }
+    };
 
     let fakeModal = {
         result: {
@@ -30,7 +37,17 @@ describe("AdminController", function () {
         }
     };
 
-    beforeEach(inject(($rootScope, $controller, $uibModal, _BASE_URL_, _$httpBackend_, groupingsService, _$window_) => {
+    beforeEach(() => {
+        mockUserService = {
+            getCurrentUser: jasmine.createSpy("getCurrentUser")
+        };
+
+        module(($provide) => {
+            $provide.value("userService", mockUserService);
+        });
+    });
+
+    beforeEach(inject(($rootScope, $controller, $uibModal, _BASE_URL_, _$httpBackend_, groupingsService, _$window_, _$q_) => {
         scope = $rootScope.$new(true);
         window = {
             location: {
@@ -39,6 +56,7 @@ describe("AdminController", function () {
             },
             open(href) {}
         };
+        mockUserService.getCurrentUser.and.returnValue(_$q_.when(mockUser));
         controller = $controller("AdminJsController", {
             $scope: scope,
             $window: window
@@ -47,6 +65,7 @@ describe("AdminController", function () {
         gs = groupingsService;
         httpBackend = _$httpBackend_;
         uibModal = $uibModal;
+        scope.$apply();
         spyOn($uibModal, "open").and.returnValue(fakeModal);
     }));
 
@@ -417,7 +436,7 @@ describe("AdminController", function () {
         const invalid = { resultCode: "FAILURE", invalid: uhIdentifiers, results: [] };
 
         beforeEach(() => {
-            httpBackend.whenGET("currentUser").passThrough();
+            expect(mockUserService.getCurrentUser).toHaveBeenCalled();
         });
 
         it("should check if the admin to add is empty", () => {
@@ -442,7 +461,7 @@ describe("AdminController", function () {
             scope.adminToAdd = "testiwt2";
             scope.addAdmin();
 
-            httpBackend.expectPOST(BASE_URL + "members", ['testiwt2']).respond(200, results);
+            httpBackend.expectPOST(BASE_URL + "members", ["testiwt2"]).respond(200, results);
             httpBackend.flush();
 
             expect(scope.user).toBe(scope.adminToAdd);

@@ -1,3 +1,5 @@
+@use "../customs" as *;
+
 h1,
 h2,
 h3,
@@ -57,9 +59,16 @@ h4 {
     text-align: center;
 }
 
-/* Makes the "here" text in about.html blue. */
+/* Styling for the links in about.html. */
 .link {
     color: $uh-blue2;
+    text-decoration: underline;
+
+    &:hover,
+    &:focus {
+        text-decoration: underline;
+        color: $uh-blue3;
+    }
 }
 
 .explain-paragraph-text {

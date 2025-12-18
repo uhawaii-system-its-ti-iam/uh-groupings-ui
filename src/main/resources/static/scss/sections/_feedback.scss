@@ -1,5 +1,7 @@
+@use "../customs" as *;
+
 .required-asterisk {
-    color: red;
+    color: $uh-red4;
 }
 
 .alert {

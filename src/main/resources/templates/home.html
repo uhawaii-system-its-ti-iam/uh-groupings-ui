@@ -14,7 +14,7 @@
 <main>
     <div class="col-12 p-1" data-ng-controller="AnnouncementsJsController" ng-init="init()" ng-cloak>
         <div class="mt-1" ng-repeat="announcement in activeAnnouncements">
-            <div class="alert alert-warning container alert-dismissible fade show" role="alert">
+            <div class="alert alert-warning container alert-dismissible fade show mb-0" role="alert">
                 {{ announcement }}
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
@@ -113,15 +113,15 @@
                         </div>
                     </div>
                     <div class="col-sm-9 col-md-10">
-                        <h1 class="h3 text-center text-md-left">Welcome, <span sec:authentication="principal.givenName"></span>!</h1>
+                        <p class="h3 user-info text-center text-md-left">Welcome, <span sec:authentication="principal.givenName"></span>!</p>
                         <div>
-                            <h1 class="h3 text-center text-md-left">Role:
+                            <p class="h3 user-info text-center text-md-left">Role:
                                 <span th:switch="true">
                                     <span th:case="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">Admin</span>
                                     <span th:case="${#authorization.expression('hasRole(''ROLE_OWNER'')')}">Owner</span>
                                     <span th:case="${#authorization.expression('hasRole(''ROLE_UH'')')}">Member</span>
                                 </span>
-                            </h1>
+                            </p>
                         </div>
                     </div>
                 </div>

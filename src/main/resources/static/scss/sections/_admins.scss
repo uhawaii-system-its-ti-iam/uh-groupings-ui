@@ -1,3 +1,5 @@
+@use "../customs" as *;
+
 .manage-admins td:first-child {
     align-items: center;
     display: flex;
@@ -26,6 +28,6 @@ label input {
 }
 
 .custom-text-danger {
-  color: #FF0000;
+  color: $uh-red4;
 }
 

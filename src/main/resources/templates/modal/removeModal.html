@@ -1,6 +1,6 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <div class="modal-header">
-    <h5 class="modal-title" id="remove-modal">Remove Member</h5>
+    <h1 class="h5 modal-title" id="remove-modal">Remove Member</h1>
     <a class="close" type="button" ng-click="cancelRemoveModal()">
         <span aria-hidden="true">&times;</span>
     </a>
@@ -12,6 +12,7 @@
     <div class="alert alert-danger" role="alert" ng-if="showWarningRemovingSelf()" ng-switch="listName">
         <span class="alert-danger" ng-switch-default th:utext="#{screen.message.modal.remove.warning}">Warning</span>
         <span class="alert-danger" ng-switch-when="admins" th:utext="#{screen.message.modal.remove.warning.admin}">Warning</span>
+        <span class="alert-danger" th:utext="#{screen.message.modal.remove.redirect.home}">Warning</span>
     </div>
     <p>
         <span class="modal-black-text" th:text="#{screen.message.modal.remove.confirmation}"></span>
@@ -69,7 +70,7 @@
 
 </div>
 <div class="modal-footer">
-    <button class="btn btn-primary" ng-click="proceedRemoveModal()">Yes</button>
+    <button class="btn btn-primary btn-sized" ng-click="proceedRemoveModal()">Yes</button>
     <button class="btn btn-light" ng-click="cancelRemoveModal()" data-dismiss="modal">Cancel</button>
 </div>
 

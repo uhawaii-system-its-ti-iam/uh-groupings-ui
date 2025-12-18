@@ -21,23 +21,23 @@
         </div>
 
         <div class="table-responsive-sm">
-            <table class="table table-striped table-hover" aria-live="assertive">
+            <table class="table table-striped table-hover" aria-atomic="true">
                 <thead>
                 <tr>
-                    <th scope="col" role="button"
+                    <th id="name-column" scope="col" role="columnheader"
                         ng-click="sortBy('groupingBasis', 'pagedItemsBasis', 'name')">
                         Name
                         <i class="fa sort-icon"
                            ng-show="columnSort.groupingBasis.property === 'name' || !columnSort.groupingBasis"
                            ng-class="{ reverse: columnSort.groupingBasis.reverse }"></i>
                     </th>
-                    <th scope="col" role="button"
+                    <th id="uhUuid-column" scope="col" role="columnheader"
                         ng-click="sortBy('groupingBasis', 'pagedItemsBasis', 'uhUuid')">
                         UH Number
                         <i class="fa sort-icon" ng-show="columnSort.groupingBasis.property === 'uhUuid'"
                            ng-class="{ reverse: columnSort.groupingBasis.reverse }"></i>
                     </th>
-                    <th scope="col" role="button"
+                    <th id="uid-column" scope="col" role="columnheader"
                         ng-click="sortBy('groupingBasis', 'pagedItemsBasis', 'uid')">
                         UH Username
                         <i class="fa sort-icon" ng-show="columnSort.groupingBasis.property === 'uid'"
@@ -46,6 +46,9 @@
                 </tr>
                 </thead>
                 <tbody>
+                <tr ng-if="groupingBasis.length === 0">
+                    <td colspan="4">No members found.</td>
+                </tr>
                 <tr ng-repeat="b in pagedItemsBasis[currentPageBasis]" class="table table-sm">
                     <td class="p-10">
                         <div class="d-flex">

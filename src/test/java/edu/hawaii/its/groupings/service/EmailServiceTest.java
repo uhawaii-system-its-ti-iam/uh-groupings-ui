@@ -15,10 +15,12 @@ import org.springframework.mail.MailException;
 import org.springframework.mail.MailSendException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.test.context.ActiveProfiles;
 
 import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
 import edu.hawaii.its.groupings.type.Feedback;
 
+@ActiveProfiles("localTest")
 @SpringBootTest(classes = { SpringBootWebApplication.class })
 public class EmailServiceTest {
 
@@ -32,6 +34,9 @@ public class EmailServiceTest {
 
     @Value("${app.environment}")
     private String environment;
+
+    @Value("${groupings.api.test.path:/api/groupings/v2.1}")
+    private String testPath;
 
     private Feedback createBaseFeedback() {
         Feedback feedback = new Feedback();
@@ -60,6 +65,7 @@ public class EmailServiceTest {
         mockEmailService = spy(new EmailService(sender));
 
         wasSent = false;
+        testPath = "/api/groupings/v2.1";
     }
 
     @Test
@@ -109,7 +115,7 @@ public class EmailServiceTest {
 
         emailServiceWithException.send(feedback);
         assertFalse(wasSent);
-        emailServiceWithException.sendWithStack(new NullPointerException(), "Null Pointer Exception");
+        emailServiceWithException.sendWithStack(new NullPointerException(), "Null Pointer Exception", testPath);
         assertFalse(wasSent);
     }
 
@@ -117,7 +123,7 @@ public class EmailServiceTest {
     public void enabled() {
         emailService.setEnabled(false);
         assertFalse(emailService.isEnabled());
-        emailService.sendWithStack(new NullPointerException(), "Null Pointer Exception");
+        emailService.sendWithStack(new NullPointerException(), "Null Pointer Exception", testPath);
         assertFalse(wasSent);
 
         emailService.setEnabled(false);
@@ -127,7 +133,7 @@ public class EmailServiceTest {
 
         emailService.setEnabled(true);
         assertTrue(emailService.isEnabled());
-        emailService.sendWithStack(new NullPointerException(), "Null Pointer Exception");
+        emailService.sendWithStack(new NullPointerException(), "Null Pointer Exception", testPath);
         assertTrue(wasSent);
 
         emailService.setEnabled(true);
@@ -149,13 +155,13 @@ public class EmailServiceTest {
         assertFalse(messageSent.getText().contains("Recipient overridden"));
 
         emailService.setRecipient("its-iam-web-app-dev-help-l@lists.hawaii.edu");
-        emailService.sendWithStack(new NullPointerException(), "Null Pointer Exception");
+        emailService.sendWithStack(new NullPointerException(), "Null Pointer Exception", testPath);
         assertFalse(messageSent.getText().contains("Recipient overridden"));
 
 
         emailService.setEnabled(true);
         emailService.setRecipient("override@email.com");
-        emailService.sendWithStack(new NullPointerException(), "Null Pointer Exception");
+        emailService.sendWithStack(new NullPointerException(), "Null Pointer Exception", testPath);
         assertTrue(messageSent.getText().contains("Recipient overridden"));
     }
 
@@ -169,7 +175,7 @@ public class EmailServiceTest {
         mockEmailService.send(feedback);
         assertTrue(messageSent.getText().contains("Unknown Host"));
 
-        mockEmailService.sendWithStack(new NullPointerException(), "Null Pointer Exception");
+        mockEmailService.sendWithStack(new NullPointerException(), "Null Pointer Exception", testPath);
         assertTrue(messageSent.getText().contains("Unknown Host"));
     }
 
@@ -178,7 +184,7 @@ public class EmailServiceTest {
         emailService.setEnabled(true);
         String environment = emailService.getEnvironment();
         assertTrue(environment.equals("dev"));
-        emailService.sendWithStack(new NullPointerException(), "Null Pointer Exception");
+        emailService.sendWithStack(new NullPointerException(), "Null Pointer Exception", testPath);
         assertTrue(messageSent.getSubject().contains("(dev)"));
     }
 }

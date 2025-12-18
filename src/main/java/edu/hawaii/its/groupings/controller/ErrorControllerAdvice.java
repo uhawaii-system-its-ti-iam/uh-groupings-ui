@@ -1,9 +1,8 @@
 package edu.hawaii.its.groupings.controller;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
-
-import jakarta.mail.MessagingException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -11,21 +10,24 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.ui.Model;
+
+import jakarta.mail.MessagingException;
+import java.io.IOException;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import edu.hawaii.its.groupings.access.User;
 import edu.hawaii.its.groupings.access.UserContextService;
 import edu.hawaii.its.groupings.service.EmailService;
-import edu.hawaii.its.api.type.ApiError;
 
 @ControllerAdvice
 public class ErrorControllerAdvice {
 
     private static final Log logger = LogFactory.getLog(ErrorControllerAdvice.class);
-
     private final UserContextService userContextService;
-
     private final EmailService emailService;
 
     public ErrorControllerAdvice(UserContextService userContextService, EmailService emailService) {
@@ -34,96 +36,102 @@ public class ErrorControllerAdvice {
     }
 
     @ExceptionHandler(WebClientResponseException.class)
-    public ResponseEntity<ApiError> handleWebClientResponseException
-            (WebClientResponseException wcre) {
-        emailService.sendWithStack(wcre, "Web Client Response Exception");
-        ApiError.Builder errorBuilder = new ApiError.Builder()
-                .status((HttpStatus) wcre.getStatusCode())
-                .message("Web Client Response Exception")
-                .debugMessage(wcre.getMessage())
-                .timestamp(LocalDateTime.now());
+    public ResponseEntity<Map<String, Object>> handleWebClientResponseException(WebClientResponseException wcre) {
 
-        ApiError apiError = errorBuilder.build();
-        return buildResponseEntity(apiError, wcre);
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        String path = attributes.getRequest().getRequestURI();
+
+        log(wcre);
+
+        emailService.sendWithStack(wcre, "Web Client Response Exception", path);
+
+        Map<String, Object> body = new HashMap<>();
+
+        body.put("status", wcre.getStatusCode());
+        body.put("message", "Web Client Response Exception");
+        body.put("path", path);
+        body.put("timestamp", LocalDateTime.now());
+
+        return new ResponseEntity<>(body, wcre.getStatusCode());
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ApiError> handleIllegalArgumentException(IllegalArgumentException iae, WebRequest request) {
-        emailService.sendWithStack(iae, "Illegal Argument Exception");
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public String handleIllegalArgumentException(IllegalArgumentException iae, Model model) {
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        String path = attributes.getRequest().getRequestURI();
 
-        ApiError.Builder errorBuilder = new ApiError.Builder()
-                .status(HttpStatus.NOT_FOUND)
-                .message("Resource not available")
-                .debugMessage(iae.getMessage())
-                .timestamp(LocalDateTime.now());
+        log(iae);
 
-        ApiError apiError = errorBuilder.build();
+        emailService.sendWithStack(iae, "Illegal Argument Exception", path);
 
-        return buildResponseEntity(apiError, iae);
+        model.addAttribute("status", HttpStatus.NOT_FOUND);
+        model.addAttribute("message", "Resource not available");
+        model.addAttribute("path", path);
+        model.addAttribute("timestamp", LocalDateTime.now());
+
+        return "error";
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiError> handleException(Exception exception) {
-        emailService.sendWithStack(exception, "Exception");
+    @ExceptionHandler(MessagingException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public String handleMessagingException(MessagingException me, Model model) {
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        String path = attributes.getRequest().getRequestURI();
 
-        ApiError.Builder errorBuilder = new ApiError.Builder()
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .message("Exception")
-                .debugMessage(exception.getMessage())
-                .timestamp(LocalDateTime.now());
+        log(me);
 
-        ApiError apiError = errorBuilder.build();
+        emailService.sendWithStack(me, "Messaging Exception", path);
 
-        return buildResponseEntity(apiError, exception);
+        model.addAttribute("status", HttpStatus.INTERNAL_SERVER_ERROR);
+        model.addAttribute("message", "Mail service exception");
+        model.addAttribute("path", path);
+        model.addAttribute("timestamp", LocalDateTime.now());
+
+        return "error";
     }
 
+    @ExceptionHandler(IOException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public String handleIOException(IOException ioe, Model model) {
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        String path = attributes.getRequest().getRequestURI();
 
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<ApiError> handleRuntimeException(Exception exception) {
-        emailService.sendWithStack(exception, "Runtime Exception");
+        log(ioe);
 
-        ApiError.Builder errorBuilder = new ApiError.Builder()
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .message("Runtime Exception")
-                .debugMessage(exception.getMessage())
-                .timestamp(LocalDateTime.now());
+        emailService.sendWithStack(ioe, "IO Exception", path);
 
-        ApiError apiError = errorBuilder.build();
+        model.addAttribute("status", HttpStatus.INTERNAL_SERVER_ERROR);
+        model.addAttribute("message", "IO exception");
+        model.addAttribute("path", path);
+        model.addAttribute("timestamp", LocalDateTime.now());
 
-      return buildResponseEntity(apiError, exception);
-    }
-
-    @ExceptionHandler({MessagingException.class, IOException.class})
-    public ResponseEntity<ApiError> handleMessagingException(Exception e) {
-        emailService.sendWithStack(e, "Messaging Exception");
-
-        ApiError.Builder errorBuilder = new ApiError.Builder()
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .message("Mail service exception")
-                .debugMessage(e.getMessage())
-                .timestamp(LocalDateTime.now());
-
-        ApiError apiError = errorBuilder.build();
-
-      return buildResponseEntity(apiError, e);
+        return "error";
     }
 
     @ExceptionHandler(UnsupportedOperationException.class)
-    public ResponseEntity<ApiError> handleUnsupportedOperationException(UnsupportedOperationException nie) {
-        emailService.sendWithStack(nie, "Unsupported Operation Exception");
+    @ResponseStatus(HttpStatus.NOT_IMPLEMENTED)
+    public String handleUnsupportedOperationException(UnsupportedOperationException ex, Model model) {
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        String path = attributes.getRequest().getRequestURI();
 
-        ApiError.Builder errorBuilder = new ApiError.Builder()
-                .status(HttpStatus.NOT_IMPLEMENTED)
-                .message("Method not implemented")
-                .debugMessage(nie.getMessage())
-                .timestamp(LocalDateTime.now());
+        log(ex);
 
-        ApiError apiError = errorBuilder.build();
+        emailService.sendWithStack(ex, "Unsupported Operation Exception", path);
 
-        return buildResponseEntity(apiError, nie);
+        model.addAttribute("status", HttpStatus.NOT_IMPLEMENTED);
+        model.addAttribute("message", "Method not implemented");
+        model.addAttribute("path", path);
+        model.addAttribute("timestamp", LocalDateTime.now());
+
+        return "error";
     }
 
-    private ResponseEntity<ApiError> buildResponseEntity(ApiError apiError, Throwable cause) {
+    /**
+     * Helper function to log exception cause and user involved.
+     * @param cause Exception object.
+     */
+    public void log(Throwable cause) {
 
         String uid = null;
         User user = userContextService.getCurrentUser();
@@ -132,7 +140,5 @@ public class ErrorControllerAdvice {
         }
 
         logger.error("uid: " + uid + "; Exception: ", cause);
-
-        return new ResponseEntity<>(apiError, apiError.getStatus());
     }
 }

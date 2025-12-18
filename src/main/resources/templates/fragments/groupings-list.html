@@ -1,25 +1,25 @@
 <th:block th:fragment="groupings-list">
     <div class="table-responsive">
-        <table class="table manage-groupings table-striped table-hover table-md" aria-live="assertive">
+        <table class="table manage-groupings table-striped table-hover table-md" aria-atomic="true" aria-live="assertive">
             <thead>
             <tr>
-                <th ng-click="sortBy('groupingsList', 'pagedItemsGroupings', 'name')"
-                    class="w-35 align-middle" role="button">
+                <th id="th-grouping-name" scope="col" ng-click="sortBy('groupingsList', 'pagedItemsGroupings', 'name')"
+                    class="w-35 align-middle" role="columnheader">
                     Grouping Name
                     <i class="fa sort-icon"
                        ng-show="columnSort.groupingsList.property === 'name' || !columnSort.groupingsList"
                        ng-class="{ reverse: columnSort.groupingsList.reverse }"></i>
                 </th>
-                <th ng-click="sortBy('groupingsList', 'pagedItemsGroupingss', 'description')"
+                <th id="th-description" scope="col" ng-click="sortBy('groupingsList', 'pagedItemsGroupingss', 'description')"
                     ng-show="showDescriptionColumn"
-                    class="clickable d-none d-sm-table-cell">
+                    class="clickable d-none d-sm-table-cell" role="columnheader">
                     Description
                     <i class="fa sort-icon" ng-show="columnSort.groupingsList.property === 'description'"
                        ng-class="{ reverse: columnSort.groupingsList.reverse }"></i>
                 </th>
-                <th ng-click="sortBy('groupingsList', 'pagedItemsGroupings', 'path')"
+                <th id="th-grouping-path" scope="col" ng-click="sortBy('groupingsList', 'pagedItemsGroupings', 'path')"
                     ng-show="showGroupingPathColumn"
-                    class=" d-none d-sm-table-cell" role="button">
+                    class=" d-none d-sm-table-cell" role="columnheader">
                     Grouping Path
                     <i class="fa sort-icon" ng-show="columnSort.groupingsList.property === 'path'"
                        ng-class="{ reverse: columnSort.groupingsList.reverse }"></i>
@@ -28,20 +28,20 @@
             </thead>
             <tbody class="table table-borderless">
             <tr class="row-height" ng-repeat="l in pagedItemsGroupings[currentPageGroupings] ">
-                <td class="w-35 p-10 align-middle" role="button" tabindex="0" aria-label="Click to Manage {{l.name}}"
+                <td headers="th-grouping-name" class="w-35 p-10 interactive-td" tabindex="0" aria-label="Click to Manage {{l.name}}"
                     ng-keypress="$event.keyCode === 13 ? displayGrouping(currentPageGroupings, $index) : null"
                     ng-click="displayGrouping(currentPageGroupings, $index)">
                     <i class="far fa-fw fa-edit" aria-hidden="true"></i>
                     {{l.name}}
                 </td>
-                <td class="mw-0 p-10 align-middle d-none d-sm-table-cell"
+                <td headers="th-description" class="mw-0 p-10 align-middle d-none d-sm-table-cell"
                     ng-class="{'w-35': columnDisplaySetting === 'all', 'col-auto': columnDisplaySetting === 'description'}"
                     ng-show="showDescriptionColumn">
                     <div class="text-truncate" tooltip-on-truncate="{{l.description}}">
                         {{l.description}}
                     </div>
                 </td>
-                <td class="p-10 align-middle d-none d-sm-table-cell"
+                <td headers="th-grouping-path" class="p-10 align-middle d-none d-sm-table-cell"
                     ng-class="{'w-30': columnDisplaySetting === 'all', 'col-auto': columnDisplaySetting === 'groupingPath'}"
                     ng-show="showGroupingPathColumn">
                     <form class="seamless border border-secondary rounded">

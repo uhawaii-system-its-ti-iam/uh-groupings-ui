@@ -1,4 +1,5 @@
-@import 'mixins';
+@use 'mixins';
+@use '../customs' as *;
 
 form.seamless button {
     border-top-left-radius: 0;
@@ -28,7 +29,7 @@ form.seamless button {
         margin-left: 2px;
         margin-right: 2px;
 
-        @include btn-rmv;
+        @include mixins.btn-rmv;
 
         &:hover,
         &:focus,
@@ -37,9 +38,9 @@ form.seamless button {
         }
     }
 
-    &.btn-primary,
     &.btn-lg {
-        @include gradient;
+        @include mixins.gradient;
+        font-size: 20px;
 
         &:hover,
         &:focus,
@@ -48,8 +49,28 @@ form.seamless button {
         }
     }
 
+    &.btn-primary {
+        @include mixins.gradient;
+
+        &:hover,
+        &:focus,
+        &:active {
+            background: $green-blue right center;
+        }
+
+        &.btn-sized {
+            font-size: 20px;
+            min-width: 44px;
+            min-height: 44px;
+        }
+    }
+
     &.btn-bottom { /* Buttons for membership, admin, owner in home page */
-        @include gradient;
+        min-width: 44px;
+        min-height: 44px;
+        font-size: 20px;
+
+        @include mixins.gradient;
     }
 
     &-bottom {
@@ -59,16 +80,27 @@ form.seamless button {
     }
 
     &-default { /* Default button */
-        @include gradient;
+        @include mixins.gradient;
     }
 
     &-outline-secondary {
+        min-width: 44px;
+        min-height: 44px;
+        font-size: 20px;
+        color: $uh-dark-gray;
+        border-color: $uh-dark-gray;
+
         &:hover,
         &:focus,
         &:active { /* Changes the logout color when you hover. */
             background-color: $green-blue;
             border-color: $green-blue;
         }
+    }
+
+    &-grouping {
+        min-width: 44px;
+        min-height: 44px;
     }
 
     &-sm { /* Button for copying path, clipboard, and CSV */
@@ -83,9 +115,14 @@ form.seamless button {
         }
     }
 
-    &-light:hover {
-        color: white;
-        background-color: $uh-blue4;
+    &-light {
+        min-height: 44px;
+        font-size: 20px;
+
+        &.hover {
+            color: white;
+            background-color: $uh-blue4;
+        }
     }
 }
 
@@ -142,3 +179,9 @@ form.seamless button {
 .refresh-button {
     font-size: 2rem;
 }
+
+.navbar-toggler-icon {
+    min-width: 44px;
+    min-height: 44px;
+}
+

@@ -1,0 +1,16 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<div class="modal-header">
+    <h1 class="h5 modal-title" id="owner-warning-modal">Owner Limit Warning</h1>
+    <a class="close" type="button"  ng-click="closeOwnerLimitWarningModal()">
+        <span aria-hidden="true">&times;</span>
+    </a>
+</div>
+<div class="modal-body" id="modal-body">
+    <p th:text="#{screen.message.modal.warning.ownerlimit}"></p>
+</div>
+
+<div class="modal-footer">
+    <button class="btn btn-primary btn-sized" ng-click="closeOwnerLimitWarningModal()">Ok</button>
+    <button class="btn btn-secondary" ng-click="proceedRedirectFeedback()">Feedback</button>
+</div>
+</html>

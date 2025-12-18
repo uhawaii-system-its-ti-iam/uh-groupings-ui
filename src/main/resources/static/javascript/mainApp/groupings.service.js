@@ -195,10 +195,10 @@
             },
 
             /**
-             * Add group path owners to owners group of grouping.
+             * Add owner-groupings to owners group of grouping.
              */
-            addGroupPathOwnerships(path, newGroupPathOwner, onSuccess, onError) {
-                let endpoint = BASE_URL + path + "/" + newGroupPathOwner + "/addGroupPathOwnerships";
+            addOwnerGroupings(path, newOwnerGrouping, onSuccess, onError) {
+                let endpoint = BASE_URL + path + "/" + newOwnerGrouping + "/addOwnerGroupings";
                 dataProvider.updateData(endpoint, onSuccess, onError);
             },
 
@@ -245,10 +245,10 @@
             },
 
             /**
-             * Remove group path owners from owners group of grouping.
+             * Remove owner-groupings from owners group of grouping.
              */
-            removeGroupPathOwnerships(path, groupPathToRemove, onSuccess, onError) {
-                let endpoint = BASE_URL + path + "/" + groupPathToRemove + "/removeGroupPathOwnerships";
+            removeOwnerGroupings(path, ownerGroupingToRemove, onSuccess, onError) {
+                let endpoint = BASE_URL + path + "/" + ownerGroupingToRemove + "/removeOwnerGroupings";
                 dataProvider.updateData(endpoint, onSuccess, onError);
             },
 
@@ -437,10 +437,26 @@
             },
 
             /**
+             * Get the number of all owners (direct + indirect) in a grouping.
+             */
+            getNumberOfAllOwners(groupingPath, onSuccess, onError) {
+                let endpoint = BASE_URL + "groupings/" + groupingPath + "/owners/count";
+                dataProvider.loadData(endpoint, onSuccess, onError);
+            },
+
+            /**
+             * Get the number of members in a grouping.
+             */
+            getNumberOfGroupingMembers(groupingPath, onSuccess, onError) {
+                let endpoint = BASE_URL + "groupings/" + groupingPath + "/count";
+                dataProvider.loadData(endpoint, onSuccess, onError);
+            },
+
+            /**
              * Checks if the owner of a grouping is the sole owner
              */
-            getNumberOfOwners(path, uidToCheck, onSuccess, onError) {
-                let endpoint = BASE_URL + path + "/owners/" + uidToCheck + "/count";
+            getNumberOfOwners(path, onSuccess, onError) {
+                let endpoint = BASE_URL + path + "/owners/count";
                 dataProvider.loadData(endpoint, onSuccess, onError);
             },
 
@@ -458,7 +474,7 @@
              * Throws an exception
              */
             throwException(onSuccess, onError) {
-                let endpoint = "/testing/" + "exception";
+                let endpoint = BASE_URL + "testing/exception";
                 dataProvider.loadData(endpoint, onSuccess, onError);
             },
         };

@@ -1,17 +1,17 @@
 <th:block th:fragment="pagination">
     <nav aria-label="Page Navigation">
-        <ul class="pagination float-right flex-wrap" aria-live="assertive">
+        <ul class="pagination float-right flex-wrap" aria-atomic="true" aria-live="assertive">
             <li class="page-item"
                 th:attr="ng-class='{ disabled: disableFirstAndPrev(' + ${currentPage} + ') }'">
                 <button class="page-link"
                         th:attr="ng-click='setPage(\'First\', \'' + ${currentPage} + '\', \'' + ${pagedItems} + '\');newPage(\'' + ${groupType} + '\')'">
-                    « <span class="d-md-inline d-none">First</span>
+                    <span class="arrow"> « </span><span class="d-md-inline d-none">First</span>
                 </button>
             </li>
             <li class="page-item" th:attr="ng-class='{ disabled: disableFirstAndPrev(' + ${currentPage} + ') }'">
                 <button class="page-link"
                         th:attr="ng-click='setPage(\'Prev\', \'' + ${currentPage} + '\', \'' + ${pagedItems} + '\');newPage(\'' + ${groupType} + '\')'">
-                    ‹ <span class="d-md-inline d-none">Prev</span>
+                    <span class="arrow"> ‹ </span><span class="d-md-inline d-none">Prev</span>
                 </button>
             </li>
             <li class="page-item"
@@ -21,21 +21,21 @@
                 <button  class="page-link"
                          ng-bind="n + 1"
                          th:attr="ng-click='setPage(\'Set\', \'' + ${currentPage} + '\', \'' + ${pagedItems} + '\');newPage(\'' + ${groupType} + '\')',
-                    ng-style='{\'color\' : n === ' + ${currentPage} + ' ? \'#1C6070\' : \'#1C6070\' }' ">
+                    ng-style='{\'color\' : n === ' + ${currentPage} + ' ? \'#174E59\' : \'#174E59\' }' ">
                 </button>
             </li>
             <li class="page-item"
                 th:attr="ng-class='{ disabled: disableNextAndLast(' + ${pagedItems} + ', ' + ${currentPage} + ') }'">
                 <button class="page-link"
                         th:attr="ng-click='setPage(\'Next\', \'' + ${currentPage} + '\', \'' + ${pagedItems} + '\');newPage(\'' + ${groupType} + '\')'">
-                    <span class="d-md-inline d-none">Next</span> ›
+                    <span class="d-md-inline d-none">Next</span><span class="arrow"> › </span>
                 </button>
             </li>
             <li class="page-item"
                 th:attr="ng-class='{ disabled: disableNextAndLast(' + ${pagedItems} + ', ' + ${currentPage} + ') }'">
                 <button class="page-link"
                         th:attr="ng-click='setPage(\'Last\', \'' + ${currentPage} + '\', \'' + ${pagedItems} + '\');newPage(\'' + ${groupType} + '\')'">
-                    <span class="d-md-inline d-none">Last</span> »
+                    <span class="d-md-inline d-none">Last</span><span class="arrow"> » </span>
                 </button>
             </li>
         </ul>

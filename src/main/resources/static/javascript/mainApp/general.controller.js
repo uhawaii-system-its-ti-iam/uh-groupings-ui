@@ -8,11 +8,12 @@
      * @param $controller - service for instantiating controllers
      * @param $window - the browser window object
      * @param $uibModal - the UI Bootstrap service for creating modals
-     * @param dataProvider - service that handles redirection to the feedback page upon error
      * @param groupingsService - service for creating requests to the groupings API
+     * @param userService - service for accessing logged-in user's data.
+     * @param Message - message hub.
      */
 
-    function GeneralJsController($scope, $controller, $window, $uibModal, groupingsService, dataProvider ) {
+    function GeneralJsController($scope, $controller, $window, $uibModal, Message, userService, groupingsService ) {
         // This is a regex Pattern that contains all valid UH Identifiers which consists of uid (Username) and uhUuid (UH Numbers) chars.
         $scope.uhIdentifierPattern = new RegExp("^[_?a-z-?@?0-9]{2,64}$");
         $scope.currentUser = {};
@@ -30,6 +31,14 @@
         $scope.availableProfiles = [];
 
         angular.extend(this, $controller("TableJsController", { $scope }));
+
+        userService.getCurrentUser().then((res) => {
+            $scope.currentUser = {
+                uid: res.data.uid,
+                uhUuid: res.data.uhUuid
+            };
+            $scope.feedbackEmail = $scope.currentUser.uid + Message.Csv.EMAIL_SUFFIX;
+        });
 
         /**
          * Shows/hides admin tabs: Manage Groupings, Manage Admins, Manage Subject
@@ -292,9 +301,9 @@
          */
         $scope.checkForDeptAccount = (membersToAdd) => {
             return membersToAdd.some(member =>
-                member['uid'] === member['uhUuid'] || member['uhUuid'] === ""
+                member["uid"] === member['uhUuid'] || member['uhUuid'] === ""
             );
-        }
+        };
     }
 
     UHGroupingsApp.controller("GeneralJsController", GeneralJsController);

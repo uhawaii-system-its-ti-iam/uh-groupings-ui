@@ -4,7 +4,7 @@
       lang="en">
 
 <div class="modal-header">
-    <h5 class="modal-title" id="timeout-modal">Inactivity Warning</h5>
+    <h1 class="h5 modal-title" id="timeout-modal">Inactivity Warning</h1>
 </div>
 <div class="modal-body" id="modal-body">
     <p>Warning! This session will expire soon. Time remaining:
@@ -15,7 +15,7 @@
     <button class="btn btn-primary" ng-click="closeTimeoutModal()">Stay logged in</button>
     <div sec:authorize="isAuthenticated()">
        <form action="/logout" th:action="@{/logout}" method="post">
-           <button class="btn btn-primary" type="submit">Log off now</button>
+           <button class="btn btn-primary btn-sized" type="submit">Log off now</button>
        </form>
     </div>
 </div>

@@ -12,7 +12,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.4.1</version>
+        <version>3.5.6</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -91,6 +91,25 @@
             <groupId>org.apereo.cas.client</groupId>
             <artifactId>cas-client-support-saml</artifactId>
             <version>${org.apereo.cas.client-version}</version>
+        </dependency>
+
+        <!-- JWT -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-api</artifactId>
+            <version>0.13.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+            <version>0.13.0</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-jackson</artifactId>
+            <version>0.13.0</version>
+            <scope>runtime</scope>
         </dependency>
 
         <!-- Test -->
@@ -177,11 +196,6 @@
             <groupId>org.webjars</groupId>
             <artifactId>webjars-locator-core</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.17.0</version>
-        </dependency>
     </dependencies>
 
     <build>
@@ -198,7 +212,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.5.2</version>
+                <version>3.5.3</version>
                 <configuration>
                     <forkCount>1</forkCount>
                     <excludes>
@@ -254,6 +268,7 @@
                         <source>${basedir}/src/main/resources/static/javascript/mainApp/table.controller.js</source>
                         <source>${basedir}/src/main/resources/static/javascript/mainApp/timeout.controller.js</source>
                         <source>${basedir}/src/main/resources/static/javascript/mainApp/feedback.controller.js</source>
+                        <source>${basedir}/src/main/resources/static/javascript/mainApp/user.service.js</source>
                     </preloadSources>
                     <specIncludes>
                         <include>${jasmine.test.specs}</include>
@@ -300,7 +315,7 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.12</version>
+                <version>0.8.13</version>
                 <configuration>
                     <excludes>
                         <exclude>edu/hawaii/its/groupings/configuration/SpringBootWebApplication.class</exclude>

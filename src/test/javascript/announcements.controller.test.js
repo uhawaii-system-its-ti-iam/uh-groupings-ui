@@ -8,14 +8,34 @@ describe("AnnouncementsJsController", function () {
     let controller;
     let httpBackend;
     let gs;
+    let mockUserService;
+    const mockUser = {
+        data: {
+            uid: "testiwta",
+            uhUuid: "99997010"
+        }
+    };
 
-    beforeEach(inject(($rootScope, $controller, _$httpBackend_, groupingsService) => {
+    beforeEach(() => {
+        mockUserService = {
+            getCurrentUser: jasmine.createSpy("getCurrentUser")
+        };
+
+        module(($provide) => {
+            $provide.value("userService", mockUserService);
+        });
+    });
+
+    beforeEach(inject(($rootScope, $controller, _$httpBackend_, _$q_, groupingsService) => {
         scope = $rootScope.$new(true);
+        httpBackend = _$httpBackend_;
+        gs = groupingsService;
+
+        mockUserService.getCurrentUser.and.returnValue(_$q_.when(mockUser));
         controller = $controller("AnnouncementsJsController", {
             $scope: scope
         });
-        httpBackend = _$httpBackend_;
-        gs = groupingsService;
+        scope.$apply();
     }));
 
     const announcementsRes = {
@@ -57,9 +77,9 @@ describe("AnnouncementsJsController", function () {
             spyOn(scope, "handleActiveAnnouncements");
             scope.init();
 
-            httpBackend.whenGET("currentUser").passThrough();
+            expect(mockUserService.getCurrentUser).toHaveBeenCalled();
             httpBackend.expectGET("announcements").respond(200, announcementsRes);
-            httpBackend.flush()
+            httpBackend.flush();
 
             expect(scope.handleActiveAnnouncements).toHaveBeenCalledWith(announcementsRes.announcements);
             expect(scope.activeAnnouncements).toBe(scope.handleActiveAnnouncements(announcementsRes.announcements))

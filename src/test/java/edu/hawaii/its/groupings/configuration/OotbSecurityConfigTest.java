@@ -24,7 +24,7 @@ import edu.hawaii.its.api.service.OotbHttpRequestService;
 import edu.hawaii.its.groupings.service.OotbActiveUserProfileService;
 
 @SpringBootTest(classes = { SpringBootWebApplication.class })
-@ActiveProfiles("ootb")
+@ActiveProfiles({"ootb", "localTest"})
 class OotbSecurityConfigTest {
 
     @Autowired
