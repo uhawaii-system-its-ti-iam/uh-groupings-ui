@@ -519,20 +519,7 @@ public class GroupingsRestController {
         String safePath = policy.sanitize(path);
         logger.info(String.format("Entered REST compareOwnerGroupings - currentUid: %s, path: %s", currentUid, path));
         String uri = String.format(API_2_1_BASE + "/groupings/%s/owners/compare", safePath);
-        return httpRequestService.makeApiRequest(currentUid, uri, HttpMethod.GET);
-    }
-
-
-    /**
-     * Column3: Get all duplicated owner paths in a grouping.
-     */
-    @GetMapping(value = "/groupings/{path:[\\w-:.]+}/owners/compare/paths")
-    public ResponseEntity<String> getDuplicateOwnerPaths(@PathVariable String path) {
-        String currentUid = policy.sanitize(userContextService.getCurrentUid());
-        String safePath = policy.sanitize(path);
-        logger.info(String.format("Entered REST getDuplicateOwnerPaths - currentUid: %s, path: %s", currentUid, path));
-        String uri = String.format(API_2_1_BASE + "/groupings/%s/owners/compare/paths", safePath);
-        return httpRequestService.makeApiRequest(currentUid, uri, HttpMethod.GET);
+        return httpRequestService.makeApiRequest(uri, HttpMethod.GET);
     }
 
     /**
