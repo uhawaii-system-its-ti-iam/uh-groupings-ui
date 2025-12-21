@@ -460,13 +460,11 @@
                 dataProvider.loadData(endpoint, onSuccess, onError);
             },
 
+            /**
+             * Returns all duplicated owners in a grouping with their sources of ownership.
+             */
             compareOwnerGroupings(path, onSuccess, onError) {
                 let endpoint = BASE_URL + "groupings/" + path + "/owners/compare";
-                dataProvider.loadData(endpoint, onSuccess, onError);
-            },
-
-            fetchDuplicateOwnerPaths(path, onSuccess, onError) {
-                let endpoint = BASE_URL + "groupings/" + path + "/owners/compare/paths";
                 dataProvider.loadData(endpoint, onSuccess, onError);
             },
 
