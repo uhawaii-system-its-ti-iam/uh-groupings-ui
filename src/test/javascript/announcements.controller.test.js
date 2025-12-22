@@ -11,8 +11,7 @@ describe("AnnouncementsJsController", function () {
     let mockUserService;
     const mockUser = {
         data: {
-            uid: "testiwta",
-            uhUuid: "99997010"
+            uid: "testiwta", uhUuid: "99997010"
         }
     };
 
@@ -39,28 +38,10 @@ describe("AnnouncementsJsController", function () {
     }));
 
     const announcementsRes = {
-        "resultCode": "SUCCESS",
-        "announcements": [
-            {
-                "message": "old message",
-                "start": "20230607T000000",
-                "end": "20230615T000000",
-                "state": "Expired"
-            },
-            {
-                "message": "Test will be down for migration to new VMs featuring Java 17 (required for Spring Boot 3)",
-                "start": "20231206T000000",
-                "end": "20231208T110000",
-                "state": "Expired"
-            },
-            {
-                "message": "Test is now running on VMs featuring Java 17 (hello Spring Boot3)",
-                "start": "20231208T110000",
-                "end": "20240215T000000",
-                "state": "Active"
-            }
-        ]
-    }
+        "resultCode": "SUCCESS", "announcements": [{
+            "message": "Test is now running on VMs featuring Java 17 (hello Spring Boot3)"
+        }]
+    };
 
     it("should define the announcements controller", () => {
         expect(controller).toBeDefined();
@@ -73,24 +54,15 @@ describe("AnnouncementsJsController", function () {
             expect(gs.getAnnouncements).toHaveBeenCalled();
         });
 
-        it("should call $scope.handleActiveAnnouncements", () => {
-            spyOn(scope, "handleActiveAnnouncements");
+        it("should map announcements to messages directly (API filters to Active only)", () => {
             scope.init();
 
             expect(mockUserService.getCurrentUser).toHaveBeenCalled();
             httpBackend.expectGET("announcements").respond(200, announcementsRes);
             httpBackend.flush();
 
-            expect(scope.handleActiveAnnouncements).toHaveBeenCalledWith(announcementsRes.announcements);
-            expect(scope.activeAnnouncements).toBe(scope.handleActiveAnnouncements(announcementsRes.announcements))
-        })
-    });
-
-    describe("handleActiveAnnouncements", () => {
-        it("should filter by active announcements and map to list of messages", () => {
-            const activeAnnouncements = scope.handleActiveAnnouncements(announcementsRes.announcements);
-            expect(activeAnnouncements.length).toBe(1);
-            expect(activeAnnouncements[0]).toBe("Test is now running on VMs featuring Java 17 (hello Spring Boot3)");
+            expect(scope.activeAnnouncements.length).toBe(1);
+            expect(scope.activeAnnouncements[0]).toBe("Test is now running on VMs featuring Java 17 (hello Spring Boot3)");
         });
     });
 });
