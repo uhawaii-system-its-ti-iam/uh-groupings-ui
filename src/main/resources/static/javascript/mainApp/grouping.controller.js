@@ -328,7 +328,6 @@
 
         /**
          * Fetches all duplicated owners in a grouping with their sources of ownership.
-         * Stores results on scope
          * @param groupPath - path of the grouping to retrieve duplicated owners from
          */
         $scope.fetchCompareOwnerGroupings = (groupPath) => {
@@ -338,7 +337,7 @@
                 groupingsService.compareOwnerGroupings(
                     groupPath,
                     (res) => {
-                        $scope.compareOwnerGroupingsResults =res
+                        $scope.compareOwnerGroupingsResults = res;
                         $scope.compareOwnerGroupingsResultsCount =
                             Object.keys($scope.compareOwnerGroupingsResults).length;
                         $scope.compareLoading = false;

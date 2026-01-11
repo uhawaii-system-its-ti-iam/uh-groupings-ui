@@ -49,7 +49,7 @@
             </div>
       </div>
       <div class="row pt-4 pb-5">
-          <div class="col-md-6 col-12">
+          <div class="col-md-12 col-12">
               <h2 class="h5">Diagnostics</h2>
 
               <div class="col-md-8">
@@ -73,33 +73,42 @@
                       <thead>
                       <tr>
                           <th scope="col">
-                              UH UUID
+                              NAME
                           </th>
-
+                          <th scope="col">
+                              UH Username
+                          </th>
                           <th scope="col">
                               Sources of Ownership
                           </th>
                       </tr>
                       </thead>
-
                       <tbody>
-                      <tr ng-repeat="(uuid, paths) in compareOwnerGroupingsResults"
+                      <tr ng-repeat="(uuid, data) in compareOwnerGroupingsResults"
                           class="table table-sm">
+
                           <td class="overflow-auto py-1 px-3">
-                              {{ uuid }}
+                              {{ data.name[0] }}
                           </td>
+
                           <td class="overflow-auto py-1 px-3">
-                              <div ng-if="paths.length">
+                              {{ data.uid[0] }}
+                          </td>
+
+                          <td class="overflow-auto py-1 px-3">
+                              <div ng-if="data.paths && data.paths.length">
                                   <ul class="mb-0 pl-3">
-                                      <li ng-repeat="path in paths">
+                                      <li ng-repeat="path in data.paths">
                                           {{ path }}
                                       </li>
                                   </ul>
                               </div>
-                              <div ng-if="!paths.length">
+
+                              <div ng-if="!data.paths || !data.paths.length">
                                   <span class="text-muted">—</span>
                               </div>
                           </td>
+
                       </tr>
                       </tbody>
                   </table>
