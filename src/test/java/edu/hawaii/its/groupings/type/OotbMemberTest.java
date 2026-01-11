@@ -25,8 +25,8 @@ public class OotbMemberTest {
     @Test
     public void name() {
         assertNull(member.getName());
-        member.setName("tst01name");
-        assertThat(member.getName(), is("tst01name"));
+        member.setName("Testf-iwt-a TestIAM-staff");
+        assertThat(member.getName(), is("Testf-iwt-a TestIAM-staff"));
     }
 
     @Test
@@ -45,8 +45,8 @@ public class OotbMemberTest {
 
     @Test
     public void allArgsConstructor() {
-        OotbMember member = new OotbMember("tst01name", "99997010", "testiwta");
-        assertThat(member.getName(), is("tst01name"));
+        OotbMember member = new OotbMember("Testf-iwt-a TestIAM-staff", "99997010", "testiwta");
+        assertThat(member.getName(), is("Testf-iwt-a TestIAM-staff"));
         assertThat(member.getUhUuid(), is("99997010"));
         assertThat(member.getUid(), is("testiwta"));
     }

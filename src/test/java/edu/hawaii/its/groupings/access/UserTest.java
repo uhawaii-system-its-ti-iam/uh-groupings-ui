@@ -23,21 +23,21 @@ public class UserTest {
     public void construction() {
         Set<GrantedAuthority> authorities = new LinkedHashSet<>();
 
-        User user = new User("a", authorities);
+        User user = new User("testiwta", authorities);
         assertNotNull(user);
 
-        assertThat(user.getUid(), is("a"));
-        assertThat(user.getUid(), is("a"));
+        assertThat(user.getUid(), is("testiwta"));
+        assertThat(user.getUid(), is("testiwta"));
         assertNull(user.getUhUuid());
         assertNull(user.getAttributes());
 
         authorities = new LinkedHashSet<>();
         authorities.add(new SimpleGrantedAuthority(Role.ANONYMOUS.longName()));
-        user = new User("b", "12345", authorities);
+        user = new User("testiwtb", "99997027", authorities);
 
-        assertThat(user.getUid(), is("b"));
-        assertThat(user.getUid(), is("b"));
-        assertThat(user.getUhUuid(), is("12345"));
+        assertThat(user.getUid(), is("testiwtb"));
+        assertThat(user.getUid(), is("testiwtb"));
+        assertThat(user.getUhUuid(), is("99997027"));
         assertNull(user.getAttributes());
 
         user.setAttributes(new UhAttributes());
@@ -49,8 +49,8 @@ public class UserTest {
         Map<Object, Object> map = new HashMap<>();
         map.put("uid", "testiwtc");
         map.put("uhUuid", "99997033");
-        map.put("cn", "IamtstC1");
-        map.put("givenName", "IamtstC");
+        map.put("cn", "Testf-iwt-c TestIAM-staff");
+        map.put("givenName", "Testf-iwt-c");
         map.put("mail", "iamtstc@example.com");
         map.put("eduPersonAffiliation", "aff");
 
@@ -59,8 +59,8 @@ public class UserTest {
         user.setAttributes(new UhAttributes(map));
 
         assertThat(user.getAttribute("uid"), is("testiwtc"));
-        assertThat(user.getName(), is("IamtstC1"));
-        assertThat(user.getGivenName(), is("IamtstC"));
+        assertThat(user.getName(), is("Testf-iwt-c TestIAM-staff"));
+        assertThat(user.getGivenName(), is("Testf-iwt-c"));
         assertThat(user.toString(), containsString("uid=a"));
         assertThat(user.toString(), containsString("uhUuid=null"));
     }
@@ -70,16 +70,16 @@ public class UserTest {
         // Create user with builder
         User user = new User.Builder("testiwtc")
                 .uhUuid("99997033")
-                .addAttribute("givenName", "IamtstC")
-                .addAttribute("cn", "IamtstC1")
+                .addAttribute("givenName", "Testf-iwt-c")
+                .addAttribute("cn", "Testf-iwt-c TestIAM-staff")
                 .addAuthorities("ROLE_UH")
                 .addAuthorities(Arrays.asList("ROLE_ADMIN", "ROLE_OWNER"))
                 .build();
 
         assertThat(user.getUid(), is("testiwtc"));
         assertThat(user.getUhUuid(), is("99997033"));
-        assertThat(user.getGivenName(), is("IamtstC"));
-        assertThat(user.getName(), is("IamtstC1"));
+        assertThat(user.getGivenName(), is("Testf-iwt-c"));
+        assertThat(user.getName(), is("Testf-iwt-c TestIAM-staff"));
 
         assertTrue(user.hasRole(Role.UH));
         assertTrue(user.hasRole(Role.OWNER));
@@ -90,12 +90,12 @@ public class UserTest {
     public void testBuilderAttributes() {
 
         User user = new User.Builder("testiwtd")
-                .addAttribute("cn", "IamtstD1")
-                .addAttribute("givenName", "IamtstD")
+                .addAttribute("cn", "Testf-iwt-d TestIAM-faculty")
+                .addAttribute("givenName", "Testf-iwt-d")
                 .build();
 
-        assertThat(user.getAttribute("cn"), is("IamtstD1"));
-        assertThat(user.getAttribute("givenName"), is("IamtstD"));
+        assertThat(user.getAttribute("cn"), is("Testf-iwt-d TestIAM-faculty"));
+        assertThat(user.getAttribute("givenName"), is("Testf-iwt-d"));
     }
 
     @Test

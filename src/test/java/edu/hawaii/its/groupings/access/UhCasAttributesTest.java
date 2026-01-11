@@ -202,7 +202,7 @@ public class UhCasAttributesTest {
         Map<Object, Object> map = new HashMap<>();
         map.put("uid", "testiwtd");
         map.put("uhUuid", "99997043");
-        map.put("cn", "IamtstD");
+        map.put("cn", "Testf-iwt-d TestIAM-faculty");
         map.put("mail", "iamtstd@example.com");
         map.put("eduPersonAffiliation", "aff");
         UhAttributes attributes = new UhAttributes(map);
@@ -210,7 +210,7 @@ public class UhCasAttributesTest {
         assertThat(attributes.getMap().size(), is(5));
         assertThat(attributes.getUid(), is("testiwtd"));
         assertThat(attributes.getUhUuid(), is("99997043"));
-        assertThat(attributes.getName(), is("IamtstD"));
+        assertThat(attributes.getName(), is("Testf-iwt-d TestIAM-faculty"));
         assertThat(attributes.getMail().get(0), is("iamtstd@example.com"));
         assertThat(attributes.getAffiliation().get(0), is("aff"));
 

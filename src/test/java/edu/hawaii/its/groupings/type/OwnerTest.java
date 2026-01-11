@@ -19,15 +19,15 @@ public class OwnerTest {
 
     @Test
     public void construction() {
-        owner = new Owner("tst01name");
-        assertThat(owner.getPrivilegeName(), is("tst01name"));
+        owner = new Owner("Testf-iwt-a TestIAM-staff");
+        assertThat(owner.getPrivilegeName(), is("Testf-iwt-a TestIAM-staff"));
     }
 
     @Test
     public void name() {
         assertNull(owner.getName());
-        owner.setName("tst02name");
-        assertThat(owner.getName(), is("tst02name"));
+        owner.setName("Testf-iwt-b TestIAM-staff");
+        assertThat(owner.getName(), is("Testf-iwt-b TestIAM-staff"));
     }
 
     @Test
