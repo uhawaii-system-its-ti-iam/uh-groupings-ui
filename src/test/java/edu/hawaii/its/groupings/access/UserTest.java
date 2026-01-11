@@ -23,21 +23,21 @@ public class UserTest {
     public void construction() {
         Set<GrantedAuthority> authorities = new LinkedHashSet<>();
 
-        User user = new User("a", authorities);
+        User user = new User("testiwta", authorities);
         assertNotNull(user);
 
-        assertThat(user.getUid(), is("a"));
-        assertThat(user.getUid(), is("a"));
+        assertThat(user.getUid(), is("testiwta"));
+        assertThat(user.getUid(), is("testiwta"));
         assertNull(user.getUhUuid());
         assertNull(user.getAttributes());
 
         authorities = new LinkedHashSet<>();
         authorities.add(new SimpleGrantedAuthority(Role.ANONYMOUS.longName()));
-        user = new User("b", "12345", authorities);
+        user = new User("testiwtb", "99997027", authorities);
 
-        assertThat(user.getUid(), is("b"));
-        assertThat(user.getUid(), is("b"));
-        assertThat(user.getUhUuid(), is("12345"));
+        assertThat(user.getUid(), is("testiwtb"));
+        assertThat(user.getUid(), is("testiwtb"));
+        assertThat(user.getUhUuid(), is("99997027"));
         assertNull(user.getAttributes());
 
         user.setAttributes(new UhAttributes());
@@ -49,7 +49,7 @@ public class UserTest {
         Map<Object, Object> map = new HashMap<>();
         map.put("uid", "testiwtc");
         map.put("uhUuid", "99997033");
-        map.put("cn", "IamtstC1");
+        map.put("cn", "Testf-iwt-c TestIAM-staff");
         map.put("givenName", "IamtstC");
         map.put("mail", "iamtstc@example.com");
         map.put("eduPersonAffiliation", "aff");
@@ -59,7 +59,7 @@ public class UserTest {
         user.setAttributes(new UhAttributes(map));
 
         assertThat(user.getAttribute("uid"), is("testiwtc"));
-        assertThat(user.getName(), is("IamtstC1"));
+        assertThat(user.getName(), is("Testf-iwt-c TestIAM-staff"));
         assertThat(user.getGivenName(), is("IamtstC"));
         assertThat(user.toString(), containsString("uid=a"));
         assertThat(user.toString(), containsString("uhUuid=null"));
@@ -90,11 +90,11 @@ public class UserTest {
     public void testBuilderAttributes() {
 
         User user = new User.Builder("testiwtd")
-                .addAttribute("cn", "IamtstD1")
+                .addAttribute("cn", "Testf-iwt-d TestIAM-faculty")
                 .addAttribute("givenName", "IamtstD")
                 .build();
 
-        assertThat(user.getAttribute("cn"), is("IamtstD1"));
+        assertThat(user.getAttribute("cn"), is("Testf-iwt-d TestIAM-faculty"));
         assertThat(user.getAttribute("givenName"), is("IamtstD"));
     }
 

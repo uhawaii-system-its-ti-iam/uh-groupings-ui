@@ -40,7 +40,7 @@ public class EmailServiceTest {
 
     private Feedback createBaseFeedback() {
         Feedback feedback = new Feedback();
-        feedback.setName("Test Iwa");
+        feedback.setName("Testf-iwt-a TestIAM-staff");
         feedback.setEmail("testiwa@hawaii.edu");
         feedback.setType("problem");
         feedback.setMessage("Some problem happened.");
@@ -76,7 +76,7 @@ public class EmailServiceTest {
         assertTrue(wasSent);
 
         assertTrue(messageSent.getSubject().contains("problem"));
-        assertTrue(messageSent.getText().contains("Test Iwa"));
+        assertTrue(messageSent.getText().contains("Testf-iwt-a TestIAM-staff"));
         assertTrue(messageSent.getText().contains("testiwa@hawaii.edu"));
         assertTrue(messageSent.getText().contains("Some problem happened."));
         assertFalse(messageSent.getText().contains("Stack Trace:"));
@@ -91,7 +91,7 @@ public class EmailServiceTest {
         assertTrue(wasSent);
 
         assertTrue(messageSent.getSubject().contains("problem"));
-        assertTrue(messageSent.getText().contains("Test Iwa"));
+        assertTrue(messageSent.getText().contains("Testf-iwt-a TestIAM-staff"));
         assertTrue(messageSent.getText().contains("testiwa@hawaii.edu"));
         assertTrue(messageSent.getText().contains("Some problem happened."));
         assertTrue(messageSent.getText().contains("Stack Trace:"));
