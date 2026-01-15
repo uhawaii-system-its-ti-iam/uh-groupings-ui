@@ -15,6 +15,7 @@
                 <div class="panel-body">
                     <div class="border my-3 px-3 pb-1 pt-2 h-50 alert-danger " role="alert">User was sent to feedback page due to an unexpected error</div>
                     <form class="form-horizontal" action="#" th:action="@{/templates/feedback}" th:object="${feedback}" method="post">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                         <div class="form-group">
                             <label for="typeField" class="col-sm-2 control-label">Feedback Type:</label>
                             <div class="col-sm-10">
