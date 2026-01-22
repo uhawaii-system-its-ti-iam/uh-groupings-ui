@@ -213,7 +213,8 @@ public class SecurityConfig {
                 .addFilterBefore(logoutFilter(), LogoutFilter.class)
                 .exceptionHandling((exception) -> exception.authenticationEntryPoint(casProcessingFilterEntryPoint()))
                 .csrf((csrf) -> csrf
-                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
+                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                        .ignoringRequestMatchers(antMatcher("/api/**")))
                 .logout((logout) -> logout
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")

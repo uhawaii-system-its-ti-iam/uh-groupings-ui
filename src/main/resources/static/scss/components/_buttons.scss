@@ -65,6 +65,12 @@ form.seamless button {
         }
     }
 
+    &.btn-secondary {
+        font-size: 20px;
+        min-width: 44px;
+        min-height: 44px;
+    }
+
     &.btn-bottom { /* Buttons for membership, admin, owner in home page */
         min-width: 44px;
         min-height: 44px;
@@ -185,3 +191,8 @@ form.seamless button {
     min-height: 44px;
 }
 
+.modal-footer .btn-primary {
+    font-size: 20px;
+    min-width: 44px;
+    min-height: 44px;
+}
