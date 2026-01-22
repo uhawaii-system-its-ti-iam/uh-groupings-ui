@@ -34,12 +34,14 @@
                     <p class="lead" th:utext="#{screen.message.home.page.leadDescription}"></p>
                     <div sec:authorize="!isAuthenticated()">
                         <form action="/login" th:action="@{/login}" method="post">
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                             <button class="btn btn-lg dark-teal-bg" role="button">Login Here</button>
                         </form>
 
                     </div>
                     <div sec:authorize="isAuthenticated()">
                         <form action="/logout" th:action="@{/logout}" method="post">
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                             <button class="btn btn-lg dark-teal-bg" type="submit">Logout</button>
                         </form>
                     </div>

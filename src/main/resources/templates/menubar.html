@@ -52,6 +52,7 @@
                 </li>
                 <li class="nav-item" sec:authorize="isAuthenticated()" th:if="${!@realm.isOotb()}">
                     <form action="/logout" th:action="@{/logout}" method="post">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                         <div class="dropdown-divider d-block d-lg-none pb-3"></div>
                         <button class="btn btn-outline-secondary btn-v-align text-nowrap" type="submit">Logout (<span
                                 sec:authentication="name" id="name"></span>)

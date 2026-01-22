@@ -18,6 +18,7 @@
             </div>
             <div class="col-lg-7 col-md-8 col-12">
             <form th:action="@{/feedback}" th:object="${feedback}" method="post" ng-submit="checkEmail($event)" >
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                 <div class="form-group pb-3" id="typeError">
                     <label for="input-type">Feedback type:
                         <span class="required-asterisk">*</span>
