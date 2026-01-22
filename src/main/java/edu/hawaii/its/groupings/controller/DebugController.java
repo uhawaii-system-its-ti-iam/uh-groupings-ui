@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import edu.hawaii.its.groupings.access.UserContextService;
 import edu.hawaii.its.groupings.service.JwtService;
 
-@Profile({"test", "localhost", "localTest"})
+@Profile({"localhost", "localTest"})
 @RestController
 public class DebugController {
 
