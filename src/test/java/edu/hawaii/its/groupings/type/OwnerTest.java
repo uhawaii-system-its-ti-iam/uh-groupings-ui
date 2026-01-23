@@ -19,15 +19,15 @@ public class OwnerTest {
 
     @Test
     public void construction() {
-        owner = new Owner("Test I Wa");
-        assertThat(owner.getPrivilegeName(), is("Test I Wa"));
+        owner = new Owner("Testf-iwt-a TestIAM-staff");
+        assertThat(owner.getPrivilegeName(), is("Testf-iwt-a TestIAM-staff"));
     }
 
     @Test
     public void name() {
         assertNull(owner.getName());
-        owner.setName("imtsta");
-        assertThat(owner.getName(), is("imtsta"));
+        owner.setName("Testf-iwt-b TestIAM-staff");
+        assertThat(owner.getName(), is("Testf-iwt-b TestIAM-staff"));
     }
 
     @Test
@@ -40,15 +40,15 @@ public class OwnerTest {
     @Test
     public void uhUuid() {
         assertNull(owner.getUhUuid());
-        owner.setUhUuid("uhUuid");
-        assertThat(owner.getUhUuid(), is("uhUuid"));
+        owner.setUhUuid("99997010");
+        assertThat(owner.getUhUuid(), is("99997010"));
     }
 
     @Test
     public void uid() {
         assertNull(owner.getUid());
-        owner.setUid("uid");
-        assertThat(owner.getUid(), is("uid"));
+        owner.setUid("testiwta");
+        assertThat(owner.getUid(), is("testiwta"));
     }
 
     @Test

@@ -121,29 +121,29 @@ describe("TableController", () => {
                     $$hashKey: "random",
                     firstName: "Iwc",
                     lastName: "Iamtst",
-                    uid: "tiwc",
-                    uhUuid: "12345678"
+                    uid: "testiwtc",
+                    uhUuid: "99997033"
                 },
                 {
                     $$hashKey: "random",
                     firstName: "Iwd",
                     lastName: "Iamtst",
-                    uid: "iamd",
-                    uhUuid: "23456789"
+                    uid: "testiwtd",
+                    uhUuid: "99997043"
                 },
                 {
                     $$hashKey: "something",
                     firstName: "E",
                     lastName: "Testiw",
-                    uid: "te",
-                    uhUuid: "65478912"
+                    uid: "testiwte",
+                    uhUuid: "99997056"
                 },
                 {
                     $$hashKey: "another",
                     firstName: "Iwb",
                     lastName: "IamtstIW",
-                    uid: "iwb",
-                    uhUuid: "72897556"
+                    uid: "testiwtb",
+                    uhUuid: "99997027"
                 }
             ];
             scope.itemsPerPage = 1;
@@ -152,7 +152,7 @@ describe("TableController", () => {
         });
 
         it("should return entries where any property value matches the query", () => {
-            scope.filter(scope.items, "pagedItems", "currentPage", "iamd", true);
+            scope.filter(scope.items, "pagedItems", "currentPage", "testiwtd", true);
 
             expect(scope.pagedItems.length).toEqual(1);
 
@@ -177,13 +177,13 @@ describe("TableController", () => {
         it("should call groupToPages so the table is repaginated", () => {
             spyOn(scope, "groupToPages").and.callThrough();
 
-            scope.filter(scope.items, "pagedItems", "currentPage", "iamd", true);
+            scope.filter(scope.items, "pagedItems", "currentPage", "testiwtd", true);
 
             expect(scope.groupToPages).toHaveBeenCalled();
         });
 
         it("should reset the page number to 0", () => {
-            scope.filter(scope.items, "pagedItems", "currentPage", "iamd", true);
+            scope.filter(scope.items, "pagedItems", "currentPage", "testiwtd", true);
 
             expect(scope.currentPage).toEqual(0);
         });

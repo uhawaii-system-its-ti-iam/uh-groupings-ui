@@ -59,14 +59,14 @@ public class JsonUtilTest {
     public void testAsList() {
 
         Feedback fb1 = new Feedback();
-        fb1.setName("testiwa");
+        fb1.setName("Testf-iwt-a TestIAM-staff");
         fb1.setEmail("testiwa@hawaii.edu");
         fb1.setType("general");
         fb1.setMessage("Hello World");
         fb1.setExceptionMessage(null);
 
         Feedback fb2 = new Feedback();
-        fb2.setName("testiwb");
+        fb2.setName("Testf-iwt-b TestIAM-staff");
         fb2.setEmail("testiwb@hawaii.edu");
         fb2.setType("support");
         fb2.setMessage("Goodbye World");

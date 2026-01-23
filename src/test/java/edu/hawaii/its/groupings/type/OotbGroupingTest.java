@@ -63,13 +63,13 @@ public class OotbGroupingTest {
     @Test
     public void members() {
         assertNull(grouping.getMembers());
-        OotbMember member1 = new OotbMember("Member One", "11111111", "member1");
-        OotbMember member2 = new OotbMember("Member Two", "22222222", "member2");
+        OotbMember member1 = new OotbMember("Testf-iwt-a TestIAM-staff", "99997010", "testiwta");
+        OotbMember member2 = new OotbMember("Testf-iwt-b TestIAM-staff", "99997027", "testiwtb");
         List<OotbMember> members = Arrays.asList(member1, member2);
         grouping.setMembers(members);
         assertNotNull(grouping.getMembers());
         assertThat(grouping.getMembers().size(), is(2));
-        assertThat(grouping.getMembers().get(0).getName(), is("Member One"));
-        assertThat(grouping.getMembers().get(1).getName(), is("Member Two"));
+        assertThat(grouping.getMembers().get(0).getName(), is("Testf-iwt-a TestIAM-staff"));
+        assertThat(grouping.getMembers().get(1).getName(), is("Testf-iwt-b TestIAM-staff"));
     }
 }
