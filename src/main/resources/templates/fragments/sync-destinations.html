@@ -21,7 +21,7 @@
                                 {{ syncDest.description }}
                             </label>
                             <span class="fa fa-question-circle" role="button"
-                                  title="This option syncs destinations to {{ syncDest.description }}"
+                                  title="This option syncs destinations to {{ syncDest.description }}. Owners are automatically added to the corresponding LISTSERV list as editors. On lists set to Send=Editor, editors are allowed to post directly to the list without moderation/approval."
                                   tooltip="{{syncDest.tooltip}}" data-placement="right"
                                   tabindex="0"
                                   th:attr="ng-click='displayDynamicModal(\'Sync Destinations Information\', ' + 'syncDest.tooltip)', ng-keypress='$event.keyCode === 13 ? displayDynamicModal(\'Sync Destinations ' +    'Information\', syncDest.tooltip) : null'">
