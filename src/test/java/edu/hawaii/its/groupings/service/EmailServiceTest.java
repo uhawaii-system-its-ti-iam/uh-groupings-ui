@@ -22,7 +22,7 @@ import edu.hawaii.its.groupings.type.Feedback;
 
 @ActiveProfiles("localTest")
 @SpringBootTest(classes = { SpringBootWebApplication.class })
-public class EmailServiceTest {
+pubEmailServiceTest {
 
     private static boolean wasSent;
 
