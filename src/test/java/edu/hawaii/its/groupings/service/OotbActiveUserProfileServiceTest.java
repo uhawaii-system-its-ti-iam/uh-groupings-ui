@@ -39,36 +39,39 @@ class OotbActiveUserProfileServiceTest {
     @MockBean
     private OotbHttpRequestService ootbHttpRequestService;
 
+    private static final String ADMIN_UID = "testiwta";
+    private static final String ADMIN_UH_UUID = "99997010";
+
     @BeforeEach
     public void setUp() {
 
         when(ootbHttpRequestService.makeApiRequestWithActiveProfileBody(any(), any(), any(), any()))
                 .thenReturn(null);
 
-        List<String> availableProfiles = List.of("admin0123");
+        List<String> availableProfiles = List.of(ADMIN_UID);
 
         UhAttributes mockAttributes = mock(UhAttributes.class);
-        when(mockAttributes.getValue("givenName")).thenReturn("admin0123");
+        when(mockAttributes.getValue("givenName")).thenReturn(ADMIN_UID);
         when(mockAttributes.getValue("cn")).thenReturn("AdminUser");
 
-        User user = new User.Builder("admin0123")
-                .uhUuid("33333333")
+        User user = new User.Builder(ADMIN_UID)
+                .uhUuid(ADMIN_UH_UUID)
                 .addAuthorities(List.of("ROLE_UH", "ROLE_OWNER", "ROLE_ADMIN"))
-                .addAttribute("givenName", "admin0123")
+                .addAttribute("givenName", ADMIN_UID)
                 .build();
 
         user.setAttributes(mockAttributes);
 
         Map<String, OotbActiveProfile> activeProfiles = new HashMap<>();
         OotbActiveProfile adminProfile = mock(OotbActiveProfile.class);
-        activeProfiles.put("admin0123", adminProfile);
+        activeProfiles.put(ADMIN_UID, adminProfile);
 
-        when(ootbActiveUserProfileService.findGivenNameForAdminRole()).thenReturn("admin0123");
-        when(ootbActiveUserProfileService.loadUserByUsername("admin0123")).thenReturn(user);
+        when(ootbActiveUserProfileService.findGivenNameForAdminRole()).thenReturn(ADMIN_UID);
+        when(ootbActiveUserProfileService.loadUserByUsername(ADMIN_UID)).thenReturn(user);
         when(ootbActiveUserProfileService.loadUserByUsername("NON_EXISTENT"))
                 .thenThrow(new UsernameNotFoundException("User not found"));
         when(ootbActiveUserProfileService.getAvailableProfiles()).thenReturn(availableProfiles);
-        when(ootbActiveUserProfileService.getUsers()).thenReturn(Map.of("admin0123", user));
+        when(ootbActiveUserProfileService.getUsers()).thenReturn(Map.of(ADMIN_UID, user));
         when(ootbActiveUserProfileService.getActiveProfiles()).thenReturn(activeProfiles);
     }
 
@@ -80,8 +83,8 @@ class OotbActiveUserProfileServiceTest {
         assertNotNull(userDetails, "UserDetails should not be null");
 
         assertNotNull(user, "User should not be null");
-        assertEquals("admin0123", user.getUid(), "Username should match");
-        assertEquals("33333333", user.getUhUuid(), "UhUuid should match");
+        assertEquals(ADMIN_UID, user.getUid(), "Username should match");
+        assertEquals(ADMIN_UH_UUID, user.getUhUuid(), "UhUuid should match");
         assertEquals(3, user.getAuthorities().size(), "Should have 3 authorities");
     }
 

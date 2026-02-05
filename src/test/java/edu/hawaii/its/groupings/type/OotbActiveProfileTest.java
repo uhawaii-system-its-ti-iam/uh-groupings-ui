@@ -30,15 +30,15 @@ public class OotbActiveProfileTest {
     @Test
     public void uid() {
         assertNull(profile.getUid());
-        profile.setUid("123456");
-        assertThat(profile.getUid(), is("123456"));
+        profile.setUid("testiwta");
+        assertThat(profile.getUid(), is("testiwta"));
     }
 
     @Test
     public void uhUuid() {
         assertNull(profile.getUhUuid());
-        profile.setUhUuid("ABCDEF");
-        assertThat(profile.getUhUuid(), is("ABCDEF"));
+        profile.setUhUuid("99997010");
+        assertThat(profile.getUhUuid(), is("99997010"));
     }
 
     @Test

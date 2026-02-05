@@ -246,7 +246,7 @@ describe("GroupingsService", () => {
     });
 
     describe("updateOotbActiveProfile", () => {
-        let profile = "testProfile"; // Example profile for testing
+        let profile = "testiwta";
 
         it("should call dataProvider.updateData", () => {
             spyOn(dp, "updateData"); // Spy on the updateData method
@@ -610,7 +610,7 @@ describe("GroupingsService", () => {
             gs.updateSyncDest(groupingPath, syncDestId, turnOn, onSuccess, onError);
             expect(dp.updateData).toHaveBeenCalled();
         });
-        
+
         it("should use the correct path for enable", () => {
             gs.updateSyncDest(groupingPath, syncDestId, true, onSuccess, onError);
             httpBackend.expectPOST(BASE_URL + "groupings/" + groupingPath + "/syncDests/" + syncDestId + "/true").respond(200);
@@ -632,9 +632,9 @@ describe("GroupingsService", () => {
         });
 
         it("should use the correct path", () => {
-            let groupingPath = "some-path";
+            let groupingPath = "tmp:tst01name:groupPath01";
             gs.groupingOwners(groupingPath, onSuccess, onError);
-            httpBackend.expectGET(BASE_URL + "grouping/some-path/owners").respond(200);
+            httpBackend.expectGET(BASE_URL + "grouping/tmp:tst01name:groupPath01/owners").respond(200);
             expect(httpBackend.flush).not.toThrow();
         });
     });
@@ -681,19 +681,17 @@ describe("GroupingsService", () => {
     describe("getNumberOfGroupingMembers", () => {
         it("should call dataProvider.loadData", () => {
             spyOn(dp, "loadData");
-            const groupingPath = "some-path";
+            const groupingPath = "tmp:tst01name:groupPath01";
             gs.getNumberOfGroupingMembers(groupingPath, onSuccess, onError);
             expect(dp.loadData).toHaveBeenCalled();
         });
         it("should use the correct path", () => {
-            const groupingPath = "some-path";
+            const groupingPath = "tmp:tst01name:groupPath01";
             gs.getNumberOfGroupingMembers(groupingPath, onSuccess, onError);
             httpBackend.expectGET(BASE_URL + "groupings/" + groupingPath + "/count").respond(200);
             expect(httpBackend.flush).not.toThrow();
         });
     });
-
-
 
     describe("encodeParameterizedQueryString", () => {
         it("should encode a parameterized query string", () => {
