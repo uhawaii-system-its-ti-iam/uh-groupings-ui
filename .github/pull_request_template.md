@@ -15,4 +15,4 @@
 - [ ] Project Jasmine Tests Passed:
 - [ ] Executes Expected Functionality:
 - [ ] Tested For Incorrect/Unexpected Inputs:
-
+- [ ] Checked For ADA Compliance:
