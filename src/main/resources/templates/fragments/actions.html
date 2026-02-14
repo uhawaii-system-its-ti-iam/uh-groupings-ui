@@ -54,9 +54,9 @@
 
               <div class="col-md-8">
                   <div class="pt-2 mb-0">
-                      <h5 class="font-weight-bold text-dark mb-1">
+                      <h3 class="font-weight-bold text-dark mb-1">
                           Duplicate Owners ({{ compareOwnerGroupingsResultsCount || 0 }})
-                      </h5>
+                      </h3>
                   </div>
 
                   <div class="spinner-border ml-1 d-inline-block"
@@ -84,15 +84,15 @@
                       </tr>
                       </thead>
                       <tbody>
-                      <tr ng-repeat="(uuid, data) in compareOwnerGroupingsResults"
+                      <tr ng-repeat="(uhUuid, data) in compareOwnerGroupingsResults"
                           class="table table-sm">
 
                           <td class="overflow-auto py-1 px-3">
-                              {{ data.name[0] }}
+                              {{ data.name }}
                           </td>
 
                           <td class="overflow-auto py-1 px-3">
-                              {{ data.uid[0] }}
+                              {{ data.uid }}
                           </td>
 
                           <td class="overflow-auto py-1 px-3">

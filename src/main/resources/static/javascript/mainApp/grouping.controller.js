@@ -332,15 +332,12 @@
          */
         $scope.fetchCompareOwnerGroupings = (groupPath) => {
             return new Promise((resolve) => {
-                $scope.compareLoading = true;
-
                 groupingsService.compareOwnerGroupings(
                     groupPath,
                     (res) => {
                         $scope.compareOwnerGroupingsResults = res;
                         $scope.compareOwnerGroupingsResultsCount =
                             Object.keys($scope.compareOwnerGroupingsResults).length;
-                        $scope.compareLoading = false;
                         resolve();
                     },
                 );

@@ -313,6 +313,13 @@ describe("GroupingController", () => {
         });
     });
 
+    describe("fetchCompareOwnerGroupings", () => {
+        it("should call compareOwnerGroupings", () => {
+            spyOn(gs, "compareOwnerGroupings").and.callThrough();
+            scope.fetchOwners().then((res) => expect(gs.compareOwnerGroupings).toHaveBeenCalled());
+        });
+    });
+
     // For reference (in index order):
     // Members: User One, User Two, User Three, User Seven, User Eight
     // Basis: User One, User Four, User Seven

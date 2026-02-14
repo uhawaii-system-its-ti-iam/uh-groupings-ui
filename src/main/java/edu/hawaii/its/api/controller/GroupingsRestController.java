@@ -510,7 +510,7 @@ public class GroupingsRestController {
     }
 
     /**
-     * Get all duplicated owners in a grouping.
+     * Get all duplicated owners in a grouping, and their sources of ownership.
      * (Either both a direct owner and indirect owner, or multiple indirect owners via different owner-groupings.)
      */
     @GetMapping(value = "/groupings/{path:[\\w-:.]+}/owners/compare")
