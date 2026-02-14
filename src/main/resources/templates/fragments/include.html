@@ -14,8 +14,9 @@
                         class="fa fa-check" aria-hidden="true"></i></p>
             </div>
             <div class="col-md-4 py-2">
-                <input placeholder="Filter Members..." type="text" title="Filter Members"
-                       ng-model="includeQuery" class="form-control" aria-label="Filter Members..."
+                <input class="form-control" placeholder="Filter Members..." type="text"
+                       title="Filter Members" tabindex="-1"
+                       ng-model="includeQuery"
                        ng-change="filter(groupingInclude, 'pagedItemsInclude', 'currentPageInclude', includeQuery, true)"/>
             </div>
         </div>
@@ -26,7 +27,7 @@
                 <tr>
                     <th scope="col" class="ml-1 align-top" aria-label="Check all checkboxes">
                         <input class="position-relative ml-1" type="checkbox"
-                               aria-label="Select all checkboxes in the current page"
+                               tabindex="-1" aria-label="Select all checkboxes in the current page"
                                ng-model="pageSelected"
                                ng-disabled="groupingInclude.length === 0"
                                id="include-checkbox-page"
@@ -73,10 +74,9 @@
                 <tr ng-repeat="member in pagedItemsInclude[currentPageInclude]" class="table table-sm">
                     <td class="overflow-auto py-1 px-3">
                         <input class="position-relative ml-0 blank-checkbox" type="checkbox"
-                               tabindex="0"
-                               aria-label="Remove {{member.name}} from the include."
-                               ng-model="membersInCheckboxList[member.uhUuid]"
+                               tabindex="-1" aria-label="Remove {{member.name}} from the include."
                                id="{{'include-checkbox-' + member.uhUuid}}"
+                               ng-model="membersInCheckboxList[member.uhUuid]"
                                ng-keypress="toggleSingleCheckbox('Include', member, $event.keyCode)"
                                ng-click="toggleSingleCheckbox('Include', member, $event.keyCode)">
                     </td>
@@ -92,7 +92,7 @@
                             </span>
                             <span class="far fa-trash-alt fa-pull-right clickable pt-1" role="button"
                                   tooltip data-placement="top"
-                                  tabindex="0" aria-label="Remove {{member.name}} from the Include list"
+                                  tabindex="-1" aria-label="Remove {{member.name}} from the Include list"
                                   th:title="#{screen.message.common.tooltip.remove.include}"
                                   ng-keypress="$event.keyCode === 13 ? removeMemberWithTrashcan('Include', currentPageInclude, $index) : null"
                                   ng-click="removeMemberWithTrashcan('Include', currentPageInclude, $index)">
@@ -121,24 +121,25 @@
                 <form>
                     <div class="input-group long">
                         <div class="memSearch">
-                            <input class="form-control" placeholder="UH Username or UH Number" type="search"
+                            <input class="form-control" placeholder="UH Username or UH Number" type="search" title="Enter one or more UH members"
+                                   tabindex="-1" aria-label="Enter one or more UH members to add to the Include list"
                                    ng-init="dismissErrors()"
                                    ng-blur="dismissErrors()"
-                                   title="Enter one or more UH members" ng-model="manageMembers"
-                                   aria-label="Enter one or more UH members to add to the Include list"
+                                   ng-model="manageMembers"
                             />
                         </div>
                         <div class="memBtns">
-                            <button class="btn btn-primary btn-grouping add-margin"
+                            <button class="btn btn-primary btn-grouping add-margin" tabindex="-1" aria-label="Add"
                                     ng-click="addOnClick('Include')">
                                 Add
                             </button>
-                            <button class="btn btn-remove btn-grouping"
+                            <button class="btn btn-remove btn-grouping" tabindex="-1" aria-label="Remove"
                                     ng-blur="dismissErrors()"
                                     ng-click="removeOnClick('Include')">
                                 Remove
                             </button>
-                            <button class="btn btn-primary btn-grouping" ng-click="displayImportModal('Include')">
+                            <button class="btn btn-primary btn-grouping" tabindex="-1" aria-label="Import File"
+                                    ng-click="displayImportModal('Include')">
                                 Import File
                             </button>
                             <div class="spinner-border spinner-border-sm d-inline-block"

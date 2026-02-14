@@ -16,8 +16,10 @@
                 </div>
             </div>
             <div class="col-md-4 py-2">
-                <input placeholder="Filter Members..." type="text" title="Filter Members"
+                <input placeholder="Filter Members..." type="text" title="Filter Members" tabindex="-1"
                        ng-model="ownersQuery" class="form-control" aria-label="Filter Members..."
+
+
                        ng-change="filter(groupingOwners, 'pagedItemsOwners', 'currentPageOwners', ownersQuery, true)"/>
             </div>
         </div>
@@ -68,7 +70,7 @@
                                   style="margin-right: 1.85rem"
                                   role="button"
                                   tooltip data-placement="top"
-                                  tabindex="0" aria-label="Remove {{owner.name}} from the Owner members list"
+                                  tabindex="-1" aria-label="Remove {{owner.name}} from the Owner members list"
                                   th:title="#{screen.message.common.tooltip.remove.owner}"
                                   ng-keypress="$event.keyCode === 13 ? removeOwnerWithTrashcan(currentPageOwners, $index) : null"
                                   ng-click="removeOwnerWithTrashcan(currentPageOwners, $index)">
@@ -97,6 +99,7 @@
                         <span ng-if="groupingOwners.length === 1">
                             <span class="far fa-trash-alt fa-pull-right pt-1 fa-trash-alt-disabled" role="button"
                                   tooltip data-placement="top"
+                                  tabindex="-1"
                                   aria-label="The last owner cannot be removed from the Owner members list"
                                   th:title="#{screen.message.common.tooltip.remove.warning}">
                             </span>
@@ -121,7 +124,7 @@
                 <form>
                     <div class="input-group long">
                         <div class="memSearch">
-                            <input class="form-control" placeholder="UH Username or UH Number" type="search"
+                            <input class="form-control" placeholder="UH Username or UH Number" type="search" tabindex="-1"
                                    ng-init="dismissErrors()" aria-required="true"
                                    ng-blur="dismissErrors()"
                                    title="Enter one or more UH members"
@@ -130,11 +133,11 @@
                                    id="owner-input"/>
                         </div>
                         <div class="memBtns">
-                            <button class="btn btn-primary btn-grouping add-margin"
+                            <button class="btn btn-primary btn-grouping add-margin" tabindex="-1" aria-label="Add"
                                     ng-click="addOnClick('owners')">
                                 Add
                             </button>
-                            <button class="btn btn-remove btn-grouping add-margin"
+                            <button class="btn btn-remove btn-grouping add-margin" tabindex="-1" aria-label="Remove"
                                     ng-blur="dismissErrors()"
                                     ng-click="removeOnClick('owners')">
                                 Remove

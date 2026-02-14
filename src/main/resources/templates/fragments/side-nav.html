@@ -5,21 +5,21 @@
         <li class="pr-0 pl-0 mt-1 mx-auto" tooltip data-placement="right"
             th:title="#{screen.message.common.tooltip.nav.members}">
             <a data-toggle="tab" href="#all" class="nav-link rounded-circle d-flex align-items-center justify-content-center active"
-               aria-label="All Members" ng-click="resetFields()">
+               tabindex="-1" aria-label="All Members" ng-click="resetFields()">
                 <i class="fa fa-users" aria-hidden="true"></i>
             </a>
         </li>
         <li class="pr-0 pl-0 mt-1 mx-auto pt-0" tooltip data-placement="right"
             th:title="#{screen.message.common.tooltip.nav.basis}">
             <a data-toggle="tab" href="#basis" class="nav-link rounded-circle d-flex align-items-center justify-content-center"
-               aria-label="Basis Members" ng-click="resetFields()">
+               tabindex="-1" aria-label="Basis Members" ng-click="resetFields()">
                 <i class="far fa-id-card" aria-hidden="true"></i>
             </a>
         </li>
         <li class="pr-0 pl-0 mt-1 mx-auto pt-0" tooltip data-placement="right"
             th:title="#{screen.message.common.tooltip.nav.include}">
             <a data-toggle="tab" href="#include" class="nav-link rounded-circle d-flex align-items-center justify-content-center"
-               aria-label="Include Members" ng-click="resetFields();
+               tabindex="-1" aria-label="Include Members" ng-click="resetFields();
                  transferMembersFromPageToCheckboxObject(groupingInclude)">
                 <i class="fas fa-user-plus" aria-hidden="false"></i>
             </a>
@@ -27,7 +27,7 @@
         <li class="pr-0 pl-0 mt-1 mx-auto pt-0" tooltip data-placement="right"
             th:title="#{screen.message.common.tooltip.nav.exclude}">
             <a data-toggle="tab" href="#exclude" class="nav-link rounded-circle d-flex align-items-center justify-content-center"
-               aria-label="Exclude Members" ng-click="resetFields();
+               tabindex="-1" aria-label="Exclude Members" ng-click="resetFields();
                  transferMembersFromPageToCheckboxObject(groupingExclude)">
                 <i class="fas fa-user-minus" aria-hidden="true"></i>
             </a>
@@ -35,28 +35,28 @@
         <li class="pr-0 pl-0 mt-1 mx-auto pt-0" tooltip data-placement="right"
             th:title="#{screen.message.common.tooltip.nav.owners}">
             <a data-toggle="tab" href="#owners" class="nav-link rounded-circle d-flex align-items-center justify-content-center"
-               aria-label="Grouping Owners" ng-click="resetFields()">
+               tabindex="-1" aria-label="Grouping Owners" ng-click="resetFields()">
                 <i class="fa fa-crown fa-fw" aria-hidden="true"></i>
             </a>
         </li>
         <li class="pr-0 pl-0 mt-1 mx-auto pt-0" tooltip data-placement="right"
             th:title="#{screen.message.common.tooltip.nav.sync-destinations}">
             <a data-toggle="tab" href="#sync-destinations" class="nav-link rounded-circle d-flex align-items-center justify-content-center"
-               aria-label="Sync Destinations">
+               tabindex="-1" aria-label="Sync Destinations">
                 <i class="fa fa-share-alt fa-fw" aria-hidden="true"></i>
             </a>
         </li>
         <li class="pr-0 pl-0 mt-1 mx-auto pt-0" tooltip data-placement="right"
             th:title="#{screen.message.common.tooltip.nav.preferences}">
             <a data-toggle="tab" href="#preferences" class="nav-link rounded-circle d-flex align-items-center justify-content-center"
-               aria-label="Preferences">
+               tabindex="-1" aria-label="Preferences">
                 <i class="fa fa-cog fa-fw" aria-hidden="true"></i>
             </a>
         </li>
         <li class="pr-0 pl-0 mt-1 mx-auto pt-0" tooltip data-placement="right"
             th:title="#{screen.message.common.tooltip.nav.actions}">
             <a data-toggle="tab" href="#actions" class="nav-link rounded-circle d-flex align-items-center justify-content-center"
-               aria-label="Actions">
+               tabindex="-1" aria-label="Actions">
                 <i class="fas fa-tools fa-fw" aria-hidden="true"></i>
             </a>
         </li>
