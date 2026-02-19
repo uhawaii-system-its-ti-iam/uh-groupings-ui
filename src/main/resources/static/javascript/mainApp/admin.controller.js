@@ -29,6 +29,7 @@
         $scope.allGroupingsLoading = false;
         $scope.userGroupingInformationLoading = false;
         $scope.loadingOwners = false;
+        $scope.owners = [];
 
         let PAGE_SIZE = 20;
 
@@ -428,12 +429,26 @@
             $scope.loadingOwners = false;
             $scope.owners = [];
 
-            res.members.forEach((member) => {
-                $scope.owners.push({
-                    name: member.name,
-                    uid: member.uid,
-                    uhUuid: member.uhUuid
-                });
+            // The API returns owners in res.owners property, which contains a members array
+            let members = [];
+
+            if (res?.owners?.members && Array.isArray(res.owners.members)) {
+                members = res.owners.members;
+            } else if (res?.members && Array.isArray(res.members)) {
+                // Fallback for other formats
+                members = res.members;
+            }
+
+            members.forEach((member) => {
+                // Filter out owner-groupings: only show people (names without colons)
+                // Owner-groupings have colons in their names (e.g., "group:name:owners")
+                if (member.name && !member.name.includes(":")) {
+                    $scope.owners.push({
+                        name: member.name,
+                        uid: member.uid,
+                        uhUuid: member.uhUuid
+                    });
+                }
             });
 
             $scope.displayGroupingOwnersModal();
