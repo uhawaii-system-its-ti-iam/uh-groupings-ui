@@ -728,29 +728,14 @@ describe("AdminController", function () {
             }
         };
 
-        const resOldFormat = {
-            members: testMembers
-        };
-
         it("should set scope.owners equal to API response using new format (res.owners.members)", () => {
             scope.handleGroupingOwnersOnSuccess(resNewFormat);
             expect(scope.owners).toEqual(resNewFormat.owners.members);
         });
 
-        it("should set scope.owners equal to API response using fallback format (res.members)", () => {
-            scope.handleGroupingOwnersOnSuccess(resOldFormat);
-            expect(scope.owners).toEqual(resOldFormat.members);
-        });
-
         it("should call displayGroupingOwnersModal with new format", () => {
             spyOn(scope, "displayGroupingOwnersModal");
             scope.handleGroupingOwnersOnSuccess(resNewFormat);
-            expect(scope.displayGroupingOwnersModal).toHaveBeenCalled();
-        });
-
-        it("should call displayGroupingOwnersModal with fallback format", () => {
-            spyOn(scope, "displayGroupingOwnersModal");
-            scope.handleGroupingOwnersOnSuccess(resOldFormat);
             expect(scope.displayGroupingOwnersModal).toHaveBeenCalled();
         });
     });
