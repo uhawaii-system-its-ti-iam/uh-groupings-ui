@@ -429,16 +429,9 @@
             $scope.loadingOwners = false;
             $scope.owners = [];
 
-            // The API returns owners in res.owners property, which contains a members array
-            let members = [];
-
-            if (res?.owners?.members && Array.isArray(res.owners.members)) {
-                members = res.owners.members;
-            } else if (res?.members && Array.isArray(res.members)) {
-                // Fallback for other formats
-                members = res.members;
-            }
-
+            // The API returns owners in res.owners.members (see grouping.controller.js line 281).
+            // Other response formats (e.g., res.members) are no longer supported here.
+            const members = Array.isArray(res?.owners?.members) ? res.owners.members : [];
             members.forEach((member) => {
                 // Filter out owner-groupings: only show people (names without colons)
                 // Owner-groupings have colons in their names (e.g., "group:name:owners")
