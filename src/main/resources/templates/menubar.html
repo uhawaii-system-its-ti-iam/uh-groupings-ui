@@ -3,7 +3,7 @@
 <nav class="navbar fixed-top navbar-expand-lg navbar-light border-bottom pt-2 pb-2" th:fragment="copy"
      ng-controller="GeneralJsController">
     <div class="container">
-        <a class="navbar-brand align-items-center" th:href="@{/}">
+        <a class="navbar-brand align-items-center" tabindex="-1" th:href="@{/}">
             <img class="img-fluid"
                  alt="UH Groupings Logo"
                  th:srcset="@{images/uh-groupings-logo.png 1x, images/uh-groupings-logo-2x.png 2x, images/uh-groupings-logo.svg}"
@@ -27,34 +27,34 @@
             <ul class="navbar-nav">
                 <li class="nav-item" sec:authorize="hasAuthority('ROLE_ADMIN')">
                     <div class="dropdown-divider d-block d-lg-none"></div>
-                    <a class="nav-link" th:href="@{/admin}">Admin</a>
+                    <a class="nav-link" tabindex="-1" aria-label="Admin Tab" th:href="@{/admin}">Admin</a>
                 </li>
                 <li class="nav-item" sec:authorize="hasAuthority('ROLE_UH')">
                     <div class="dropdown-divider d-block d-lg-none"></div>
-                    <a class="nav-link" th:href="@{/memberships}">Memberships</a>
+                    <a class="nav-link" tabindex="-1" aria-label="Memberships Tab" th:href="@{/memberships}">Memberships</a>
                 </li>
                 <li class="nav-item" sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_OWNER')">
                     <div class="dropdown-divider d-block d-lg-none"></div>
-                    <a class="nav-link" th:href="@{/groupings}">Groupings</a>
+                    <a class="nav-link" tabindex="-1" aria-label="Groupings Tab" th:href="@{/groupings}">Groupings</a>
                 </li>
                 <li class="nav-item">
                     <div class="dropdown-divider d-block d-lg-none"></div>
-                    <a class="nav-link" th:href="@{/about}">About</a>
+                    <a class="nav-link" tabindex="-1" aria-label="About Tab" th:href="@{/about}">About</a>
                 </li>
                 <li class="nav-item" sec:authorize="hasAuthority('ROLE_UH')">
                     <div class="dropdown-divider d-block d-lg-none"></div>
-                    <a class="nav-link" th:href="@{/feedback}">Feedback</a>
+                    <a class="nav-link" tabindex="-1" aria-label="Feedback Tab" th:href="@{/feedback}">Feedback</a>
                 </li>
                 <li class="nav-item" sec:authorize="!isAuthenticated()">
                     <div class="dropdown-divider d-block d-lg-none pb-3"></div>
-                    <a class="btn btn-primary btn-v-align login" th:href="@{/login}">Login
+                    <a class="btn btn-primary btn-v-align login" tabindex="-1" aria-label="Login" th:href="@{/login}">Login
                         <i class="fas fa-sign-in-alt" aria-hidden="false"></i></a>
                 </li>
                 <li class="nav-item" sec:authorize="isAuthenticated()" th:if="${!@realm.isOotb()}">
                     <form action="/logout" th:action="@{/logout}" method="post">
                         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                         <div class="dropdown-divider d-block d-lg-none pb-3"></div>
-                        <button class="btn btn-outline-secondary btn-v-align text-nowrap" type="submit">Logout (<span
+                        <button class="btn btn-outline-secondary btn-v-align text-nowrap" tabindex="-1" type="submit">Logout (<span
                                 sec:authentication="name" id="name"></span>)
                             <i class="fas fa-sign-out-alt" aria-hidden="true"></i>
                         </button>
@@ -62,11 +62,11 @@
                 </li>
                 <li class="nav-item dropdown" sec:authorize="isAuthenticated()" th:if="${@realm.isOotb()}" ng-click="loadAvailableProfiles()">
                     <a class="btn btn-outline-secondary btn-v-align text-nowrap dropdown-toggle" href="#" id="navbarDropdownMenuLink2" role="button"
-                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                       data-toggle="dropdown" tabindex="-1" aria-haspopup="true" aria-expanded="false">
                         Logout (<span sec:authentication="name" id="name"></span>)
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <a class="dropdown-item" href="login" ng-repeat="profile in availableProfiles"
+                        <a class="dropdown-item" href="login" tabindex="-1" aria-label="Login" ng-repeat="profile in availableProfiles"
                            ng-click="updateActiveUserProfile(profile)">{{profile}}</a>
                     </div>
                 </li>

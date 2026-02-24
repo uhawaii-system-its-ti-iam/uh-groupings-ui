@@ -14,8 +14,9 @@
                         class="fa fa-check" aria-hidden="true"></i></p>
             </div>
             <div class="col-md-4 py-2">
-                <input placeholder="Filter Members..." type="text" title="Filter Members"
-                       ng-model="excludeQuery" class="form-control" aria-label="Filter Members..."
+                <input class="form-control" placeholder="Filter Members..." type="text"
+                       title="Filter Members" tabindex="-1"
+                       ng-model="excludeQuery"
                        ng-change="filter(groupingExclude, 'pagedItemsExclude', 'currentPageExclude', excludeQuery, true)"/>
             </div>
         </div>
@@ -122,22 +123,24 @@
                     <div class="input-group long">
                         <div class="memSearch">
                             <input class="form-control" placeholder="UH Username or UH Number" type="search"
+                                   title="Enter one or more UH members" tabindex="-1"
                                    ng-init="dismissErrors()"
                                    ng-blur="dismissErrors()"
-                                   title="Enter one or more UH members" ng-model="manageMembers"
+                                   ng-model="manageMembers"
                             />
                         </div>
                         <div class="memBtns">
-                            <button class="btn btn-primary btn-grouping add-margin"
+                            <button class="btn btn-primary btn-grouping add-margin" tabindex="-1" aria-label="Add"
                                     ng-click="addOnClick('Exclude')">
                                 Add
                             </button>
-                            <button class="btn btn-remove btn-grouping"
+                            <button class="btn btn-remove btn-grouping" tabindex="-1" aria-label="Remove"
                                     ng-blur="dismissErrors()"
                                     ng-click="removeOnClick('Exclude')">
                                 Remove
                             </button>
-                            <button class="btn btn-primary btn-grouping" ng-click="displayImportModal('Exclude')">
+                            <button class="btn btn-primary btn-grouping" tabindex="-1" aria-label="Import File"
+                                    ng-click="displayImportModal('Exclude')">
                                 Import File
                             </button>
                             <div class="spinner-border spinner-border-sm d-inline-block"

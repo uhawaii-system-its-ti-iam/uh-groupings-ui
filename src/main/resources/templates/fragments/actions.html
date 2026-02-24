@@ -16,6 +16,7 @@
                     <form ng-submit="resetGroup()">
                         <div class="form-check">
                             <input type="checkbox" class="position-relative ml-0" id="resetIncludeCheck"
+                                   tabindex="-1" aria-label="Reset Include"
                                    ng-click="updateIncludeCheck();"
                                    ng-model="includeCheck" ng-disabled="includeDisable"
                                    ng-keydown="clickWithEnter($event)"/>
@@ -23,18 +24,18 @@
                         </div>
                         <div class="form-check">
                             <input type="checkbox" class="position-relative ml-0" id="resetExcludeCheck"
+                                   tabindex="-1" aria-label="Reset Exclude"
                                    ng-click="updateExcludeCheck()"
                                    ng-model="excludeCheck" ng-disabled="excludeDisable"
                                    ng-keydown="clickWithEnter($event)"/>
                             <label class="form-check-label" for="resetExcludeCheck">Reset Exclude</label>
                         </div>
                         <div>
-                            <button class="btn btn-primary btn-sm" type="submit"
+                            <button class="btn btn-primary btn-sm" type="submit" tabindex="-1" aria-label="Reset Selected"
                                     ng-disabled="excludeCheck == false && includeCheck == false">Reset Selected
                             </button>
-                            <span class="fa fa-question-circle" role="button"
+                            <span class="fa fa-question-circle" role="button" tabindex="-1"
                                   tooltip data-placement="right"
-                                  tabindex="0"
                                   th:aria-label="#{screen.message.common.tooltip.actions.resetGroup}"
                                   th:title="#{screen.message.common.tooltip.actions.resetGroup}"
                                   th:attr="ng-click='displayDynamicModal(\'Actions Information\', \'' +
