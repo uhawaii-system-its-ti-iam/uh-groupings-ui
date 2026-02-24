@@ -713,33 +713,44 @@ describe("AdminController", function () {
     });
 
     describe ("handleGroupingOwnersOnSuccess", () => {
-        const res = {
-            members: [
-                {
-                    uid: "testiwta",
-                    uhUuid: "99997010",
-                    name: "testiwta"
-                },
-                {
-                    uid: "testiwtb",
-                    uhUuid: "99997027",
-                    name: "testiwtb"
-                },
-                {
-                    uid: "testiwtc",
-                    uhUuid: "99997033",
-                    name: "testiwtc"
-                }]
-            };
+        // Shared test member data
+        const testMembers = [
+            {
+                uid: mockUser.data.uid,
+                uhUuid: mockUser.data.uhUuid,
+                name: mockUser.data.uid
+            }
+        ];
 
-        it("should set scope.owners equal to API response", () => {
-            scope.handleGroupingOwnersOnSuccess(res);
-            expect(scope.owners).toEqual(res.members);
+        const resNewFormat = {
+            owners: {
+                members: testMembers
+            }
+        };
+
+        const resOldFormat = {
+            members: testMembers
+        };
+
+        it("should set scope.owners equal to API response using new format (res.owners.members)", () => {
+            scope.handleGroupingOwnersOnSuccess(resNewFormat);
+            expect(scope.owners).toEqual(resNewFormat.owners.members);
         });
 
-        it("should call displayGroupingOwnersModal", () => {
+        it("should set scope.owners equal to API response using fallback format (res.members)", () => {
+            scope.handleGroupingOwnersOnSuccess(resOldFormat);
+            expect(scope.owners).toEqual(resOldFormat.members);
+        });
+
+        it("should call displayGroupingOwnersModal with new format", () => {
             spyOn(scope, "displayGroupingOwnersModal");
-            scope.handleGroupingOwnersOnSuccess(res);
+            scope.handleGroupingOwnersOnSuccess(resNewFormat);
+            expect(scope.displayGroupingOwnersModal).toHaveBeenCalled();
+        });
+
+        it("should call displayGroupingOwnersModal with fallback format", () => {
+            spyOn(scope, "displayGroupingOwnersModal");
+            scope.handleGroupingOwnersOnSuccess(resOldFormat);
             expect(scope.displayGroupingOwnersModal).toHaveBeenCalled();
         });
     });
