@@ -210,6 +210,7 @@
                 $scope.disableResetCheckboxes();
                 await $scope.fetchGrouping(currentPage, paths);
                 await $scope.fetchOwners(groupingPath);
+                await $scope.fetchCompareOwnerGroupings(groupingPath);
                 currentPage++;
                 $scope.loading = false;
             }
@@ -323,6 +324,24 @@
                     loadMembersList = false;
                     resolve();
                 });
+            });
+        };
+
+        /**
+         * Fetches all duplicated owners in a grouping with their sources of ownership.
+         * @param groupPath - path of the grouping to retrieve duplicated owners from
+         */
+        $scope.fetchCompareOwnerGroupings = (groupPath) => {
+            return new Promise((resolve) => {
+                groupingsService.compareOwnerGroupings(
+                    groupPath,
+                    (res) => {
+                        $scope.compareOwnerGroupingsResults = res;
+                        $scope.compareOwnerGroupingsResultsCount =
+                            Object.keys($scope.compareOwnerGroupingsResults).length;
+                        resolve();
+                    },
+                );
             });
         };
 

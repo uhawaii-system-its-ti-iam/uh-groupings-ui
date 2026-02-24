@@ -606,6 +606,22 @@ public class GroupingsRestControllerTest {
 
     @Test
     @WithMockUhUser
+    public void compareOwnerGroupingsTest() throws Exception {
+        String uri = REST_CONTROLLER_BASE + "groupings/groupingPath/owners/compare";
+
+        given(httpRequestService.makeApiRequest(anyString(), eq(HttpMethod.GET)))
+                .willReturn(new ResponseEntity(HttpStatus.OK));
+
+        assertNotNull(mockMvc.perform(get(uri).with(csrf()))
+                .andExpect(status().isOk())
+                .andReturn());
+
+        verify(httpRequestService, times(1))
+                .makeApiRequest(anyString(), eq(HttpMethod.GET));
+    }
+
+    @Test
+    @WithMockUhUser
     public void getNumberOfGroupingMembersTest() throws Exception {
         String uri = REST_CONTROLLER_BASE + "/groupings/groupingPath/count";
 
