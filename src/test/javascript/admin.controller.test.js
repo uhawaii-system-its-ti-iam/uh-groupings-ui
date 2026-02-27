@@ -722,20 +722,20 @@ describe("AdminController", function () {
             }
         ];
 
-        const resNewFormat = {
+        const res = {
             owners: {
                 members: testMembers
             }
         };
 
-        it("should set scope.owners equal to API response using new format (res.owners.members)", () => {
-            scope.handleGroupingOwnersOnSuccess(resNewFormat);
-            expect(scope.owners).toEqual(resNewFormat.owners.members);
+        it("should set scope.owners equal to API response", () => {
+            scope.handleGroupingOwnersOnSuccess(res);
+            expect(scope.owners).toEqual(res.owners.members);
         });
 
-        it("should call displayGroupingOwnersModal with new format", () => {
+        it("should call displayGroupingOwnersModal", () => {
             spyOn(scope, "displayGroupingOwnersModal");
-            scope.handleGroupingOwnersOnSuccess(resNewFormat);
+            scope.handleGroupingOwnersOnSuccess(res);
             expect(scope.displayGroupingOwnersModal).toHaveBeenCalled();
         });
     });
