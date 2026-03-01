@@ -1,9 +1,9 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <div class="modal-header">
     <h1 class="h5 modal-title" id="remove-modal">Remove Member</h1>
-    <a class="close" type="button" ng-click="cancelRemoveModal()">
+    <button class="close" type="button" aria-label="Close" ng-click="cancelRemoveModal()">
         <span aria-hidden="true">&times;</span>
-    </a>
+    </button>
 </div>
 <div class="modal-body" id="modal-body" tabindex="0">
     <p class="modal-black-text text-truncate" ng-if="membersNotInList.length > 0">Not in {{listName}}:
@@ -21,11 +21,11 @@
     <table>
         <tr>
             <th th:utext="#{screen.message.modal.remove.name}"></th>
-            <th class="font-weight-normal modal-attributes">{{fullName}}</th>
+            <td class="font-weight-normal modal-attributes">{{fullName}}</td>
         </tr>
         <tr>
             <th th:utext="#{screen.message.modal.remove.username}"></th>
-            <th class="font-weight-normal modal-attributes">
+            <td class="font-weight-normal modal-attributes">
                 {{uid}}
                 <span class="modal-black-text" ng-if="!uid">
                     N/A
@@ -34,15 +34,15 @@
                           th:title="#{screen.message.common.tooltip.username.notApplicable}">
                     </span>
                 </span>
-            </th>
+            </td>
         </tr>
         <tr>
             <th th:utext="#{screen.message.modal.remove.uhUserId}"></th>
-            <th class="font-weight-normal modal-attributes">{{uhUuid}}</th>
+            <td class="font-weight-normal modal-attributes">{{uhUuid}}</td>
         </tr>
         <tr ng-if="listName !== 'owners' && groupingBasis.length > 0">
             <th th:utext="#{screen.message.modal.remove.inBasis}"></th>
-            <th class="font-weight-normal modal-attributes">
+            <td class="font-weight-normal modal-attributes">
                 {{ inBasis }}
                 <span class="fa fa-info-circle clickable" ng-if="inBasis === 'Yes' && listName === 'Include'"
                       tooltip
@@ -56,7 +56,7 @@
                       tooltip
                       th:title="#{screen.message.modal.remove.tooltip.inBasis.exclude.optIn}" aria-hidden="true">
                 </span>
-            </th>
+            </td>
         </tr>
     </table>
     <p>

@@ -448,7 +448,7 @@ describe("AdminController", function () {
         it("should check that the admin to add is in the admin list", () => {
             scope.containsInput = false;
             scope.adminToAdd = "testiwta";
-            scope.adminsList = [{uid: "testiwta", uhUuid: "99997027" }];
+            scope.adminsList = [{uid: "testiwta", uhUuid: "99997010" }];
             scope.addAdmin();
 
             expect(scope.user).toBe(scope.adminToAdd);

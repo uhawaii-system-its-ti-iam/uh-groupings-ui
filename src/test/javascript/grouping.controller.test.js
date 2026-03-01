@@ -313,6 +313,13 @@ describe("GroupingController", () => {
         });
     });
 
+    describe("fetchCompareOwnerGroupings", () => {
+        it("should call compareOwnerGroupings", () => {
+            spyOn(gs, "compareOwnerGroupings").and.callThrough();
+            scope.fetchOwners().then((res) => expect(gs.compareOwnerGroupings).toHaveBeenCalled());
+        });
+    });
+
     // For reference (in index order):
     // Members: User One, User Two, User Three, User Seven, User Eight
     // Basis: User One, User Four, User Seven
@@ -1121,7 +1128,7 @@ describe("GroupingController", () => {
 
                     expect(scope.invalidMembers).toEqual(uhIdentifiers);
                     expect(scope.addInputError).toBeTrue();
-                    expect(scope.waitingForImportResponse).toBeFalse();
+                    expect(scope.loading).toBeFalse();
                 });
 
                 it("should call $scope.displayImportErrorModal and set $scope.addInputError to false when res has invalid uhIdentifiers", () => {
@@ -1193,7 +1200,7 @@ describe("GroupingController", () => {
             });
 
             describe("onError", () => {
-                it("should set $scope.waitingForImportResponse, $scope.resStatus and call $scope.displayApiErrorModal", () => {
+                it("should set $scope.loading, $scope.resStatus and call $scope.displayApiErrorModal", () => {
                     const resStatus = 404;
                     spyOn(scope, "displayApiErrorModal").and.callThrough();
                     scope.addMembers("Include", uhIdentifiers);
@@ -1202,7 +1209,7 @@ describe("GroupingController", () => {
                     httpBackend.expectGET("modal/apiError").respond(200);
                     httpBackend.flush();
 
-                    expect(scope.waitingForImportResponse).toBeFalse();
+                    expect(scope.loading).toBeFalse();
                     expect(scope.resStatus).toBe(resStatus);
                     expect(scope.displayApiErrorModal).toHaveBeenCalled();
                 });
@@ -1426,7 +1433,7 @@ describe("GroupingController", () => {
                 });
 
                 scope.cancelAddModal();
-                expect(scope.waitingForImportResponse).toBeFalse();
+                expect(scope.loading).toBeFalse();
                 expect(gs.addIncludeMembers).not.toHaveBeenCalled();
                 expect(gs.addExcludeMembers).not.toHaveBeenCalled();
                 expect(gs.addOwnerships).not.toHaveBeenCalled();
@@ -1441,7 +1448,7 @@ describe("GroupingController", () => {
                 });
 
                 scope.cancelAddModal();
-                expect(scope.waitingForImportResponse).toBeFalse();
+                expect(scope.loading).toBeFalse();
                 expect(gs.addIncludeMembers).not.toHaveBeenCalled();
                 expect(gs.addExcludeMembers).not.toHaveBeenCalled();
                 expect(gs.addOwnerships).not.toHaveBeenCalled();
@@ -1459,7 +1466,7 @@ describe("GroupingController", () => {
                 });
 
                 scope.proceedAddModal();
-                expect(scope.waitingForImportResponse).toBeTrue();
+                expect(scope.loading).toBeTrue();
                 expect(gs.addOwnerGroupings).toHaveBeenCalled();
                 scope.isOwnerGrouping = false;
             });
@@ -1473,7 +1480,7 @@ describe("GroupingController", () => {
                 });
 
                 scope.proceedAddModal();
-                expect(scope.waitingForImportResponse).toBeTrue();
+                expect(scope.loading).toBeTrue();
                 expect(gs.addIncludeMembers).toHaveBeenCalled();
             });
 
@@ -1486,7 +1493,7 @@ describe("GroupingController", () => {
                 });
 
                 scope.proceedAddModal();
-                expect(scope.waitingForImportResponse).toBeTrue();
+                expect(scope.loading).toBeTrue();
                 expect(gs.addIncludeMembers).toHaveBeenCalled();
             });
 
@@ -1499,7 +1506,7 @@ describe("GroupingController", () => {
                 });
 
                 scope.proceedAddModal();
-                expect(scope.waitingForImportResponse).toBeTrue();
+                expect(scope.loading).toBeTrue();
                 expect(gs.addExcludeMembers).toHaveBeenCalled();
             });
 
@@ -1512,7 +1519,7 @@ describe("GroupingController", () => {
                 });
 
                 scope.proceedAddModal();
-                expect(scope.waitingForImportResponse).toBeTrue();
+                expect(scope.loading).toBeTrue();
                 expect(gs.addExcludeMembers).toHaveBeenCalled();
             });
 
@@ -1525,7 +1532,7 @@ describe("GroupingController", () => {
                 });
 
                 scope.proceedAddModal();
-                expect(scope.waitingForImportResponse).toBeTrue();
+                expect(scope.loading).toBeTrue();
                 expect(gs.addOwnerships).toHaveBeenCalled();
             });
 
@@ -1538,7 +1545,7 @@ describe("GroupingController", () => {
                 });
 
                 scope.proceedAddModal();
-                expect(scope.waitingForImportResponse).toBeTrue();
+                expect(scope.loading).toBeTrue();
                 expect(gs.addOwnerships).toHaveBeenCalled();
             });
 
@@ -1551,7 +1558,7 @@ describe("GroupingController", () => {
                 });
 
                 scope.proceedAddModal();
-                expect(scope.waitingForImportResponse).toBeTrue();
+                expect(scope.loading).toBeTrue();
                 expect(gs.addAdmin).toHaveBeenCalled();
             });
         });
@@ -2055,7 +2062,7 @@ describe("GroupingController", () => {
             });
 
             scope.proceedRemoveModal();
-            expect(scope.waitingForImportResponse).toBeTrue();
+            expect(scope.loading).toBeTrue();
             expect(gs.removeOwnerGroupings).toHaveBeenCalled();
             scope.isOwnerGrouping = false;
         });

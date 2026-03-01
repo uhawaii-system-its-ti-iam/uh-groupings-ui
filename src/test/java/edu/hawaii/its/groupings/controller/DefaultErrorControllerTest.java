@@ -67,7 +67,7 @@ class DefaultErrorControllerTest {
                 .thenReturn(attrs);
 
         User mockUser = mock(User.class);
-        when(mockUser.getUid()).thenReturn("winnie-pooh");
+        when(mockUser.getUid()).thenReturn("testiwta");
         when(userContextService.getCurrentUser()).thenReturn(mockUser);
 
         // Act

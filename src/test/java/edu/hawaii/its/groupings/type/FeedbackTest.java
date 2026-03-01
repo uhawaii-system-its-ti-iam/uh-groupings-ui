@@ -27,19 +27,19 @@ public class FeedbackTest {
         assertNull(feedback.getMessage());
         assertNull(feedback.getExceptionMessage());
 
-        feedback.setName("Test User");
-        feedback.setEmail("test@hawaii.edu");
+        feedback.setName("Testf-iwt-a TestIAM-staff");
+        feedback.setEmail("iamtsta@example.com");
         feedback.setType("Problem");
         feedback.setMessage("Test Message");
         feedback.setExceptionMessage("Exception Message");
 
-        assertThat(feedback.getName(), is("Test User"));
-        assertThat(feedback.getEmail(), is("test@hawaii.edu"));
+        assertThat(feedback.getName(), is("Testf-iwt-a TestIAM-staff"));
+        assertThat(feedback.getEmail(), is("iamtsta@example.com"));
         assertThat(feedback.getType(), is("Problem"));
         assertThat(feedback.getMessage(), is("Test Message"));
         assertThat(feedback.getExceptionMessage(), is("Exception Message"));
 
-        assertThat(feedback.toString(), containsString("email=test@hawaii.edu"));
+        assertThat(feedback.toString(), containsString("email=iamtsta@example.com"));
         assertThat(feedback.toString(), containsString("exceptionMessage=Exception Message"));
     }
 

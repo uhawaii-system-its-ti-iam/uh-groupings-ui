@@ -210,6 +210,7 @@
                 $scope.disableResetCheckboxes();
                 await $scope.fetchGrouping(currentPage, paths);
                 await $scope.fetchOwners(groupingPath);
+                await $scope.fetchCompareOwnerGroupings(groupingPath);
                 currentPage++;
                 $scope.loading = false;
             }
@@ -323,6 +324,24 @@
                     loadMembersList = false;
                     resolve();
                 });
+            });
+        };
+
+        /**
+         * Fetches all duplicated owners in a grouping with their sources of ownership.
+         * @param groupPath - path of the grouping to retrieve duplicated owners from
+         */
+        $scope.fetchCompareOwnerGroupings = (groupPath) => {
+            return new Promise((resolve) => {
+                groupingsService.compareOwnerGroupings(
+                    groupPath,
+                    (res) => {
+                        $scope.compareOwnerGroupingsResults = res;
+                        $scope.compareOwnerGroupingsResultsCount =
+                            Object.keys($scope.compareOwnerGroupingsResults).length;
+                        resolve();
+                    },
+                );
             });
         };
 
@@ -947,7 +966,7 @@
          * Displays the appropriate modal if it was batch-import, multi-add, or single add.
          */
         const handleSuccessfulAdd = (res) => {
-            $scope.waitingForImportResponse = false; // Small spinner off
+            $scope.loading = false; // Full-screen spinner off
             // Display the appropriate result modal
             if ($scope.isBatchImport) {
                 $scope.batchImportResults = res.addResults.results;
@@ -962,12 +981,12 @@
                 $scope.addModalURL = "modal/addModal";
                 $scope.isOwnerGrouping = false;
                 $scope.displayDynamicModal(
-                  Message.Title.ADD_GROUP_PATH,
-                  Message.Body.ADD_GROUP_PATH.with($scope.groupingName, $scope.listName));
+                    Message.Title.ADD_GROUP_PATH,
+                    Message.Body.ADD_GROUP_PATH.with($scope.groupingName, $scope.listName));
             } else {
                 $scope.displayDynamicModal(
-                  Message.Title.ADD_MEMBER,
-                  Message.Body.ADD_MEMBER.with($scope.member, $scope.listName));
+                    Message.Title.ADD_MEMBER,
+                    Message.Body.ADD_MEMBER.with($scope.member, $scope.listName));
             }
 
             // On pressing "Ok" in the Dynamic modal, reload the grouping
@@ -1048,7 +1067,7 @@
 
             // On pressing "Yes/Add" in the modal, make API call to add members to the group
             $scope.addModalInstance.result.then(async () => {
-                $scope.waitingForImportResponse = true; // Small spinner on
+                $scope.loading = true; // Full-screen spinner on
                 const groupingPath = $scope.selectedGrouping.path;
                 if ($scope.listName === "Include") {
                     await groupingsService.addIncludeMembers(uhIdentifiers, groupingPath, handleSuccessfulAdd, handleUnsuccessfulRequest, displaySlowImportModal);
@@ -1262,7 +1281,6 @@
          */
         const handleSuccessfulRemove = () => {
             $scope.loading = false;
-            $scope.waitingForImportResponse = false;
             $scope.syncDestArray = [];
 
             // Display the appropriate modal
@@ -1316,7 +1334,9 @@
          * Handler for successfully removing an admin from a grouping.
          */
         const handleAdminRemove = () => {
-            $scope.waitingForImportResponse = false;
+            $scope.displayDynamicModal(
+                Message.Title.REMOVE_MEMBER,
+                Message.Body.REMOVE_MEMBER.with($scope.member, $scope.listName));
             // Removing self as admin -> redirect to home page and then logout
             if ($scope.membersToRemove.includes($scope.currentUser.uhUuid)) {
                 $scope.proceedLogoutUser();
@@ -1370,7 +1390,7 @@
 
             // On pressing "Yes/Remove" in the modal, make API call to remove members from the group
             $scope.removeModalInstance.result.then(() => {
-                $scope.waitingForImportResponse = true; // Small spinner on
+                $scope.loading = true; // Full-screen spinner on
                 const groupingPath = $scope.selectedGrouping.path;
                 if ($scope.listName === "Include") {
                     groupingsService.removeIncludeMembers(groupingPath, $scope.membersToRemove, handleSuccessfulRemove, handleUnsuccessfulRequest);
