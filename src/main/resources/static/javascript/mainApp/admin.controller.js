@@ -429,7 +429,7 @@
             $scope.loadingOwners = false;
             $scope.owners = [];
 
-            // The API returns owners in res.owners.members (see grouping.controller.js line 281).
+            // The API returns owners in res.owners.members
             // Other response formats (e.g., res.members) are no longer supported here.
             const members = Array.isArray(res?.owners?.members) ? res.owners.members : [];
             members.forEach((member) => {
