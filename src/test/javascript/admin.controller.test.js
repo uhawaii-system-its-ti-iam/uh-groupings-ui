@@ -448,7 +448,7 @@ describe("AdminController", function () {
         it("should check that the admin to add is in the admin list", () => {
             scope.containsInput = false;
             scope.adminToAdd = "testiwta";
-            scope.adminsList = [{uid: "testiwta", uhUuid: "99997027" }];
+            scope.adminsList = [{uid: "testiwta", uhUuid: "99997010" }];
             scope.addAdmin();
 
             expect(scope.user).toBe(scope.adminToAdd);
@@ -713,28 +713,24 @@ describe("AdminController", function () {
     });
 
     describe ("handleGroupingOwnersOnSuccess", () => {
+        // Shared test member data
+        const testMembers = [
+            {
+                uid: mockUser.data.uid,
+                uhUuid: mockUser.data.uhUuid,
+                name: mockUser.data.uid
+            }
+        ];
+
         const res = {
-            members: [
-                {
-                    uid: "testiwta",
-                    uhUuid: "99997010",
-                    name: "testiwta"
-                },
-                {
-                    uid: "testiwtb",
-                    uhUuid: "99997027",
-                    name: "testiwtb"
-                },
-                {
-                    uid: "testiwtc",
-                    uhUuid: "99997033",
-                    name: "testiwtc"
-                }]
-            };
+            owners: {
+                members: testMembers
+            }
+        };
 
         it("should set scope.owners equal to API response", () => {
             scope.handleGroupingOwnersOnSuccess(res);
-            expect(scope.owners).toEqual(res.members);
+            expect(scope.owners).toEqual(res.owners.members);
         });
 
         it("should call displayGroupingOwnersModal", () => {
