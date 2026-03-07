@@ -208,13 +208,14 @@
             while (!($scope.paginatingComplete) && loadMembersList) {
                 $scope.paginatingProgress = true;
                 $scope.disableResetCheckboxes();
-                await $scope.fetchGrouping(currentPage, paths);
                 await $scope.fetchOwners(groupingPath);
                 await $scope.fetchCompareOwnerGroupings(groupingPath);
+                await $scope.fetchGrouping(currentPage, paths);
                 currentPage++;
                 $scope.loading = false;
             }
             loadMembersList = false;
+            $scope.$applyAsync();
         };
 
         /**
