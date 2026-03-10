@@ -208,8 +208,8 @@
             while (!($scope.paginatingComplete) && loadMembersList) {
                 $scope.paginatingProgress = true;
                 $scope.disableResetCheckboxes();
-                await $scope.fetchGrouping(currentPage, paths);
                 await $scope.fetchOwners(groupingPath);
+                await $scope.fetchGrouping(currentPage, paths);
                 currentPage++;
                 $scope.loading = false;
             }
@@ -227,6 +227,7 @@
                     if (res.paginationComplete) {
                         $scope.paginatingComplete = true;
                         $scope.paginatingProgress = false;
+                        $scope.loading = false;
                     } else if (res.groupingBasis.groupPath.slice(0, -6) === ($scope.selectedGrouping.path)) {
                         let putGroupMembers = combineGroupMembers;
                         if (currentPage === 1) {
