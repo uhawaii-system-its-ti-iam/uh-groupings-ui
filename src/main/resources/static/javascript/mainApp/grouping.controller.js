@@ -336,7 +336,21 @@
                 groupingsService.compareOwnerGroupings(
                     groupPath,
                     (res) => {
-                        $scope.compareOwnerGroupingsResults = res;
+                        // Filter out DIRECT paths from the duplicate owners results
+                        const filteredResults = {};
+                        for (const [key, value] of Object.entries(res)) {
+                            // Check if paths array contains 'DIRECT' and filter it out
+                            if (Array.isArray(value.paths)) {
+                                value.paths = value.paths.filter((path) => path.trim() !== 'DIRECT');
+                                // Only include this entry if it still has paths after filtering
+                                if (value.paths.length > 0) {
+                                    filteredResults[key] = value;
+                                }
+                            } else {
+                                filteredResults[key] = value;
+                            }
+                        }
+                        $scope.compareOwnerGroupingsResults = filteredResults;
                         $scope.compareOwnerGroupingsResultsCount =
                             Object.keys($scope.compareOwnerGroupingsResults).length;
                         resolve();

@@ -316,7 +316,47 @@ describe("GroupingController", () => {
     describe("fetchCompareOwnerGroupings", () => {
         it("should call compareOwnerGroupings", () => {
             spyOn(gs, "compareOwnerGroupings").and.callThrough();
-            scope.fetchOwners().then((res) => expect(gs.compareOwnerGroupings).toHaveBeenCalled());
+            scope.fetchCompareOwnerGroupings().then((res) => expect(gs.compareOwnerGroupings).toHaveBeenCalled());
+        });
+
+        it("should filter out DIRECT paths from the results", () => {
+            const mockResults = {
+                "uuid1": {
+                    name: "User One",
+                    uid: "user1",
+                    paths: ["DIRECT", "group:owners"]
+                },
+                "uuid2": {
+                    name: "User Two",
+                    uid: "user2",
+                    paths: ["group1:owners", "group2:owners"]
+                },
+                "uuid3": {
+                    name: "User Three",
+                    uid: "user3",
+                    paths: ["DIRECT"]
+                }
+            };
+
+            spyOn(gs, "compareOwnerGroupings").and.callFake((path, onSuccess) => {
+                onSuccess(mockResults);
+            });
+
+            scope.fetchCompareOwnerGroupings().then(() => {
+                // User One should still be present, but only with "group:owners" path
+                expect(scope.compareOwnerGroupingsResults["uuid1"]).toBeDefined();
+                expect(scope.compareOwnerGroupingsResults["uuid1"].paths).toEqual(["group:owners"]);
+
+                // User Two should be present with both paths (neither is DIRECT)
+                expect(scope.compareOwnerGroupingsResults["uuid2"]).toBeDefined();
+                expect(scope.compareOwnerGroupingsResults["uuid2"].paths).toEqual(["group1:owners", "group2:owners"]);
+
+                // User Three should be filtered out completely since only path was DIRECT
+                expect(scope.compareOwnerGroupingsResults["uuid3"]).toBeUndefined();
+
+                // Result count should be 2 (uuid1 and uuid2)
+                expect(scope.compareOwnerGroupingsResultsCount).toBe(2);
+            });
         });
     });
 
