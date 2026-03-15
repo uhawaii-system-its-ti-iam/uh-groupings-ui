@@ -67,7 +67,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr ng-if="groupingMembers.length === 0">
+                <tr ng-if="groupingMembers.length === 0 && paginatingComplete">
                     <td colspan="4">No members found.</td>
                 </tr>
                 <tr ng-repeat="g in pagedItemsMembers[currentPageMembers]" class="table table-sm">
