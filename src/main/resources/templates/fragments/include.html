@@ -67,7 +67,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr ng-if="groupingInclude.length === 0">
+                <tr ng-if="groupingInclude.length === 0 && paginatingComplete">
                     <td colspan="5">No members found.</td>
                 </tr>
                 <tr ng-repeat="member in pagedItemsInclude[currentPageInclude]" class="table table-sm">
