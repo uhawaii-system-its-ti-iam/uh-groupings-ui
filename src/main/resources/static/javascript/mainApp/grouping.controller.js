@@ -203,7 +203,7 @@
             $scope.groupingMembers = [];
             $scope.pagedItemsMembers = [];
             const groupingPath = $scope.selectedGrouping.path;
-            const paths = [groupingPath + ":basis", groupingPath + ":include", groupingPath + ":exclude"];
+            const paths = [groupingPath, groupingPath + ":basis", groupingPath + ":include", groupingPath + ":exclude"];
             let currentPage = 1;
             $scope.setPage("First", "currentPageMembers", "pagedItemsMembers");
             $scope.loading = true;
