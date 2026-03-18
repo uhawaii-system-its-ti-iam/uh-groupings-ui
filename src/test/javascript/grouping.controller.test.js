@@ -279,37 +279,44 @@ describe("GroupingController", () => {
 
         it("should call getGroupingDescription", () => {
             spyOn(gs, "getGroupingDescription").and.callThrough();
-            return scope.getGroupingInformation().then((res) => expect(gs.getGroupingDescription).toHaveBeenCalled());
+            scope.getGroupingInformation();
+            expect(gs.getGroupingDescription).toHaveBeenCalled();
         });
 
         it("should call getGroupingSyncDest", () => {
             spyOn(gs, "getGroupingSyncDest").and.callThrough();
-            return scope.getGroupingInformation().then((res) => expect(gs.getGroupingSyncDest).toHaveBeenCalled());
+            scope.getGroupingInformation();
+            expect(gs.getGroupingSyncDest).toHaveBeenCalled();
         });
 
         it("should call getGroupingOptAttributes", () => {
             spyOn(gs, "getGroupingOptAttributes").and.callThrough();
-            return scope.getGroupingInformation().then((res) => expect(gs.getGroupingOptAttributes).toHaveBeenCalled());
+            scope.getGroupingInformation();
+            expect(gs.getGroupingOptAttributes).toHaveBeenCalled();
         });
 
         it("should call disableResetCheckboxes", () => {
-             spyOn(scope, "disableResetCheckboxes").and.callThrough();
-            return scope.getGroupingInformation().then((res) => expect(scope.disableResetCheckboxes).toHaveBeenCalled());
+            spyOn(scope, "disableResetCheckboxes").and.callThrough();
+            scope.getGroupingInformation();
+            expect(scope.disableResetCheckboxes).toHaveBeenCalled();
         });
     });
 
     describe("fetchOwners",()=> {
         it("should call groupingOwners", () => {
             spyOn(gs, "groupingOwners").and.callThrough();
-            return scope.fetchOwners().then((res) => expect(gs.groupingOwners).toHaveBeenCalled());
+            scope.fetchOwners();
+            expect(gs.groupingOwners).toHaveBeenCalled();
         });
         it("should call getNumberOfAllOwners ", () => {
             spyOn(gs, "getNumberOfAllOwners").and.callThrough();
-            return scope.fetchOwners().then((res) => expect(gs.getNumberOfAllOwners).toHaveBeenCalled());
+            scope.fetchOwners();
+            expect(gs.getNumberOfAllOwners).toHaveBeenCalled();
         });
         it("should call getNumberOfGroupingMembers", () => {
             spyOn(gs, "getNumberOfGroupingMembers").and.callThrough();
-            return scope.fetchOwners().then((res) => expect(gs.getNumberOfGroupingMembers).toHaveBeenCalled());
+            scope.fetchOwners();
+            expect(gs.getNumberOfGroupingMembers).toHaveBeenCalled();
         });
     });
 
