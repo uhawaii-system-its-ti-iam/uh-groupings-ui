@@ -21,13 +21,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.ui.ExtendedModelMap;
 import org.springframework.ui.Model;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
+import org.springframework.web.context.request.async.AsyncRequestNotUsableException;
 
 import edu.hawaii.its.groupings.access.User;
 import edu.hawaii.its.groupings.access.UserContextService;
@@ -161,5 +161,17 @@ public class ErrorControllerAdviceTest {
 
         verify(userContextService).getCurrentUser();
         verify(emailService).sendWithStack(uoe, "Unsupported Operation Exception", testURI);
+    }
+
+    @Test
+    public void testAsyncRequestNotUsableException() {
+        // Client disconnection during response writing should be logged as warning, not error
+        AsyncRequestNotUsableException arue = new AsyncRequestNotUsableException("Broken pipe");
+
+        // This should not throw and should handle gracefully
+        errorControllerAdvice.handleAsyncRequestNotUsableException(arue);
+
+        verify(userContextService).getCurrentUser();
+        // Should NOT send email for this client-side issue
     }
 }

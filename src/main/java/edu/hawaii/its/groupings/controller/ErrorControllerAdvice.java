@@ -18,6 +18,7 @@ import org.springframework.ui.Model;
 import jakarta.mail.MessagingException;
 import java.io.IOException;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
+import org.springframework.web.context.request.async.AsyncRequestNotUsableException;
 
 import edu.hawaii.its.groupings.access.User;
 import edu.hawaii.its.groupings.access.UserContextService;
@@ -127,6 +128,13 @@ public class ErrorControllerAdvice {
         return "error";
     }
 
+    @ExceptionHandler(AsyncRequestNotUsableException.class)
+    public void handleAsyncRequestNotUsableException(AsyncRequestNotUsableException arue) {
+        // Log as warning (not error) since this indicates client disconnection during response writing.
+        // This is normal behavior in production and does not indicate a server problem.
+        logAsWarning(arue);
+    }
+
     /**
      * Helper function to log exception cause and user involved.
      * @param cause Exception object.
@@ -140,5 +148,20 @@ public class ErrorControllerAdvice {
         }
 
         logger.error("uid: " + uid + "; Exception: ", cause);
+    }
+
+    /**
+     * Helper function to log exception as warning (for non-critical issues like client disconnections).
+     * @param cause Exception object.
+     */
+    public void logAsWarning(Throwable cause) {
+        String uid = null;
+        User user = userContextService.getCurrentUser();
+        if (user != null) {
+            uid = user.getUid();
+        }
+
+        logger.warn("uid: " + uid + "; Client disconnected during response writing (broken pipe): " 
+            + cause.getMessage());
     }
 }
