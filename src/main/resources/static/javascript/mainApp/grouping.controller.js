@@ -355,6 +355,17 @@
                             Object.keys($scope.compareOwnerGroupingsResults).length;
                         resolve();
                     },
+                    (res) => {
+                        // Handle error by setting empty results and showing error modal
+                        $scope.compareOwnerGroupingsResults = {};
+                        $scope.compareOwnerGroupingsResultsCount = 0;
+                        if (res.statusCode === 403) {
+                            $scope.displayOwnerErrorModal();
+                        } else {
+                            $scope.displayApiErrorModal();
+                        }
+                        resolve();
+                    }
                 );
             });
         };
