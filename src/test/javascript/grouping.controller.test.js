@@ -279,44 +279,44 @@ describe("GroupingController", () => {
 
         it("should call getGroupingDescription", () => {
             spyOn(gs, "getGroupingDescription").and.callThrough();
-            scope.getGroupingInformation().then((res) => expect(gs.getGroupingDescription).toHaveBeenCalled());
+            return scope.getGroupingInformation().then((res) => expect(gs.getGroupingDescription).toHaveBeenCalled());
         });
 
         it("should call getGroupingSyncDest", () => {
             spyOn(gs, "getGroupingSyncDest").and.callThrough();
-            scope.getGroupingInformation().then((res) => expect(gs.getGroupingSyncDest).toHaveBeenCalled());
+            return scope.getGroupingInformation().then((res) => expect(gs.getGroupingSyncDest).toHaveBeenCalled());
         });
 
         it("should call getGroupingOptAttributes", () => {
             spyOn(gs, "getGroupingOptAttributes").and.callThrough();
-            scope.getGroupingInformation().then((res) => expect(gs.getGroupingOptAttributes).toHaveBeenCalled());
+            return scope.getGroupingInformation().then((res) => expect(gs.getGroupingOptAttributes).toHaveBeenCalled());
         });
 
         it("should call disableResetCheckboxes", () => {
              spyOn(scope, "disableResetCheckboxes").and.callThrough();
-            scope.getGroupingInformation().then((res) => expect(scope.disableResetCheckboxes).toHaveBeenCalled());
+            return scope.getGroupingInformation().then((res) => expect(scope.disableResetCheckboxes).toHaveBeenCalled());
         });
     });
 
     describe("fetchOwners",()=> {
         it("should call groupingOwners", () => {
             spyOn(gs, "groupingOwners").and.callThrough();
-            scope.fetchOwners().then((res) => expect(gs.groupingOwners).toHaveBeenCalled());
+            return scope.fetchOwners().then((res) => expect(gs.groupingOwners).toHaveBeenCalled());
         });
         it("should call getNumberOfAllOwners ", () => {
             spyOn(gs, "getNumberOfAllOwners").and.callThrough();
-            scope.fetchOwners().then((res) => expect(gs.getNumberOfAllOwners).toHaveBeenCalled());
+            return scope.fetchOwners().then((res) => expect(gs.getNumberOfAllOwners).toHaveBeenCalled());
         });
         it("should call getNumberOfGroupingMembers", () => {
             spyOn(gs, "getNumberOfGroupingMembers").and.callThrough();
-            scope.fetchOwners().then((res) => expect(gs.getNumberOfGroupingMembers).toHaveBeenCalled());
+            return scope.fetchOwners().then((res) => expect(gs.getNumberOfGroupingMembers).toHaveBeenCalled());
         });
     });
 
     describe("fetchCompareOwnerGroupings", () => {
         it("should call compareOwnerGroupings", () => {
             spyOn(gs, "compareOwnerGroupings").and.callThrough();
-            scope.fetchCompareOwnerGroupings().then((res) => expect(gs.compareOwnerGroupings).toHaveBeenCalled());
+            return scope.fetchCompareOwnerGroupings().then((res) => expect(gs.compareOwnerGroupings).toHaveBeenCalled());
         });
 
         it("should filter out DIRECT paths from the results", () => {
@@ -342,7 +342,7 @@ describe("GroupingController", () => {
                 onSuccess(mockResults);
             });
 
-            scope.fetchCompareOwnerGroupings().then(() => {
+            return scope.fetchCompareOwnerGroupings().then(() => {
                 // User One should still be present, but only with "group:owners" path
                 expect(scope.compareOwnerGroupingsResults["uuid1"]).toBeDefined();
                 expect(scope.compareOwnerGroupingsResults["uuid1"].paths).toEqual(["group:owners"]);
