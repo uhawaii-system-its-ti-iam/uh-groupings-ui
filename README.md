@@ -1,4 +1,5 @@
-## The UI for UH Groupings.
+## UH Groupings Project
+### The UI for UH Groupings.
 
 Manage your groupings in one place, use them in many.
 
@@ -69,8 +70,8 @@ To run the System Tests:
     $ ./mvnw -Dtest=*SystemTest clean test
 
 ## OOTB (Out-of-the-box) Project
+### The UI for OOTB.
 
-### What is OOTB?
 #### How UH Groupings Currently Works
 The UH Groupings project relies on external systems to function properly, notably:
 - **GrouperClient**: Used to communicate with an external Grouper system over the network.
@@ -82,9 +83,9 @@ The application must communicate with external systems before it can display or 
 
 Example use case:
 1. A user logs in to UH Groupings using CAS.
-1. The system uses GrouperClient to send requests to an external Grouper service.
-1. The external system processes the request and returns data.
-1. The website displays or modifies that data using API calls.
+2. The system uses GrouperClient to send requests to an external Grouper service.
+3. The external system processes the request and returns data.
+4. The website displays or modifies that data using API calls.
 
 #### OOTB Project Objective
 The OOTB project is designed to run locally without external dependencies. Its goal is to provide a fully self-contained development environment for the UH Groupings project that behaves like an open-source project on GitHub.
@@ -97,9 +98,9 @@ Everything runs independently in a local environment without network communicati
 
 Example use case:
 1. Static data is preloaded into the application at startup.
-1. Spring Boot converts the data into managed beans.
-1. Services operate on this in-memory data instead of external systems.
-1. The UI interacts with the API exactly as it would in production.
+2. Spring Boot converts the data into managed beans.
+3. Services operate on this in-memory data instead of external systems.
+4. The UI interacts with the API exactly as it would in production.
 
 ### High-level overview of OOTB
 
@@ -108,9 +109,9 @@ OOTB is a local simulation of the UH Groupings system. It preserves the same API
 #### 1. Application Startup
 When the application starts in the ootb profile:
 1. Static JSON data (the data harness) is loaded.
-1. The JSON is converted into WS result objects (e.g., WsSubject, WsGroup, etc.).
-1. These objects are wrapped in Results classes (e.g., SubjectsResults, GetMembersResults).
-1. The results are registered as singleton Spring beans.
+2. The JSON is converted into WS result objects (e.g., WsSubject, WsGroup, etc.).
+3. These objects are wrapped in Results classes (e.g., SubjectsResults, GetMembersResults).
+4. The results are registered as singleton Spring beans.
 
 At this point, the application has a fully initialized in-memory dataset that mimics what would normally come from Grouper APIs.
 
@@ -171,14 +172,14 @@ To do this, modify your IDE run configurations and set:
 Active Profiles: ootb
 ```
 
-### When to use OOTB vs main
+### When to use OOTB vs Main
 
-Choosing between OOTB and main depends on what you are trying to accomplish during development.
+Choosing between OOTB and Main depends on what you are trying to accomplish during development.
 
 #### OOTB
-`OOTB` is ideal for local development, UI work, and safe testing.
+`ootb` is ideal for local development, UI work, and safe testing.
 
-Use `OOTB` when:
+Use `ootb` when:
 - Developing or modifying UI components
 - Testing features without external authentication
 - Working offline
@@ -186,7 +187,7 @@ Use `OOTB` when:
 - You want predictable, stable sample data
 - You need a safe environment that cannot impact live services
 
-#### main
+#### Main
 `main` should be used when working with real integrations and production-like environments. `main` interacts with external systems and may depend on network access and credentials.
 
 Use `main` when:
