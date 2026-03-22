@@ -32,6 +32,7 @@ import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 import org.springframework.util.Assert;
 import org.springframework.ws.config.annotation.DelegatingWsConfiguration;
 
@@ -216,7 +217,7 @@ public class SecurityConfig {
                 .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
                 .csrf((csrf) -> csrf
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                        .ignoringRequestMatchers(antMatcher("/api/**")))
+                        .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler()))
                 .logout((logout) -> logout
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")
