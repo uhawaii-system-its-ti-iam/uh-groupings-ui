@@ -197,6 +197,12 @@
          */
         $scope.getGroupingInformation = async () => {
             loadMembersList = true;
+            $scope.groupingInclude = [];
+            $scope.pagedItemsInclude = [];
+            $scope.groupingExclude = [];
+            $scope.pagedItemsExclude = [];
+            $scope.groupingMembers = [];
+            $scope.pagedItemsMembers = [];
             const groupingPath = $scope.selectedGrouping.path;
             const paths = [groupingPath + ":basis", groupingPath + ":include", groupingPath + ":exclude"];
             let currentPage = 1;
