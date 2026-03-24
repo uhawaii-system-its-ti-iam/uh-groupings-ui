@@ -82,6 +82,7 @@
         $scope.multiAddResults = [];
         $scope.invalidMembers = [];
         $scope.membersInList = "";
+        $scope.membersInListArray = [];
         $scope.isMultiAdd = false;
         $scope.hasDeptAccount = false;
         $scope.isAddingMembers = false;
@@ -524,6 +525,7 @@
             $scope.groupingName = "";
             $scope.membersNotInList = "";
             $scope.membersInList = "";
+            $scope.membersInListArray = [];
             $scope.multiRemoveResults = [];
             $scope.waitingForImportResponse = false;
         };
@@ -742,6 +744,7 @@
                 _.some(currentPage, {uhUuid: member}) || _.some(currentPage, {uid: member}) || _.some(currentPage, {name: $scope.groupingName})
             );
             $scope.membersInList = membersInList.join(", ");
+            $scope.membersInListArray = membersInList;
 
             if (_.isEqual(members, membersInList)) {
                 $scope.containsInput = true;
@@ -892,7 +895,7 @@
             $scope.isBatchImport = uhIdentifiers.length > Threshold.MULTI_ADD;
 
             // Filter out members already in the group
-            uhIdentifiers = uhIdentifiers.filter((member) => !$scope.membersInList.includes(member));
+            uhIdentifiers = uhIdentifiers.filter((member) => !$scope.membersInListArray.includes(member));
 
             if (_.isEmpty(uhIdentifiers)) {
                 $scope.containsInput = true;
