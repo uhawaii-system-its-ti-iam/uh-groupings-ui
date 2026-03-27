@@ -215,9 +215,12 @@ public class SecurityConfig {
                 .addFilterBefore(logoutFilter(), LogoutFilter.class)
                 .exceptionHandling((exception) -> exception.authenticationEntryPoint(casProcessingFilterEntryPoint()))
                 .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
-                .csrf((csrf) -> csrf
-                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                        .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler()))
+                .csrf((csrf) -> {
+                    CookieCsrfTokenRepository repository = CookieCsrfTokenRepository.withHttpOnlyFalse();
+                    repository.setCookieCustomizer(cookie -> cookie.sameSite("Lax"));
+                    csrf.csrfTokenRepository(repository)
+                            .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler());
+                })
                 .logout((logout) -> logout
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")
