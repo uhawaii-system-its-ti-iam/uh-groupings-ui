@@ -1,5 +1,8 @@
 name: Coverage
 
+permissions:
+  security-events: write
+
 on:
   push:
     branches: [ main ]
