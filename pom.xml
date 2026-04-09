@@ -19,7 +19,7 @@
     <properties>
         <maven-war-plugin.version>3.4.0</maven-war-plugin.version>
         <java.version>17</java.version>
-        <org.apereo.cas.client-version>4.0.4</org.apereo.cas.client-version>
+        <org.apereo.cas.client-version>4.1.0</org.apereo.cas.client-version>
 
         <jquery-version>3.7.1</jquery-version>
         <angular-mocks-version>1.8.3</angular-mocks-version>
@@ -29,7 +29,7 @@
         <popper.js-version>1.16.1-lts</popper.js-version>
         <bootstrap-version>4.6.2</bootstrap-version>
 
-        <lodash-version>4.17.21</lodash-version>
+        <lodash-version>4.17.23</lodash-version>
         <jasmine.test.specs>**/**.test.js</jasmine.test.specs>
     </properties>
 
@@ -137,7 +137,7 @@
         <dependency>
             <groupId>com.googlecode.owasp-java-html-sanitizer</groupId>
             <artifactId>owasp-java-html-sanitizer</artifactId>
-            <version>20240325.1</version>
+            <version>20260101.1</version>
         </dependency>
 
         <!-- Webjars -->
