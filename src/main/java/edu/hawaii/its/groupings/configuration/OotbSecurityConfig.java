@@ -46,7 +46,13 @@ public class OotbSecurityConfig {
 
     @PostConstruct
     public void init() {
-        updateActiveDefaultUser();
+        try {
+            updateActiveDefaultUser();
+        } catch (org.springframework.web.reactive.function.client.WebClientResponseException e) {
+            logger.warn("Failed to sync active OOTB profile (status: " + e.getStatusCode() + "). Continuing startup.");
+        } catch (Exception e) {
+            logger.warn("Unexpected error during OOTB profile sync. Continuing startup.", e);
+        }
     }
 
     @Bean
@@ -101,6 +107,11 @@ public class OotbSecurityConfig {
     }
 
     public void updateActiveDefaultUser() {
-        ootbRestController.updateActiveDefaultUser(ootbActiveUserProfileService.findGivenNameForAdminRole());
+        String adminProfile = ootbActiveUserProfileService.findGivenNameForAdminRole();
+        if (adminProfile == null) {
+            logger.warn("Admin profile is null. Skipping active profile sync.");
+            return;
+        }
+        ootbRestController.updateActiveDefaultUser(adminProfile);
     }
 }
