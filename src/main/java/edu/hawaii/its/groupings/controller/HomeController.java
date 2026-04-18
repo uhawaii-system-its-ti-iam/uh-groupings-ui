@@ -51,9 +51,6 @@ public class HomeController {
     @GetMapping(value = { "/", "/home" })
     public String home(Map<String, Locale> locale) {
         logger.info("User at home. The client locale is " + locale);
-        if (realmService.isOotb()) {
-            return "redirect:/login";
-        }
         return "home";
     }
 

@@ -13,7 +13,6 @@ import org.apereo.cas.client.validation.Saml11TicketValidator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.cas.ServiceProperties;
 import org.springframework.security.cas.authentication.CasAssertionAuthenticationToken;
@@ -42,7 +41,6 @@ import edu.hawaii.its.groupings.access.UserBuilder;
 
 @EnableWebSecurity
 @Configuration
-@Profile("!ootb")
 public class SecurityConfig {
 
     private static final Log logger = LogFactory.getLog(SecurityConfig.class);
