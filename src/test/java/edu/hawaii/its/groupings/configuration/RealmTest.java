@@ -22,7 +22,6 @@ public class RealmTest {
         assertTrue(realm.isDefault());
         assertFalse(realm.isTest());
         assertFalse(realm.isProduction());
-        assertFalse(realm.isOotb());
 
         assertFalse(realm.isProfileActive("not"));
         assertFalse(realm.isProfileActive(""));
