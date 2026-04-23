@@ -28,6 +28,7 @@
         <angularjs-version>1.8.3</angularjs-version>
         <popper.js-version>1.16.1-lts</popper.js-version>
         <bootstrap-version>4.6.2</bootstrap-version>
+        <thymeleaf.version>3.1.4.RELEASE</thymeleaf.version>
 
         <lodash-version>4.18.1</lodash-version>
         <jasmine.test.specs>**/**.test.js</jasmine.test.specs>
