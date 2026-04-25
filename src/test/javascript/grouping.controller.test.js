@@ -1899,6 +1899,26 @@ describe("GroupingController", () => {
                 uhUuid: "iamtst03"
             }];
             scope.manageMembers = "iamtst03";
+            scope.directOwnersCount = 1;
+            spyOn(scope, "displayRemoveErrorModal");
+            scope.removeMembers("owners");
+            expect(scope.displayRemoveErrorModal).toHaveBeenCalled();
+        });
+
+        it("should call displayRemoveErrorModal when the listName is owners and there's only one direct owner left", () => {
+            scope.groupingOwners = [
+                {
+                name: "iamtst03",
+                uid: "iamtst03",
+                uhUuid: "iamtst03"
+                },
+                {
+                    name: "testOwnerGrouping",
+                    ownerGroupingPath: "test-owner-path"
+                }
+            ];
+            scope.manageMembers = "iamtst03";
+            scope.directOwnersCount = 1;
             spyOn(scope, "displayRemoveErrorModal");
             scope.removeMembers("owners");
             expect(scope.displayRemoveErrorModal).toHaveBeenCalled();
@@ -2149,6 +2169,7 @@ describe("GroupingController", () => {
                 uid: "iamtst01",
                 uhUuid: "iamtst01"
             }];
+            scope.directOwnersCount = 1;
             spyOn(scope, "displayRemoveErrorModal");
             scope.removeOwnerWithTrashcan(0, 0);
             expect(scope.displayRemoveErrorModal).toHaveBeenCalledWith("owner");
