@@ -685,9 +685,10 @@ public class GroupingsRestController {
     }
 
     /**
-     * Get the number of owners of the group path that contains the owner with uhIdentifier
+     * Get number of direct owners in a grouping
+     * Used to check if the user is a sole owner of a grouping.
      */
-    @GetMapping(value = "/{path:.+}/owners/count")
+    @GetMapping(value = "/members/{path:.+}/owners/count")
     public ResponseEntity<String> getNumberOfOwners(@PathVariable String path) {
         String currentUid = policy.sanitize(userContextService.getCurrentUid());
         logger.info(String.format("Entered REST getNumberOfOwners - currentUid: %s, path: %s",
