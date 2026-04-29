@@ -268,8 +268,8 @@
             }
 
             groupingsService.getMemberAttributeResults([sanitizedAdmin], (res) => {
-                // Prevent departmental accounts from being added as admins
-                $scope.isDeptAccount = $scope.checkForDeptAccount(res.results);
+                // Keep legacy admin restrictions: block uid===uhUuid or missing uhUuid.
+                $scope.isDeptAccount = $scope.checkForRestrictedAdminAccount(res.results);
                 if ($scope.isDeptAccount) {
                     $scope.containsDeptAcc = true;
                     return;

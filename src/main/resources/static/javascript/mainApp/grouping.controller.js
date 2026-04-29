@@ -926,15 +926,27 @@
                         return;
                     }
 
-                    // Prevent departmental accounts from being added as Owners
-                    $scope.hasDeptAccount = $scope.checkForDeptAccount(res.results);
-                    if (listName === "owners" && $scope.hasDeptAccount) {
-                        $scope.displayDynamicModal(
-                          Message.Title.OWNER_NOT_ADDED,
-                          Message.Body.OWNER_NOT_ADDED
-                        );
-                        $scope.isAddingMembers = false;
-                        return;
+                    if (listName === "owners") {
+                        // Department accounts are not eligible for owner assignments.
+                        $scope.hasDeptAccount = $scope.checkForDeptAccount(res.results);
+                        if ($scope.hasDeptAccount) {
+                            $scope.displayDynamicModal(
+                                Message.Title.OWNER_NOT_ADDED,
+                                Message.Body.OWNER_NOT_ADDED
+                            );
+                            $scope.isAddingMembers = false;
+                            return;
+                        }
+
+                        // Service accounts are allowed only if they have an assigned uhUuid.
+                        if ($scope.checkForServiceAccountWithoutUhUuid(res.results)) {
+                            $scope.displayDynamicModal(
+                                Message.Title.OWNER_NOT_ADDED,
+                                Message.Body.SERVICE_ACCOUNT_UHUUID_REQUIRED
+                            );
+                            $scope.isAddingMembers = false;
+                            return;
+                        }
                     }
 
                     // Display the appropriate modal
