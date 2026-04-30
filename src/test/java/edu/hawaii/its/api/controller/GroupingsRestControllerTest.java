@@ -606,8 +606,8 @@ public class GroupingsRestControllerTest {
 
     @Test
     @WithMockUhUser
-    public void compareOwnerGroupingsTest() throws Exception {
-        String uri = REST_CONTROLLER_BASE + "groupings/groupingPath/owners/compare";
+    public void getDuplicateOwnersTest() throws Exception {
+        String uri = REST_CONTROLLER_BASE + "groupings/groupingPath/owners/duplicates";
 
         given(httpRequestService.makeApiRequest(anyString(), eq(HttpMethod.GET)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));

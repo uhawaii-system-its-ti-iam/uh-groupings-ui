@@ -216,7 +216,7 @@
                 $scope.paginatingProgress = true;
                 $scope.disableResetCheckboxes();
                 await $scope.fetchOwners(groupingPath);
-                await $scope.fetchCompareOwnerGroupings(groupingPath);
+                await $scope.fetchDuplicateOwners(groupingPath);
                 await $scope.fetchGrouping(currentPage, paths);
                 currentPage++;
                 $scope.loading = false;
@@ -339,14 +339,14 @@
          * Fetches all duplicated owners in a grouping with their sources of ownership.
          * @param groupPath - path of the grouping to retrieve duplicated owners from
          */
-        $scope.fetchCompareOwnerGroupings = (groupPath) => {
+        $scope.fetchDuplicateOwners = (groupPath) => {
             return new Promise((resolve) => {
-                groupingsService.compareOwnerGroupings(
+                groupingsService.getDuplicateOwners(
                     groupPath,
                     (res) => {
-                        $scope.compareOwnerGroupingsResults = res;
-                        $scope.compareOwnerGroupingsResultsCount =
-                            Object.keys($scope.compareOwnerGroupingsResults).length;
+                        $scope.duplicateOwnerResults = res;
+                        $scope.duplicateOwnersCount =
+                            Object.keys($scope.duplicateOwnerResults).length;
                         resolve();
                     },
                 );

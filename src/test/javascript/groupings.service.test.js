@@ -678,15 +678,15 @@ describe("GroupingsService", () => {
         });
     });
 
-    describe("compareOwnerGroupings", () => {
+    describe("getDuplicateOwners", () => {
         it("should call dataProvider.loadData", () => {
             spyOn(dp, "loadData");
-            gs.compareOwnerGroupings(onSuccess, onError);
+            gs.getDuplicateOwners(onSuccess, onError);
             expect(dp.loadData).toHaveBeenCalled();
         });
         it("should use the correct path", () => {
-            gs.compareOwnerGroupings(groupingPath, onSuccess, onError);
-            httpBackend.expectGET(BASE_URL + "groupings/" + groupingPath + "/owners/compare").respond(200);
+            gs.getDuplicateOwners(groupingPath, onSuccess, onError);
+            httpBackend.expectGET(BASE_URL + "groupings/" + groupingPath + "/owners/duplicates").respond(200);
             expect(httpBackend.flush).not.toThrow();
         });
     });

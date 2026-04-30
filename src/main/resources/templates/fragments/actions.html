@@ -56,7 +56,7 @@
               <div class="col-md-8">
                   <div class="pt-2 mb-0">
                       <h3 class="font-weight-bold text-dark mb-1">
-                          Duplicate Owners ({{ compareOwnerGroupingsResultsCount || 0 }})
+                          Duplicate Owners ({{ duplicateOwnersCount || 0 }})
                       </h3>
                   </div>
 
@@ -68,7 +68,7 @@
               </div>
 
               <div class="table-responsive"
-                   ng-if="compareOwnerGroupingsResultsCount">
+                   ng-if="duplicateOwnersCount">
 
                   <table class="table table-striped table-hover" aria-atomic="true">
                       <thead>
@@ -85,7 +85,7 @@
                       </tr>
                       </thead>
                       <tbody>
-                      <tr ng-repeat="(uhUuid, data) in compareOwnerGroupingsResults"
+                      <tr ng-repeat="(uhUuid, data) in duplicateOwnerResults"
                           class="table table-sm">
 
                           <td class="overflow-auto py-1 px-3">

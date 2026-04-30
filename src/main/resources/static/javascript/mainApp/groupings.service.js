@@ -447,8 +447,8 @@
             /**
              * Get all duplicated owners in a grouping, and their sources of ownership.
              */
-            compareOwnerGroupings(path, onSuccess, onError) {
-                let endpoint = BASE_URL + "groupings/" + path + "/owners/compare";
+            getDuplicateOwners(path, onSuccess, onError) {
+                let endpoint = BASE_URL + "groupings/" + path + "/owners/duplicates";
                 dataProvider.loadData(endpoint, onSuccess, onError);
             },
 
