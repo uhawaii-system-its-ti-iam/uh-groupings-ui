@@ -2361,6 +2361,65 @@
                 $scope.excludeDisable = true;
             }
         };
+
+        /**
+         * Retire a grouping with confirmation dialog.
+         * Displays a confirmation modal before retiring the grouping.
+         */
+        $scope.retireGrouping = () => {
+            if (!$scope.selectedGrouping || !$scope.selectedGrouping.path) {
+                $scope.displayDynamicModal(
+                    "Error",
+                    "No grouping selected to retire."
+                );
+                return;
+            }
+
+            // Open the retirement confirmation modal
+            $scope.retireGroupingModalInstance = $uibModal.open({
+                templateUrl: "modal/retireGroupingModal",
+                scope: $scope,
+                backdrop: "static"
+            });
+        };
+
+        /**
+         * Proceed with retiring the grouping after confirmation.
+         */
+        $scope.proceedRetireGroupingModal = () => {
+            $scope.retireGroupingModalInstance.close();
+            $scope.loading = true;
+
+            groupingsService.retireGrouping($scope.selectedGrouping.path,
+                (res) => {
+                    // Success handler
+                    $scope.loading = false;
+                    $scope.displayDynamicModal(
+                        "Success",
+                        "Grouping retired successfully."
+                    );
+                    $scope.dynamicModal.result.finally(() => {
+                        // Navigate back to groupings list
+                        $window.location.href = "groupings";
+                    });
+                },
+                (err) => {
+                    // Error handler
+                    $scope.loading = false;
+                    $scope.displayDynamicModal(
+                        "Error",
+                        `Failed to retire grouping: ${err.statusCode || 'Unknown error'}`
+                    );
+                }
+            );
+        };
+
+        /**
+         * Cancel the retire grouping modal.
+         */
+        $scope.cancelRetireGroupingModal = () => {
+            $scope.retireGroupingModalInstance.dismiss();
+        };
     }
 
     function OptPreferenceModalController($scope, $uibModalInstance, isSingular, preferenceChanges, Message) {

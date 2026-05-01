@@ -1,0 +1,17 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<div class="modal-header">
+    <h1 class="h5 modal-title" id="retire-grouping-modal">Confirm Retire Grouping</h1>
+    <a class="close" type="button" ng-click="cancelRetireGroupingModal()">
+        <span aria-hidden="true">&times;</span>
+    </a>
+</div>
+<div class="modal-body" id="modal-body">
+    <p><strong>Warning:</strong> You are about to retire the grouping: <strong>{{ selectedGrouping.name }}</strong></p>
+    <p>This action cannot be undone. All members, settings, and configurations for this grouping will be permanently removed.</p>
+    <p>Are you sure you want to proceed?</p>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-danger btn-sized" ng-click="proceedRetireGroupingModal()">Yes, Retire</button>
+    <button class="btn btn-light" ng-click="cancelRetireGroupingModal()" data-dismiss="modal">Cancel</button>
+</div>
+</html>

@@ -466,6 +466,17 @@
                 let endpoint = BASE_URL + "testing/exception";
                 dataProvider.loadData(endpoint, onSuccess, onError);
             },
+
+            /**
+             * Retire a grouping
+             * @param groupingPath - The path of the grouping to retire
+             * @param onSuccess - Function to be called when HTTP request returns a success
+             * @param onError - Function to be called if HTTP request returns an error
+             */
+            retireGrouping(groupingPath, onSuccess, onError) {
+                let endpoint = BASE_URL + "groupings/" + groupingPath + "/retire";
+                dataProvider.updateData(endpoint, onSuccess, onError);
+            },
         };
     });
 })();

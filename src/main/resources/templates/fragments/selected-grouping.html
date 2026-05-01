@@ -57,9 +57,14 @@
              ng-init="changeStyleAttribute('sel', 'display', 'unset')">
             <section>
                 <div class="card-header teal-bg">
-                    <div class="row" id="selectedGroupHeader">
+                    <div class="row d-flex justify-content-between align-items-center" id="selectedGroupHeader">
                         <div class="col-md-8" id="groupNameCol">
                             <h2 ng-if="selectedGrouping.name" class="card-title text-light mb-0"> {{ selectedGrouping.name }}</h2>
+                        </div>
+                        <div class="col-md-4 text-right">
+                            <button class="btn btn-primary btn-grouping" ng-click="retireGrouping()">
+                                <i class="fas fa-door-open mr-1"></i>Retire Grouping
+                            </button>
                         </div>
                     </div>
                     <div class="row">
