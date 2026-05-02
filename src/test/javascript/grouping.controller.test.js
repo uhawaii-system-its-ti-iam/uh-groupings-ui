@@ -313,10 +313,10 @@ describe("GroupingController", () => {
         });
     });
 
-    describe("fetchCompareOwnerGroupings", () => {
-        it("should call compareOwnerGroupings", () => {
-            spyOn(gs, "compareOwnerGroupings").and.callThrough();
-            scope.fetchOwners().then((res) => expect(gs.compareOwnerGroupings).toHaveBeenCalled());
+    describe("fetchDuplicateOwners", () => {
+        it("should call getDuplicateOwners", () => {
+            spyOn(gs, "getDuplicateOwners").and.callThrough();
+            scope.fetchOwners().then((res) => expect(gs.getDuplicateOwners).toHaveBeenCalled());
         });
     });
 

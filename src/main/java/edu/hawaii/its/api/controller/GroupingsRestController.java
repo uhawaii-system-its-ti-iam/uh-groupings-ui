@@ -513,12 +513,12 @@ public class GroupingsRestController {
      * Get all duplicated owners in a grouping, and their sources of ownership.
      * (Either both a direct owner and indirect owner, or multiple indirect owners via different owner-groupings.)
      */
-    @GetMapping(value = "/groupings/{path:[\\w-:.]+}/owners/compare")
-    public ResponseEntity<String> compareOwnerGroupings(@PathVariable String path) {
+    @GetMapping(value = "/groupings/{path:[\\w-:.]+}/owners/duplicates")
+    public ResponseEntity<String> getDuplicateOwners(@PathVariable String path) {
         String currentUid = policy.sanitize(userContextService.getCurrentUid());
         String safePath = policy.sanitize(path);
-        logger.info(String.format("Entered REST compareOwnerGroupings - currentUid: %s, path: %s", currentUid, path));
-        String uri = String.format(API_2_1_BASE + "/groupings/%s/owners/compare", safePath);
+        logger.info(String.format("Entered REST getDuplicateOwners - currentUid: %s, path: %s", currentUid, path));
+        String uri = String.format(API_2_1_BASE + "/groupings/%s/owners/duplicates", safePath);
         return httpRequestService.makeApiRequest(uri, HttpMethod.GET);
     }
 
