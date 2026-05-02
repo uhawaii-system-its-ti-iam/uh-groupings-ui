@@ -27,9 +27,6 @@
         $scope.showDescriptionColumn = JSON.parse(localStorage.getItem("showDescriptionColumn") ?? true);
         $scope.showGroupingPathColumn = JSON.parse(localStorage.getItem("showPathColumn") ?? false);
 
-        $scope.ootbActiveUser = "";
-        $scope.availableProfiles = [];
-
         angular.extend(this, $controller("TableJsController", { $scope }));
 
         userService.getCurrentUser().then((res) => {
@@ -265,32 +262,6 @@
          */
         $scope.hoverCopy = () => {
             $("[data-content='copy']").popover();
-        };
-
-        /**
-         * Get available ootb active profiles that defined in ootb.active.user.profiles.json
-         */
-        $scope.loadAvailableProfiles = () => {
-            groupingsService.getAvailableOotbActiveProfiles(
-                (data) => {
-                    $scope.availableProfiles = data;
-                },
-                (res) => {
-                    $scope.resStatus = res.status;
-                }
-            );
-        };
-
-        /**
-         * Updates the active user profile, clears cache by reloading the page with a cache-busting URL.
-         * @param profile - the type of profile to switch to ('MEMBER', 'OWNER', 'ADMIN')
-         */
-        $scope.updateActiveUserProfile = (profile) => {
-            groupingsService.updateOotbActiveProfile(profile,
-                () => $scope.$apply(),
-                (res) => {
-                    $scope.resStatus = res.status;
-            });
         };
 
         /**

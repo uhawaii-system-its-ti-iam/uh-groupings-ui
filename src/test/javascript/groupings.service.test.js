@@ -231,37 +231,6 @@ describe("GroupingsService", () => {
         });
     });
 
-    describe("getAvailableOotbActiveProfiles", () => {
-        it("should call dataProvider.loadData", () => {
-            spyOn(dp, "loadData");
-            gs.getAvailableOotbActiveProfiles(onSuccess, onError);
-            expect(dp.loadData).toHaveBeenCalled();
-        });
-
-        it("should use the correct path", () => {
-            gs.getAvailableOotbActiveProfiles(onSuccess, onError);
-            httpBackend.expectGET(BASE_URL + "ootb/availableProfiles").respond(200);
-            expect(httpBackend.flush).not.toThrow();
-        });
-    });
-
-    describe("updateOotbActiveProfile", () => {
-        let profile = "testiwta";
-
-        it("should call dataProvider.updateData", () => {
-            spyOn(dp, "updateData"); // Spy on the updateData method
-            gs.updateOotbActiveProfile(profile, onSuccess, onError);
-            expect(dp.updateData).toHaveBeenCalled();
-        });
-
-        it("should use the correct path", () => {
-            gs.updateOotbActiveProfile(profile, onSuccess, onError);
-            httpBackend.expectPOST(BASE_URL + "ootb/" + profile).respond(200);
-            expect(httpBackend.flush).not.toThrow();
-        });
-    });
-
-
     describe("assignOwnership", () => {
         let newOwner;
         it("should call dataProvider.updateData", () => {
