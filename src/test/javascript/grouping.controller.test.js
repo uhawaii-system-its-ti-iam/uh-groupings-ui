@@ -104,7 +104,6 @@ describe("GroupingController", () => {
         ];
         scope.pagedItemsInclude = scope.groupToPages(scope.groupingInclude);
 
-        scope.pagedItemsExclude = scope.groupToPages(scope.groupingExclude);
         scope.groupingExclude = [
             {
                 name: "User Four",
@@ -128,6 +127,8 @@ describe("GroupingController", () => {
                 lastName: "Nine"
             }
         ];
+
+        scope.pagedItemsExclude = scope.groupToPages(scope.groupingExclude);
 
         scope.groupingMembers = _.cloneDeep(scope.groupingInclude);
         scope.groupingMembers.push({
@@ -3053,109 +3054,140 @@ describe("GroupingController", () => {
 
     describe("toggleSelectAllCheckbox", () => {
         beforeEach(() => {
-            scope.membersInCheckboxList = scope.pagedItemsInclude;
+            scope.membersInCheckboxList = {
+                "00000001": false,
+                "00000002": false,
+                "00000003": false
+            };
         });
 
         it("should call assignListToGroup", () => {
             spyOn(scope, "assignListToGroup").and.callThrough();
+
             scope.toggleSelectAllCheckbox("Include");
-            expect(scope.assignListToGroup).toHaveBeenCalled();
+
+            expect(scope.assignListToGroup).toHaveBeenCalledWith("Include");
         });
 
         it("should check the Select All checkbox", () => {
             scope.pageSelected = false;
+
             scope.toggleSelectAllCheckbox("Include");
-            expect(scope.pageSelected = true);
+
+            expect(scope.pageSelected).toBeTrue();
         });
 
         it("should uncheck the Select All checkbox", () => {
-            scope.pageSelected = false;
-            scope.toggleSelectAllCheckbox("Include");
-            expect(scope.pageSelected = true);
-        });
-
-        it("should check all checkboxes", () => {
-            scope.pageSelected = false;
-            scope.toggleSelectAllCheckbox("Include");
-            for (let i in scope.membersInCheckboxList[0]) {
-                if (scope.membersInCheckboxList[0].length !== 0) {
-                    const memberUuid = scope.pagedItemsInclude[0][Number(i)].uhUuid;
-                    expect(scope.membersInCheckboxList[String(memberUuid)]).toEqual(true);
-                }
-            }
-        });
-
-        it("should uncheck all checkboxes", () => {
             scope.pageSelected = true;
+
             scope.toggleSelectAllCheckbox("Include");
-            for (let i in scope.membersInCheckboxList[0]) {
-                if (scope.membersInCheckboxList[0].length !== 0) {
-                    const memberUuid = scope.pagedItemsInclude[0][Number(i)].uhUuid;
-                    expect(scope.membersInCheckboxList[String(memberUuid)]).toEqual(false);
-                }
+
+            expect(scope.pageSelected).toBeFalse();
+        });
+
+        it("should check all checkboxes on the current Include page", () => {
+            scope.pageSelected = false;
+
+            scope.toggleSelectAllCheckbox("Include");
+
+            for (const member of scope.pagedItemsInclude[scope.currentPageInclude]) {
+                expect(scope.membersInCheckboxList[member.uhUuid]).toBeTrue();
             }
+        });
+
+        it("should uncheck all checkboxes on the current Include page", () => {
+            scope.membersInCheckboxList = {
+                "00000001": true,
+                "00000002": true,
+                "00000003": true
+            };
+            scope.pageSelected = true;
+
+            scope.toggleSelectAllCheckbox("Include");
+
+            for (const member of scope.pagedItemsInclude[scope.currentPageInclude]) {
+                expect(scope.membersInCheckboxList[member.uhUuid]).toBeFalse();
+            }
+
             expect(scope.pageSelected).toBeFalse();
         });
 
         it("should change paginationPageChange from true to false", () => {
             scope.paginationPageChange = true;
+
             scope.toggleSelectAllCheckbox("Include");
+
             expect(scope.paginationPageChange).toBeFalse();
         });
     });
 
     describe("toggleSingleCheckbox", () => {
         let testUser;
+
         beforeEach(() => {
-            scope.membersInCheckboxList = scope.pagedItemsInclude;
-            testUser = scope.membersInCheckboxList[0][0];
+            testUser = scope.pagedItemsInclude[scope.currentPageInclude][0];
+
+            scope.membersInCheckboxList = {
+                "00000001": false,
+                "00000002": false,
+                "00000003": false
+            };
         });
 
         it("should call assignListToGroup", () => {
             spyOn(scope, "assignListToGroup").and.callThrough();
+
             scope.toggleSingleCheckbox("Include", testUser);
-            expect(scope.assignListToGroup).toHaveBeenCalled();
+
+            expect(scope.assignListToGroup).toHaveBeenCalledWith("Include");
         });
 
         it("should check the member's checkbox", () => {
             scope.membersInCheckboxList[testUser.uhUuid] = false;
+
             scope.toggleSingleCheckbox("Include", testUser);
+
             expect(scope.membersInCheckboxList[testUser.uhUuid]).toBeTrue();
         });
 
         it("should uncheck the member's checkbox", () => {
             scope.membersInCheckboxList[testUser.uhUuid] = true;
+
             scope.toggleSingleCheckbox("Include", testUser);
+
             expect(scope.membersInCheckboxList[testUser.uhUuid]).toBeFalse();
         });
 
         it("should change paginationPageChange from true to false", () => {
             scope.paginationPageChange = true;
+
             scope.toggleSingleCheckbox("Include", testUser);
+
             expect(scope.paginationPageChange).toBeFalse();
         });
     });
 
     describe("assignListToGroup", () => {
-        it("should set list with exclude values", () => {
-            scope.groupingMembers = {
-                allMembers: scope.groupingInclude,
-                membersOnPage: scope.pagedItemsInclude[scope.currentPageInclude]
-            };
+        it("should set selectedMembersGroup with exclude values and not change groupingMembers", () => {
+            const originalGroupingMembers = _.cloneDeep(scope.groupingMembers);
 
             scope.assignListToGroup("Exclude");
-            expect(scope.groupingMembers.allMembers).toEqual(scope.groupingExclude);
-            expect(scope.groupingMembers.membersOnPage).toEqual(scope.pagedItemsExclude[scope.currentPageExclude]);
+
+            expect(scope.selectedMembersGroup.allMembers).toEqual(scope.groupingExclude);
+            expect(scope.selectedMembersGroup.membersOnPage)
+                .toEqual(scope.pagedItemsExclude[scope.currentPageExclude] || []);
+            expect(scope.groupingMembers).toEqual(originalGroupingMembers);
         });
 
-        it("should set list with include values", () => {
-            scope.groupingMembers = {
-                allItems: scope.groupingExclude,
-                pageItems: scope.pagedItemsExclude[scope.currentPageExclude]
-            };
+        it("should set selectedMembersGroup with include values and not change groupingMembers", () => {
+            const originalGroupingMembers = _.cloneDeep(scope.groupingMembers);
+
             scope.assignListToGroup("Include");
-            expect(scope.groupingMembers.allMembers).toEqual(scope.groupingInclude);
-            expect(scope.groupingMembers.membersOnPage).toEqual(scope.pagedItemsInclude[scope.currentPageInclude]);
+
+            expect(scope.selectedMembersGroup.allMembers).toEqual(scope.groupingInclude);
+            expect(scope.selectedMembersGroup.membersOnPage)
+                .toEqual(scope.pagedItemsInclude[scope.currentPageInclude] || []);
+            expect(scope.groupingMembers).toEqual(originalGroupingMembers);
         });
     });
 

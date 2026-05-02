@@ -1,13 +1,16 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <div class="modal-header">
     <h1 class="h5 modal-title" id="add-modal">Add Member</h1>
-    <a class="close" type="button"  ng-click="cancelAddModal()">
+    <a class="close" type="button" ng-click="cancelAddModal()">
         <span aria-hidden="true">&times;</span>
     </a>
 </div>
 
 <div class="modal-body" id="modal-body" tabindex="0">
-    <p class="modal-black-text text-truncate" ng-if="membersInList.length > 0">Already in {{listName}}: {{membersInList}}</p>
+    <p class="modal-black-text text-truncate" ng-if="membersInList.length > 0">
+        Already in {{listName}}: {{membersInList}}
+    </p>
+
     <p>
         <span class="modal-black-text" th:text="#{screen.message.modal.add.confirmation}"></span>
         <span class="modal-black-text">{{listName}} list.</span>
@@ -18,66 +21,81 @@
             <th th:utext="#{screen.message.modal.add.name}"></th>
             <td class="font-weight-normal modal-attributes">{{fullName}}</td>
         </tr>
+
         <tr>
             <th th:utext="#{screen.message.modal.add.username}"></th>
             <td class="font-weight-normal modal-attributes">
                 {{uid}}
                 <span class="modal-black-text" ng-if="!uid">
                     N/A
-                    <span class="fa fa-question-circle clickable" aria-hidden="true"
+                    <span class="fa fa-question-circle clickable"
+                          aria-hidden="true"
                           tooltip
-                          th:title="#{screen.message.common.tooltip.username.notApplicable}">
+                          th:title="#{screen.message.common.tooltip.uid.notApplicable}">
                     </span>
                 </span>
             </td>
         </tr>
+
         <tr>
             <th th:utext="#{screen.message.modal.add.uhUserId}"></th>
             <td class="font-weight-normal modal-attributes">{{uhUuid}}</td>
         </tr>
+
         <tr ng-if="listName !== 'owners' && groupingBasis.length > 0">
             <th th:utext="#{screen.message.modal.add.inBasis}"></th>
             <td class="font-weight-normal modal-attributes">
-                {{ inBasis }}
+                {{inBasis}}
+                <span class="fa fa-info-circle clickable"
+                      ng-if="inBasis === 'Yes' && listName === 'Include'"
                       tooltip
-                      th:title="#{screen.message.modal.add.tooltip.inBasis.include}" aria-hidden="true">
+                      th:title="#{screen.message.modal.add.tooltip.inBasis.include}"
+                      aria-hidden="true">
                 </span>
-                <span class="fa fa-info-circle clickable" ng-if="inBasis === 'Yes' && listName === 'Exclude'"
+                <span class="fa fa-info-circle clickable"
+                      ng-if="inBasis === 'Yes' && listName === 'Exclude'"
                       tooltip
-                      th:title="#{screen.message.modal.add.tooltip.inBasis.exclude}" aria-hidden="true">
+                      th:title="#{screen.message.modal.add.tooltip.inBasis.exclude}"
+                      aria-hidden="true">
                 </span>
-                <span class="fa fa-info-circle clickable" ng-if="inBasis === 'No' && listName === 'Exclude' && allowOptIn"
+                <span class="fa fa-info-circle clickable"
+                      ng-if="inBasis === 'No' && listName === 'Exclude' && allowOptIn"
                       tooltip
-                      th:title="#{screen.message.modal.add.tooltip.inBasis.exclude.optIn}" aria-hidden="true">
+                      th:title="#{screen.message.modal.add.tooltip.inBasis.exclude.optIn}"
+                      aria-hidden="true">
                 </span>
             </td>
         </tr>
         <tr ng-if="listName !== 'owners' && listName === 'Exclude'">
             <th th:utext="#{screen.message.modal.add.inInclude}"></th>
             <td class="font-weight-normal modal-attributes">
-                {{ inInclude }}
-                <span class="fa fa-info-circle clickable" ng-if="inInclude === 'Yes'"
+                {{inInclude}}
+                <span class="fa fa-info-circle clickable"
+                      ng-if="inInclude === 'Yes'"
                       tooltip
-                      th:title="#{screen.message.modal.add.tooltip.inInclude}" aria-hidden="true">
+                      th:title="#{screen.message.modal.add.tooltip.inInclude}"
+                      aria-hidden="true">
                 </span>
             </td>
         </tr>
         <tr ng-if="listName !== 'owners' && listName === 'Include'">
             <th th:utext="#{screen.message.modal.add.inExclude}"></th>
             <td class="font-weight-normal modal-attributes">
-                {{ inExclude }}
-                <span class="fa fa-info-circle clickable" ng-if="inExclude === 'Yes'"
+                {{inExclude}}
+                <span class="fa fa-info-circle clickable"
+                      ng-if="inExclude === 'Yes'"
                       tooltip
-                      th:title="#{screen.message.modal.add.tooltip.inExclude}" aria-hidden="true">
+                      th:title="#{screen.message.modal.add.tooltip.inExclude}"
+                      aria-hidden="true">
                 </span>
             </td>
         </tr>
     </table>
 
     <p>
-        <span class="modal-black-text">Are you sure you want to add</span>
+        <span class="modal-black-text">Are you sure you want to add </span>
         <span class="font-weight-bold">{{fullName}}</span>
-        <span class="modal-black-text">to the {{listName}} list?</span>
+        <span class="modal-black-text"> to the {{listName}} list?</span>
     </p>
     <p class="alert alert-warning mt-2" role="alert" ng-if="hasDeptAccount">
         <span class="text-dark" th:text="#{screen.message.modal.add.deptAccount}"></span>

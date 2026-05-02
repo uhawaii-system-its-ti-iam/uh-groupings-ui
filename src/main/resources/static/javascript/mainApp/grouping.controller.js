@@ -32,8 +32,26 @@
         $scope.currentPageBasis = 0;
 
         $scope.groupingMembers = [];
+        $scope.displayedGroupingMembers = [];
         $scope.pagedItemsMembers = [];
         $scope.currentPageMembers = 0;
+
+        $scope.allMembersTotalCount = 0;
+        $scope.allMembersPageNumber = 1;
+        $scope.allMembersTotalPages = 1;
+        $scope.allMembersSortBy = "name";
+        $scope.allMembersIsAscending = true;
+        $scope.allMembersPaths = [];
+        $scope.suppressAllMembersWatch = false;
+        $scope.allMembersLoadedCount = 0;
+        $scope.allMembersRequestId = "";
+        $scope.allMembersLoading = false;
+        $scope.allMembersProgressComplete = false;
+
+        $scope.selectedMembersGroup = {
+            allMembers: [],
+            membersOnPage: []
+        };
 
         $scope.groupingInclude = [];
         $scope.pagedItemsInclude = [];
@@ -204,27 +222,64 @@
             $scope.groupingMembers = [];
             $scope.pagedItemsMembers = [];
             const groupingPath = $scope.selectedGrouping.path;
-            const paths = [groupingPath + ":basis", groupingPath + ":include", groupingPath + ":exclude"];
+            const paths = [groupingPath, groupingPath + ":basis", groupingPath + ":include", groupingPath + ":exclude"];
             let currentPage = 1;
-            $scope.setPage("First", "currentPageMembers", "pagedItemsMembers");
             $scope.loading = true;
             $scope.paginatingComplete = false;
+            $scope.paginatingProgress = true;
+            $scope.largeGrouping = false;
+
+            $scope.allMembersPaths = paths;
+            $scope.groupingMembers = [];
+            $scope.displayedGroupingMembers = [];
+            $scope.pagedItemsMembers = [];
+            $scope.currentPageMembers = 0;
+            $scope.allMembersTotalCount = 0;
+            $scope.allMembersLoadedCount = 0;
+            $scope.allMembersRequestId = "";
+            $scope.allMembersLoading = true;
+            $scope.allMembersProgressComplete = false;
+            $scope.allMembersPageNumber = 1;
+            $scope.allMembersTotalPages = 1;
+            $scope.allMembersSortBy = "name";
+            $scope.allMembersIsAscending = true;
+            $scope.membersQuery = "";
+            $scope.suppressAllMembersWatch = false;
+
+            $scope.groupingBasis = [];
+            $scope.groupingInclude = [];
+            $scope.groupingExclude = [];
+            $scope.groupingOwners = [];
+
+            $scope.pagedItemsBasis = [];
+            $scope.pagedItemsInclude = [];
+            $scope.pagedItemsExclude = [];
+            $scope.pagedItemsOwners = [];
+
+            $scope.currentPageBasis = 0;
+            $scope.currentPageInclude = 0;
+            $scope.currentPageExclude = 0;
+            $scope.currentPageOwners = 0;
+
             await $scope.getGroupingDescription(groupingPath);
             await $scope.getGroupingSyncDest(groupingPath);
             await $scope.getGroupingOptAttributes(groupingPath);
-            while (!($scope.paginatingComplete) && loadMembersList) {
+
+            await $scope.fetchOwners(groupingPath);
+            await $scope.fetchDuplicateOwners(groupingPath);
+            await $scope.fetchAllMembers(1, paths);
+
+            while (!$scope.paginatingComplete && loadMembersList) {
                 $scope.paginatingProgress = true;
-                $scope.disableResetCheckboxes();
-                await $scope.fetchOwners(groupingPath);
-                await $scope.fetchDuplicateOwners(groupingPath);
                 await $scope.fetchGrouping(currentPage, paths);
+                $scope.disableResetCheckboxes();
                 currentPage++;
-                $scope.loading = false;
             }
             loadMembersList = false;
+            $scope.paginatingProgress = false;
+            $scope.loading = false;
             $scope.$applyAsync();
         };
-
         /**
          * Fetches all the members from each of the specified group paths
          * @param currentPage - Keeps track of current page in groupings
@@ -235,9 +290,11 @@
                 groupingsService.getGrouping(groupPaths, currentPage, PAGE_SIZE, "name", true, (res) => {
                     if (res.paginationComplete) {
                         $scope.paginatingComplete = true;
-                        $scope.paginatingProgress = false;
-                        $scope.loading = false;
-                    } else if (res.groupingBasis.groupPath.slice(0, -6) === ($scope.selectedGrouping.path)) {
+                        resolve();
+                        return;
+                    }
+
+                    if (res.groupingBasis.groupPath.slice(0, -6) === $scope.selectedGrouping.path) {
                         let putGroupMembers = combineGroupMembers;
                         if (currentPage === 1) {
                             putGroupMembers = setGroupMembers;
@@ -252,17 +309,11 @@
                         $scope.groupingExclude = putGroupMembers(res.groupingExclude.members, $scope.groupingExclude);
                         $scope.addInBasis($scope.groupingExclude);
                         $scope.filter($scope.groupingExclude, "pagedItemsExclude", "currentPageExclude", $scope.excludeQuery, false);
-
-                        $scope.groupingMembers = putGroupMembers(res.allMembers.members, $scope.groupingMembers);
-                        $scope.filter($scope.groupingMembers, "pagedItemsMembers", "currentPageMembers", $scope.membersQuery, false);
-
-                        $scope.loading = false;
                     }
                     resolve();
-
                 }, (res) => {
                     $scope.paginatingComplete = true;
-                    $scope.resStatus = res.status;
+                    $scope.resStatus = res ? res.status : null;
                     if (res === null) {
                         $scope.largeGrouping = true;
                         $scope.paginatingComplete = false;
@@ -408,6 +459,190 @@
                 $scope.resStatus = res.status;
                 resolve();
             }));
+        };
+
+        /**
+         * Get the complete membership of a grouping.
+         * @param groupPaths
+         * @returns {Promise<unknown>}
+         */
+
+        $scope.fetchAllMembers = (page, groupPaths) => {
+            return new Promise((resolve) => {
+                $scope.allMembersLoading = true;
+                $scope.allMembersProgressComplete = false;
+                $scope.allMembersLoadedCount = 0;
+                $scope.allMembersRequestId = "";
+
+                groupingsService.startAllMembersProgress(
+                    groupPaths,
+                    PAGE_SIZE,
+                    $scope.allMembersSortBy,
+                    $scope.allMembersIsAscending,
+                    (res) => {
+                        $scope.allMembersRequestId = res.requestId;
+                        $scope.pollAllMembersProgress(res.requestId);
+                        resolve();
+                    },
+                    (err) => {
+                        $scope.allMembersLoading = false;
+                        $scope.loading = false;
+                        $scope.resStatus = err ? err.status : null;
+
+                        if (err === null) {
+                            $scope.largeGrouping = true;
+                        } else if (err.statusCode === 403) {
+                            $scope.displayOwnerErrorModal();
+                        } else {
+                            $scope.displayApiErrorModal();
+                        }
+
+                        resolve();
+                    }
+                );
+            });
+        };
+
+        $scope.pollAllMembersProgress = (requestId) => {
+            if (!requestId) {
+                return;
+            }
+
+            groupingsService.getAllMembersProgress(
+                requestId,
+                (res) => {
+                    $scope.allMembersLoadedCount = res.loadedCount || 0;
+
+                    if (res.failed) {
+                        $scope.allMembersLoading = false;
+                        $scope.loading = false;
+                        $scope.largeGrouping = true;
+                        $scope.$applyAsync();
+                        return;
+                    }
+
+                    if (res.complete) {
+                        $scope.allMembersProgressComplete = true;
+                        $scope.fetchAllMembersResult(requestId);
+                        return;
+                    }
+
+                    $scope.$applyAsync();
+                    setTimeout(() => {
+                        $scope.pollAllMembersProgress(requestId);
+                    }, 1000);
+                },
+                () => {
+                    $scope.allMembersLoading = false;
+                    $scope.loading = false;
+                    $scope.largeGrouping = true;
+                    $scope.$applyAsync();
+                }
+            );
+        };
+
+        $scope.fetchAllMembersResult = (requestId) => {
+            return new Promise((resolve) => {
+                groupingsService.getAllMembersResult(
+                    requestId,
+                    (res) => {
+                        $scope.groupingMembers = res.members || [];
+                        $scope.currentPageMembers = 0;
+                        $scope.allMembersPageNumber = 1;
+
+                        $scope.applyAllMembersFilter();
+
+                        $scope.allMembersLoading = false;
+                        $scope.loading = false;
+                        resolve();
+                    },
+                    (err) => {
+                        $scope.allMembersLoading = false;
+                        $scope.loading = false;
+                        $scope.resStatus = err ? err.status : null;
+
+                        if (err === null) {
+                            $scope.largeGrouping = true;
+                        } else if (err.statusCode === 403) {
+                            $scope.displayOwnerErrorModal();
+                        } else {
+                            $scope.displayApiErrorModal();
+                        }
+
+                        resolve();
+                    }
+                );
+            });
+        };
+
+        const normalizeAllMembersSortValue = (member, sortBy) => {
+            if (member === null || typeof member === "undefined") {
+                return "";
+            }
+
+            if (member[sortBy] === null || typeof member[sortBy] === "undefined") {
+                return "";
+            }
+
+            return String(member[sortBy]).toLowerCase();
+        };
+
+        const sortAllMembersList = (members) => {
+            if (!Array.isArray(members)) {
+                return [];
+            }
+
+            let sortedMembers = _.sortBy(members, (member) => {
+                return normalizeAllMembersSortValue(member, $scope.allMembersSortBy);
+            });
+
+            if (!$scope.allMembersIsAscending) {
+                sortedMembers = sortedMembers.reverse();
+            }
+
+            return sortedMembers;
+        };
+
+        $scope.applyAllMembersFilter = () => {
+            const sortedMembers = sortAllMembersList($scope.groupingMembers);
+
+            $scope.filter(
+                sortedMembers,
+                "pagedItemsMembers",
+                "currentPageMembers",
+                $scope.membersQuery,
+                true
+            );
+
+            let total = 0;
+            let flattenedMembers = [];
+
+            for (let i = 0; i < $scope.pagedItemsMembers.length; i++) {
+                total += $scope.pagedItemsMembers[i].length;
+                Array.prototype.push.apply(flattenedMembers, $scope.pagedItemsMembers[i]);
+            }
+
+            $scope.displayedGroupingMembers = flattenedMembers;
+            $scope.allMembersTotalCount = total;
+            $scope.allMembersTotalPages = $scope.pagedItemsMembers.length > 0
+                ? $scope.pagedItemsMembers.length
+                : 1;
+        };
+
+        $scope.sortAllMembers = (sortBy) => {
+            if ($scope.allMembersLoading || $scope.loading) {
+                return;
+            }
+
+            if ($scope.allMembersSortBy === sortBy) {
+                $scope.allMembersIsAscending = !$scope.allMembersIsAscending;
+            } else {
+                $scope.allMembersSortBy = sortBy;
+                $scope.allMembersIsAscending = true;
+            }
+
+            $scope.currentPageMembers = 0;
+            $scope.applyAllMembersFilter();
         };
 
         /**
@@ -2132,10 +2367,10 @@
          */
         $scope.toggleSelectAllCheckbox = (group) => {
             $scope.assignListToGroup(group);
-            // Only called when checkbox is clicked on.
-            // Therefore, needs to be flipped to reflect the function of a checkbox.
+
             $scope.pageSelected = !$scope.pageSelected;
-            for (const member of $scope.groupingMembers.membersOnPage) {
+
+            for (const member of $scope.selectedMembersGroup.membersOnPage) {
                 $scope.membersInCheckboxList[member.uhUuid] = $scope.pageSelected;
             }
             $scope.paginationPageChange = false;
@@ -2149,7 +2384,7 @@
         $scope.toggleSingleCheckbox = (group, member) => {
             $scope.assignListToGroup(group);
             $scope.membersInCheckboxList[member.uhUuid] = !$scope.membersInCheckboxList[member.uhUuid];
-            $scope.pageSelected = $scope.checkMainSelectAllCheckbox($scope.groupingMembers);
+            $scope.pageSelected = $scope.checkMainSelectAllCheckbox($scope.selectedMembersGroup);
             $scope.paginationPageChange = false;
         };
 
@@ -2159,14 +2394,14 @@
          */
         $scope.assignListToGroup = (group) => {
             if (group === "Exclude") {
-                $scope.groupingMembers = {
+                $scope.selectedMembersGroup = {
                     allMembers: $scope.groupingExclude,
-                    membersOnPage: $scope.pagedItemsExclude[$scope.currentPageExclude]
+                    membersOnPage: $scope.pagedItemsExclude[$scope.currentPageExclude] || []
                 };
             } else if (group === "Include") {
-                $scope.groupingMembers = {
+                $scope.selectedMembersGroup = {
                     allMembers: $scope.groupingInclude,
-                    membersOnPage: $scope.pagedItemsInclude[$scope.currentPageInclude]
+                    membersOnPage: $scope.pagedItemsInclude[$scope.currentPageInclude] || []
                 };
             }
         };
@@ -2178,7 +2413,7 @@
          */
         $scope.newPage = (group) => {
             $scope.assignListToGroup(group);
-            $scope.pageSelected =  $scope.checkMainSelectAllCheckbox($scope.groupingMembers);
+            $scope.pageSelected = $scope.checkMainSelectAllCheckbox($scope.selectedMembersGroup);
         };
 
         /**
@@ -2189,15 +2424,18 @@
          *                       {Object} membersOnPage - The array of members on the current page.
          * @returns {boolean} - Reflects if the "Select All" checkbox should be checked.
          */
-        $scope.checkMainSelectAllCheckbox = (groupingMembers) => {
+        $scope.checkMainSelectAllCheckbox = (selectedMembersGroup) => {
             $scope.checkPage = true;
 
-            if (groupingMembers.membersOnPage.length === 0) {
+            if (!selectedMembersGroup || !Array.isArray(selectedMembersGroup.membersOnPage)) {
+                return false;
+            }
+
+            if (selectedMembersGroup.membersOnPage.length === 0) {
                 return $scope.checkPage;
             }
 
-            for (let member of groupingMembers.membersOnPage) {
-                // If any checkbox is unchecked, then the main "Select All" checkbox should be unchecked
+            for (let member of selectedMembersGroup.membersOnPage) {
                 if ($scope.membersInCheckboxList[member.uhUuid] === false) {
                     $scope.checkPage = false;
                     break;

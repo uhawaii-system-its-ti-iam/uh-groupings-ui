@@ -754,6 +754,90 @@ public class GroupingsRestControllerTest {
 
     @Test
     @WithMockUhUser
+    public void getAllMembersTest() throws Exception {
+        String uri = REST_CONTROLLER_BASE
+                + "groupings/all-members?page=1&size=700&sortBy=name&isAscending=true";
+        List<String> groupPaths = List.of(
+                GROUPING,
+                GROUPING + ":basis",
+                GROUPING + ":include",
+                GROUPING + ":exclude"
+        );
+
+        given(httpRequestService.makeApiRequestWithBody(anyString(), eq(groupPaths), eq(HttpMethod.POST)))
+                .willReturn(new ResponseEntity(HttpStatus.OK));
+
+        assertNotNull(mockMvc.perform(post(uri).with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(JsonUtil.asJson(groupPaths)))
+                .andExpect(status().isOk())
+                .andReturn());
+
+        verify(httpRequestService, times(1))
+                .makeApiRequestWithBody(anyString(), eq(groupPaths), eq(HttpMethod.POST));
+    }
+
+    @Test
+    @WithMockUhUser
+    public void startAllMembersProgressTest() throws Exception {
+        String uri = REST_CONTROLLER_BASE
+                + "groupings/all-members/start?size=700&sortBy=name&isAscending=true";
+        List<String> groupPaths = List.of(
+                GROUPING,
+                GROUPING + ":basis",
+                GROUPING + ":include",
+                GROUPING + ":exclude"
+        );
+
+        given(httpRequestService.makeApiRequestWithBody(anyString(), eq(groupPaths), eq(HttpMethod.POST)))
+                .willReturn(new ResponseEntity(HttpStatus.OK));
+
+        assertNotNull(mockMvc.perform(post(uri).with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(JsonUtil.asJson(groupPaths)))
+                .andExpect(status().isOk())
+                .andReturn());
+
+        verify(httpRequestService, times(1))
+                .makeApiRequestWithBody(anyString(), eq(groupPaths), eq(HttpMethod.POST));
+    }
+
+    @Test
+    @WithMockUhUser
+    public void getAllMembersProgressTest() throws Exception {
+        String requestId = "request-id-1";
+        String uri = REST_CONTROLLER_BASE + "groupings/all-members/progress/" + requestId;
+
+        given(httpRequestService.makeApiRequest(anyString(), eq(HttpMethod.GET)))
+                .willReturn(new ResponseEntity(HttpStatus.OK));
+
+        assertNotNull(mockMvc.perform(get(uri).with(csrf()))
+                .andExpect(status().isOk())
+                .andReturn());
+
+        verify(httpRequestService, times(1))
+                .makeApiRequest(anyString(), eq(HttpMethod.GET));
+    }
+
+    @Test
+    @WithMockUhUser
+    public void getAllMembersResultTest() throws Exception {
+        String requestId = "request-id-1";
+        String uri = REST_CONTROLLER_BASE + "groupings/all-members/result/" + requestId;
+
+        given(httpRequestService.makeApiRequest(anyString(), eq(HttpMethod.GET)))
+                .willReturn(new ResponseEntity(HttpStatus.OK));
+
+        assertNotNull(mockMvc.perform(get(uri).with(csrf()))
+                .andExpect(status().isOk())
+                .andReturn());
+
+        verify(httpRequestService, times(1))
+                .makeApiRequest(anyString(), eq(HttpMethod.GET));
+    }
+
+    @Test
+    @WithMockUhUser
     public void getGroupingDescriptionTest() throws Exception {
         String uri = REST_CONTROLLER_BASE + "groupings/" + GROUPING + "/description";
 

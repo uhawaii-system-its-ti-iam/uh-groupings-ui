@@ -154,3 +154,51 @@
     display: inline;
     word-break: break-word;
 }
+
+.skeleton-row td {
+    padding: 0.9rem 1rem !important;
+    height: 52px !important;
+    vertical-align: middle !important;
+    border-top: 1px solid #dee2e6;
+    background-color: transparent !important;
+}
+
+.skeleton-line {
+    display: block;
+    height: 1.1rem;
+    border-radius: 4px;
+    background: linear-gradient(
+                    90deg,
+                    #e9ecef 25%,
+                    #f8f9fa 50%,
+                    #e9ecef 75%
+    );
+    background-size: 200% 100%;
+    animation: skeleton-shimmer 1.2s infinite ease-in-out;
+}
+
+.skeleton-name {
+    width: 78%;
+}
+
+.skeleton-uh {
+    width: 58%;
+}
+
+.skeleton-uid {
+    width: 54%;
+}
+
+.skeleton-listing {
+    width: 45%;
+}
+
+@keyframes skeleton-shimmer {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+}
