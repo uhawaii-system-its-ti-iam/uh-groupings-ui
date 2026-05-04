@@ -144,6 +144,7 @@
             $scope.containsInput = false;
             $scope.invalidInput = false;
             $scope.containsDeptAcc = false;
+            $scope.containsServiceAccAdmin = false;
             $scope.addInputError = false;
             $scope.removeInputError = false;
         };
@@ -314,17 +315,12 @@
         };
 
         /**
-         * Checks if any members match restricted-admin rules.
-         * Admin add flow historically blocks accounts when uid matches uhUuid, or when uhUuid is blank.
-         * @param {object[]} membersToAdd - members to add as admins
+         * True if any member is a service account (machine identity uid with a leading underscore).
+         * @param {object[]} membersToAdd - members to evaluate
          * @returns {boolean}
          */
-        $scope.checkForRestrictedAdminAccount = (membersToAdd) => {
-            return membersToAdd.some((member) => {
-                const uid = member?.uid ?? "";
-                const uhUuid = member?.uhUuid ?? "";
-                return uid === uhUuid || _.isEmpty(uhUuid);
-            });
+        $scope.checkForServiceAccountMembers = (membersToAdd) => {
+            return membersToAdd.some((member) => $scope.isServiceAccount(member));
         };
     }
 

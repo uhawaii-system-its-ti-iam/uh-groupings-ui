@@ -499,10 +499,9 @@ describe("GeneralController", () => {
             expect(scope.checkForServiceAccountWithoutUhUuid(membersToAdd)).toBeTrue();
         });
 
-        it("should keep admin restrictions for uid===uhUuid and empty uhUuid", () => {
-            expect(scope.checkForRestrictedAdminAccount([{ uid: "testiwt2", uhUuid: "testiwt2" }])).toBeTrue();
-            expect(scope.checkForRestrictedAdminAccount([{ uid: "_testiwt", uhUuid: "" }])).toBeTrue();
-            expect(scope.checkForRestrictedAdminAccount([{ uid: "testiwta", uhUuid: "99997010" }])).toBeFalse();
+        it("should detect any service account in a member list", () => {
+            expect(scope.checkForServiceAccountMembers([{ uid: "testiwta", uhUuid: "99997010" }])).toBeFalse();
+            expect(scope.checkForServiceAccountMembers([{ uid: "_testiwt", uhUuid: "12345678" }])).toBeTrue();
         });
     });
 

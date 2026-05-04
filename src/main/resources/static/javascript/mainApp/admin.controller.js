@@ -268,9 +268,19 @@
             }
 
             groupingsService.getMemberAttributeResults([sanitizedAdmin], (res) => {
-                // Keep legacy admin restrictions: block uid===uhUuid or missing uhUuid.
-                $scope.isDeptAccount = $scope.checkForRestrictedAdminAccount(res.results);
-                if ($scope.isDeptAccount) {
+                const members = res.results ?? [];
+                $scope.containsDeptAcc = false;
+                $scope.containsServiceAccAdmin = false;
+
+                // Service accounts and department accounts are never eligible for admin assignment.
+                // Also treat leading "_" on the entered id as a service account: lookup may return empty or
+                // incomplete results, which would otherwise open the add modal with N/A fields.
+                const isServiceByEnteredId = _.isString(sanitizedAdmin) && sanitizedAdmin.startsWith("_");
+                if (isServiceByEnteredId || $scope.checkForServiceAccountMembers(members)) {
+                    $scope.containsServiceAccAdmin = true;
+                    return;
+                }
+                if ($scope.checkForDeptAccount(members)) {
                     $scope.containsDeptAcc = true;
                     return;
                 }
