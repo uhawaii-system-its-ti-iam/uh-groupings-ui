@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
-import org.springframework.boot.web.servlet.error.DefaultErrorAttributes;
+import org.springframework.boot.webmvc.error.DefaultErrorAttributes;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.ui.ExtendedModelMap;
 import org.springframework.ui.Model;
