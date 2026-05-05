@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import edu.hawaii.its.api.service.HttpRequestService;
@@ -751,11 +752,11 @@ public class GroupingsRestController {
     }
 
     public String buildUriWithParams(String baseUri, Map<String, String> params) {
-        UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromHttpUrl(baseUri);
+        UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromUriString(baseUri);
         for (Map.Entry<String, String> entry : params.entrySet()) {
             uriComponentsBuilder.queryParam(entry.getKey(), entry.getValue());
         }
-        return uriComponentsBuilder.encode().toUriString();
+        return uriComponentsBuilder.build().encode().toUriString();
     }
 
     protected Boolean shouldDoApiHandshake() {
