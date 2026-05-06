@@ -263,8 +263,8 @@
                         <source>${basedir}/src/main/resources/static/javascript/mainApp/home.controller.js</source>
                         <source>${basedir}/src/main/resources/static/javascript/mainApp/general.controller.js</source>
                         <source>${basedir}/src/main/resources/static/javascript/mainApp/membership.controller.js</source>
-                        <source>${basedir}/src/main/resources/static/javascript/mainApp/grouping.controller.js</source>
-                        <source>${basedir}/src/main/resources/static/javascript/mainApp/groupings.controller.js</source>
+                        <source>${basedir}/src/main/resources/static/javascript/mainApp/groupingDetails.controller.js</source>
+                        <source>${basedir}/src/main/resources/static/javascript/mainApp/listGroupings.controller.js</source>
                         <source>${basedir}/src/main/resources/static/javascript/mainApp/table.controller.js</source>
                         <source>${basedir}/src/main/resources/static/javascript/mainApp/timeout.controller.js</source>
                         <source>${basedir}/src/main/resources/static/javascript/mainApp/feedback.controller.js</source>
