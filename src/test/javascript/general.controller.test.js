@@ -480,4 +480,29 @@ describe("GeneralController", () => {
         });
     });
 
+    describe("account type helper methods", () => {
+        it("should identify service accounts by leading underscore", () => {
+            expect(scope.isServiceAccount({ uid: "_testiwt", uhUuid: "12345678" })).toBeTrue();
+            expect(scope.isServiceAccount({ uid: "testiwta", uhUuid: "99997010" })).toBeFalse();
+        });
+
+        it("should identify department accounts and exclude service accounts", () => {
+            expect(scope.isDepartmentAccount({ uid: "testiwt2", uhUuid: "testiwt2" })).toBeTrue();
+            expect(scope.isDepartmentAccount({ uid: "_testiwt", uhUuid: "_testiwt" })).toBeFalse();
+        });
+
+        it("should detect service accounts without uhUuid", () => {
+            const membersToAdd = [
+                { uid: "testiwta", uhUuid: "99997010" },
+                { uid: "_testiwt", uhUuid: "" }
+            ];
+            expect(scope.checkForServiceAccountWithoutUhUuid(membersToAdd)).toBeTrue();
+        });
+
+        it("should detect any service account in a member list", () => {
+            expect(scope.checkForServiceAccountMembers([{ uid: "testiwta", uhUuid: "99997010" }])).toBeFalse();
+            expect(scope.checkForServiceAccountMembers([{ uid: "_testiwt", uhUuid: "12345678" }])).toBeTrue();
+        });
+    });
+
 });

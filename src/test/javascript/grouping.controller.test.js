@@ -1180,22 +1180,106 @@ describe("GroupingController", () => {
                     spyOn(scope, 'displayDynamicModal');
                     scope.addMembers("owners", memberDept);
 
-                    const deptResults = { resultCode: "SUCCESS", invalid: [], results: ['testiwt2'] };
-                    httpBackend.expectPOST(BASE_URL + "members", ['testiwt2']).respond(200, deptResults);
+                    const deptResults = {
+                        resultCode: "SUCCESS",
+                        invalid: [],
+                        results: [
+                            {
+                                name: "Testf-iwt-2 TestIAM-dept",
+                                uid: "testiwt2",
+                                uhUuid: "testiwt2"
+                            }
+                        ]
+                    };
+                    httpBackend.expectPOST(BASE_URL + "members", ["testiwt2"]).respond(200, deptResults);
                     httpBackend.flush();
 
-                    expect(scope.displayDynamicModal).toHaveBeenCalled();
+                    expect(scope.displayDynamicModal).toHaveBeenCalledWith(
+                        message.Title.OWNER_NOT_ADDED,
+                        message.Body.OWNER_NOT_ADDED
+                    );
                 });
 
                 it("should call $scope.displayDynamicModal() when trying to add a dept account along with other members to Owners", () => {
                     spyOn(scope, 'displayDynamicModal');
                     scope.addMembers("owners", membersDept);
 
-                    const deptResults = { resultCode: "SUCCESS", invalid: [], results: [membersDept] };
+                    const deptResults = {
+                        resultCode: "SUCCESS",
+                        invalid: [],
+                        results: [
+                            {
+                                name: "Testf-iwt-a TestIAM-staff",
+                                uid: "testiwta",
+                                uhUuid: "99997010"
+                            },
+                            {
+                                name: "Testf-iwt-2 TestIAM-dept",
+                                uid: "testiwt2",
+                                uhUuid: "testiwt2"
+                            }
+                        ]
+                    };
                     httpBackend.expectPOST(BASE_URL + "members", membersDept).respond(200, deptResults);
                     httpBackend.flush();
 
-                    expect(scope.displayDynamicModal).toHaveBeenCalled();
+                    expect(scope.displayDynamicModal).toHaveBeenCalledWith(
+                        message.Title.OWNER_NOT_ADDED,
+                        message.Body.OWNER_NOT_ADDED
+                    );
+                });
+
+                it("should allow adding a service account with assigned uhUuid to Owners", () => {
+                    spyOn(scope, "displayAddModal");
+                    spyOn(scope, "displayDynamicModal");
+                    const serviceAccount = ["_testiwt"];
+                    scope.addMembers("owners", serviceAccount);
+
+                    const serviceResults = {
+                        resultCode: "SUCCESS",
+                        invalid: [],
+                        results: [
+                            {
+                                name: "Groupings Service Account",
+                                uid: "_testiwt",
+                                uhUuid: "12345678"
+                            }
+                        ]
+                    };
+                    httpBackend.expectPOST(BASE_URL + "members", serviceAccount).respond(200, serviceResults);
+                    httpBackend.flush();
+
+                    expect(scope.displayDynamicModal).not.toHaveBeenCalled();
+                    expect(scope.displayAddModal).toHaveBeenCalledWith({
+                        membersAttributes: serviceResults,
+                        uhIdentifiers: serviceAccount,
+                        listName: "owners"
+                    });
+                });
+
+                it("should block adding a service account without uhUuid to Owners", () => {
+                    spyOn(scope, "displayDynamicModal");
+                    const serviceAccountNoUhUuid = ["_testiwt"];
+                    scope.addMembers("owners", serviceAccountNoUhUuid);
+
+                    const serviceResults = {
+                        resultCode: "SUCCESS",
+                        invalid: [],
+                        results: [
+                            {
+                                name: "Service Account Without UHUUID",
+                                uid: "_testiwt",
+                                uhUuid: ""
+                            }
+                        ]
+                    };
+                    httpBackend.expectPOST(BASE_URL + "members", serviceAccountNoUhUuid).respond(200, serviceResults);
+                    httpBackend.flush();
+
+                    expect(scope.displayDynamicModal).toHaveBeenCalledWith(
+                        message.Title.OWNER_NOT_ADDED,
+                        message.Body.SERVICE_ACCOUNT_UHUUID_REQUIRED
+                    );
                 });
             });
 

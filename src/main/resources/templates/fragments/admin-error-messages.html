@@ -20,6 +20,12 @@
              role="alert">
             <p th:text="#{screen.message.modal.add.preExisting.admin}"></p>
         </div>
+        <!--message for trying to add a service (machine) account as admin-->
+        <div ng-if="containsServiceAccAdmin"
+             class="float-md-left my-3 px-3 pt-2 rounded alert-danger show"
+             role="alert">
+            <p th:text="#{screen.message.modal.add.serviceAccount.admin}"></p>
+        </div>
         <!--message for trying to add a departmental account-->
         <div ng-if="containsDeptAcc"
              class="float-md-left my-3 px-3 pt-2 rounded alert-danger show"

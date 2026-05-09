@@ -144,6 +144,7 @@
             $scope.containsInput = false;
             $scope.invalidInput = false;
             $scope.containsDeptAcc = false;
+            $scope.containsServiceAccAdmin = false;
             $scope.addInputError = false;
             $scope.removeInputError = false;
         };
@@ -265,15 +266,61 @@
         };
 
         /**
-         * Checks if a member is a departmental account
-         * A departmental account is characterized by having the same uid as its uhUuid, or having a blank uhUuid
+         * Checks if member is service account using a machine identity uid with a leading underscore.
+         * @param {object} member - member object
+         * @returns {boolean}
+         */
+        $scope.isServiceAccount = (member) => {
+            const uid = member?.uid ?? "";
+            return uid.startsWith("_");
+        };
+
+        /**
+         * Checks whether  member has a non-empty uhUuid assigned.
+         * @param {object} member - member object
+         * @returns {boolean}
+         */
+        $scope.hasAssignedUhUuid = (member) => {
+            return !_.isEmpty(member?.uhUuid);
+        };
+
+        /**
+         * Checks if a member is a departmental account.
+         * Departmental accounts are non-service accounts whose uhUuid matches uid, or have no uhUuid.
+         * @param {object} member - member object
+         * @returns {boolean}
+         */
+        $scope.isDepartmentAccount = (member) => {
+            const uid = member?.uid ?? "";
+            const uhUuid = member?.uhUuid ?? "";
+            return !$scope.isServiceAccount(member) && (uid === uhUuid || _.isEmpty(uhUuid));
+        };
+
+        /**
+         * Checks if any members in the add list are departmental accounts.
          * @param {object[]} membersToAdd - members to add to a group or admin
-         * @returns {boolean} - True if a member is a departmental account
+         * @returns {boolean}
          */
         $scope.checkForDeptAccount = (membersToAdd) => {
-            return membersToAdd.some(member =>
-                member["uid"] === member['uhUuid'] || member['uhUuid'] === ""
-            );
+            return membersToAdd.some((member) => $scope.isDepartmentAccount(member));
+        };
+
+        /**
+         * Checks if any service accounts are missing a required uhUuid assignment.
+         * @param {object[]} membersToAdd - members to add to a group or admin
+         * @returns {boolean}
+         */
+        $scope.checkForServiceAccountWithoutUhUuid = (membersToAdd) => {
+            return membersToAdd.some((member) => $scope.isServiceAccount(member) && !$scope.hasAssignedUhUuid(member));
+        };
+
+        /**
+         * True if any member is a service account (machine identity uid with a leading underscore).
+         * @param {object[]} membersToAdd - members to evaluate
+         * @returns {boolean}
+         */
+        $scope.checkForServiceAccountMembers = (membersToAdd) => {
+            return membersToAdd.some((member) => $scope.isServiceAccount(member));
         };
     }
 

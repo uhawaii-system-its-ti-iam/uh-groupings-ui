@@ -46,6 +46,7 @@ UHGroupingsApp.constant("Message", {
         REMOVE_MEMBERS: { with: (listName) => `All selected members have been successfully removed from the ${listName} list.` },
         REMOVE_GROUP_PATH: { with: (groupingName, listName) => `${groupingName} has been successfully removed from the ${listName} list.`},
         OWNER_NOT_ADDED: "Department accounts may not be assigned ownership due to accountability and lifecycle issues.  Please contact the IAM team, <its-iam-help@lists.hawaii.edu>, if there are any questions.",
+        SERVICE_ACCOUNT_UHUUID_REQUIRED: "Service accounts can be assigned ownership only when a uhUuid is present. Please ensure the service account has a uhUuid assigned, then try again.",
         DISPLAY_OWNERS_ERROR: "There was an error displaying the owners.",
         INVALID_EMAIL_ERROR: "Please enter a valid email address.",
         INVALID_MULTI_ADD: "Only one owner-grouping can be added at a time.",

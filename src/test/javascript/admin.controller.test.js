@@ -431,10 +431,6 @@ describe("AdminController", function () {
     });
 
     describe("addAdmin", () => {
-        const uhIdentifiers = ["testiwta"];
-        const results = { resultCode: "SUCCESS", invalid: [], results: uhIdentifiers };
-        const invalid = { resultCode: "FAILURE", invalid: uhIdentifiers, results: [] };
-
         beforeEach(() => {
             expect(mockUserService.getCurrentUser).toHaveBeenCalled();
         });
@@ -458,14 +454,74 @@ describe("AdminController", function () {
 
         it("should check if the admin to add is a departmental account", () => {
             scope.containsDeptAcc = false;
+            scope.containsServiceAccAdmin = false;
             scope.adminToAdd = "testiwt2";
             scope.addAdmin();
 
-            httpBackend.expectPOST(BASE_URL + "members", ["testiwt2"]).respond(200, results);
+            const departmentResult = {
+                resultCode: "SUCCESS",
+                invalid: [],
+                results: [{ uid: "testiwt2", uhUuid: "testiwt2" }]
+            };
+            httpBackend.expectPOST(BASE_URL + "members", ["testiwt2"]).respond(200, departmentResult);
             httpBackend.flush();
 
             expect(scope.user).toBe(scope.adminToAdd);
             expect(scope.containsDeptAcc).toBeTrue();
+            expect(scope.containsServiceAccAdmin).toBeFalse();
+        });
+
+        it("should block service account admin when uhUuid is missing", () => {
+            scope.containsDeptAcc = false;
+            scope.containsServiceAccAdmin = false;
+            scope.adminToAdd = "_testiwt";
+            scope.addAdmin();
+
+            const serviceNoUhUuidResult = {
+                resultCode: "SUCCESS",
+                invalid: [],
+                results: [{ uid: "_testiwt", uhUuid: "" }]
+            };
+            httpBackend.expectPOST(BASE_URL + "members", ["_testiwt"]).respond(200, serviceNoUhUuidResult);
+            httpBackend.flush();
+
+            expect(scope.containsServiceAccAdmin).toBeTrue();
+            expect(scope.containsDeptAcc).toBeFalse();
+        });
+
+        it("should block service account admin when lookup returns no usable member row", () => {
+            spyOn(scope, "displayAddModal");
+            scope.containsDeptAcc = false;
+            scope.containsServiceAccAdmin = false;
+            scope.adminToAdd = "_testiwt";
+            scope.addAdmin();
+
+            const emptyResults = { resultCode: "SUCCESS", invalid: [], results: [] };
+            httpBackend.expectPOST(BASE_URL + "members", ["_testiwt"]).respond(200, emptyResults);
+            httpBackend.flush();
+
+            expect(scope.containsServiceAccAdmin).toBeTrue();
+            expect(scope.displayAddModal).not.toHaveBeenCalled();
+        });
+
+        it("should block service account admin even when uhUuid is assigned", () => {
+            spyOn(scope, "displayAddModal");
+            scope.containsDeptAcc = false;
+            scope.containsServiceAccAdmin = false;
+            scope.adminToAdd = "_testiwt";
+            scope.addAdmin();
+
+            const serviceResult = {
+                resultCode: "SUCCESS",
+                invalid: [],
+                results: [{ uid: "_testiwt", uhUuid: "12345678" }]
+            };
+            httpBackend.expectPOST(BASE_URL + "members", ["_testiwt"]).respond(200, serviceResult);
+            httpBackend.flush();
+
+            expect(scope.containsServiceAccAdmin).toBeTrue();
+            expect(scope.containsDeptAcc).toBeFalse();
+            expect(scope.displayAddModal).not.toHaveBeenCalled();
         });
 
         it("should display the add modal", () => {
