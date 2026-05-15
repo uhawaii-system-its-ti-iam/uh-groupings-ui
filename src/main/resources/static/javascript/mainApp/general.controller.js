@@ -323,6 +323,42 @@
         $scope.checkForServiceAccountMembers = (membersToAdd) => {
             return membersToAdd.some((member) => $scope.isServiceAccount(member));
         };
+
+        /**
+         * Switch between action tabs (Reset Grouping and Diagnostics)
+         * @param event - The click event
+         * @param tabId - The ID of the tab content to show
+         */
+        $scope.switchActionTab = (event, tabId) => {
+            event.preventDefault();
+
+            // Get the actions display container
+            const actionsContainer = document.getElementById('actions-display');
+            if (!actionsContainer) return;
+
+            // Hide all tab panes within actions container only
+            const tabPanes = actionsContainer.querySelectorAll('.tab-pane');
+            tabPanes.forEach(pane => {
+                pane.classList.remove('show', 'active');
+            });
+
+            // Remove active class from all tab links within actions container
+            const tabLinks = actionsContainer.querySelectorAll('.nav-tabs .nav-link');
+            tabLinks.forEach(link => {
+                link.classList.remove('active');
+                link.setAttribute('aria-selected', 'false');
+            });
+
+            // Show the selected tab pane
+            const selectedPane = actionsContainer.querySelector('#' + tabId);
+            if (selectedPane) {
+                selectedPane.classList.add('show', 'active');
+            }
+
+            // Add active class to the clicked tab link
+            event.target.classList.add('active');
+            event.target.setAttribute('aria-selected', 'true');
+        };
     }
 
     UHGroupingsApp.controller("GeneralJsController", GeneralJsController);
