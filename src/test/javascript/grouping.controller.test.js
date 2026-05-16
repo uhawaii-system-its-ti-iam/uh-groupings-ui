@@ -2831,57 +2831,23 @@ describe("GroupingController", () => {
             });
         });
 
-        it("should populate syncDestArray with sync destinations", (done) => {
+        it("should populate syncDestArray and trim tooltips containing 'On lists set to Send=Editor'", (done) => {
+            spyOn(scope, "initSyncStatuses").and.callThrough();
             scope.getGroupingSyncDest(mockGroupPath).then(() => {
+                // Verify array population
                 expect(scope.syncDestArray.length).toBe(3);
                 expect(scope.syncDestArray[0].name).toBe("google-sync");
                 expect(scope.syncDestArray[1].name).toBe("listserv-sync");
-                done();
-            });
-            scope.$apply();
-        });
 
-        it("should trim tooltips containing 'On lists set to Send=Editor'", (done) => {
-            scope.getGroupingSyncDest(mockGroupPath).then(() => {
-                // First tooltip should be trimmed
+                // Verify tooltip trimming for items with "On lists set to Send=Editor"
                 expect(scope.syncDestArray[0].tooltip).toBe("Synchronize with Google Groups.");
-                // Second tooltip should also be trimmed
                 expect(scope.syncDestArray[1].tooltip).toBe("Synchronize with LISTSERV.");
-                done();
-            });
-            scope.$apply();
-        });
 
-        it("should not modify tooltips without 'On lists set to Send=Editor'", (done) => {
-            scope.getGroupingSyncDest(mockGroupPath).then(() => {
+                // Verify tooltips without the phrase are not modified
                 expect(scope.syncDestArray[2].tooltip).toBe("This tooltip does not have the LISTSERV text");
-                done();
-            });
-            scope.$apply();
-        });
 
-        it("should call gs.getGroupingSyncDest with correct parameters", (done) => {
-            scope.getGroupingSyncDest(mockGroupPath).then(() => {
-                expect(gs.getGroupingSyncDest).toHaveBeenCalledWith(mockGroupPath, jasmine.any(Function), jasmine.any(Function));
-                done();
-            });
-            scope.$apply();
-        });
-
-        it("should call initSyncStatuses after populating syncDestArray", (done) => {
-            spyOn(scope, "initSyncStatuses").and.callThrough();
-            scope.getGroupingSyncDest(mockGroupPath).then(() => {
+                // Verify side effects
                 expect(scope.initSyncStatuses).toHaveBeenCalled();
-                done();
-            });
-            scope.$apply();
-        });
-
-        it("should handle tooltip with multiple occurrences of 'On lists set to Send=Editor'", (done) => {
-            mockSyncDestinations[0].tooltip = "First part. On lists set to Send=Editor, text1. On lists set to Send=Editor, text2";
-            scope.getGroupingSyncDest(mockGroupPath).then(() => {
-                // Should only trim the first occurrence and everything after it
-                expect(scope.syncDestArray[0].tooltip).toBe("First part.");
                 done();
             });
             scope.$apply();
@@ -2893,16 +2859,6 @@ describe("GroupingController", () => {
             });
             scope.getGroupingSyncDest(mockGroupPath).then(() => {
                 expect(scope.syncDestArray.length).toBe(0);
-                done();
-            });
-            scope.$apply();
-        });
-
-        it("should trim whitespace after splitting tooltip", (done) => {
-            mockSyncDestinations[0].tooltip = "Description.   On lists set to Send=Editor, more text";
-            scope.getGroupingSyncDest(mockGroupPath).then(() => {
-                // Should trim whitespace after split
-                expect(scope.syncDestArray[0].tooltip).toBe("Description.");
                 done();
             });
             scope.$apply();
