@@ -52,8 +52,11 @@
                 <tr ng-repeat="b in pagedItemsBasis[currentPageBasis]" class="table table-sm">
                     <td class="p-10">
                         <div class="d-flex">
-                            {{b.name}}
-                            <div ng-if="b.uid == b.uhUuid">
+                            <span ng-if="!isOrphanMember(b)">{{b.name}}</span>
+                            <span ng-if="isOrphanMember(b)">
+                                <th:block th:insert="~{fragments/orphan-name :: orphan-name}"></th:block>
+                            </span>
+                            <div ng-if="!isOrphanMember(b) && b.uid == b.uhUuid">
                                 <i class="d-inline rounded-circle blue-bg text-light fa fa-school fa-xs p-1 ml-1"
                                    role="button"
                                    aria-hidden="true"

@@ -82,8 +82,11 @@
                                ng-click="toggleSingleCheckbox('Exclude', member, $event.keyCode)">
                     </td>
                     <td class="overflow-auto py-1 px-3">
-                            {{member.name}}
-                            <span ng-if="member.uid == member.uhUuid">
+                            <span ng-if="!isOrphanMember(member)">{{member.name}}</span>
+                            <span ng-if="isOrphanMember(member)">
+                                <th:block th:insert="~{fragments/orphan-name :: orphan-name}"></th:block>
+                            </span>
+                            <span ng-if="!isOrphanMember(member) && member.uid == member.uhUuid">
                                 <i class="d-inline rounded-circle blue-bg text-light fa fa-school fa-xs p-1 ml-1"
                                    role="button"
                                    aria-hidden="true"
@@ -93,7 +96,7 @@
                             </span>
                             <span class="far fa-trash-alt fa-pull-right pt-1" role="button"
                                   tooltip data-placement="top"
-                                  tabindex="0" aria-label="Remove {{member.name}} from the Exclude list"
+                                  tabindex="0" aria-label="Remove {{member.name || member.uhUuid}} from the Exclude list"
                                   th:title="#{screen.message.common.tooltip.remove.exclude}"
                                   ng-keypress="$event.keyCode === 13 ? removeMemberWithTrashcan('Exclude', currentPageExclude, $index) : null"
                                   ng-click="removeMemberWithTrashcan('Exclude', currentPageExclude, $index)">

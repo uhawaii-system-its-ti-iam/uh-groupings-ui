@@ -93,6 +93,8 @@ UHGroupingsApp.constant("Message", {
 });
 UHGroupingsApp.constant("BASE_URL", "api/groupings/");
 UHGroupingsApp.constant("PAGE_SIZE", 700);
+UHGroupingsApp.constant("ORPHAN_HELP_URL",
+    "https://uhawaii.atlassian.net/wiki/spaces/UHIAM/pages/2482569221/UH+Groupings+Missing+Member+Names");
 
 UHGroupingsApp.run(($rootScope, Threshold) => {
     $rootScope.Threshold = Threshold;

@@ -14,7 +14,11 @@
      * @param Threshold - threshold object constant from app.constants.js
      * @param Utility - utility function constant from app.constants.js
      */
-    function GroupingJsController($scope, $controller, $window, $uibModal, groupingsService, PAGE_SIZE, Message, Threshold, Utility) {
+    function GroupingJsController($scope, $controller, $window, $uibModal, groupingsService, PAGE_SIZE, Message,
+        Threshold, Utility, ORPHAN_HELP_URL) {
+
+        $scope.orphanHelpUrl = ORPHAN_HELP_URL;
+        $scope.isOrphanMember = (member) => member && member.orphan === true;
 
         $scope.loading = false;
         $scope.waitingForImportResponse = false;
@@ -157,40 +161,30 @@
         };
 
         /**
-         * Remove all nameless members from members and return a sorted object of distinct members.
+         * Sort members by display name, then uhUuid (orphans with empty names sort predictably).
          * @param {object[]} members - the members of the group
-         * @returns {object[]} the members of the group, sorted by name and with blank uids filtered out
+         * @returns {object[]} sorted distinct members by uhUuid
          */
-        const setGroupMembers = (members) => {
-            _.remove(members, (member) => {
-                return _.isEmpty(member.name);
-            });
-
-            // Unique members only by UUID (assume no two users should have the same uuid)
+        const sortGroupMembers = (members) => {
             members = _.uniqBy(members, "uhUuid");
-
-            return _.sortBy(members, "name");
+            return _.sortBy(members, [(member) => (member.name || "").toLowerCase(), "uhUuid"]);
         };
 
         /**
-         * Remove all nameless members from membersToAdd then display an object of distinct members as a sorted
-         *  concatenation of initialMembers and membersToAdd objects.
+         * Return a sorted list of distinct members.
+         * @param {object[]} members - the members of the group
+         * @returns {object[]} the members of the group, sorted by name
+         */
+        const setGroupMembers = (members) => sortGroupMembers(members);
+
+        /**
+         * Concatenate initialMembers and membersToAdd into one sorted list of distinct members.
          * @param {object[]} initialMembers - initial members in group
          * @param {object[]} membersToAdd - members to add to group
-         * @returns {object[]} the members of both groups in one array, sorted by name with blank uids filtered out
+         * @returns {object[]} the members of both groups in one array, sorted by name
          */
-        const combineGroupMembers = (initialMembers, membersToAdd) => {
-            _.remove(membersToAdd, (member) => {
-                return _.isEmpty(member.name);
-            });
-
-            let members = _.concat(initialMembers, membersToAdd);
-
-            // Unique members only by UUID (assume no two users should have the same uuid)
-            members = _.uniqBy(members, "uhUuid");
-
-            return _.sortBy(members, "name");
-        };
+        const combineGroupMembers = (initialMembers, membersToAdd) =>
+            sortGroupMembers(_.concat(initialMembers, membersToAdd));
 
         /**
          * Get information about the grouping including members and description.
