@@ -73,6 +73,18 @@ describe("GroupingController", () => {
             expect(scope.isOrphanMember({ name: "", uhUuid: "25528222", uid: "" })).toBeFalse();
         });
 
+        it("should use uhUuid in aria label for orphan members with entity-not-found name", () => {
+            expect(scope.memberLabelForAria({
+                name: "25528222 entity not found",
+                uhUuid: "25528222",
+                orphan: true
+            })).toBe("25528222");
+            expect(scope.memberLabelForAria({ name: "Test User", uhUuid: "99997010", orphan: false }))
+                .toBe("Test User");
+            expect(scope.memberLabelForAria({ name: "", uhUuid: "99997010", orphan: false }))
+                .toBe("99997010");
+        });
+
         it("should retain orphan members when paginating grouping data", () => {
             scope.groupingBasis = [];
             scope.selectedGrouping = { name: "grouping1", path: "test:path:grouping1" };
@@ -100,6 +112,36 @@ describe("GroupingController", () => {
                 expect(scope.groupingBasis.length).toBe(1);
                 expect(scope.groupingBasis[0].uhUuid).toBe("25528222");
                 expect(scope.isOrphanMember(scope.groupingBasis[0])).toBeTrue();
+            });
+        });
+
+        it("should exclude nameless non-orphan members when paginating grouping data", () => {
+            scope.groupingBasis = [];
+            scope.selectedGrouping = { name: "grouping1", path: "test:path:grouping1" };
+            const orphan = {
+                name: "25528222 entity not found",
+                uhUuid: "25528222",
+                uid: "",
+                orphan: true
+            };
+            const nameless = { name: "", uhUuid: "11111111", uid: "", orphan: false };
+            const res = {
+                paginationComplete: false,
+                groupingBasis: { groupPath: "test:path:grouping1:basis", members: [orphan, nameless] },
+                groupingInclude: { groupPath: "test:path:grouping1:include", members: [] },
+                groupingExclude: { groupPath: "test:path:grouping1:exclude", members: [] },
+                allMembers: { members: [] }
+            };
+            spyOn(gs, "getGrouping").and.callFake((paths, page, size, sortBy, asc, onSuccess) => {
+                onSuccess(res);
+            });
+            return scope.fetchGrouping(1, [
+                scope.selectedGrouping.path + ":basis",
+                scope.selectedGrouping.path + ":include",
+                scope.selectedGrouping.path + ":exclude"
+            ]).then(() => {
+                expect(scope.groupingBasis.length).toBe(1);
+                expect(scope.groupingBasis[0].uhUuid).toBe("25528222");
             });
         });
     });

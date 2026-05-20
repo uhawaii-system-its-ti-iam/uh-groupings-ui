@@ -75,7 +75,7 @@
                     <td class="overflow-auto py-1 px-3">
                         <input class="position-relative ml-0 blank-checkbox" type="checkbox"
                                tabindex="0"
-                               aria-label="Remove {{member.name}} from the exclude."
+                               aria-label="Remove {{memberLabelForAria(member)}} from the exclude."
                                ng-model="membersInCheckboxList[member.uhUuid]"
                                id="{{'exclude-checkbox-' + e.uhUuid}}"
                                ng-keydown="toggleSingleCheckbox('Exclude', member, $event.keyCode)"
@@ -96,7 +96,7 @@
                             </span>
                             <span class="far fa-trash-alt fa-pull-right pt-1" role="button"
                                   tooltip data-placement="top"
-                                  tabindex="0" aria-label="Remove {{member.name || member.uhUuid}} from the Exclude list"
+                                  tabindex="0" aria-label="Remove {{memberLabelForAria(member)}} from the Exclude list"
                                   th:title="#{screen.message.common.tooltip.remove.exclude}"
                                   ng-keypress="$event.keyCode === 13 ? removeMemberWithTrashcan('Exclude', currentPageExclude, $index) : null"
                                   ng-click="removeMemberWithTrashcan('Exclude', currentPageExclude, $index)">

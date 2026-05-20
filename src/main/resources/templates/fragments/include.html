@@ -74,7 +74,7 @@
                 <tr ng-repeat="member in pagedItemsInclude[currentPageInclude]" class="table table-sm">
                     <td class="overflow-auto py-1 px-3">
                         <input class="position-relative ml-0 blank-checkbox" type="checkbox"
-                               tabindex="-1" aria-label="Remove {{member.name}} from the include."
+                               tabindex="-1" aria-label="Remove {{memberLabelForAria(member)}} from the include."
                                id="{{'include-checkbox-' + member.uhUuid}}"
                                ng-model="membersInCheckboxList[member.uhUuid]"
                                ng-keypress="toggleSingleCheckbox('Include', member, $event.keyCode)"
@@ -95,7 +95,7 @@
                             </span>
                             <span class="far fa-trash-alt fa-pull-right clickable pt-1" role="button"
                                   tooltip data-placement="top"
-                                  tabindex="-1" aria-label="Remove {{member.name || member.uhUuid}} from the Include list"
+                                  tabindex="-1" aria-label="Remove {{memberLabelForAria(member)}} from the Include list"
                                   th:title="#{screen.message.common.tooltip.remove.include}"
                                   ng-keypress="$event.keyCode === 13 ? removeMemberWithTrashcan('Include', currentPageInclude, $index) : null"
                                   ng-click="removeMemberWithTrashcan('Include', currentPageInclude, $index)">

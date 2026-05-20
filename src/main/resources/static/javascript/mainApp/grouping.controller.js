@@ -19,6 +19,15 @@
 
         $scope.orphanHelpUrl = ORPHAN_HELP_URL;
         $scope.isOrphanMember = (member) => member && member.orphan === true;
+        $scope.memberLabelForAria = (member) => {
+            if (!member) {
+                return "";
+            }
+            if ($scope.isOrphanMember(member)) {
+                return member.uhUuid || "";
+            }
+            return member.name || member.uhUuid || "";
+        };
 
         $scope.loading = false;
         $scope.waitingForImportResponse = false;
@@ -166,6 +175,7 @@
          * @returns {object[]} sorted distinct members by uhUuid
          */
         const sortGroupMembers = (members) => {
+            members = _.filter(members, (member) => $scope.isOrphanMember(member) || !!member.name);
             members = _.uniqBy(members, "uhUuid");
             return _.sortBy(members, [(member) => (member.name || "").toLowerCase(), "uhUuid"]);
         };
