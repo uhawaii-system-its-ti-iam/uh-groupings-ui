@@ -35,6 +35,17 @@ public class HttpRequestService {
     }
 
     /*
+     * Make a public http request to the API without a JWT.
+     */
+    public ResponseEntity<String> makePublicApiRequest(String uri, HttpMethod method) {
+        return webClient.method(method)
+                .uri(uri)
+                .retrieve()
+                .toEntity(String.class)
+                .block();
+    }
+
+    /*
      * Make a http request to the API with path variables and description string in the body.
      */
     public ResponseEntity<String> makeApiRequestWithBody(String uri, String data,

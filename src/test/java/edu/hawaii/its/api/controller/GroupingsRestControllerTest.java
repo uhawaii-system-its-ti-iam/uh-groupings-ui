@@ -120,6 +120,24 @@ public class GroupingsRestControllerTest {
     }
 
     @Test
+    public void activeAnnouncementsTest() throws Exception {
+        String uri = "/announcements";
+        String apiUri = API_2_1_BASE + "/announcements";
+
+        given(httpRequestService.makePublicApiRequest(eq(apiUri), eq(HttpMethod.GET)))
+                .willReturn(new ResponseEntity(HttpStatus.OK));
+
+        assertNotNull(mockMvc.perform(get(uri).with(csrf()))
+                .andExpect(status().isOk())
+                .andReturn());
+
+        verify(httpRequestService, times(1))
+                .makePublicApiRequest(eq(apiUri), eq(HttpMethod.GET));
+        verify(httpRequestService, times(0))
+                .makeApiRequest(anyString(), any(HttpMethod.class));
+    }
+
+    @Test
     @WithMockUhUser(uid = "admin")
     public void groupingAdminsTest() throws Exception {
         String uri = REST_CONTROLLER_BASE + "groupings/admins";
@@ -133,6 +151,8 @@ public class GroupingsRestControllerTest {
 
         verify(httpRequestService, times(1))
                 .makeApiRequest(anyString(), eq(HttpMethod.GET));
+        verify(httpRequestService, times(0))
+                .makePublicApiRequest(anyString(), any(HttpMethod.class));
     }
 
     @Test
