@@ -2881,6 +2881,75 @@ describe("GroupingController", () => {
         });
     });
 
+    describe("getGroupingSyncDest", () => {
+        let mockGroupPath;
+        let mockSyncDestinations;
+
+        beforeEach(() => {
+            mockGroupPath = "test-grouping-path";
+            mockSyncDestinations = [
+                {
+                    description: "Google-Group: #uh-iam-group",
+                    hidden: false,
+                    name: "google-sync",
+                    synced: false,
+                    tooltip: "Synchronize with Google Groups. On lists set to Send=Editor, editors are allowed to post directly to the list without moderation/approval."
+                },
+                {
+                    description: "LISTSERV List: #uh-listserv",
+                    hidden: false,
+                    name: "listserv-sync",
+                    synced: true,
+                    tooltip: "Synchronize with LISTSERV. On lists set to Send=Editor, editors are allowed to post directly to the list without moderation/approval."
+                },
+                {
+                    description: "Another Sync Dest",
+                    hidden: false,
+                    name: "other-sync",
+                    synced: false,
+                    tooltip: "This tooltip does not have the LISTSERV text"
+                }
+            ];
+            spyOn(gs, "getGroupingSyncDest").and.callFake((path, onSuccess, onError) => {
+                onSuccess({ syncDestinations: mockSyncDestinations });
+            });
+        });
+
+        it("should populate syncDestArray and trim tooltips containing 'On lists set to Send=Editor'", (done) => {
+            spyOn(scope, "initSyncStatuses").and.callThrough();
+            scope.getGroupingSyncDest(mockGroupPath).then(() => {
+                // Verify array population
+                expect(scope.syncDestArray.length).toBe(3);
+                expect(scope.syncDestArray[0].name).toBe("google-sync");
+                expect(scope.syncDestArray[1].name).toBe("listserv-sync");
+
+                // Verify tooltip trimming for items with "On lists set to Send=Editor"
+                expect(scope.syncDestArray[0].tooltip).toBe("Synchronize with Google Groups.");
+                expect(scope.syncDestArray[1].tooltip).toBe("Synchronize with LISTSERV.");
+
+                // Verify tooltips without the phrase are not modified
+                expect(scope.syncDestArray[2].tooltip).toBe("This tooltip does not have the LISTSERV text");
+
+                // Verify side effects
+                expect(scope.initSyncStatuses).toHaveBeenCalled();
+                done();
+            });
+            scope.$apply();
+        });
+
+        it("should handle empty syncDestinations array", (done) => {
+            gs.getGroupingSyncDest.and.callFake((path, onSuccess, onError) => {
+                onSuccess({ syncDestinations: [] });
+            });
+            scope.getGroupingSyncDest(mockGroupPath).then(() => {
+                expect(scope.syncDestArray.length).toBe(0);
+                done();
+            });
+            scope.$apply();
+        });
+    });
+
+
     describe("displayOwnerErrorModal", () => {
         it("should set loading to false", () => {
             scope.loading = true;
