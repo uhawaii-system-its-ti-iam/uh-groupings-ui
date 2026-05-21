@@ -21,10 +21,11 @@
                                 {{ syncDest.description }}
                             </label>
                             <span class="fa fa-question-circle" role="button"
-                                  title="This option syncs destinations to {{ syncDest.description }}"
                                   tooltip="{{syncDest.tooltip}}" data-placement="right"
+                                  aria-label="{{syncDest.tooltip}}"
                                   tabindex="0"
-                                  th:attr="ng-click='displayDynamicModal(\'Sync Destinations Information\', ' + 'syncDest.tooltip)', ng-keypress='$event.keyCode === 13 ? displayDynamicModal(\'Sync Destinations ' +    'Information\', syncDest.tooltip) : null'">
+                                  th:attr="ng-click='displayDynamicModal(\'Sync Destinations Information\', ' + 'syncDest.tooltip)',
+                                  ng-keypress='$event.keyCode === 13 ? displayDynamicModal(\'Sync Destinations ' +    'Information\', syncDest.tooltip) : null'">
                             </span>
                         </div>
                     </div>

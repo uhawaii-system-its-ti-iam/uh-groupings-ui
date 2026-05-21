@@ -358,6 +358,12 @@
         $scope.getGroupingSyncDest = (groupPath) => {
             return new Promise((resolve) => groupingsService.getGroupingSyncDest(groupPath, (res) => {
                 $scope.syncDestArray = res.syncDestinations;
+                // Trim tooltip text to remove LISTSERV-specific details
+                $scope.syncDestArray.forEach(syncDest => {
+                    if (syncDest.tooltip && syncDest.tooltip.includes("On lists set to Send=Editor")) {
+                        syncDest.tooltip = syncDest.tooltip.split("On lists set to Send=Editor")[0].trim();
+                    }
+                });
                 resolve();
                 $scope.initSyncStatuses();
             }, (res) => {
