@@ -53,9 +53,11 @@ public class DefaultErrorController implements ErrorController {
         if (user != null) {
             uid = user.getUid();
         }
-        logger.error("uid: " + uid + "; Exception: ", ex);
 
-        emailService.sendWithStack(ex, ex.getClass().getSimpleName(), request.getRequestURI());
+        if (ex != null) {
+            logger.error("uid: " + uid + "; Exception: ", ex);
+            emailService.sendWithStack(ex, ex.getClass().getSimpleName(), request.getRequestURI());
+        }
 
         // Pick desired error attributes and attach them to the model.
         Map<String, Object> attrs = errorAttributes
