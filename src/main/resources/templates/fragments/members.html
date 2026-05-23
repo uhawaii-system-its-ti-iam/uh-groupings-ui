@@ -4,29 +4,32 @@
         <div class="row">
             <div class="col-md-8">
                 <h1 class="font-weight-bold text-dark pt-2 mb-0 d-inline-block">All Members
-                    ({{groupingMembers.length}})
+                    ({{allMembersLoading ? (allMembersLoadedCount) : allMembersTotalCount}})
                 </h1>
                 <div class="spinner-border ml-1 d-inline-block"
-                     ng-show="paginatingProgress && !loading"
+                     ng-show="allMembersLoading || loading || (paginatingProgress && !loading)"
                      role="status">
                     <span class="sr-only">Loading...</span>
                 </div>
                 <i class="refresh-button fas fa-sync-alt ml-1 pr-2 d-inline-block"
-                   ng-show="!paginatingProgress && !loading"
+                   ng-show="!paginatingProgress && !loading && !allMembersLoading"
                    ng-click="reloadGrouping();resetFields()"
                    role="button"
                    aria-label="Refresh grouping"
                    tooltip data-placement="right"
                    th:title="#{screen.message.common.refreshMembers}">
                 </i>
-                <p class=" mb-1" ng-show="largeGrouping" th:text="#{screen.message.common.loading.toolarge}">
+                <p class="mb-1" ng-show="largeGrouping" th:text="#{screen.message.common.loading.toolarge}">
                     <i class="fa fa-check" aria-hidden="true"></i>
                 </p>
             </div>
+
             <div class="col-md-4 py-2">
                 <input placeholder="Filter Members..." type="text" title="Filter Members"
-                       ng-model="membersQuery" class="form-control" aria-label="Filter Members..."
-                       ng-change="filter(groupingMembers, 'pagedItemsMembers', 'currentPageMembers', membersQuery, true)"/>
+                       ng-model="membersQuery"
+                       class="form-control"
+                       aria-label="Filter Members..."
+                       ng-change="applyAllMembersFilter()"/>
             </div>
         </div>
 
@@ -35,42 +38,65 @@
                 <thead>
                 <tr>
                     <th id="name-column" scope="col"
-                        ng-click="sortBy('groupingMembers', 'pagedItemsMembers', 'name')"
-                        aria-sort="{{columnSort.groupingMembers.property === 'name' ? (columnSort.groupingMembers.reverse ? 'descending' : 'ascending') : undefined}}">
+                        ng-click="sortAllMembers('name')"
+                        aria-sort="{{allMembersSortBy === 'name' ? (allMembersIsAscending ? 'ascending' : 'descending') : undefined}}">
                         Name
                         <i class="fa sort-icon"
-                           ng-show="columnSort.groupingMembers.property === 'name' || !columnSort.groupingMembers"
-                           ng-class="{ reverse: columnSort.groupingMembers.reverse }"></i>
+                           ng-show="allMembersSortBy === 'name'"
+                           ng-class="{ reverse: !allMembersIsAscending }"></i>
                     </th>
+
                     <th id="uhUuid-column" scope="col"
-                        ng-click="sortBy('groupingMembers', 'pagedItemsMembers', 'uhUuid')"
-                        aria-sort="{{columnSort.groupingMembers.property === 'uhUuid' ? (columnSort.groupingMembers.reverse ? 'descending' : 'ascending') : undefined}}">
+                        ng-click="sortAllMembers('uhUuid')"
+                        aria-sort="{{allMembersSortBy === 'uhUuid' ? (allMembersIsAscending ? 'ascending' : 'descending') : undefined}}">
                         UH Number
-                        <i class="fa sort-icon" ng-show="columnSort.groupingMembers.property === 'uhUuid'"
-                           ng-class="{ reverse: columnSort.groupingMembers.reverse }"></i>
+                        <i class="fa sort-icon"
+                           ng-show="allMembersSortBy === 'uhUuid'"
+                           ng-class="{ reverse: !allMembersIsAscending }"></i>
                     </th>
+
                     <th id="uid-column" scope="col"
-                        ng-click="sortBy('groupingMembers', 'pagedItemsMembers', 'uid')"
-                        aria-sort="{{columnSort.groupingMembers.property === 'uid' ? (columnSort.groupingMembers.reverse ? 'descending' : 'ascending') : undefined}}">
+                        ng-click="sortAllMembers('uid')"
+                        aria-sort="{{allMembersSortBy === 'uid' ? (allMembersIsAscending ? 'ascending' : 'descending') : undefined}}">
                         UH Username
-                        <i class="fa sort-icon" ng-show="columnSort.groupingMembers.property === 'uid'"
-                           ng-class="{ reverse: columnSort.groupingMembers.reverse }"></i>
+                        <i class="fa sort-icon"
+                           ng-show="allMembersSortBy === 'uid'"
+                           ng-class="{ reverse: !allMembersIsAscending }"></i>
                     </th>
+
                     <th id="listing-column" scope="col"
                         class="basis-column"
-                        ng-click="sortBy('groupingMembers', 'pagedItemsMembers', 'whereListed')"
-                        aria-sort="{{columnSort.groupingMembers.property === 'whereListed' ? (columnSort.groupingMembers.reverse ? 'descending' : 'ascending') : undefined}}">
+                        ng-click="sortAllMembers('whereListed')"
+                        aria-sort="{{allMembersSortBy === 'whereListed' ? (allMembersIsAscending ? 'ascending' : 'descending') : undefined}}">
                         Listing
-                        <i class="fa sort-icon" ng-show="columnSort.groupingMembers.property === 'whereListed'"
-                           ng-class="{ reverse: columnSort.groupingMembers.reverse }"></i>
+                        <i class="fa sort-icon"
+                           ng-show="allMembersSortBy === 'whereListed'"
+                           ng-class="{ reverse: !allMembersIsAscending }"></i>
                     </th>
                 </tr>
                 </thead>
+
                 <tbody>
-                <tr ng-if="groupingMembers.length === 0">
+                <tr ng-if="allMembersLoading" ng-repeat="n in [].constructor(20) track by $index" class="skeleton-row">
+                    <td>
+                        <span class="skeleton-line skeleton-name"></span>
+                    </td>
+                    <td>
+                        <span class="skeleton-line skeleton-uh"></span>
+                    </td>
+                    <td>
+                        <span class="skeleton-line skeleton-uid"></span>
+                    </td>
+                    <td>
+                        <span class="skeleton-line skeleton-listing"></span>
+                    </td>
+                </tr>
+
+                <tr ng-if="!allMembersLoading && (!pagedItemsMembers[currentPageMembers] || pagedItemsMembers[currentPageMembers].length === 0)">
                     <td colspan="4">No members found.</td>
                 </tr>
-                <tr ng-repeat="g in pagedItemsMembers[currentPageMembers]" class="table table-sm">
+
+                <tr ng-if="!allMembersLoading" ng-repeat="g in pagedItemsMembers[currentPageMembers]" class="table table-sm">
                     <td headers="name-column" class="overflow-auto py-1 px-3" tabindex="0">
                         <div class="d-flex">
                             {{g.name}}
@@ -84,9 +110,13 @@
                             </div>
                         </div>
                     </td>
-                    <td headers="uhUuid-column" class="overflow-auto py-1 px-3">{{g.uhUuid}}</td>
+
+                    <td headers="uhUuid-column" class="overflow-auto py-1 px-3">
+                        {{g.uhUuid}}
+                    </td>
+
                     <td headers="uid-column" class="overflow-auto py-1 px-3" tabindex="0">
-                        {{g.uid}}
+                        <span ng-if="g.uid !== ''">{{g.uid}}</span>
                         <div ng-if="g.uid === ''">
                             <span>N/A</span>
                             <i class="fa fa-question-circle" role="button" aria-hidden="true"
@@ -95,6 +125,7 @@
                             </i>
                         </div>
                     </td>
+
                     <td headers="listing-column" class="basis-column overflow-auto py-1 px-3 text-nowrap" tabindex="0">
                         {{ g.whereListed }}
                     </td>
@@ -102,7 +133,6 @@
                 </tbody>
             </table>
         </div>
-
 
         <div class="d-flex justify-content-lg-end justify-content-start">
             <div th:replace="~{fragments/pagination :: pagination(currentPage='currentPageMembers', pagedItems='pagedItemsMembers')}"></div>

@@ -124,6 +124,72 @@ public class GroupingsRestController {
         return httpRequestService.makeApiRequestWithBody(uri, safePaths, HttpMethod.POST);
     }
 
+
+    @PostMapping(value = "/groupings/all-members")
+    @ResponseBody
+    public ResponseEntity<String> getAllMembers(@RequestBody List<String> groupPaths,
+            @RequestParam(required = true) Integer page,
+            @RequestParam(required = true) Integer size,
+            @RequestParam(required = true) String sortBy,
+            @RequestParam(required = true) Boolean isAscending) {
+        String currentUid = userContextService.getCurrentUid();
+        logger.info(String.format(
+                "Entered REST getAllMembers - currentUid: %s, groupPaths: %s, page: %d, size: %d, sortBy: %s, isAscending: %b",
+                currentUid, groupPaths, page, size, sortBy, isAscending));
+
+        List<String> safePaths = sanitizeList(groupPaths);
+        Map<String, String> params = mapGroupingParameters(page, size, sortBy, isAscending);
+        String baseUri = API_2_1_BASE + "/groupings/all-members";
+        String uri = buildUriWithParams(baseUri, params);
+
+        return httpRequestService.makeApiRequestWithBody(uri, safePaths, HttpMethod.POST);
+    }
+
+    @PostMapping(value = "/groupings/all-members/start")
+    @ResponseBody
+    public ResponseEntity<String> startAllMembersProgress(@RequestBody List<String> groupPaths,
+            @RequestParam(required = true) Integer size,
+            @RequestParam(required = true) String sortBy,
+            @RequestParam(required = true) Boolean isAscending) {
+        String currentUid = userContextService.getCurrentUid();
+        logger.info(String.format(
+                "Entered REST startAllMembersProgress - currentUid: %s, groupPaths: %s, size: %d, sortBy: %s, isAscending: %b",
+                currentUid, groupPaths, size, sortBy, isAscending));
+
+        List<String> safePaths = sanitizeList(groupPaths);
+        Map<String, String> params = new HashMap<>();
+        params.put("size", Integer.toString(size));
+        params.put("sortBy", sortBy);
+        params.put("isAscending", Boolean.toString(isAscending));
+
+        String baseUri = API_2_1_BASE + "/groupings/all-members/start";
+        String uri = buildUriWithParams(baseUri, params);
+
+        return httpRequestService.makeApiRequestWithBody(uri, safePaths, HttpMethod.POST);
+    }
+
+    @GetMapping(value = "/groupings/all-members/progress/{requestId}")
+    @ResponseBody
+    public ResponseEntity<String> getAllMembersProgress(@PathVariable String requestId) {
+        String currentUid = userContextService.getCurrentUid();
+        logger.info(String.format("Entered REST getAllMembersProgress - currentUid: %s, requestId: %s",
+                currentUid, requestId));
+
+        String baseUri = API_2_1_BASE + "/groupings/all-members/progress/" + policy.sanitize(requestId);
+        return httpRequestService.makeApiRequest(baseUri, HttpMethod.GET);
+    }
+
+    @GetMapping(value = "/groupings/all-members/result/{requestId}")
+    @ResponseBody
+    public ResponseEntity<String> getAllMembersResult(@PathVariable String requestId) {
+        String currentUid = userContextService.getCurrentUid();
+        logger.info(String.format("Entered REST getAllMembersResult - currentUid: %s, requestId: %s",
+                currentUid, requestId));
+
+        String baseUri = API_2_1_BASE + "/groupings/all-members/result/" + policy.sanitize(requestId);
+        return httpRequestService.makeApiRequest(baseUri, HttpMethod.GET);
+    }
+
     @GetMapping(value = "/groupings/{groupPath}/description")
     public ResponseEntity<String> getGroupingDescription(@PathVariable String groupPath) {
         String currentUid = userContextService.getCurrentUid();

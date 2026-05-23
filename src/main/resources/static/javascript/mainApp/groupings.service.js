@@ -120,6 +120,77 @@
             },
 
             /**
+             /**
+             * Retrieve the complete membership of a grouping by aggregating all paginated data
+             * and returning the final member list computed from the composite group.
+             */
+            getAllMembers(groupPaths,
+                          page,
+                          size,
+                          sortBy,
+                          isAscending,
+                          onSuccess,
+                          onError) {
+                let endpoint = BASE_URL + "groupings/all-members?";
+                let params = { page, size, sortBy, isAscending };
+                let query = this.encodeParameterizedQueryString(params);
+                endpoint = endpoint + query;
+                dataProvider.loadDataWithBodyRetry(endpoint, groupPaths, onSuccess, onError);
+            },
+
+            /**
+             * Start retrieving the complete membership of a grouping and return a request id
+             * that can be used to poll progress.
+             */
+            startAllMembersProgress(groupPaths,
+                                    size,
+                                    sortBy,
+                                    isAscending,
+                                    onSuccess,
+                                    onError) {
+                let endpoint = BASE_URL + "groupings/all-members/start?";
+                let params = { size, sortBy, isAscending };
+                let query = this.encodeParameterizedQueryString(params);
+                endpoint = endpoint + query;
+                dataProvider.loadDataWithBodyRetry(endpoint, groupPaths, onSuccess, onError);
+            },
+
+            /**
+             * Get progress for an All Members request.
+             */
+            getAllMembersProgress(requestId, onSuccess, onError) {
+                let endpoint = BASE_URL + "groupings/all-members/progress/" + requestId;
+                dataProvider.loadData(endpoint, onSuccess, onError);
+            },
+
+            /**
+             * Get the final All Members result for a completed request.
+             */
+            getAllMembersResult(requestId, onSuccess, onError) {
+                let endpoint = BASE_URL + "groupings/all-members/result/" + requestId;
+                dataProvider.loadData(endpoint, onSuccess, onError);
+            },
+
+            /**
+             * Get a list of available ootb active profiles.
+             */
+            getAvailableOotbActiveProfiles(onSuccess, onError) {
+                let endpoint = BASE_URL + "ootb/availableProfiles";
+                dataProvider.loadData(endpoint, onSuccess, onError);
+            },
+
+            /**
+             * Update data harness bean with OotbActiveProfile
+             * @param profile {String}
+             * @param onSuccess {Function}
+             * @param onError {Function}
+             */
+            updateOotbActiveProfile(profile, onSuccess, onError) {
+                let endpoint = BASE_URL + "ootb/" + profile;
+                dataProvider.updateData(endpoint, onSuccess, onError);
+            },
+
+            /**
              * Add a members to the include group of a grouping. A modal is passed in and displayed after a certain amount
              * of time has elapsed.
              */
