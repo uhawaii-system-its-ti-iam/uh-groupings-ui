@@ -53,7 +53,7 @@ public class DefaultErrorController implements ErrorController {
         if (user != null) {
             uid = user.getUid();
         }
-            if (ex != null) {
+        if (ex != null) {
             logger.error("uid: " + uid + "; Exception: ", ex);
             emailService.sendWithStack(ex, ex.getClass().getSimpleName(), request.getRequestURI());
         }
