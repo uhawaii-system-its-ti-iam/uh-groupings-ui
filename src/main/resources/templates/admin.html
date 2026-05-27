@@ -97,7 +97,10 @@
                             <tbody class="table table-borderless">
                             <tr ng-repeat="l in pagedItemsAdmins[currentPageAdmins]" class="table table-sm">
                                 <td class="p-10">
-                                    {{l.name}}
+                                    <span ng-if="!isOrphanMember(l)">{{l.name}}</span>
+                                    <span ng-if="isOrphanMember(l)">
+                                        <th:block th:insert="~{fragments/orphan-name :: orphan-name}"></th:block>
+                                    </span>
                                 </td>
                                 <td class="p-10">
                                     {{l.uhUuid}}
@@ -116,7 +119,7 @@
                                     <i class="far fa-trash-alt pull-right clickable pt-1" role="button"
                                        tooltip data-placement="top"
                                        tabindex="0"
-                                       aria-label="Remove {{l.name}} as admin. There must be at least one admin remaining."
+                                       aria-label="Remove {{memberLabelForAria(l)}} as admin. There must be at least one admin remaining."
                                        th:title="#{screen.message.admin.tooltip.nav.delete.admin}"
                                        ng-click="removeAdmin(currentPageAdmins, $index)" aria-hidden="false"
                                        ng-keypress="$event.keyCode === 13 ? removeAdmin(currentPageAdmins, $index) : null">
