@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.mock;
 
 import java.time.LocalDateTime;
@@ -61,7 +62,7 @@ class DefaultErrorControllerTest {
         attrs.put("path", "/some/path");
         attrs.put("status", 500);
         attrs.put("error", "Internal Server Error");
-        when(errorAttributes.getErrorAttributes (
+        when(errorAttributes.getErrorAttributes(
                 any(ServletWebRequest.class),
                 any(ErrorAttributeOptions.class)))
                 .thenReturn(attrs);
@@ -76,14 +77,54 @@ class DefaultErrorControllerTest {
         // Assert
         assertEquals("error", view, "should return the error view name");
 
-        assertEquals("Runtime Exception",       model.getAttribute("message"));
-        assertEquals("/some/path",              model.getAttribute("path"));
-        assertEquals(500,                       model.getAttribute("status"));
-        assertEquals("Internal Server Error",   model.getAttribute("error"));
+        assertEquals("Runtime Exception", model.getAttribute("message"));
+        assertEquals("/some/path", model.getAttribute("path"));
+        assertEquals(500, model.getAttribute("status"));
+        assertEquals("Internal Server Error", model.getAttribute("error"));
         assertTrue(model.getAttribute("timestamp") instanceof LocalDateTime);
 
         // confirm we looked up the user and emailed the exception
         verify(userContextService).getCurrentUser();
         verify(emailService).sendWithStack(ex, "RuntimeException", "/some/path");
+    }
+
+    @Test
+    void onErrorWithNullException() {
+        // Arrange
+        MockHttpServletRequest servletRequest = new MockHttpServletRequest();
+        servletRequest.setRequestURI("/some/path");
+        Model model = new ExtendedModelMap();
+        when(errorAttributes.getError(any(ServletWebRequest.class)))
+                .thenReturn(null);
+
+        Map<String, Object> attrs = new HashMap<>();
+        attrs.put("message", "Internal Server Error");
+        attrs.put("path", "/some/path");
+        attrs.put("status", 500);
+        attrs.put("error", "Internal Server Error");
+        when(errorAttributes.getErrorAttributes(
+                any(ServletWebRequest.class),
+                any(ErrorAttributeOptions.class)))
+                .thenReturn(attrs);
+
+        User mockUser = mock(User.class);
+        when(mockUser.getUid()).thenReturn("testiwta");
+        when(userContextService.getCurrentUser()).thenReturn(mockUser);
+
+        // Act
+        String view = controller.onError(servletRequest, model);
+
+        // Assert
+        assertEquals("error", view, "should return the error view name");
+
+        assertEquals("Internal Server Error", model.getAttribute("message"));
+        assertEquals("/some/path", model.getAttribute("path"));
+        assertEquals(500, model.getAttribute("status"));
+        assertEquals("Internal Server Error", model.getAttribute("error"));
+        assertTrue(model.getAttribute("timestamp") instanceof LocalDateTime);
+
+        // confirm we looked up the user but did NOT email the exception
+        verify(userContextService).getCurrentUser();
+        verifyNoInteractions(emailService);
     }
 }
