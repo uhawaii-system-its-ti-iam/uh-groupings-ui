@@ -10,7 +10,7 @@
      */
     function ListGroupingsJsController($scope, $controller, groupingsService) {
 
-        angular.extend(this, $controller("GroupingJsController", { $scope }));
+        angular.extend(this, $controller("GroupingDetailsJsController", { $scope }));
         /**
          * Initialize function that retrieves the groupings you own.
          */

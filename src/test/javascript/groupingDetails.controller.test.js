@@ -33,7 +33,7 @@ describe("GroupingController", () => {
     beforeEach(inject(($rootScope, $controller, _BASE_URL_, _$httpBackend_, _$q_, groupingsService, $uibModal, Threshold, Message) => {
         scope = $rootScope.$new(true);
         mockUserService.getCurrentUser.and.returnValue(_$q_.when(mockUser));
-        controller = $controller("GroupingJsController", {
+        controller = $controller("GroupingDetailsJsController", {
             $scope: scope
         });
         httpBackend = _$httpBackend_;
@@ -3040,6 +3040,28 @@ describe("GroupingController", () => {
             });
             scope.getGroupingSyncDest(mockGroupPath).then(() => {
                 expect(scope.syncDestArray.length).toBe(0);
+                done();
+            });
+            scope.$apply();
+        });
+
+        it("should handle missing syncDestinations array", (done) => {
+            gs.getGroupingSyncDest.and.callFake((path, onSuccess, onError) => {
+                onSuccess({});
+            });
+            scope.getGroupingSyncDest(mockGroupPath).then(() => {
+                expect(scope.syncDestArray).toEqual([]);
+                done();
+            });
+            scope.$apply();
+        });
+
+        it("should handle null sync destinations response", (done) => {
+            gs.getGroupingSyncDest.and.callFake((path, onSuccess, onError) => {
+                onSuccess(null);
+            });
+            scope.getGroupingSyncDest(mockGroupPath).then(() => {
+                expect(scope.syncDestArray).toEqual([]);
                 done();
             });
             scope.$apply();
