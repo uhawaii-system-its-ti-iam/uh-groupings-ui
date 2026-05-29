@@ -14,7 +14,7 @@
      * @param Threshold - threshold object constant from app.constants.js
      * @param Utility - utility function constant from app.constants.js
      */
-    function GroupingJsController($scope, $controller, $window, $uibModal, groupingsService, PAGE_SIZE, Message,
+    function GroupingDetailsJsController($scope, $controller, $window, $uibModal, groupingsService, PAGE_SIZE, Message,
         Threshold, Utility, ORPHAN_HELP_URL) {
 
         $scope.orphanHelpUrl = ORPHAN_HELP_URL;
@@ -2402,7 +2402,7 @@
         };
     }
 
-    UHGroupingsApp.controller("GroupingJsController", GroupingJsController);
+    UHGroupingsApp.controller("GroupingDetailsJsController", GroupingDetailsJsController);
     UHGroupingsApp.controller("OptPreferenceModalController", OptPreferenceModalController);
     UHGroupingsApp.controller("SyncDestModalController", SyncDestModalController);
 })();
