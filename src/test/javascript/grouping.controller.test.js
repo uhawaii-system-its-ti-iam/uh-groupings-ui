@@ -3044,6 +3044,28 @@ describe("GroupingController", () => {
             });
             scope.$apply();
         });
+
+        it("should handle missing syncDestinations array", (done) => {
+            gs.getGroupingSyncDest.and.callFake((path, onSuccess, onError) => {
+                onSuccess({});
+            });
+            scope.getGroupingSyncDest(mockGroupPath).then(() => {
+                expect(scope.syncDestArray).toEqual([]);
+                done();
+            });
+            scope.$apply();
+        });
+
+        it("should handle null sync destinations response", (done) => {
+            gs.getGroupingSyncDest.and.callFake((path, onSuccess, onError) => {
+                onSuccess(null);
+            });
+            scope.getGroupingSyncDest(mockGroupPath).then(() => {
+                expect(scope.syncDestArray).toEqual([]);
+                done();
+            });
+            scope.$apply();
+        });
     });
 
 
