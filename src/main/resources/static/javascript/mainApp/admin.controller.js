@@ -33,7 +33,7 @@
 
         let PAGE_SIZE = 20;
 
-        angular.extend(this, $controller("GroupingJsController", { $scope }));
+        angular.extend(this, $controller("GroupingDetailsJsController", { $scope }));
 
         /**
          * Callback which takes the admin tab data and moves it into adminList, the object is then paginated.

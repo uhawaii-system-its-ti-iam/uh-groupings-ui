@@ -12,7 +12,7 @@ describe("GroupingController", () => {
 
     beforeEach(inject(($rootScope, $controller, _BASE_URL_, _$httpBackend_, groupingsService) => {
         scope = $rootScope.$new(true);
-        controller = $controller("GroupingsJsController", {
+        controller = $controller("ListGroupingsJsController", {
             $scope: scope
         });
         httpBackend = _$httpBackend_;
