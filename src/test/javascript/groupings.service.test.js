@@ -676,16 +676,16 @@ describe("GroupingsService", () => {
         });
     });
 
-    describe("getNumberOfOwners", () => {
+    describe("getNumberOfDirectOwners", () => {
         it("should call dataProvider.loadData", () => {
             spyOn(dp, "loadData");
             const groupingPath = "tmp:tst01name:groupPath01";
-            gs.getNumberOfOwners(groupingPath, onSuccess, onError);
+            gs.getNumberOfDirectOwners(groupingPath, onSuccess, onError);
             expect(dp.loadData).toHaveBeenCalled();
         });
         it("should use the correct path", () => {
             const groupingPath = "tmp:tst01name:groupPath01";
-            gs.getNumberOfOwners(groupingPath, onSuccess, onError);
+            gs.getNumberOfDirectOwners(groupingPath, onSuccess, onError);
             httpBackend.expectGET(BASE_URL + "members/" + groupingPath + "/owners/count").respond(200);
             expect(httpBackend.flush).not.toThrow();
         });

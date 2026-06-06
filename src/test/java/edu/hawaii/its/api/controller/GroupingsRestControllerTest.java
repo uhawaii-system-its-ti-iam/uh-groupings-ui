@@ -910,7 +910,7 @@ public class GroupingsRestControllerTest {
 
     @Test
     @WithMockUhUser
-    public void getNumberOfOwners() throws Exception {
+    public void getNumberOfDirectOwners() throws Exception {
         String uri = REST_CONTROLLER_BASE + "members/" + GROUPING + "/owners/count";
 
         given(httpRequestService.makeApiRequest(anyString(), eq(HttpMethod.GET)))

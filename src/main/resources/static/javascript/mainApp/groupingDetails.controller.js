@@ -299,7 +299,7 @@
                     const jobs = [];
                     let directOwnersCount = 0;
                     const directOwnersCountJob = new Promise((r) => {
-                        groupingsService.getNumberOfOwners(groupPath, (n) => {
+                        groupingsService.getNumberOfDirectOwners(groupPath, (n) => {
                             directOwnersCount = n;
                             r();
                         });
