@@ -524,6 +524,40 @@ describe("AdminController", function () {
             expect(scope.displayAddModal).not.toHaveBeenCalled();
         });
 
+        it("should show an add input error when the admin to add is invalid", () => {
+            spyOn(scope, "displayAddModal");
+            scope.addInputError = false;
+            scope.invalidMembers = [];
+            scope.adminToAdd = "word";
+            scope.addAdmin();
+
+            // Covers the normal /members invalid response shape.
+            const invalidResult = { resultCode: "SUCCESS", invalid: ["word"], results: [] };
+            httpBackend.expectPOST(BASE_URL + "members", ["word"]).respond(200, invalidResult);
+            httpBackend.flush();
+
+            expect(scope.addInputError).toBeTrue();
+            expect(scope.invalidMembers).toEqual(["word"]);
+            expect(scope.displayAddModal).not.toHaveBeenCalled();
+        });
+
+        it("should show an add input error when lookup returns no member row", () => {
+            spyOn(scope, "displayAddModal");
+            scope.addInputError = false;
+            scope.invalidMembers = [];
+            scope.adminToAdd = "12312312";
+            scope.addAdmin();
+
+            // Covers lookups that return 200 OK but no usable member row.
+            const emptyResults = { resultCode: "SUCCESS", invalid: [], results: [] };
+            httpBackend.expectPOST(BASE_URL + "members", ["12312312"]).respond(200, emptyResults);
+            httpBackend.flush();
+
+            expect(scope.addInputError).toBeTrue();
+            expect(scope.invalidMembers).toEqual(["12312312"]);
+            expect(scope.displayAddModal).not.toHaveBeenCalled();
+        });
+
         it("should display the add modal", () => {
             spyOn(scope, "displayAddModal");
             scope.adminToAdd = "testiwta";

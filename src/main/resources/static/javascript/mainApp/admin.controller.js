@@ -269,8 +269,11 @@
 
             groupingsService.getMemberAttributeResults([sanitizedAdmin], (res) => {
                 const members = res.results ?? [];
+                const invalidMembers = res.invalid ?? [];
                 $scope.containsDeptAcc = false;
                 $scope.containsServiceAccAdmin = false;
+                $scope.addInputError = false;
+                $scope.invalidMembers = [];
 
                 // Service accounts and department accounts are never eligible for admin assignment.
                 // Also treat leading "_" on the entered id as a service account: lookup may return empty or
@@ -278,6 +281,11 @@
                 const isServiceByEnteredId = _.isString(sanitizedAdmin) && sanitizedAdmin.startsWith("_");
                 if (isServiceByEnteredId || $scope.checkForServiceAccountMembers(members)) {
                     $scope.containsServiceAccAdmin = true;
+                    return;
+                }
+                if (!_.isEmpty(invalidMembers) || _.isEmpty(members)) {
+                    $scope.invalidMembers = _.isEmpty(invalidMembers) ? [sanitizedAdmin] : invalidMembers;
+                    $scope.addInputError = true;
                     return;
                 }
                 if ($scope.checkForDeptAccount(members)) {
