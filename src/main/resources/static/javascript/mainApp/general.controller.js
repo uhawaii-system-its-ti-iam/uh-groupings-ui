@@ -147,6 +147,7 @@
             $scope.containsServiceAccAdmin = false;
             $scope.addInputError = false;
             $scope.removeInputError = false;
+            $scope.invalidMembers = [];
         };
 
         /**
