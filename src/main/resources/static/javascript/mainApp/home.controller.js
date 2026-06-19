@@ -13,6 +13,14 @@
 
         angular.extend(this, $controller('GeneralJsController', {$scope}));
 
+        const countFallback = "--";
+
+        const handleCountError = (countProperty) => (response) => {
+            if (response && response.data && response.data.resultCode === "BACKEND_UNAVAILABLE") {
+                $scope[countProperty] = countFallback;
+            }
+        };
+
         $scope.init = () => {
 
             /**
@@ -25,7 +33,8 @@
              */
             groupingsService.getNumberOfMemberships((res) => {
                     $scope.numberOfMemberships = res;
-                }
+                },
+                handleCountError("numberOfMemberships")
             );
 
             /**
@@ -33,7 +42,8 @@
              */
             groupingsService.getNumberOfGroupings((res) => {
                     $scope.numberOfGroupings = res;
-                }
+                },
+                handleCountError("numberOfGroupings")
             );
         };
     }

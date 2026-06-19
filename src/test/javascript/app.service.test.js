@@ -43,11 +43,22 @@ describe("AppService", () => {
             expect(onError).not.toHaveBeenCalled();
         });
 
-        it("should call onError", () => {
+        it("should call onError when callError is provided", () => {
             httpBackend.expectGET(endpoint).respond(500);
             httpBackend.flush();
 
             expect(onError).toHaveBeenCalled();
+            expect(onSuccess).not.toHaveBeenCalled();
+        });
+
+        it("should not throw when callError is missing and the request fails", () => {
+            const endpointWithoutErrorCallback = `${BASE_URL}/missing-error-callback`;
+            dp.loadData(endpointWithoutErrorCallback, onSuccess);
+
+            httpBackend.expectGET(endpoint).respond(500);
+            httpBackend.expectGET(endpointWithoutErrorCallback).respond(500);
+
+            expect(() => httpBackend.flush()).not.toThrow();
             expect(onSuccess).not.toHaveBeenCalled();
         });
     });
