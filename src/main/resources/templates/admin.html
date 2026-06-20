@@ -97,7 +97,10 @@
                             <tbody class="table table-borderless">
                             <tr ng-repeat="l in pagedItemsAdmins[currentPageAdmins]" class="table table-sm">
                                 <td class="p-10">
-                                    {{l.name}}
+                                    <span ng-if="!isOrphanMember(l)">{{l.name}}</span>
+                                    <span ng-if="isOrphanMember(l)">
+                                        <th:block th:insert="~{fragments/orphan-name :: orphan-name}"></th:block>
+                                    </span>
                                 </td>
                                 <td class="p-10">
                                     {{l.uhUuid}}
@@ -116,7 +119,7 @@
                                     <i class="far fa-trash-alt pull-right clickable pt-1" role="button"
                                        tooltip data-placement="top"
                                        tabindex="0"
-                                       aria-label="Remove {{l.name}} as admin. There must be at least one admin remaining."
+                                       aria-label="Remove {{memberLabelForAria(l)}} as admin. There must be at least one admin remaining."
                                        th:title="#{screen.message.admin.tooltip.nav.delete.admin}"
                                        ng-click="removeAdmin(currentPageAdmins, $index)" aria-hidden="false"
                                        ng-keypress="$event.keyCode === 13 ? removeAdmin(currentPageAdmins, $index) : null">
@@ -130,7 +133,7 @@
                         <div class="col-lg-7">
                             <form class="d-flex" ng-submit="addAdmin()">
                                 <div class="w-75 input-group">
-                                    <input name="Add Admin" class="form-control" type="search"
+                                    <input name="AddAdmin" class="form-control" type="search"
                                            ng-init="dismissErrors()"
                                            ng-blur="dismissErrors()"
                                            title="Enter UH Username or UH Number"
@@ -170,7 +173,7 @@
                         <div class="mr-auto col-lg-3 col-md-4 col-12 p-0">
                             <form ng-submit="searchForUserGroupingInformation(); errorDismissed = false;">
                                 <div class="input-group">
-                                    <input name="Search Person" class="form-control" type="search" aria-required="true"
+                                    <input name="SearchPerson" class="form-control" type="search" aria-required="true"
                                            title="Enter UH Username" aria-label="Enter UH Username to manage the person"
                                            placeholder="UH Username" ng-model="subjectToLookup"
                                            ng-init="dismissErrors()"

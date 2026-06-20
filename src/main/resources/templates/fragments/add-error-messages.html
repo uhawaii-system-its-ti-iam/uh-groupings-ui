@@ -16,7 +16,7 @@
         <div ng-if="addInputError"
              class="float-md-left my-3 px-3 pt-2 h-50 rounded alert-danger show">
             <p>
-                <span class="alert-danger" th:text="#{screen.message.modal.add.fail}"></span>
+                <span class="alert-danger" th:text="#{screen.message.modal.add.fail}"></span><span>&nbsp;</span>
                 <span class="alert-danger" ng-repeat="members in invalidMembers">{{members}}{{$last ? "" : ", "}}</span>
             </p>
             <p th:text="#{screen.message.modal.add.ensureValid}"></p>

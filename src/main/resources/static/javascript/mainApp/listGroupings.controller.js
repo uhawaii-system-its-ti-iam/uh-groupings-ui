@@ -8,9 +8,9 @@
      * @param $controller - service for instantiating controllers
      * @param groupingsService - service for creating requests to the groupings API
      */
-    function GroupingsJsController($scope, $controller, groupingsService) {
+    function ListGroupingsJsController($scope, $controller, groupingsService) {
 
-        angular.extend(this, $controller("GroupingJsController", { $scope }));
+        angular.extend(this, $controller("GroupingDetailsJsController", { $scope }));
         /**
          * Initialize function that retrieves the groupings you own.
          */
@@ -32,5 +32,5 @@
         };
     }
 
-    UHGroupingsApp.controller("GroupingsJsController", GroupingsJsController);
+    UHGroupingsApp.controller("ListGroupingsJsController", ListGroupingsJsController);
 })();

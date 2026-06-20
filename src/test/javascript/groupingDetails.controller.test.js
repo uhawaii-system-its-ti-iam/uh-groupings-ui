@@ -33,7 +33,7 @@ describe("GroupingController", () => {
     beforeEach(inject(($rootScope, $controller, _BASE_URL_, _$httpBackend_, _$q_, groupingsService, $uibModal, Threshold, Message) => {
         scope = $rootScope.$new(true);
         mockUserService.getCurrentUser.and.returnValue(_$q_.when(mockUser));
-        controller = $controller("GroupingJsController", {
+        controller = $controller("GroupingDetailsJsController", {
             $scope: scope
         });
         httpBackend = _$httpBackend_;
@@ -47,6 +47,103 @@ describe("GroupingController", () => {
 
     it("should define the owner controller", () => {
         expect(controller).toBeDefined();
+    });
+
+    describe("orphan members", () => {
+        it("should define orphanHelpUrl to IAM Confluence help page", () => {
+            expect(scope.orphanHelpUrl).toBe(
+                "https://uhawaii.atlassian.net/wiki/spaces/UHIAM/pages/2482569221/UH+Groupings+Missing+Member+Names");
+        });
+
+        it("should identify orphan members when API sets orphan flag", () => {
+            expect(scope.isOrphanMember({
+                name: "25528222 entity not found",
+                uhUuid: "25528222",
+                uid: "",
+                orphan: true
+            })).toBeTrue();
+            expect(scope.isOrphanMember({ name: "Test User", uhUuid: "99997010", uid: "test", orphan: false }))
+                .toBeFalse();
+            expect(scope.isOrphanMember({
+                name: "25528222 entity not found",
+                uhUuid: "25528222",
+                uid: "",
+                orphan: false
+            })).toBeFalse();
+            expect(scope.isOrphanMember({ name: "", uhUuid: "25528222", uid: "" })).toBeFalse();
+        });
+
+        it("should use uhUuid in aria label for orphan members with entity-not-found name", () => {
+            expect(scope.memberLabelForAria({
+                name: "25528222 entity not found",
+                uhUuid: "25528222",
+                orphan: true
+            })).toBe("25528222");
+            expect(scope.memberLabelForAria({ name: "Test User", uhUuid: "99997010", orphan: false }))
+                .toBe("Test User");
+            expect(scope.memberLabelForAria({ name: "", uhUuid: "99997010", orphan: false }))
+                .toBe("99997010");
+        });
+
+        it("should retain orphan members when paginating grouping data", () => {
+            scope.groupingBasis = [];
+            scope.selectedGrouping = { name: "grouping1", path: "test:path:grouping1" };
+            const orphan = {
+                name: "25528222 entity not found",
+                uhUuid: "25528222",
+                uid: "",
+                orphan: true
+            };
+            const res = {
+                paginationComplete: false,
+                groupingBasis: { groupPath: "test:path:grouping1:basis", members: [orphan] },
+                groupingInclude: { groupPath: "test:path:grouping1:include", members: [] },
+                groupingExclude: { groupPath: "test:path:grouping1:exclude", members: [] },
+                allMembers: { members: [] }
+            };
+            spyOn(gs, "getGrouping").and.callFake((paths, page, size, sortBy, asc, onSuccess) => {
+                onSuccess(res);
+            });
+            return scope.fetchGrouping(1, [
+                scope.selectedGrouping.path + ":basis",
+                scope.selectedGrouping.path + ":include",
+                scope.selectedGrouping.path + ":exclude"
+            ]).then(() => {
+                expect(scope.groupingBasis.length).toBe(1);
+                expect(scope.groupingBasis[0].uhUuid).toBe("25528222");
+                expect(scope.isOrphanMember(scope.groupingBasis[0])).toBeTrue();
+            });
+        });
+
+        it("should exclude nameless non-orphan members when paginating grouping data", () => {
+            scope.groupingBasis = [];
+            scope.selectedGrouping = { name: "grouping1", path: "test:path:grouping1" };
+            const orphan = {
+                name: "25528222 entity not found",
+                uhUuid: "25528222",
+                uid: "",
+                orphan: true
+            };
+            const nameless = { name: "", uhUuid: "11111111", uid: "", orphan: false };
+            const res = {
+                paginationComplete: false,
+                groupingBasis: { groupPath: "test:path:grouping1:basis", members: [orphan, nameless] },
+                groupingInclude: { groupPath: "test:path:grouping1:include", members: [] },
+                groupingExclude: { groupPath: "test:path:grouping1:exclude", members: [] },
+                allMembers: { members: [] }
+            };
+            spyOn(gs, "getGrouping").and.callFake((paths, page, size, sortBy, asc, onSuccess) => {
+                onSuccess(res);
+            });
+            return scope.fetchGrouping(1, [
+                scope.selectedGrouping.path + ":basis",
+                scope.selectedGrouping.path + ":include",
+                scope.selectedGrouping.path + ":exclude"
+            ]).then(() => {
+                expect(scope.groupingBasis.length).toBe(1);
+                expect(scope.groupingBasis[0].uhUuid).toBe("25528222");
+            });
+        });
     });
 
     // Set up mock data
@@ -2880,6 +2977,97 @@ describe("GroupingController", () => {
             expect(scope.selectedSyncDest).toEqual(scope.getEntireSyncDestInArray(testSyncDest.name));
         });
     });
+
+    describe("getGroupingSyncDest", () => {
+        let mockGroupPath;
+        let mockSyncDestinations;
+
+        beforeEach(() => {
+            mockGroupPath = "test-grouping-path";
+            mockSyncDestinations = [
+                {
+                    description: "Google-Group: #uh-iam-group",
+                    hidden: false,
+                    name: "google-sync",
+                    synced: false,
+                    tooltip: "Synchronize with Google Groups. On lists set to Send=Editor, editors are allowed to post directly to the list without moderation/approval."
+                },
+                {
+                    description: "LISTSERV List: #uh-listserv",
+                    hidden: false,
+                    name: "listserv-sync",
+                    synced: true,
+                    tooltip: "Synchronize with LISTSERV. On lists set to Send=Editor, editors are allowed to post directly to the list without moderation/approval."
+                },
+                {
+                    description: "Another Sync Dest",
+                    hidden: false,
+                    name: "other-sync",
+                    synced: false,
+                    tooltip: "This tooltip does not have the LISTSERV text"
+                }
+            ];
+            spyOn(gs, "getGroupingSyncDest").and.callFake((path, onSuccess, onError) => {
+                onSuccess({ syncDestinations: mockSyncDestinations });
+            });
+        });
+
+        it("should populate syncDestArray and trim tooltips containing 'On lists set to Send=Editor'", (done) => {
+            spyOn(scope, "initSyncStatuses").and.callThrough();
+            scope.getGroupingSyncDest(mockGroupPath).then(() => {
+                // Verify array population
+                expect(scope.syncDestArray.length).toBe(3);
+                expect(scope.syncDestArray[0].name).toBe("google-sync");
+                expect(scope.syncDestArray[1].name).toBe("listserv-sync");
+
+                // Verify tooltip trimming for items with "On lists set to Send=Editor"
+                expect(scope.syncDestArray[0].tooltip).toBe("Synchronize with Google Groups.");
+                expect(scope.syncDestArray[1].tooltip).toBe("Synchronize with LISTSERV.");
+
+                // Verify tooltips without the phrase are not modified
+                expect(scope.syncDestArray[2].tooltip).toBe("This tooltip does not have the LISTSERV text");
+
+                // Verify side effects
+                expect(scope.initSyncStatuses).toHaveBeenCalled();
+                done();
+            });
+            scope.$apply();
+        });
+
+        it("should handle empty syncDestinations array", (done) => {
+            gs.getGroupingSyncDest.and.callFake((path, onSuccess, onError) => {
+                onSuccess({ syncDestinations: [] });
+            });
+            scope.getGroupingSyncDest(mockGroupPath).then(() => {
+                expect(scope.syncDestArray.length).toBe(0);
+                done();
+            });
+            scope.$apply();
+        });
+
+        it("should handle missing syncDestinations array", (done) => {
+            gs.getGroupingSyncDest.and.callFake((path, onSuccess, onError) => {
+                onSuccess({});
+            });
+            scope.getGroupingSyncDest(mockGroupPath).then(() => {
+                expect(scope.syncDestArray).toEqual([]);
+                done();
+            });
+            scope.$apply();
+        });
+
+        it("should handle null sync destinations response", (done) => {
+            gs.getGroupingSyncDest.and.callFake((path, onSuccess, onError) => {
+                onSuccess(null);
+            });
+            scope.getGroupingSyncDest(mockGroupPath).then(() => {
+                expect(scope.syncDestArray).toEqual([]);
+                done();
+            });
+            scope.$apply();
+        });
+    });
+
 
     describe("displayOwnerErrorModal", () => {
         it("should set loading to false", () => {

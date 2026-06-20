@@ -12,7 +12,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>4.0.6</version>
+        <version>4.0.7</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -263,8 +263,8 @@
                         <source>${basedir}/src/main/resources/static/javascript/mainApp/home.controller.js</source>
                         <source>${basedir}/src/main/resources/static/javascript/mainApp/general.controller.js</source>
                         <source>${basedir}/src/main/resources/static/javascript/mainApp/membership.controller.js</source>
-                        <source>${basedir}/src/main/resources/static/javascript/mainApp/grouping.controller.js</source>
-                        <source>${basedir}/src/main/resources/static/javascript/mainApp/groupings.controller.js</source>
+                        <source>${basedir}/src/main/resources/static/javascript/mainApp/groupingDetails.controller.js</source>
+                        <source>${basedir}/src/main/resources/static/javascript/mainApp/listGroupings.controller.js</source>
                         <source>${basedir}/src/main/resources/static/javascript/mainApp/table.controller.js</source>
                         <source>${basedir}/src/main/resources/static/javascript/mainApp/timeout.controller.js</source>
                         <source>${basedir}/src/main/resources/static/javascript/mainApp/feedback.controller.js</source>
