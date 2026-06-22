@@ -1735,14 +1735,14 @@
         };
 
         /**
-         * Closes the modal, then proceeds with reseting the grouping.
+         * Closes the modal, then proceeds with resetting the grouping.
          */
         $scope.proceedResetGroup = () => {
             $scope.resetModalInstance.close();
         };
 
         /**
-         * Closes the modal for reseting group. This does not reset the grouping.
+         * Closes the modal for resetting group. This does not reset the grouping.
          */
         $scope.cancelResetGroup = () => {
             $scope.resetModalInstance.dismiss();
