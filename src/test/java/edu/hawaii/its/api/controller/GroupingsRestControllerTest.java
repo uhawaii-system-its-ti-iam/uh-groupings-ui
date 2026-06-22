@@ -37,7 +37,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -67,7 +67,7 @@ public class GroupingsRestControllerTest {
     @Value("${url.api.2.1.base}")
     private String API_2_1_BASE;
 
-    @MockBean
+    @MockitoBean
     private HttpRequestService httpRequestService;
 
     @Autowired

@@ -1,7 +1,9 @@
 package edu.hawaii.its.api.controller;
 
 import java.io.IOException;
+import java.net.URI;
 
+import org.springframework.http.HttpMethod;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.ResponseErrorHandler;
@@ -17,7 +19,7 @@ public class RestTemplateResponseErrorHandler implements ResponseErrorHandler {
     }
 
     @Override
-    public void handleError(ClientHttpResponse clientHttpResponse) throws IOException {
+    public void handleError(URI uri, HttpMethod method, ClientHttpResponse clientHttpResponse) throws IOException {
         //intentionally empty
     }
 }

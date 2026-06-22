@@ -14,19 +14,19 @@ import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.test.context.ActiveProfiles;
 
 import edu.hawaii.its.api.service.OotbHttpRequestService;
+import edu.hawaii.its.groupings.service.OotbActiveUserProfileService;
 
 @SpringBootTest(classes = { SpringBootWebApplication.class })
 @ActiveProfiles("ootb")
@@ -35,34 +35,41 @@ public class OotbStaticUserAuthenticationFilterTest {
     @Autowired
     private OotbStaticUserAuthenticationFilter filter;
 
-    @MockBean
+    @MockitoBean
     private OotbHttpRequestService ootbHttpRequestService;
 
-    @Mock
-    private UserDetailsService userDetailsService;
+    @MockitoBean
+    private OotbActiveUserProfileService ootbActiveUserProfileService;
 
-    @Mock
     private UserDetails userDetails;
 
-    @Mock
     private ServletRequest request;
 
-    @Mock
     private ServletResponse response;
 
-    @Mock
     private FilterChain chain;
 
-    @Mock
     private SecurityContext securityContext;
 
     @BeforeEach
     public void setup() {
+        userDetails = mock(UserDetails.class);
+        request = mock(ServletRequest.class);
+        response = mock(ServletResponse.class);
+        chain = mock(FilterChain.class);
+        securityContext = mock(SecurityContext.class);
+
         SecurityContextHolder.setContext(securityContext);
-        when(userDetailsService.loadUserByUsername("ADMIN")).thenReturn(userDetails);
+        filter.setUserProfile("ADMIN");
+        when(ootbActiveUserProfileService.loadUserByUsername("ADMIN")).thenReturn(userDetails);
 
         when(ootbHttpRequestService.makeApiRequestWithActiveProfileBody(any(), any(), any(), any()))
                 .thenReturn(null);
+    }
+
+    @AfterEach
+    public void tearDown() {
+        SecurityContextHolder.clearContext();
     }
 
     @Test

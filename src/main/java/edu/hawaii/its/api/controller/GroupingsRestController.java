@@ -746,11 +746,11 @@ public class GroupingsRestController {
     }
 
     public String buildUriWithParams(String baseUri, Map<String, String> params) {
-        UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromHttpUrl(baseUri);
+        UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromUriString(baseUri);
         for (Map.Entry<String, String> entry : params.entrySet()) {
             uriComponentsBuilder.queryParam(entry.getKey(), entry.getValue());
         }
-        return uriComponentsBuilder.encode().toUriString();
+        return uriComponentsBuilder.build().encode().toUriString();
     }
 
     private ResponseEntity<String> changePreference(String grouping, String uhIdentifier, String preference,

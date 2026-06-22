@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.WebApplicationContext;
@@ -33,7 +33,7 @@ public class AuthorizationServiceTest {
     @Autowired
     private AuthorizationService authorizationService;
 
-    @MockBean
+    @MockitoBean
     private GroupingsRestController groupingsRestController;
 
     @Autowired
@@ -64,9 +64,9 @@ public class AuthorizationServiceTest {
         Principal principal = new SimplePrincipal(uhUuid);
 
         given(groupingsRestController.hasOwnerPrivs(uhUuid))
-                .willReturn(new ResponseEntity<>(null, HttpStatus.OK));
+                .willReturn(new ResponseEntity<>(HttpStatus.OK));
         given(groupingsRestController.hasAdminPrivs(uhUuid))
-                .willReturn(new ResponseEntity<>(null, HttpStatus.OK));
+                .willReturn(new ResponseEntity<>(HttpStatus.OK));
 
         // What we are testing.
         RoleHolder roleHolder = authorizationService.fetchRoles(uhUuid, "test");
