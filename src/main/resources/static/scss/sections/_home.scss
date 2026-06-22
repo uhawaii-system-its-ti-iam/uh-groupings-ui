@@ -18,11 +18,17 @@ body {
     overflow-x: hidden;
 }
 
-.user-info { /* For the Role: and Welcome *name* */
+/* For the Role: and Welcome *name* */
+.user-info {
     font-size: 1.75rem;
     line-height: 1.5;
     font-weight: 500;
     color: $uh-black;
+}
+
+/* For the announcements */
+.announce-info {
+    font-size: 1.3rem;
 }
 
 /* Holds name and description. */
