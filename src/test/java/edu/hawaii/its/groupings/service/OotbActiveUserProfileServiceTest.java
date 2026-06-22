@@ -17,7 +17,7 @@ import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.context.ActiveProfiles;
@@ -33,10 +33,10 @@ import edu.hawaii.its.groupings.type.OotbActiveProfile;
 @ActiveProfiles("ootb")
 class OotbActiveUserProfileServiceTest {
 
-    @MockBean
+    @MockitoBean
     private OotbActiveUserProfileService ootbActiveUserProfileService;
 
-    @MockBean
+    @MockitoBean
     private OotbHttpRequestService ootbHttpRequestService;
 
     @BeforeEach

@@ -1,7 +1,6 @@
 package edu.hawaii.its.groupings.configuration;
 
 import static org.springframework.security.config.Customizer.withDefaults;
-import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
 
 import jakarta.annotation.PostConstruct;
 
@@ -70,32 +69,32 @@ public class OotbSecurityConfig {
                 .addFilterBefore(ootbStaticUserAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests((auths)
                         -> auths
-                        .requestMatchers(antMatcher("/")).permitAll()
-                        .requestMatchers(antMatcher("/announcements/**")).permitAll()
-                        .requestMatchers(antMatcher("/api/**")).hasRole("UH")
-                        .requestMatchers(antMatcher("/currentUser")).permitAll()
-                        .requestMatchers(antMatcher("/css/**")).permitAll()
-                        .requestMatchers(antMatcher("/fonts/**")).permitAll()
-                        .requestMatchers(antMatcher("/images/**")).permitAll()
-                        .requestMatchers(antMatcher("/javascript/**")).permitAll()
-                        .requestMatchers(antMatcher("/webjars/**")).permitAll()
-                        .requestMatchers(antMatcher("/home")).permitAll()
-                        .requestMatchers(antMatcher("/about")).permitAll()
-                        .requestMatchers(antMatcher("/feedback")).hasRole("UH")
-                        .requestMatchers(antMatcher("/denied")).permitAll()
-                        .requestMatchers(antMatcher("/404")).permitAll()
-                        .requestMatchers(antMatcher("/login")).hasRole("UH")
-                        .requestMatchers(antMatcher("/admin/**")).hasRole("ADMIN")
-                        .requestMatchers(antMatcher("/groupings/**")).hasAnyRole("ADMIN", "OWNER")
-                        .requestMatchers(antMatcher("/memberships/**")).hasRole("UH")
-                        .requestMatchers(antMatcher("/modal/apiError")).permitAll()
-                        .requestMatchers(antMatcher("/uhuuid-error")).permitAll()
-                        .requestMatchers(antMatcher("/error")).permitAll()
-                        .requestMatchers(antMatcher("/testing/**")).hasRole("ADMIN")
+                        .requestMatchers("/").permitAll()
+                        .requestMatchers("/announcements/**").permitAll()
+                        .requestMatchers("/api/**").hasRole("UH")
+                        .requestMatchers("/currentUser").permitAll()
+                        .requestMatchers("/css/**").permitAll()
+                        .requestMatchers("/fonts/**").permitAll()
+                        .requestMatchers("/images/**").permitAll()
+                        .requestMatchers("/javascript/**").permitAll()
+                        .requestMatchers("/webjars/**").permitAll()
+                        .requestMatchers("/home").permitAll()
+                        .requestMatchers("/about").permitAll()
+                        .requestMatchers("/feedback").hasRole("UH")
+                        .requestMatchers(("/denied")).permitAll()
+                        .requestMatchers(("/404")).permitAll()
+                        .requestMatchers("/login").hasRole("UH")
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/groupings/**").hasAnyRole("ADMIN", "OWNER")
+                        .requestMatchers("/memberships/**").hasRole("UH")
+                        .requestMatchers("/modal/apiError").permitAll()
+                        .requestMatchers("/uhuuid-error").permitAll()
+                        .requestMatchers("/error").permitAll()
+                        .requestMatchers("/testing/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .csrf((csrf) -> csrf
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                        .ignoringRequestMatchers(antMatcher("/api/**"), antMatcher("/logout")))
+                        .ignoringRequestMatchers("/api/**", "/logout"))
                 .httpBasic(withDefaults());
         return http.build();
     }
