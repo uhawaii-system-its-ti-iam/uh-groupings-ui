@@ -15,9 +15,9 @@
 
         const countFallback = "--";
 
-        const handleCountError = (countProperty) => (response) => {
+        const handleCountError = (setFallbackCount) => (response) => {
             if (response && response.data && response.data.resultCode === "BACKEND_UNAVAILABLE") {
-                $scope[countProperty] = countFallback;
+                setFallbackCount();
             }
         };
 
@@ -34,7 +34,9 @@
             groupingsService.getNumberOfMemberships((res) => {
                     $scope.numberOfMemberships = res;
                 },
-                handleCountError("numberOfMemberships")
+                handleCountError(() => {
+                    $scope.numberOfMemberships = countFallback;
+                })
             );
 
             /**
@@ -43,7 +45,9 @@
             groupingsService.getNumberOfGroupings((res) => {
                     $scope.numberOfGroupings = res;
                 },
-                handleCountError("numberOfGroupings")
+                handleCountError(() => {
+                    $scope.numberOfGroupings = countFallback;
+                })
             );
         };
     }

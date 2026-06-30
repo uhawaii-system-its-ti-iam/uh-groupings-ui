@@ -52,8 +52,7 @@ describe("AppService", () => {
         });
 
         it("should not throw when callError is missing and the request fails", () => {
-            const endpointWithoutErrorCallback = `${BASE_URL}/missing-error-callback`;
-            dp.loadData(endpointWithoutErrorCallback, onSuccess);
+            const endpointWithoutErrorCallback = `${BASE_URL}missing-error-callback`;
 
             httpBackend.expectGET(endpoint).respond(500);
             httpBackend.expectGET(endpointWithoutErrorCallback).respond(500);
