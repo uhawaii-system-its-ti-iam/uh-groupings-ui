@@ -60,6 +60,7 @@
         $scope.pagedItemsOwners = [];
         $scope.currentPageOwners = 0;
         $scope.ownerLimit = 0;
+        $scope.directOwnersCount = 0;
 
         $scope.allowOptIn = false;
         $scope.allowOptOut = false;
@@ -296,6 +297,13 @@
                     const immediateOwnersCount = $scope.groupingOwners.length;
                     let totalOwnerGroupingMembers = 0;
                     const jobs = [];
+                    let directOwnersCount = 0;
+                    const directOwnersCountJob = new Promise((r) => {
+                        groupingsService.getNumberOfDirectOwners(groupPath, (n) => {
+                            directOwnersCount = n;
+                            r();
+                        });
+                    });
                     let allOwnersCount = 0;
                     const allOwnersCountJob = new Promise((r) => {
                         groupingsService.getNumberOfAllOwners(groupPath, (n) => {
@@ -321,7 +329,8 @@
                             );
                         }
                     });
-                    await Promise.all([...jobs, allOwnersCountJob]);
+                    await Promise.all([...jobs, allOwnersCountJob, directOwnersCountJob]);
+                    $scope.directOwnersCount = directOwnersCount;
                     $scope.allOwnersCount = allOwnersCount;
                     $scope.hasDuplicateOwners = (immediateOwnersCount + totalOwnerGroupingMembers) !== $scope.allOwnersCount;
                     $scope.filter($scope.groupingOwners, "pagedItemsOwners", "currentPageOwners", $scope.ownersQuery, false);
@@ -1286,7 +1295,7 @@
             }
 
             // Prevent removing all owners
-            if ((listName === "owners") && $scope.multiRemoveResults.length === $scope.groupingOwners.length) {
+            if ((listName === "owners") && $scope.multiRemoveResults.length === $scope.directOwnersCount) {
                 $scope.displayRemoveErrorModal("owner");
                 clearMemberInput();
                 return;
@@ -1487,7 +1496,7 @@
             const ownerToRemove = $scope.pagedItemsOwners[Number(currentPage)][Number(index)];
             $scope.listName = "owners";
 
-            if ($scope.groupingOwners.length === 1) {
+            if ($scope.directOwnersCount === 1) {
                 $scope.displayRemoveErrorModal("owner");
                 return;
             }
