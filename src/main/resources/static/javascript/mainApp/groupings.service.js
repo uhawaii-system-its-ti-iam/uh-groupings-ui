@@ -474,7 +474,7 @@
              * @param onError - Function to be called if HTTP request returns an error
              */
             retireGrouping(groupingPath, onSuccess, onError) {
-                let endpoint = BASE_URL + "groupings/" + groupingPath + "/retire";
+                let endpoint = BASE_URL + "groupings/" + groupingPath + "/retirement-requests";
                 dataProvider.updateData(endpoint, onSuccess, onError);
             },
         };

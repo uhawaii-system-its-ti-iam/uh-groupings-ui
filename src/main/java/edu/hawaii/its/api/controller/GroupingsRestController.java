@@ -536,6 +536,19 @@ public class GroupingsRestController {
     }
 
     /**
+     * Request that IAM retire a grouping and notify the grouping owners.
+     */
+    @PostMapping(value = "/groupings/{path:[\\w-:.]+}/retirement-requests")
+    public ResponseEntity<String> requestGroupingRetirement(@PathVariable String path) {
+        String currentUid = policy.sanitize(userContextService.getCurrentUid());
+        String safePath = policy.sanitize(path);
+        logger.info(String.format("Entered REST requestGroupingRetirement - currentUid: %s, path: %s",
+                currentUid, safePath));
+        String uri = String.format(API_2_1_BASE + "/groupings/%s/retirement-requests", safePath);
+        return httpRequestService.makeApiRequest(uri, HttpMethod.POST);
+    }
+
+    /**
      * Check if principle is an owner, of any grouping.
      */
     @GetMapping(value = "/members/{uhIdentifier}/is-owner")

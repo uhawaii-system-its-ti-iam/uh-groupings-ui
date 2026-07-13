@@ -15,8 +15,8 @@
      * @param Threshold - threshold object constant from app.constants.js
      * @param Utility - utility function constant from app.constants.js
      */
-    function GroupingDetailsJsController($scope, $controller, $window, $uibModal, groupingsService, PAGE_SIZE, Message,
-        Threshold, Utility, ORPHAN_HELP_URL) {
+    function GroupingDetailsJsController($scope, $controller, $window, $uibModal, groupingsService, userService,
+        PAGE_SIZE, Message, Threshold, Utility, ORPHAN_HELP_URL) {
 
         $scope.orphanHelpUrl = ORPHAN_HELP_URL;
         $scope.isOrphanMember = (member) => member && member.orphan === true;
@@ -2459,7 +2459,7 @@
                     $scope.loading = false;
                     $scope.displayDynamicModal(
                         "Success",
-                        "Grouping retired successfully."
+                        "Retire grouping request sent successfully."
                     );
                     $scope.dynamicModal.result.finally(() => {
                         // Navigate back to groupings list
@@ -2471,7 +2471,7 @@
                     $scope.loading = false;
                     $scope.displayDynamicModal(
                         "Error",
-                        `Failed to retire grouping: ${err.statusCode || 'Unknown error'}`
+                        `Failed to send retire grouping request: ${err.statusCode || 'Unknown error'}`
                     );
                 }
             );

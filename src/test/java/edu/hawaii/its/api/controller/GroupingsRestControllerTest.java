@@ -636,6 +636,22 @@ public class GroupingsRestControllerTest {
                 .makeApiRequest(anyString(), eq(HttpMethod.GET));
     }
 
+    @Test
+    @WithMockUhUser
+    public void requestGroupingRetirementTest() throws Exception {
+        String uri = REST_CONTROLLER_BASE + "groupings/groupingPath/retirement-requests";
+
+        given(httpRequestService.makeApiRequest(anyString(), eq(HttpMethod.POST)))
+                .willReturn(new ResponseEntity(HttpStatus.OK));
+
+        assertNotNull(mockMvc.perform(post(uri).with(csrf()))
+                .andExpect(status().isOk())
+                .andReturn());
+
+        verify(httpRequestService, times(1))
+                .makeApiRequest(anyString(), eq(HttpMethod.POST));
+    }
+
 
     @Test
     @WithMockUhUser
