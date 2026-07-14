@@ -120,6 +120,23 @@ public class GroupingsRestControllerTest {
     }
 
     @Test
+    public void activeAnnouncementsTest() throws Exception {
+        String uri = "/announcements";
+        String apiUri = API_2_1_BASE + "/announcements";
+
+        given(httpRequestService.makeApiRequestWithoutJwt(eq(apiUri), eq(HttpMethod.GET)))
+                .willReturn(new ResponseEntity(HttpStatus.OK));
+
+        mockMvc.perform(get(uri))
+                .andExpect(status().isOk());
+
+        verify(httpRequestService, times(1))
+                .makeApiRequestWithoutJwt(eq(apiUri), eq(HttpMethod.GET));
+        verify(httpRequestService, times(0))
+                .makeApiRequest(anyString(), any(HttpMethod.class));
+    }
+
+    @Test
     @WithMockUhUser(uid = "admin")
     public void groupingAdminsTest() throws Exception {
         String uri = REST_CONTROLLER_BASE + "groupings/admins";
@@ -133,6 +150,8 @@ public class GroupingsRestControllerTest {
 
         verify(httpRequestService, times(1))
                 .makeApiRequest(anyString(), eq(HttpMethod.GET));
+        verify(httpRequestService, times(0))
+                .makeApiRequestWithoutJwt(anyString(), any(HttpMethod.class));
     }
 
     @Test

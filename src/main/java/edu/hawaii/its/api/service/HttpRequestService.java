@@ -6,6 +6,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClient.RequestHeadersSpec;
 
 import edu.hawaii.its.groupings.service.JwtService;
 
@@ -26,12 +27,17 @@ public class HttpRequestService {
      * Make a http request to the API with path variables.
      */
     public ResponseEntity<String> makeApiRequest(String uri, HttpMethod method) {
-        return webClient.method(method)
+        return toEntity(webClient.method(method)
                 .uri(uri)
-                .header("Authorization", "Bearer " + jwtService.generateToken())
-                .retrieve()
-                .toEntity(String.class)
-                .block();
+                .header("Authorization", "Bearer " + jwtService.generateToken()));
+    }
+
+    /*
+     * Make an HTTP request to the API without a JWT.
+     */
+    public ResponseEntity<String> makeApiRequestWithoutJwt(String uri, HttpMethod method) {
+        return toEntity(webClient.method(method)
+                .uri(uri));
     }
 
     /*
@@ -39,13 +45,10 @@ public class HttpRequestService {
      */
     public ResponseEntity<String> makeApiRequestWithBody(String uri, String data,
             HttpMethod method) {
-        return webClient.method(method)
+        return toEntity(webClient.method(method)
                 .uri(uri)
                 .header("Authorization", "Bearer " + jwtService.generateToken())
-                .bodyValue(data)
-                .retrieve()
-                .toEntity(String.class)
-                .block();
+                .bodyValue(data));
     }
 
     /*
@@ -53,12 +56,14 @@ public class HttpRequestService {
      */
     public ResponseEntity<String> makeApiRequestWithBody(String uri, List<String> data,
             HttpMethod method) {
-        return webClient.method(method)
+        return toEntity(webClient.method(method)
                 .uri(uri)
                 .header("Authorization", "Bearer " + jwtService.generateToken())
-                .bodyValue(data)
-                .retrieve()
-                .toEntity(String.class)
+                .bodyValue(data));
+    }
+
+    private ResponseEntity<String> toEntity(RequestHeadersSpec<?> request) {
+        return request.exchangeToMono(response -> response.toEntity(String.class))
                 .block();
     }
 }
