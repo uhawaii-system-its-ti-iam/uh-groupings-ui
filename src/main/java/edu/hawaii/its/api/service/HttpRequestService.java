@@ -33,9 +33,9 @@ public class HttpRequestService {
     }
 
     /*
-     * Make a public http request to the API without a JWT.
+     * Make an HTTP request to the API without a JWT.
      */
-    public ResponseEntity<String> makePublicApiRequest(String uri, HttpMethod method) {
+    public ResponseEntity<String> makeApiRequestWithoutJwt(String uri, HttpMethod method) {
         return toEntity(webClient.method(method)
                 .uri(uri));
     }

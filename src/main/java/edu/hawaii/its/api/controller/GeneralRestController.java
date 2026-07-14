@@ -35,7 +35,7 @@ public class GeneralRestController {
     public ResponseEntity<String> activeAnnouncements() {
         logger.info("Entered REST activeAnnouncements...");
         String uri = String.format(API_2_1_BASE + "/announcements");
-        return httpRequestService.makePublicApiRequest(uri, HttpMethod.GET);
+        return httpRequestService.makeApiRequestWithoutJwt(uri, HttpMethod.GET);
     }
 
     /**

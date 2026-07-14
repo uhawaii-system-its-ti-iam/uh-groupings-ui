@@ -124,15 +124,14 @@ public class GroupingsRestControllerTest {
         String uri = "/announcements";
         String apiUri = API_2_1_BASE + "/announcements";
 
-        given(httpRequestService.makePublicApiRequest(eq(apiUri), eq(HttpMethod.GET)))
+        given(httpRequestService.makeApiRequestWithoutJwt(eq(apiUri), eq(HttpMethod.GET)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
 
-        assertNotNull(mockMvc.perform(get(uri).with(csrf()))
-                .andExpect(status().isOk())
-                .andReturn());
+        mockMvc.perform(get(uri))
+                .andExpect(status().isOk());
 
         verify(httpRequestService, times(1))
-                .makePublicApiRequest(eq(apiUri), eq(HttpMethod.GET));
+                .makeApiRequestWithoutJwt(eq(apiUri), eq(HttpMethod.GET));
         verify(httpRequestService, times(0))
                 .makeApiRequest(anyString(), any(HttpMethod.class));
     }
@@ -152,7 +151,7 @@ public class GroupingsRestControllerTest {
         verify(httpRequestService, times(1))
                 .makeApiRequest(anyString(), eq(HttpMethod.GET));
         verify(httpRequestService, times(0))
-                .makePublicApiRequest(anyString(), any(HttpMethod.class));
+                .makeApiRequestWithoutJwt(anyString(), any(HttpMethod.class));
     }
 
     @Test
