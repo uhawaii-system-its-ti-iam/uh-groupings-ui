@@ -688,10 +688,10 @@ public class GroupingsRestController {
     /**
      * Get the number of owners of the group path that contains the owner with uhIdentifier
      */
-    @GetMapping(value = "/{path:.+}/owners/count")
-    public ResponseEntity<String> getNumberOfOwners(@PathVariable String path) {
+    @GetMapping(value = "/members/{path:.+}/owners/count")
+    public ResponseEntity<String> getNumberOfDirectOwners(@PathVariable String path) {
         String currentUid = policy.sanitize(userContextService.getCurrentUid());
-        logger.info(String.format("Entered REST getNumberOfOwners - currentUid: %s, path: %s",
+        logger.info(String.format("Entered REST getNumberOfDirectOwners - currentUid: %s, path: %s",
                 currentUid, path));
         String safePath = policy.sanitize(path);
         String baseUri = String.format(API_2_1_BASE + "/members/%s/owners/count", safePath);
