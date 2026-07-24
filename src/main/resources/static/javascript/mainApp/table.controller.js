@@ -56,6 +56,12 @@
          * otherwise returns true.
          */
         const isFilterableColumn = (key) => {
+            if (key === "description") {
+                return $scope.showDescriptionColumn;
+            }
+            if (key === "path") {
+                return $scope.showGroupingPathColumn;
+            }
             return !_.includes(FILTER_COLUMNS_TO_IGNORE, key);
         };
 
