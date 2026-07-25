@@ -1294,7 +1294,7 @@
                 return;
             }
 
-            // Prevent removing all owners
+            // Prevent removing the last direct owner
             if ((listName === "owners") && $scope.multiRemoveResults.length === $scope.directOwnersCount) {
                 $scope.displayRemoveErrorModal("owner");
                 clearMemberInput();
@@ -1496,6 +1496,7 @@
             const ownerToRemove = $scope.pagedItemsOwners[Number(currentPage)][Number(index)];
             $scope.listName = "owners";
 
+            // Ensure that the owner being removed is not the last remaining direct owner.
             if ($scope.directOwnersCount === 1) {
                 $scope.displayRemoveErrorModal("owner");
                 return;
