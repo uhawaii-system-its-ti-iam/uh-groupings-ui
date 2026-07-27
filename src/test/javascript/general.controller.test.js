@@ -469,6 +469,22 @@ describe("GeneralController", () => {
             expect(localStorage.getItem("showDescriptionColumn")).toBe("true");
             expect(localStorage.getItem("showPathColumn")).toBe("true");
         });
+
+        it("should refilter groupings when switching displayed columns", () => {
+            scope.groupingsList = [{ name: "grouping" }];
+            scope.groupingsQuery = "test query";
+            spyOn(scope, "filter");
+
+            scope.showColumn("groupingPath");
+
+            expect(scope.filter).toHaveBeenCalledWith(
+                scope.groupingsList,
+                "pagedItemsGroupings",
+                "currentPageGroupings",
+                scope.groupingsQuery,
+                true
+            );
+        });
     });
 
     describe("hoverCopy", () => {

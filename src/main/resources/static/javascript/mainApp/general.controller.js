@@ -217,6 +217,16 @@
             localStorage.setItem("columnDisplaySetting", $scope.columnDisplaySetting);
             localStorage.setItem("showDescriptionColumn", JSON.stringify($scope.showDescriptionColumn));
             localStorage.setItem("showPathColumn", JSON.stringify($scope.showGroupingPathColumn));
+
+            if (_.isArray($scope.groupingsList)) {
+                $scope.filter(
+                    $scope.groupingsList,
+                    "pagedItemsGroupings",
+                    "currentPageGroupings",
+                    $scope.groupingsQuery,
+                    true
+                );
+            }
         };
 
         /**
