@@ -218,15 +218,14 @@
             localStorage.setItem("showDescriptionColumn", JSON.stringify($scope.showDescriptionColumn));
             localStorage.setItem("showPathColumn", JSON.stringify($scope.showGroupingPathColumn));
 
-            if (_.isArray($scope.groupingsList)) {
-                $scope.filter(
-                    $scope.groupingsList,
-                    "pagedItemsGroupings",
-                    "currentPageGroupings",
-                    $scope.groupingsQuery,
-                    true
-                );
-            }
+            const refilterIfPresent = (listVar, pagedListVar, pageVar, query) => {
+                if (_.isArray($scope[listVar])) {
+                    $scope.filter($scope[listVar], pagedListVar, pageVar, query, true);
+                }
+            };
+            refilterIfPresent("groupingsList", "pagedItemsGroupings", "currentPageGroupings", $scope.groupingsQuery);
+            refilterIfPresent("membershipsList", "pagedItemsMemberships", "currentPageMemberships", $scope.membersQuery);
+            refilterIfPresent("optInList", "pagedItemsOptInList", "currentPageOptIn", $scope.optInQuery);
         };
 
         /**
