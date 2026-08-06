@@ -218,14 +218,14 @@
             localStorage.setItem("showDescriptionColumn", JSON.stringify($scope.showDescriptionColumn));
             localStorage.setItem("showPathColumn", JSON.stringify($scope.showGroupingPathColumn));
 
-            const refilterIfPresent = (listVar, pagedListVar, pageVar, query) => {
-                if (_.isArray($scope[listVar])) {
-                    $scope.filter($scope[listVar], pagedListVar, pageVar, query, true);
+            const refilterIfPresent = (list, pagedListVar, pageVar, query) => {
+                if (_.isArray(list)) {
+                    $scope.filter(list, pagedListVar, pageVar, query, true);
                 }
             };
-            refilterIfPresent("groupingsList", "pagedItemsGroupings", "currentPageGroupings", $scope.groupingsQuery);
-            refilterIfPresent("membershipsList", "pagedItemsMemberships", "currentPageMemberships", $scope.membersQuery);
-            refilterIfPresent("optInList", "pagedItemsOptInList", "currentPageOptIn", $scope.optInQuery);
+            refilterIfPresent($scope.groupingsList, "pagedItemsGroupings", "currentPageGroupings", $scope.groupingsQuery);
+            refilterIfPresent($scope.membershipsList, "pagedItemsMemberships", "currentPageMemberships", $scope.membersQuery);
+            refilterIfPresent($scope.optInList, "pagedItemsOptInList", "currentPageOptIn", $scope.optInQuery);
         };
 
         /**
