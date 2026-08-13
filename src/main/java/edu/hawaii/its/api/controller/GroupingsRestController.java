@@ -110,15 +110,16 @@ public class GroupingsRestController {
     @PostMapping(value = "/groupings/group")
     @ResponseBody
     public ResponseEntity<String> getGrouping(@RequestBody(required = true) List<String> groupPaths,
-            @RequestParam(required = true) Integer page,
-            @RequestParam(required = true) Integer size,
+            @RequestParam(required = true) Integer pageNumber,
+            @RequestParam(required = true) Integer pageSize,
             @RequestParam(required = true) String sortBy,
             @RequestParam(required = true) Boolean isAscending) {
         String currentUid = userContextService.getCurrentUid();
-        logger.info(String.format("Entered REST getGrouping - currentUid: %s, groupPaths: %s, page: %d, size: %d, sortBy: %s, isAscending: %b",
-                currentUid, groupPaths, page, size, sortBy, isAscending));
+        logger.info(String.format(
+                "Entered REST getGrouping - currentUid: %s, groupPaths: %s, pageNumber: %d, pageSize: %d, sortBy: %s, isAscending: %b",
+                currentUid, groupPaths, pageNumber, pageSize, sortBy, isAscending));
         List<String> safePaths = sanitizeList(groupPaths);
-        Map<String, String> params = mapGroupingParameters(page, size, sortBy, isAscending);
+        Map<String, String> params = mapGroupingParameters(pageNumber, pageSize, sortBy, isAscending);
         String baseUri = API_2_1_BASE + "/groupings/group";
         String uri = buildUriWithParams(baseUri, params);
         return httpRequestService.makeApiRequestWithBody(uri, safePaths, HttpMethod.POST);
@@ -741,11 +742,11 @@ public class GroupingsRestController {
         return sanitizedList;
     }
 
-    public Map<String, String> mapGroupingParameters(Integer page, Integer size, String sortBy,
+    public Map<String, String> mapGroupingParameters(Integer pageNumber, Integer pageSize, String sortBy,
             Boolean isAscending) {
         Map<String, String> params = new HashMap<>();
-        params.put("page", Integer.toString(page));
-        params.put("size", Integer.toString(size));
+        params.put("pageNumber", Integer.toString(pageNumber));
+        params.put("pageSize", Integer.toString(pageSize));
         params.put("sortBy", sortBy);
         params.put("isAscending", Boolean.toString(isAscending));
         return params;

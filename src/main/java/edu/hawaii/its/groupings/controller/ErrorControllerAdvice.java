@@ -8,6 +8,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -53,6 +54,27 @@ public class ErrorControllerAdvice {
         body.put("timestamp", LocalDateTime.now());
 
         return new ResponseEntity<>(body, wcre.getStatusCode());
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<Map<String, Object>> handleMissingServletRequestParameterException(
+            MissingServletRequestParameterException msrpe) {
+
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        String path = attributes.getRequest().getRequestURI();
+
+        log(msrpe);
+
+        emailService.sendWithStack(msrpe, "Missing Servlet Request Parameter Exception", path);
+
+        Map<String, Object> body = new HashMap<>();
+
+        body.put("status", HttpStatus.BAD_REQUEST);
+        body.put("message", msrpe.getMessage());
+        body.put("path", path);
+        body.put("timestamp", LocalDateTime.now());
+
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
