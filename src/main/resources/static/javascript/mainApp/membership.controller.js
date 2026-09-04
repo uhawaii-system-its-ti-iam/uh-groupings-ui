@@ -67,6 +67,10 @@
             );
         };
 
+        $scope.isCuratedGrouping = (path) => {
+            return typeof path === "string" && path.indexOf("hawaii.edu:store") === 0;
+        };
+
         $scope.clearFilterQueryStrings = () => {
             $scope.membersQuery = "";
             $scope.optInQuery = "";
