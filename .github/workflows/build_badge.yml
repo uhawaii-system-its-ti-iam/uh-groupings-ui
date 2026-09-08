@@ -1,5 +1,8 @@
 name: Build and Test
 
+permissions:
+  contents: read
+
 on:
   push:
     branches: [ main ]
@@ -12,14 +15,15 @@ jobs:
       fail-fast: true
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        java: ['17', '19', '21']
+        java: ['21', '25']
     runs-on: ${{ matrix.os }}
     name: Running Java ${{ matrix.java }} on ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up JDK ${{ matrix.java }}
-      uses: actions/setup-java@v1
-      with:
-        java-version: ${{ matrix.java }}
-    - name: Test code
-      run: mvn -B -q test -D'logging.level.edu.hawaii.its.groupings=OFF' -D'logging.level.edu.hawaii.its.api=OFF' -D'logging.level.org.springframework=ERROR' -D'spring.main.banner-mode=off'
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - name: Set up JDK ${{ matrix.java }}
+        uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3 # v4.9.1
+        with:
+          distribution: 'temurin'
+          java-version: ${{ matrix.java }}
+      - name: Test code
+        run: mvn -B -q test -D'logging.level.edu.hawaii.its.groupings=OFF' -D'logging.level.edu.hawaii.its.api=OFF' -D'logging.level.org.springframework=ERROR' -D'spring.main.banner-mode=off'
