@@ -1,67 +1,45 @@
-Manage your groupings in one place, use them in many.
+## OOTB (Out-of-the-box) UH Groupings UI
 
-A grouping is a collection of members (e.g., all full-time Hilo faculty). UH Groupings allows you to manage grouping memberships, control members' self-service options, designate sync destinations, and more.
+OOTB is a local, self-contained version of UH Groupings. It uses mock data in memory instead of Grouper, CAS, or LDAP, so you can run and develop the UI without UH infrastructure or live services.
 
-Groupings can be synchronized with one or more of the following: email LISTSERV lists, attributes for access control via CAS and LDAP, etc. Additionally, UH Groupings allows you to leverage group data from official sources, which can substantially reduce the manual overhead of membership management.
+Production UH Groupings lives on `main`. This `ootb` branch is only for that local environment.
 
-UH Groupings utilizes the Internet2 Grouper project.  Grouper is an enterprise access management system designed for the highly distributed management environment and heterogeneous information technology environment common to universities.
+https://github.com/uhawaii-system-its-ti-iam/uh-groupings-ui/tree/ootb
 
-[![License](https://img.shields.io/hexpm/l/plug.svg)](https://github.com/apereo/cas/blob/master/LICENSE)
-[![Build and Test Status](https://github.com/uhawaii-system-its-ti-iam/uh-groupings-ui/actions/workflows/build_badge.yml/badge.svg)](https://github.com/uhawaii-system-its-ti-iam/uh-groupings-ui/actions/workflows/build_badge.yml)
-[![Coverage Status](https://github.com/uhawaii-system-its-ti-iam/uh-groupings-ui/blob/badges/jacoco.svg)](https://github.com/uhawaii-system-its-ti-iam/uh-groupings-ui/actions/workflows/coverage.yml)
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/5584742766ed46faa855dafe41a1cdc9)](https://www.codacy.com/gh/uhawaii-system-its-ti-iam/uh-groupings-ui/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=uhawaii-system-its-ti-iam/uh-groupings-ui&amp;utm_campaign=Badge_Grade)
-[![CodeQL](https://github.com/uhawaii-system-its-ti-iam/uh-groupings-api/actions/workflows/codeql.yml/badge.svg)](https://github.com/uhawaii-system-its-ti-iam/uh-groupings-ui/actions/workflows/codeql.yml)
+### Requirements
+You need Java 17 and a checkout of both this UI and [uh-groupings-api](https://github.com/uhawaii-system-its-ti-iam/uh-groupings-api/tree/ootb) on the `ootb` branch. The UI talks to the local OOTB API; both must use the `ootb` profile.
 
-##### Java
-You'll need a Java JDK to build and run the project (version 17).
+### Getting started
+1. Check out the `ootb` branch in **both** `uh-groupings-api` and `uh-groupings-ui`.
+2. In each project's IDE run configuration, set:
 
-The files for the project are kept in a code repository,
-available from here:
+```
+Active Profiles: ootb
+```
 
-https://github.com/uhawaii-system-its-ti-iam/uh-groupings-ui
+3. Start the API first, then the UI:
 
-##### Building
-To run the Application from the Command Line:
+```
+$ ./mvnw clean spring-boot:run
+```
 
-    $ ./mvnw clean spring-boot:run
+The API listens on `http://localhost:8081/uhgroupingsapi`. The UI listens on `http://localhost:8080/uhgroupings` and uses that local API (`url.api.2.1.base`).
 
-To build a deployable war file for local development, if preferred:
+You can also package a war with `./mvnw clean package` if you prefer to deploy into a servlet container such as Tomcat.
 
-    $ ./mvnw clean package
+### How it works
+On the `ootb` profile, the UI does not use CAS. It talks to the OOTB API, which injects `OotbGrouperApiService` instead of the production Grouper client. The API loads a static JSON data harness into memory, and membership, group, subject, and attribute operations keep the same API contracts as production.
 
-You should have a deployable war file in the target directory.
-Deploy as usual in a servlet container, e.g. tomcat.
+```
+UI → API → OotbGrouperApiService → In-Memory Data
+```
 
-##### Running Unit Tests
-The project includes Unit Tests for various parts of the system.
-For this project, Unit Tests are defined as those tests that will
-rely on only the local development computer.
-A development build of the application will run the Unit Tests.
-A test and production build of the application will run both the
-Unit Tests and the System Tests (which may require network access).
-You can also run specific Unit Tests using the appropriate command
-line arguments.
+Restarting either app resets in-memory data. Nothing is written to external systems.
 
-To run the Unit Tests with a standard build:
+### Limitations
+- No real Grouper, CAS, or LDAP integration, so authentication and live API behavior cannot be tested here.
+- Data is mock JSON, not a live directory. Changes exist only in memory until restart.
+- Some production Grouper features may not be implemented yet.
+- Not suitable for performance or security testing.
 
-    $ ./mvnw clean test
-
-To run a test class:
-
-    $ ./mvnw clean test -Dtest=StringsTest
-
-To run a single method in a test class:
-
-    $ ./mvnw clean test -Dtest=StringsTest#trunctate
-
-##### Running System Tests
-The project files include a handful of System Tests.
-For this project, System Tests are defined as those tests that may
-call live remote systems, such as a search against the production
-LDAP server. A standard build of the application will exclude the
-System Tests, but you can explicitly run them by specifying the
-appropriate command line argument.
-
-To run the System Tests:
-
-    $ ./mvnw -Dtest=*SystemTest clean test
+Use `main` when you need real Grouper, CAS, or LDAP.
