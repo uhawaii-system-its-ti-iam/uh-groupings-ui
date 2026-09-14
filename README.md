@@ -1,3 +1,6 @@
+## UH Groupings Project
+### The UI for UH Groupings.
+
 Manage your groupings in one place, use them in many.
 
 A grouping is a collection of members (e.g., all full-time Hilo faculty). UH Groupings allows you to manage grouping memberships, control members' self-service options, designate sync destinations, and more.
