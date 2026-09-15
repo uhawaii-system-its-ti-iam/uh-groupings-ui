@@ -1,13 +1,13 @@
 ## OOTB (Out-of-the-box) UH Groupings UI
 
+This README is for the [`ootb` branch](https://github.com/uhawaii-system-its-ti-iam/uh-groupings-ui/tree/ootb).
+
 OOTB is a local, self-contained version of UH Groupings. It uses mock data in memory instead of Grouper, CAS, or LDAP, so you can run and develop the UI without UH infrastructure or live services.
 
 Production UH Groupings lives on `main`. This `ootb` branch is only for that local environment.
 
-https://github.com/uhawaii-system-its-ti-iam/uh-groupings-ui/tree/ootb
-
 ### Requirements
-You need Java 17 and a checkout of both this UI and [uh-groupings-api](https://github.com/uhawaii-system-its-ti-iam/uh-groupings-api/tree/ootb) on the `ootb` branch. The UI talks to the local OOTB API; both must use the `ootb` profile.
+You need Java 17 and a checkout of both this UI and [`uh-groupings-api` on `ootb`](https://github.com/uhawaii-system-its-ti-iam/uh-groupings-api/tree/ootb). The UI talks to the local OOTB API; both must use the `ootb` profile.
 
 ### Getting started
 1. Check out the `ootb` branch in **both** `uh-groupings-api` and `uh-groupings-ui`.
@@ -24,6 +24,8 @@ $ ./mvnw clean spring-boot:run -Dspring-boot.run.profiles=ootb
 ```
 
 The API listens on `http://localhost:8081/uhgroupingsapi`. The UI listens on `http://localhost:8080/uhgroupings` and uses that local API (`url.api.2.1.base`).
+
+4. After startup, open the UI at `http://localhost:8080/uhgroupings`. You should not be redirected to CAS. Mock users (for example DefaultMember) appear in the login/profile menu, and the UI should call `http://localhost:8081/uhgroupingsapi`.
 
 You can also package a war with `./mvnw clean package` if you prefer to deploy into a servlet container such as Tomcat. Set `SPRING_PROFILES_ACTIVE=ootb` on the container before starting it; the profile is not baked into the WAR.
 
