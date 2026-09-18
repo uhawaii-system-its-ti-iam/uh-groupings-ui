@@ -1,6 +1,7 @@
 package edu.hawaii.its.api.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -9,14 +10,17 @@ import static org.mockito.Mockito.when;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 import edu.hawaii.its.groupings.service.JwtService;
@@ -26,6 +30,14 @@ public class HttpRequestServiceTest {
     private HttpRequestService httpRequestService;
     private HttpServer server;
     private String apiBase;
+
+    /** Headers the upstream API emits that must not be relayed onward. */
+    private static final List<String> LEAKY_HEADERS = List.of(
+            HttpHeaders.TRANSFER_ENCODING,
+            HttpHeaders.CONNECTION,
+            HttpHeaders.DATE,
+            "Strict-Transport-Security",
+            "X-Frame-Options");
 
     @BeforeEach
     public void setUp() throws IOException {
@@ -41,6 +53,10 @@ public class HttpRequestServiceTest {
     @AfterEach
     public void tearDown() {
         server.stop(0);
+    }
+
+    private String uri() {
+        return "http://localhost:" + server.getAddress().getPort() + "/announcements";
     }
 
     @Test
@@ -61,6 +77,9 @@ public class HttpRequestServiceTest {
         assertEquals(HttpStatus.SERVICE_UNAVAILABLE, response.getStatusCode());
         assertEquals(body, response.getBody());
         assertTrue(response.getBody().contains("\"resultCode\":\"BACKEND_UNAVAILABLE\""));
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getHeaders().getContentType().getType()
+                + "/" + response.getHeaders().getContentType().getSubtype());
+        assertEquals(StandardCharsets.UTF_8, response.getHeaders().getContentType().getCharset());
     }
 
     @Test
@@ -141,5 +160,57 @@ public class HttpRequestServiceTest {
         exchange.sendResponseHeaders(HttpStatus.SERVICE_UNAVAILABLE.value(), bytes.length);
         exchange.getResponseBody().write(bytes);
         exchange.close();
+    }
+
+    @Test
+    public void relayedResponseDoesNotForwardUpstreamFramingHeaders() {
+        ResponseEntity<String> response = httpRequestService.makeApiRequest(uri(), HttpMethod.GET);
+
+        for (String leaked : LEAKY_HEADERS) {
+            assertFalse(response.getHeaders().containsHeader(leaked),
+                    "Upstream header must not be relayed to the browser: " + leaked);
+        }
+    }
+
+    @Test
+    public void relayedResponsePreservesStatusAndBody() {
+        ResponseEntity<String> response = httpRequestService.makeApiRequest(uri(), HttpMethod.GET);
+
+        assertEquals(200, response.getStatusCode().value());
+        assertEquals("{\"resultCode\":\"SUCCESS\",\"announcements\":[]}", response.getBody());
+    }
+
+    @Test
+    public void relayedResponseDeclaresJsonWithAnExplicitCharset() {
+        ResponseEntity<String> response = httpRequestService.makeApiRequest(uri(), HttpMethod.GET);
+
+        MediaType contentType = response.getHeaders().getContentType();
+        assertTrue(MediaType.APPLICATION_JSON.isCompatibleWith(contentType),
+                "Expected JSON content type but was: " + contentType);
+        // Without an explicit charset the body may be re-encoded with a different one than the
+        // container uses to compute Content-Length, truncating payloads that contain the
+        // Hawaiian okina and kahako.
+        assertEquals(StandardCharsets.UTF_8, contentType.getCharset(),
+                "Content-Type must state the charset so Content-Length matches the bytes written");
+    }
+
+    @Test
+    public void relayedResponseCarriesOnlyTheContentTypeHeader() {
+        ResponseEntity<String> response = httpRequestService.makeApiRequest(uri(), HttpMethod.GET);
+
+        assertEquals(List.of(HttpHeaders.CONTENT_TYPE.toLowerCase()),
+                response.getHeaders().headerNames().stream().map(String::toLowerCase).sorted().toList(),
+                "Only Content-Type should be set; the container supplies the framing headers");
+    }
+
+    @Test
+    public void relayedResponseWithBodyDoesNotForwardUpstreamFramingHeaders() {
+        ResponseEntity<String> response =
+                httpRequestService.makeApiRequestWithBody(uri(), List.of("uid"), HttpMethod.POST);
+
+        for (String leaked : LEAKY_HEADERS) {
+            assertFalse(response.getHeaders().containsHeader(leaked),
+                    "Upstream header must not be relayed to the browser: " + leaked);
+        }
     }
 }

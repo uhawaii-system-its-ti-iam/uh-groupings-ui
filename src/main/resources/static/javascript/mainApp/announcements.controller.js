@@ -31,25 +31,6 @@
                 // The modal can lead to the feedback route, which requires authentication.
                 if ($scope.currentUser?.uid && $scope.currentUser?.uhUuid) {
                     $scope.displayApiErrorModal();
-                    console.error(
-                        "Announcements request failed after authentication; displaying API error modal and feedback redirect.",
-                        {
-                            currentUser: $scope.currentUser.uid,
-                            status: res?.status,
-                            statusText: res?.statusText,
-                            data: res?.data,
-                        }
-                    );
-                } else {
-                    console.error(
-                        "Announcements request failed before authentication; suppressing API error modal and feedback redirect.",
-                        {
-                            currentUser: $scope.currentUser.uid,
-                            status: res?.status,
-                            statusText: res?.statusText,
-                            data: res?.data,
-                        }
-                    );
                 }
             });
         };
