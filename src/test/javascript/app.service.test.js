@@ -29,13 +29,15 @@ describe("AppService", () => {
     });
 
     describe("loadData", () => {
-        const endpoint = BASE_URL + "/";
+        let endpoint;
 
         beforeEach(() => {
-            dp.loadData(endpoint, onSuccess, onError);
+            endpoint = BASE_URL + "/";
         });
 
         it("should call onSuccess", () => {
+            dp.loadData(endpoint, onSuccess, onError);
+
             httpBackend.expectGET(endpoint).respond(200, "hello");
             httpBackend.flush();
 
@@ -44,6 +46,8 @@ describe("AppService", () => {
         });
 
         it("should call onError when callError is provided", () => {
+            dp.loadData(endpoint, onSuccess, onError);
+
             httpBackend.expectGET(endpoint).respond(500);
             httpBackend.flush();
 
@@ -53,20 +57,22 @@ describe("AppService", () => {
 
         it("should not throw when callError is missing and the request fails", () => {
             const endpointWithoutErrorCallback = `${BASE_URL}missing-error-callback`;
+            dp.loadData(endpointWithoutErrorCallback, onSuccess);
 
-            httpBackend.expectGET(endpoint).respond(500);
             httpBackend.expectGET(endpointWithoutErrorCallback).respond(500);
 
             expect(() => httpBackend.flush()).not.toThrow();
             expect(onSuccess).not.toHaveBeenCalled();
+            expect(onError).not.toHaveBeenCalled();
         });
     });
 
     describe("loadDataWithBody", () => {
-        const endpoint = BASE_URL + "/";
+        let endpoint;
         const requestData = { key: "value" };
 
         beforeEach(() => {
+            endpoint = BASE_URL + "/";
             dp.loadDataWithBody(endpoint, requestData, onSuccess, onError);
         });
 
@@ -182,10 +188,11 @@ describe("AppService", () => {
     });
 
     describe("updateDataAsync", () => {
-        const endpoint = BASE_URL + "/";
+        let endpoint;
         const result = "result";
 
         beforeEach(() => {
+            endpoint = BASE_URL + "/";
             dp.updateDataAsync(endpoint, initialPoll, onSuccess, onError);
         });
 
@@ -217,10 +224,11 @@ describe("AppService", () => {
     });
 
     describe("updateDataWithBody", () => {
-        const endpoint = BASE_URL + "/";
+        let endpoint;
         const requestData = { key: "value" };
 
         beforeEach(() => {
+            endpoint = BASE_URL + "/";
             dp.updateDataWithBody(endpoint, requestData, onSuccess, onError);
         });
 
@@ -243,10 +251,11 @@ describe("AppService", () => {
 
 
     describe("updateDataWithBodyAndTimeoutModel", () => {
-        const endpoint = BASE_URL + "/";
+        let endpoint;
         const requestData = { key: "value" };
 
         beforeEach(() => {
+            endpoint = BASE_URL + "/";
             dp.updateDataWithBodyAndTimeoutModal(endpoint, requestData, onSuccess, onError, modal);
         });
 
@@ -279,10 +288,11 @@ describe("AppService", () => {
     });
 
     describe("updateDataWithBodyAndTimeoutModalAsync", () => {
-        const endpoint = BASE_URL + "/";
+        let endpoint;
         const result = "result";
 
         beforeEach(() => {
+            endpoint = BASE_URL + "/";
             dp.updateDataWithBodyAndTimeoutModalAsync(endpoint, result, initialPoll, onSuccess, onError, modal);
         });
 

@@ -191,6 +191,7 @@ describe("AdminController", function () {
                         "inExclude": false,
                         "inOwner": false,
                         "inBasisAndInclude": false,
+                        "ownerGrouping": false,
                     }]
             };
         });
