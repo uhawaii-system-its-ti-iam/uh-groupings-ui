@@ -103,6 +103,13 @@
         $scope.hasDeptAccount = false;
         $scope.isAddingMembers = false;
 
+        // CSV/text file import
+        $scope.isFileImport = false;
+        $scope.importFileBaseName = "";
+        $scope.importSourceRows = {};
+        $scope.importInvalidMembers = [];
+        $scope.importSuccessCount = 0;
+
         // Always initially set to default modal
         $scope.addModalId = "add-modal";
         $scope.addModalURL = "modal/addModal";
@@ -586,6 +593,8 @@
             $scope.membersInListArray = [];
             $scope.multiRemoveResults = [];
             $scope.waitingForImportResponse = false;
+            $scope.isFileImport = false;
+            $scope.importSourceRows = {};
         };
 
         $scope.resetFields = () => {
@@ -686,6 +695,8 @@
                 const str = e.target.result;
                 $scope.resetErrors();
                 $scope.errorDismissed = false;
+                $scope.importFileBaseName = inputFile.name.replace(/\.[^.]+$/, "");
+
                 if (inputFile.type === "text/csv") {
                     const namesInFile = str.split(/[\r\n]+/);
                     const firstRow = namesInFile[0].split(",");
@@ -697,10 +708,31 @@
                         );
                         return;
                     }
-                    const UHNumbersInFile = namesInFile.map((row) => row.split(",")[Number(indexOfUhNumber)]).slice(1, -1);
+                    const indexOfLast = firstRow.findIndex((header) => header.includes(Message.Csv.LAST_COLUMN_HEADER));
+                    const indexOfFirst = firstRow.findIndex((header) => header.includes(Message.Csv.FIRST_COLUMN_HEADER));
+                    const indexOfUsername = firstRow.findIndex((header) => header.includes(Message.Csv.USERNAME_COLUMN_HEADER));
+                    const indexOfEmail = firstRow.findIndex((header) => header.includes(Message.Csv.EMAIL_COLUMN_HEADER));
+
+                    const dataRows = namesInFile.slice(1, -1).map((row) => row.split(","));
+                    $scope.importSourceRows = {};
+                    dataRows.forEach((columns) => {
+                        const uhNumber = columns[indexOfUhNumber];
+                        $scope.importSourceRows[uhNumber] = {
+                            last: indexOfLast >= 0 ? columns[indexOfLast] : "",
+                            first: indexOfFirst >= 0 ? columns[indexOfFirst] : "",
+                            username: indexOfUsername >= 0 ? columns[indexOfUsername] : "",
+                            uhNumber,
+                            email: indexOfEmail >= 0 ? columns[indexOfEmail] : ""
+                        };
+                    });
+
+                    const UHNumbersInFile = dataRows.map((columns) => columns[indexOfUhNumber]);
+                    $scope.isFileImport = true;
                     $scope.addMembers($scope.listName, UHNumbersInFile);
                 } else {
                     const namesInFile = str.split(/[\r\n,]+/);
+                    $scope.importSourceRows = {};
+                    $scope.isFileImport = true;
                     $scope.addMembers($scope.listName, namesInFile);
                 }
             };
@@ -818,6 +850,7 @@
         $scope.addOnClick = (listName) => {
             const userInput = $scope.parseAddRemoveInputStr($scope.manageMembers);
             $scope.resetErrors();
+            $scope.isFileImport = false;
             if (listName === "Include" || listName === "Exclude") {
                 // Prevents adding owner-groupings to include/exclude list
                 if ($scope.manageMembers.includes(":")) {
@@ -927,6 +960,16 @@
                 $scope.displayDynamicModal(
                     Message.Title.IMPORT_OUT_OF_BOUNDS,
                     Message.Body.IMPORT_OUT_OF_BOUNDS);
+                $scope.isAddingMembers = false;
+                return;
+            }
+
+            // CSV/text file imports are resolved and added to Grouper in a single pass: skip the pre-add
+            // validity/already-in-list checks below and let the add call itself (which is idempotent for
+            // members already in the list) report back what could not be found.
+            if ($scope.isFileImport) {
+                $scope.waitingForImportResponse = false;
+                $scope.displayImportConfirmationModal(listName, uhIdentifiers);
                 $scope.isAddingMembers = false;
                 return;
             }
@@ -1041,6 +1084,16 @@
          */
         const handleSuccessfulAdd = (res) => {
             $scope.loading = false; // Full-screen spinner off
+
+            // CSV/text file imports report a success count plus any identifiers Grouper could not
+            // resolve, rather than sharing the dynamic/batch-import modals used by manual add flows.
+            if ($scope.isFileImport) {
+                $scope.importInvalidMembers = res.invalidUhIdentifiers ?? [];
+                $scope.importSuccessCount = $scope.importSize - $scope.importInvalidMembers.length;
+                $scope.displayImportFileResultsModal();
+                return;
+            }
+
             // Display the appropriate result modal
             if ($scope.isBatchImport) {
                 $scope.batchImportResults = res.addResults.results;
@@ -1240,6 +1293,58 @@
          */
         $scope.closeImportSuccessModal = () => {
             $scope.importSuccessModalInstance.close();
+        };
+
+        /**
+         * Display the results of a CSV/text file import: the number of members successfully imported,
+         * and either a short list or a downloadable file of the identifiers Grouper could not find.
+         */
+        $scope.displayImportFileResultsModal = () => {
+            $scope.importFileResultsModalInstance = $uibModal.open({
+                templateUrl: "modal/importFileResultsModal",
+                scope: $scope,
+                backdrop: "static",
+                ariaLabelledBy: "import-file-results-modal"
+            });
+
+            $scope.importFileResultsModalInstance.result.finally(() => {
+                clearMemberInput();
+                $scope.loading = true;
+                $scope.getGroupingInformation();
+                $scope.syncDestArray = [];
+            });
+        };
+
+        /**
+         * Close the import file results modal
+         */
+        $scope.closeImportFileResultsModal = () => {
+            $scope.importFileResultsModalInstance.close();
+        };
+
+        /**
+         * Download the members from the most recent CSV/text file import that could not be found in
+         * Grouper, enriched with their original CSV row data when available.
+         */
+        $scope.downloadNotFoundMembers = () => {
+            let csv = `${Message.Csv.LAST_COLUMN_HEADER},${Message.Csv.FIRST_COLUMN_HEADER},` +
+                `${Message.Csv.USERNAME_COLUMN_HEADER},${Message.Csv.UUID_COLUMN_HEADER},${Message.Csv.EMAIL_COLUMN_HEADER}\r\n`;
+
+            for (const identifier of $scope.importInvalidMembers) {
+                const row = $scope.importSourceRows[identifier] ?? {};
+                csv += [row.last ?? "", row.first ?? "", row.username ?? "", row.uhNumber ?? identifier, row.email ?? ""]
+                    .join(",") + "\r\n";
+            }
+
+            const filename = `${$scope.importFileBaseName}${Message.Csv.NOT_FOUND_FILE_SUFFIX}.csv`;
+            const data = encodeURI("data:text/csv;charset=utf-8," + csv);
+
+            const link = document.createElement("a");
+            link.setAttribute("href", data);
+            link.setAttribute("download", filename);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         };
 
         /**

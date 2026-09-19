@@ -1940,6 +1940,232 @@ describe("GroupingController", () => {
         });
     });
 
+    describe("CSV/text file import", () => {
+        const buildIdentifiers = (count) =>
+            Array.from({ length: count }, (_, i) => `iamtst${String(i + 1).padStart(2, "0")}`);
+
+        const createMockModal = () => {
+            const mock = {
+                result: {
+                    then(cb) {
+                        mock.thenCallback = cb;
+                        return mock.result;
+                    },
+                    finally(cb) {
+                        mock.finallyCallback = cb;
+                        return mock.result;
+                    },
+                    catch(cb) {
+                        mock.catchCallback = cb;
+                        return mock.result;
+                    }
+                },
+                close() {
+                    if (mock.thenCallback) {
+                        mock.thenCallback();
+                    }
+                    if (mock.finallyCallback) {
+                        mock.finallyCallback();
+                    }
+                },
+                dismiss() {
+                    if (mock.catchCallback) {
+                        mock.catchCallback();
+                    }
+                }
+            };
+            return mock;
+        };
+
+        beforeEach(() => {
+            scope.selectedGrouping = { path: "test:path:grouping1" };
+            scope.groupingInclude = [];
+            scope.groupingExclude = [];
+            spyOn(uibModal, "open").and.callFake(() => createMockModal());
+        });
+
+        describe("readTextFile", () => {
+            it("should parse a CSV file, mark it as a file import, and add only the UH Number column", (done) => {
+                scope.listName = "Include";
+                spyOn(scope, "addMembers").and.callFake((listName, uhIdentifiers) => {
+                    expect(listName).toBe("Include");
+                    expect(uhIdentifiers).toEqual(["00000001", "00000002"]);
+                    expect(scope.isFileImport).toBeTrue();
+                    expect(scope.importFileBaseName).toBe("kfs_admins");
+                    expect(scope.importSourceRows["00000001"]).toEqual({
+                        last: "One",
+                        first: "User",
+                        username: "user1",
+                        uhNumber: "00000001",
+                        email: "user1@hawaii.edu"
+                    });
+                    done();
+                });
+
+                const csvContent = "Last,First,Username,UH Number,Email\r\n" +
+                    "One,User,user1,00000001,user1@hawaii.edu\r\n" +
+                    "Two,User,user2,00000002,user2@hawaii.edu\r\n";
+                const file = new File([csvContent], "kfs_admins.csv", { type: "text/csv" });
+                scope.readTextFile(file);
+            });
+
+            it("should parse a text file as a file import without source-row enrichment", (done) => {
+                scope.listName = "Exclude";
+                spyOn(scope, "addMembers").and.callFake((listName, uhIdentifiers) => {
+                    expect(listName).toBe("Exclude");
+                    expect(uhIdentifiers).toEqual(["iamtst01", "iamtst02"]);
+                    expect(scope.isFileImport).toBeTrue();
+                    expect(scope.importFileBaseName).toBe("members");
+                    expect(scope.importSourceRows).toEqual({});
+                    done();
+                });
+
+                const file = new File(["iamtst01,iamtst02"], "members.txt", { type: "text/plain" });
+                scope.readTextFile(file);
+            });
+
+            it("should strip only the trailing extension when deriving the import file base name", (done) => {
+                scope.listName = "Include";
+                spyOn(scope, "addMembers").and.callFake(() => {
+                    expect(scope.importFileBaseName).toBe("kfs.admins.v2");
+                    done();
+                });
+
+                const file = new File(["iamtst01"], "kfs.admins.v2.txt", { type: "text/plain" });
+                scope.readTextFile(file);
+            });
+        });
+
+        describe("addMembers - file import bypass", () => {
+            it("should skip existsInList and the pre-check, opening the import confirmation modal directly", () => {
+                spyOn(scope, "existsInList");
+                spyOn(scope, "displayImportConfirmationModal").and.callThrough();
+                scope.isFileImport = true;
+
+                scope.addMembers("Include", ["iamtst01", "iamtst02"]);
+
+                expect(scope.existsInList).not.toHaveBeenCalled();
+                expect(scope.displayImportConfirmationModal).toHaveBeenCalledWith("Include", ["iamtst01", "iamtst02"]);
+            });
+        });
+
+        describe("import results for 11 total members", () => {
+            const identifiers = buildIdentifiers(11);
+
+            const runImport = (invalidUhIdentifiers) => {
+                spyOn(gs, "addIncludeMembersAsync").and.callFake((members, path, onSuccess) => {
+                    onSuccess({
+                        addResults: { results: [] },
+                        removeResults: { results: [] },
+                        invalidUhIdentifiers
+                    });
+                });
+                spyOn(scope, "displayImportFileResultsModal").and.callThrough();
+
+                scope.isFileImport = true;
+                scope.addMembers("Include", identifiers);
+                scope.proceedImportConfirmationModal();
+            };
+
+            it("should import all 11 members when there are 0 bad entries", () => {
+                runImport([]);
+                expect(scope.importSuccessCount).toBe(11);
+                expect(scope.importInvalidMembers).toEqual([]);
+                expect(scope.displayImportFileResultsModal).toHaveBeenCalled();
+            });
+
+            it("should report a short, listable set of bad entries when there are 10 bad entries", () => {
+                const invalid = identifiers.slice(0, 10);
+                runImport(invalid);
+                expect(scope.importSuccessCount).toBe(1);
+                expect(scope.importInvalidMembers).toEqual(invalid);
+                expect(scope.importInvalidMembers.length).toBeLessThanOrEqual(threshold.MAX_LIST_SIZE);
+            });
+
+            it("should report zero successes and exceed the short-list threshold when all 11 entries are bad", () => {
+                runImport(identifiers);
+                expect(scope.importSuccessCount).toBe(0);
+                expect(scope.importInvalidMembers).toEqual(identifiers);
+                expect(scope.importInvalidMembers.length).toBeGreaterThan(threshold.MAX_LIST_SIZE);
+            });
+        });
+
+        describe("displayImportFileResultsModal", () => {
+            const mockModal = {
+                result: {
+                    finally(cb) {
+                        this.confirmCallBack = cb;
+                    }
+                },
+                close() {
+                    this.result.confirmCallBack();
+                }
+            };
+
+            it("should open $uibModal with modal/importFileResultsModal", () => {
+                uibModal.open.and.returnValue(mockModal);
+                scope.displayImportFileResultsModal();
+                expect(uibModal.open).toHaveBeenCalledWith({
+                    templateUrl: "modal/importFileResultsModal",
+                    scope,
+                    backdrop: "static",
+                    ariaLabelledBy: "import-file-results-modal"
+                });
+            });
+
+            it("should refresh the grouping and clear member input when the modal is closed", () => {
+                uibModal.open.and.returnValue(mockModal);
+                spyOn(scope, "getGroupingInformation");
+                scope.manageMembers = "iamtst01";
+
+                scope.displayImportFileResultsModal();
+                scope.closeImportFileResultsModal();
+
+                expect(scope.getGroupingInformation).toHaveBeenCalled();
+                expect(scope.manageMembers).toBe("");
+            });
+        });
+
+        describe("closeImportFileResultsModal", () => {
+            beforeEach(() => {
+                scope.importFileResultsModalInstance = {
+                    close: () => {}
+                };
+            });
+
+            it("should close importFileResultsModalInstance", () => {
+                spyOn(scope.importFileResultsModalInstance, "close").and.callThrough();
+                scope.closeImportFileResultsModal();
+                expect(scope.importFileResultsModalInstance.close).toHaveBeenCalled();
+            });
+        });
+
+        describe("downloadNotFoundMembers", () => {
+            beforeEach(() => {
+                scope.importFileBaseName = "kfs_admins";
+                scope.importInvalidMembers = ["00000009", "unknownuser"];
+                scope.importSourceRows = {
+                    "00000009": { last: "Nine", first: "User", username: "user9", uhNumber: "00000009", email: "" }
+                };
+            });
+
+            it("should download a CSV enriched with original row data, falling back to the bare identifier", () => {
+                const mockElement = document.createElement("a");
+                spyOn(document, "createElement").and.returnValue(mockElement);
+                spyOn(mockElement, "click");
+
+                scope.downloadNotFoundMembers();
+
+                expect(mockElement.href).toBe(
+                    "data:text/csv;charset=utf-8,Last,First,Username,UH%20Number,Email%0D%0A" +
+                    "Nine,User,user9,00000009,%0D%0A" +
+                    ",,,unknownuser,%0D%0A"
+                );
+                expect(mockElement.download).toBe("kfs_admins-not-found.csv");
+            });
+        });
+    });
+
     describe("returnMemberObject", () => {
         beforeEach(() => {
             scope.groupingInclude = [{

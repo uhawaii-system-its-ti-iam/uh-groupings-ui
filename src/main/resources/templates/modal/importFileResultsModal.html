@@ -1,0 +1,31 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<div class="modal-header">
+    <h1 class="h5 modal-title" id="import-file-results-modal">Import Results</h1>
+    <a class="close" type="button" ng-click="closeImportFileResultsModal()">
+        <span aria-hidden="true">&times;</span>
+    </a>
+</div>
+<div class="modal-body" id="modal-body">
+    <p class="modal-black-text">
+        Imported {{importSuccessCount}} of {{importSize}} members to the {{listName}} list.
+    </p>
+    <div ng-if="importInvalidMembers.length > 0 && importInvalidMembers.length <= Threshold.MAX_LIST_SIZE">
+        <p th:text="#{screen.message.import.modal.results.notFound}"></p>
+        <ul>
+            <li ng-repeat="member in importInvalidMembers">{{ member }}</li>
+        </ul>
+    </div>
+    <div ng-if="importInvalidMembers.length > Threshold.MAX_LIST_SIZE">
+        <p th:text="#{screen.message.import.modal.results.notFound.download}"></p>
+        <button class="btn btn-primary btn-sized" ng-click="downloadNotFoundMembers()">
+            Download Not Found List
+        </button>
+    </div>
+    <p class="alert alert-warning mt-2" role="alert" ng-if="importSuccessCount > 0">
+        <span class="text-dark" th:text="#{screen.message.common.membership.info}"></span>
+    </p>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary btn-sized" ng-click="closeImportFileResultsModal()">OK</button>
+</div>
+</html>
