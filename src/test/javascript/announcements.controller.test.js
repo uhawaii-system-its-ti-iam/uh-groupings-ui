@@ -125,5 +125,58 @@ describe("AnnouncementsJsController", function () {
 
             expect(scope.displayApiErrorModal).toHaveBeenCalled();
         });
+
+        it("should display the API error modal when an authenticated user's announcement request fails", () => {
+            scope.currentUser = {
+                uid: "testiwta",
+                uhUuid: "99997010"
+            };
+            spyOn(scope, "displayApiErrorModal");
+
+            scope.init();
+
+            httpBackend.expectGET("announcements").respond(500, {
+                message: "Unable to retrieve announcements"
+            });
+            httpBackend.flush();
+
+            expect(scope.displayApiErrorModal).toHaveBeenCalled();
+            expect(scope.activeAnnouncements).toEqual([]);
+        });
+
+        it("should not display the API error modal when an anonymous user's announcement request fails", () => {
+            scope.currentUser = {};
+
+            spyOn(scope, "displayApiErrorModal");
+            spyOn(console, "error");
+
+            scope.init();
+
+            httpBackend.expectGET("announcements").respond(500, {
+                message: "Unable to retrieve announcements"
+            });
+            httpBackend.flush();
+
+            expect(scope.displayApiErrorModal).not.toHaveBeenCalled();
+            expect(scope.activeAnnouncements).toEqual([]);
+            expect(console.error).toHaveBeenCalled();
+        });
+
+        it("should log an error and set activeAnnouncements to empty when the response has an unexpected shape", () => {
+            spyOn(console, "error");
+
+            scope.init();
+
+            httpBackend.expectGET("announcements").respond(200, {
+                resultCode: "SUCCESS"
+            });
+            httpBackend.flush();
+
+            expect(console.error).toHaveBeenCalledWith(
+                "Unexpected announcements response; expected {announcements: []} but received:",
+                jasmine.anything()
+            );
+            expect(scope.activeAnnouncements).toEqual([]);
+        });
     });
 });
