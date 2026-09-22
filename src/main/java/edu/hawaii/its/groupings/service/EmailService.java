@@ -112,8 +112,8 @@ public class EmailService {
             msg.setFrom(from);
             String text = "";
             String header =  "(" + environment + ") UH Groupings UI Error Response";
-            text += "Cause of Response: The UI threw an exception that has triggered the ErrorControllerAdvice. \n\n";
-            text += "Exception Thrown: ErrorControllerAdvice threw the " + exceptionType + ".\n\n";
+            text += "Cause of Response: The UI encountered an exception.\n\n";
+            text += "Exception Type: " + exceptionType + "\n\n";
             text += "Host Name: " + hostname + ".\n";
             text += "Endpoint Path: " + path + "\n";
             if (!recipient.equals("its-iam-web-app-dev-help-l@lists.hawaii.edu")) {
