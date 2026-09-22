@@ -120,6 +120,23 @@ public class GroupingsRestControllerTest {
     }
 
     @Test
+    public void activeAnnouncementsTest() throws Exception {
+        String uri = "/announcements";
+        String apiUri = API_2_1_BASE + "/announcements";
+
+        given(httpRequestService.makeApiRequestWithoutJwt(eq(apiUri), eq(HttpMethod.GET)))
+                .willReturn(new ResponseEntity(HttpStatus.OK));
+
+        mockMvc.perform(get(uri))
+                .andExpect(status().isOk());
+
+        verify(httpRequestService, times(1))
+                .makeApiRequestWithoutJwt(eq(apiUri), eq(HttpMethod.GET));
+        verify(httpRequestService, times(0))
+                .makeApiRequest(anyString(), any(HttpMethod.class));
+    }
+
+    @Test
     @WithMockUhUser(uid = "admin")
     public void groupingAdminsTest() throws Exception {
         String uri = REST_CONTROLLER_BASE + "groupings/admins";
@@ -133,6 +150,8 @@ public class GroupingsRestControllerTest {
 
         verify(httpRequestService, times(1))
                 .makeApiRequest(anyString(), eq(HttpMethod.GET));
+        verify(httpRequestService, times(0))
+                .makeApiRequestWithoutJwt(anyString(), any(HttpMethod.class));
     }
 
     @Test
@@ -752,7 +771,7 @@ public class GroupingsRestControllerTest {
     @Test
     @WithMockUhUser
     public void getGroupingTest() throws Exception {
-        String uri = REST_CONTROLLER_BASE + "groupings/group?page=2&size=700&sortBy=name&isAscending=true";
+        String uri = REST_CONTROLLER_BASE + "groupings/group?pageNumber=2&pageSize=700&sortBy=name&isAscending=true";
         List<String> groupPaths = List.of(GROUPING);
 
         given(httpRequestService.makeApiRequestWithBody(anyString(), eq(groupPaths), eq(HttpMethod.POST)))
@@ -765,6 +784,37 @@ public class GroupingsRestControllerTest {
                 .andReturn());
 
         verify(httpRequestService, times(1))
+                .makeApiRequestWithBody(anyString(), eq(groupPaths), eq(HttpMethod.POST));
+    }
+
+    @Test
+    @WithMockUhUser
+    public void getGroupingMissingPageNumberParamTest() throws Exception {
+        String uri = REST_CONTROLLER_BASE + "groupings/group?pageSize=700&sortBy=name&isAscending=true";
+        List<String> groupPaths = List.of(GROUPING);
+
+        mockMvc.perform(post(uri).with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(JsonUtil.asJson(groupPaths)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("pageNumber")));
+
+        verify(httpRequestService, times(0))
+                .makeApiRequestWithBody(anyString(), eq(groupPaths), eq(HttpMethod.POST));
+    }
+
+    @Test
+    @WithMockUhUser
+    public void getGroupingLegacyPageAndSizeParamsRejectedTest() throws Exception {
+        String uri = REST_CONTROLLER_BASE + "groupings/group?page=2&size=700&sortBy=name&isAscending=true";
+        List<String> groupPaths = List.of(GROUPING);
+
+        mockMvc.perform(post(uri).with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(JsonUtil.asJson(groupPaths)))
+                .andExpect(status().isBadRequest());
+
+        verify(httpRequestService, times(0))
                 .makeApiRequestWithBody(anyString(), eq(groupPaths), eq(HttpMethod.POST));
     }
 
@@ -926,8 +976,8 @@ public class GroupingsRestControllerTest {
 
     @Test
     @WithMockUhUser
-    public void getNumberOfOwners() throws Exception {
-        String uri = REST_CONTROLLER_BASE + GROUPING + "/owners/count";
+    public void getNumberOfDirectOwners() throws Exception {
+        String uri = REST_CONTROLLER_BASE + "members/" + GROUPING + "/owners/count";
 
         given(httpRequestService.makeApiRequest(anyString(), eq(HttpMethod.GET)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
@@ -1057,10 +1107,10 @@ public class GroupingsRestControllerTest {
     public void mapGroupingParametersTest() {
         Map<String, String> params = groupingsRestController.mapGroupingParameters(1, 2, "name", true);
         assertEquals(4, params.size());
-        assertTrue(params.containsKey("page"));
-        assertEquals("1", params.get("page"));
-        assertTrue(params.containsKey("size"));
-        assertEquals("2", params.get("size"));
+        assertTrue(params.containsKey("pageNumber"));
+        assertEquals("1", params.get("pageNumber"));
+        assertTrue(params.containsKey("pageSize"));
+        assertEquals("2", params.get("pageSize"));
         assertTrue(params.containsKey("sortBy"));
         assertEquals("name", params.get("sortBy"));
         assertTrue(params.containsKey("isAscending"));
@@ -1072,7 +1122,7 @@ public class GroupingsRestControllerTest {
         Map<String, String> params = groupingsRestController.mapGroupingParameters(1, 2, "name", true);
         String uriTemplate = groupingsRestController.buildUriWithParams(API_2_1_BASE, params);
         assertNotNull(uriTemplate);
-        String expectedResult = API_2_1_BASE + "?size=2&sortBy=name&page=1&isAscending=true";
+        String expectedResult = API_2_1_BASE + "?pageNumber=1&pageSize=2&sortBy=name&isAscending=true";
         assertEquals(expectedResult, uriTemplate);
     }
 

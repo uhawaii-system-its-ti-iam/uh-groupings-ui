@@ -45,14 +45,15 @@ public class DefaultErrorController implements ErrorController {
     public String onError(HttpServletRequest request, Model model) {
         ServletWebRequest webRequest = new ServletWebRequest(request);
 
-        // Get the thrown exception;
-        Exception ex = (Exception) errorAttributes.getError(webRequest);
+        // Get the thrown error.
+        Throwable ex = errorAttributes.getError(webRequest);
 
         String uid = null;
         User user = userContextService.getCurrentUser();
         if (user != null) {
             uid = user.getUid();
         }
+
         if (ex != null) {
             logger.error("uid: " + uid + "; Exception: ", ex);
             emailService.sendWithStack(ex, ex.getClass().getSimpleName(), request.getRequestURI());

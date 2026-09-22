@@ -84,7 +84,7 @@ public class EmailService {
         }
     }
 
-    public void sendWithStack(Exception e, String exceptionType, String path) {
+    public void sendWithStack(Throwable e, String exceptionType, String path) {
         logger.info("Feedback Error email has been triggered.");
 
         if (!isEnabled) {

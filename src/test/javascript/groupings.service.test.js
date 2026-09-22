@@ -51,28 +51,38 @@ describe("GroupingsService", () => {
     });
 
     describe("getGrouping", () => {
-        let page;
-        let size;
+        let pageNumber;
+        let pageSize;
         let sortBy;
         let isAscending;
 
         beforeEach(() => {
-            page = 0;
-            size = 1;
+            pageNumber = 0;
+            pageSize = 1;
             sortBy = "name";
             isAscending = true;
         });
 
         it("should call dataProvider.loadDataWithBodyRetry", () => {
             spyOn(dp, "loadDataWithBodyRetry");
-            gs.getGrouping(groupingPath, page, size, sortBy, isAscending, onSuccess, onError);
+            gs.getGrouping(groupingPath, pageNumber, pageSize, sortBy, isAscending, onSuccess, onError);
             expect(dp.loadDataWithBodyRetry).toHaveBeenCalled();
         });
 
         it("should call encodeParameterizedQueryString()", () => {
             spyOn(gs, "encodeParameterizedQueryString");
-            gs.getGrouping(groupingPath, page, size, sortBy, isAscending, onSuccess, onError);
+            gs.getGrouping(groupingPath, pageNumber, pageSize, sortBy, isAscending, onSuccess, onError);
             expect(gs.encodeParameterizedQueryString).toHaveBeenCalled();
+        });
+
+        it("should send pageNumber/pageSize (not page/size) in the query string", () => {
+            gs.getGrouping(groupingPath, pageNumber, pageSize, sortBy, isAscending, onSuccess, onError);
+            httpBackend.expectPOST(BASE_URL + "groupings/group?"
+                + "pageNumber=" + pageNumber
+                + "&pageSize=" + pageSize
+                + "&sortBy=" + sortBy
+                + "&isAscending=" + isAscending).respond(200);
+            expect(httpBackend.flush).not.toThrow();
         });
     });
 

@@ -66,7 +66,9 @@
                     .then((response) => {
                         callback(response.data);
                     }, (response) => {
-                        callError(response);
+                        if (typeof callError === "function") {
+                            callError(response);
+                        }
                     });
             },
 

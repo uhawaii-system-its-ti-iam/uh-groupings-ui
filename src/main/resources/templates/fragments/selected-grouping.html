@@ -64,7 +64,16 @@
                     </div>
                     <div class="row">
                         <div class="col-md-12">
-                            <p class="text-light mb-0"><b> Path:</b> {{ selectedGrouping.path }} </p>
+                            <p class="text-light mb-0"><b> Path:</b> {{ selectedGrouping.path }} &nbsp;<button
+                                        type="button"
+                                        ng-if="selectedGrouping.path"
+                                        ng-click="copySelectedGroupingPath()"
+                                        ng-class="pathCopied ? 'fas fa-check' : 'far fa-copy'"
+                                        class="fa-fw mr-2 teal-bg border-0 text-light tool"
+                                        tooltip="Copy grouping path to the clipboard"
+                                        data-placement="top"
+                                        aria-label="Copy grouping path to the clipboard"></button>
+                            </p>
                         </div>
                     </div>
                     <div class="row">

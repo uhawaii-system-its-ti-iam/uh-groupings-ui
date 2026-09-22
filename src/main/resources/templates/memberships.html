@@ -80,7 +80,13 @@
                             <tbody class="table table-borderless">
                             <tr class="row-height" ng-repeat="l in pagedItemsMemberships[currentPageMemberships]">
                                 <td class="w-35 p-10 align-middle">
-                                    {{l.name}}
+                                    <span ng-if="isCuratedGrouping(l.path)"
+                                          th:title="#{screen.message.memberships.tooltip.curated}">
+                                        {{l.name}}
+                                    </span>
+                                    <span ng-if="!isCuratedGrouping(l.path)">
+                                        {{l.name}}
+                                    </span>
                                 </td>
                                 <td class="mw-0 p-10 align-middle d-none d-sm-table-cell"
                                     ng-class="{'w-35': columnDisplaySetting === 'all', 'col-auto': columnDisplaySetting === 'description'}"

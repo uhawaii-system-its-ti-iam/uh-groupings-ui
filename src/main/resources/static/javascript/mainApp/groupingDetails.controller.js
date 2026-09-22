@@ -13,9 +13,10 @@
      * @param Message - message object constant from app.constants.js
      * @param Threshold - threshold object constant from app.constants.js
      * @param Utility - utility function constant from app.constants.js
+     * @param $timeout - AngularJS wrapper for window.setTimeout
      */
-    function GroupingDetailsJsController($scope, $controller, $window, $uibModal, groupingsService, PAGE_SIZE,
-        Message, Threshold, Utility, ORPHAN_HELP_URL) {
+    function GroupingDetailsJsController($scope, $controller, $window, $uibModal, groupingsService, PAGE_SIZE, Message,
+        Threshold, Utility, ORPHAN_HELP_URL, $timeout) {
 
         $scope.orphanHelpUrl = ORPHAN_HELP_URL;
         $scope.isOrphanMember = (member) => member && member.orphan === true;
@@ -38,6 +39,7 @@
         $scope.pagedItemsGroupings = [];
         $scope.currentPageGroupings = 0;
         $scope.selectedGrouping = {};
+        $scope.pathCopied = false;
 
         $scope.groupingBasis = [];
         $scope.pagedItemsBasis = [];
@@ -59,6 +61,7 @@
         $scope.pagedItemsOwners = [];
         $scope.currentPageOwners = 0;
         $scope.ownerLimit = 0;
+        $scope.directOwnersCount = 0;
 
         $scope.allowOptIn = false;
         $scope.allowOptOut = false;
@@ -295,6 +298,13 @@
                     const immediateOwnersCount = $scope.groupingOwners.length;
                     let totalOwnerGroupingMembers = 0;
                     const jobs = [];
+                    let directOwnersCount = 0;
+                    const directOwnersCountJob = new Promise((r) => {
+                        groupingsService.getNumberOfDirectOwners(groupPath, (n) => {
+                            directOwnersCount = n;
+                            r();
+                        });
+                    });
                     let allOwnersCount = 0;
                     const allOwnersCountJob = new Promise((r) => {
                         groupingsService.getNumberOfAllOwners(groupPath, (n) => {
@@ -320,7 +330,8 @@
                             );
                         }
                     });
-                    await Promise.all([...jobs, allOwnersCountJob]);
+                    await Promise.all([...jobs, allOwnersCountJob, directOwnersCountJob]);
+                    $scope.directOwnersCount = directOwnersCount;
                     $scope.allOwnersCount = allOwnersCount;
                     $scope.hasDuplicateOwners = (immediateOwnersCount + totalOwnerGroupingMembers) !== $scope.allOwnersCount;
                     $scope.filter($scope.groupingOwners, "pagedItemsOwners", "currentPageOwners", $scope.ownersQuery, false);
@@ -466,6 +477,37 @@
          * Check the length of the text string entered in the description form box, for error handling of max length
          */
         $scope.descriptionLengthWarning = () => (String($scope.modelDescription).length > $scope.maxDescriptionLength - 1);
+
+        let pathCopiedTimeout;
+
+        /**
+         * Copy the selected grouping's path to the clipboard and briefly show success feedback.
+         */
+        $scope.copySelectedGroupingPath = () => {
+            const path = $scope.selectedGrouping.path;
+            if (!path) {
+                return;
+            }
+            const textarea = document.createElement("textarea");
+            textarea.value = path;
+            textarea.setAttribute("readonly", "");
+            textarea.style.position = "absolute";
+            textarea.style.left = "-9999px";
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand("copy");
+            document.body.removeChild(textarea);
+
+            $scope.pathCopied = true;
+            $timeout.cancel(pathCopiedTimeout);
+            pathCopiedTimeout = $timeout(() => {
+                $scope.pathCopied = false;
+            }, 1500);
+        };
+
+        $scope.$on("$destroy", () => {
+            $timeout.cancel(pathCopiedTimeout);
+        });
 
         /**
          * Enable or disable editing of a Grouping's description, from selected-grouping.html.
@@ -1284,8 +1326,8 @@
                 return;
             }
 
-            // Prevent removing all owners
-            if ((listName === "owners") && $scope.multiRemoveResults.length === $scope.groupingOwners.length) {
+            // Prevent removing the last direct owner
+            if ((listName === "owners") && $scope.multiRemoveResults.length === $scope.directOwnersCount) {
                 $scope.displayRemoveErrorModal("owner");
                 clearMemberInput();
                 return;
@@ -1486,7 +1528,8 @@
             const ownerToRemove = $scope.pagedItemsOwners[Number(currentPage)][Number(index)];
             $scope.listName = "owners";
 
-            if ($scope.groupingOwners.length === 1) {
+            // Ensure that the owner being removed is not the last remaining direct owner.
+            if ($scope.directOwnersCount === 1) {
                 $scope.displayRemoveErrorModal("owner");
                 return;
             }

@@ -29,22 +29,22 @@
 
             /**
              * @param {String[]} groupPaths - The paths to the grouping.
-             * @param {Number} page - The number to fetch.
-             * @param {Number} size - The size data chunk to be fetched.
+             * @param {Number} pageNumber - The number to fetch.
+             * @param {Number} pageSize - The size data chunk to be fetched.
              * @param {String} sortBy - String to base sort off of.
              * @param isAscending - On true the data returns in ascending order.
              * @param onSuccess - Function to be called if HTTP request returns as a success.
              * @param onError - Function to be called if HTTP request returns an error.
              */
             getGrouping(groupPaths,
-                        page,
-                        size,
+                        pageNumber,
+                        pageSize,
                         sortBy,
                         isAscending,
                         onSuccess,
                         onError) {
                 let endpoint = BASE_URL + "groupings/group?";
-                let params = { page, size, sortBy, isAscending };
+                let params = { pageNumber, pageSize, sortBy, isAscending };
                 let query = this.encodeParameterizedQueryString(params);
                 endpoint = endpoint + query;
                 dataProvider.loadDataWithBodyRetry(endpoint, groupPaths, onSuccess, onError);
@@ -444,8 +444,8 @@
             /**
              * Checks if the owner of a grouping is the sole owner
              */
-            getNumberOfOwners(path, onSuccess, onError) {
-                let endpoint = BASE_URL + path + "/owners/count";
+            getNumberOfDirectOwners(path, onSuccess, onError) {
+                let endpoint = BASE_URL + "members/" + path + "/owners/count";
                 dataProvider.loadData(endpoint, onSuccess, onError);
             },
 

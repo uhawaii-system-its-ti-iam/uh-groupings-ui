@@ -530,6 +530,47 @@ describe("GroupingController", () => {
         });
     });
 
+    describe("copySelectedGroupingPath", () => {
+        let timeout;
+
+        beforeEach(inject(($timeout) => {
+            timeout = $timeout;
+            scope.selectedGrouping = { path: "tmp:mhodges:mh-aux" };
+            scope.pathCopied = false;
+            spyOn(document, "execCommand").and.returnValue(true);
+        }));
+
+        it("should copy the selected grouping path and set pathCopied to true", () => {
+            scope.copySelectedGroupingPath();
+            expect(document.execCommand).toHaveBeenCalledWith("copy");
+            expect(scope.pathCopied).toBeTrue();
+        });
+
+        it("should reset pathCopied to false after timeout", () => {
+            scope.copySelectedGroupingPath();
+            expect(scope.pathCopied).toBeTrue();
+            timeout.flush(1500);
+            expect(scope.pathCopied).toBeFalse();
+        });
+
+        it("should keep pathCopied true when copying again before the reset elapses", () => {
+            scope.copySelectedGroupingPath();
+            timeout.flush(1000);
+            scope.copySelectedGroupingPath();
+            timeout.flush(1000);
+            expect(scope.pathCopied).toBeTrue();
+            timeout.flush(500);
+            expect(scope.pathCopied).toBeFalse();
+        });
+
+        it("should not copy or set pathCopied when path is missing", () => {
+            scope.selectedGrouping = {};
+            scope.copySelectedGroupingPath();
+            expect(document.execCommand).not.toHaveBeenCalled();
+            expect(scope.pathCopied).toBeFalse();
+        });
+    });
+
     describe("cancelDescriptionEdit", () => {
         it("should set the modelDescription to the groupingDescription", () => {
             scope.cancelDescriptionEdit();
@@ -2080,6 +2121,26 @@ describe("GroupingController", () => {
                 uhUuid: "iamtst03"
             }];
             scope.manageMembers = "iamtst03";
+            scope.directOwnersCount = 1;
+            spyOn(scope, "displayRemoveErrorModal");
+            scope.removeMembers("owners");
+            expect(scope.displayRemoveErrorModal).toHaveBeenCalled();
+        });
+
+        it("should call displayRemoveErrorModal when the listName is owners and there's only one direct owner left", () => {
+            scope.groupingOwners = [
+                {
+                    name: "iamtst03",
+                    uid: "iamtst03",
+                    uhUuid: "iamtst03"
+                },
+                {
+                    name: "testOwnerGrouping",
+                    ownerGroupingPath: "test-owner-path"
+                }
+            ];
+            scope.manageMembers = "iamtst03";
+            scope.directOwnersCount = 1;
             spyOn(scope, "displayRemoveErrorModal");
             scope.removeMembers("owners");
             expect(scope.displayRemoveErrorModal).toHaveBeenCalled();
@@ -2324,12 +2385,13 @@ describe("GroupingController", () => {
             expect(scope.displayRemoveModal).toHaveBeenCalled();
         });
 
-        it("should display the remove error modal if groupingOwners < 1", () => {
+        it("should display the remove error modal if directOwnersCount is 1", () => {
             scope.groupingOwners = [{
                 name: "iamtst01",
                 uid: "iamtst01",
                 uhUuid: "iamtst01"
             }];
+            scope.directOwnersCount = 1;
             spyOn(scope, "displayRemoveErrorModal");
             scope.removeOwnerWithTrashcan(0, 0);
             expect(scope.displayRemoveErrorModal).toHaveBeenCalledWith("owner");

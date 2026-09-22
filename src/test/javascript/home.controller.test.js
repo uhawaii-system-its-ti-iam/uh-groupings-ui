@@ -42,13 +42,51 @@ describe("HomeController", () => {
         });
 
         it("should set the number of memberships in the scope", () => {
-            expect(gs.getNumberOfMemberships).toHaveBeenCalled();
+            expect(gs.getNumberOfMemberships).toHaveBeenCalledWith(jasmine.any(Function), jasmine.any(Function));
             expect(scope.numberOfMemberships).toEqual(5);
         });
 
         it("should set the number of groupings in the scope", () => {
-            expect(gs.getNumberOfGroupings).toHaveBeenCalled();
+            expect(gs.getNumberOfGroupings).toHaveBeenCalledWith(jasmine.any(Function), jasmine.any(Function));
             expect(scope.numberOfGroupings).toEqual(3);
+        });
+    });
+
+    describe("count error handling", () => {
+        const backendUnavailableResponse = {
+            data: {
+                resultCode: "BACKEND_UNAVAILABLE"
+            }
+        };
+
+        it("should show a fallback when the membership count is unavailable", () => {
+            spyOn(us, "refresh").and.callThrough();
+            spyOn(gs, "getNumberOfMemberships").and.callFake((callback, callError) => {
+                callError(backendUnavailableResponse);
+            });
+            spyOn(gs, "getNumberOfGroupings").and.callFake((callback) => {
+                callback(3);
+            });
+
+            scope.init();
+
+            expect(scope.numberOfMemberships).toEqual("--");
+            expect(scope.numberOfGroupings).toEqual(3);
+        });
+
+        it("should show a fallback when the owner grouping count is unavailable", () => {
+            spyOn(us, "refresh").and.callThrough();
+            spyOn(gs, "getNumberOfMemberships").and.callFake((callback) => {
+                callback(5);
+            });
+            spyOn(gs, "getNumberOfGroupings").and.callFake((callback, callError) => {
+                callError(backendUnavailableResponse);
+            });
+
+            scope.init();
+
+            expect(scope.numberOfMemberships).toEqual(5);
+            expect(scope.numberOfGroupings).toEqual("--");
         });
     });
 });

@@ -174,6 +174,38 @@ describe("TableController", () => {
             expect(scope.pagedItems.length).toEqual(0);
         });
 
+        it("should filter groupings by name and description when the path column is hidden", () => {
+            scope.items = [
+                { name: "name-match", description: "description", path: "path" },
+                { name: "name", description: "description-match", path: "path" },
+                { name: "name", description: "description", path: "path-match" }
+            ];
+            scope.showDescriptionColumn = true;
+            scope.showGroupingPathColumn = false;
+
+            scope.filter(scope.items, "pagedItems", "currentPage", "match", true);
+
+            expect(scope.pagedItems.length).toEqual(2);
+            expect(scope.pagedItems[0][0]).toEqual(scope.items[0]);
+            expect(scope.pagedItems[1][0]).toEqual(scope.items[1]);
+        });
+
+        it("should filter groupings by name and path when the description column is hidden", () => {
+            scope.items = [
+                { name: "name-match", description: "description", path: "path" },
+                { name: "name", description: "description-match", path: "path" },
+                { name: "name", description: "description", path: "path-match" }
+            ];
+            scope.showDescriptionColumn = false;
+            scope.showGroupingPathColumn = true;
+
+            scope.filter(scope.items, "pagedItems", "currentPage", "match", true);
+
+            expect(scope.pagedItems.length).toEqual(2);
+            expect(scope.pagedItems[0][0]).toEqual(scope.items[0]);
+            expect(scope.pagedItems[1][0]).toEqual(scope.items[2]);
+        });
+
         it("should call groupToPages so the table is repaginated", () => {
             spyOn(scope, "groupToPages").and.callThrough();
 

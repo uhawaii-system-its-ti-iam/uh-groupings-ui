@@ -25,6 +25,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.ui.ExtendedModelMap;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
@@ -84,6 +85,26 @@ public class ErrorControllerAdviceTest {
 
         verify(userContextService).getCurrentUser();
         verify(emailService).sendWithStack(wcre, "Web Client Response Exception", testURI);
+    }
+
+    @Test
+    public void testMissingServletRequestParameterException() {
+
+        MissingServletRequestParameterException msrpe =
+                new MissingServletRequestParameterException("pageNumber", "Integer");
+
+        ResponseEntity<Map<String, Object>> responseEntity =
+                errorControllerAdvice.handleMissingServletRequestParameterException(msrpe);
+        Map<String, Object> body = responseEntity.getBody();
+
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+        assertEquals(HttpStatus.BAD_REQUEST, body.get("status"));
+        assertTrue(((String) body.get("message")).contains("pageNumber"));
+        assertEquals(testURI, body.get("path"));
+        assertTrue(body.get("timestamp") instanceof LocalDateTime);
+
+        verify(userContextService).getCurrentUser();
+        verify(emailService).sendWithStack(msrpe, "Missing Servlet Request Parameter Exception", testURI);
     }
 
     @Test

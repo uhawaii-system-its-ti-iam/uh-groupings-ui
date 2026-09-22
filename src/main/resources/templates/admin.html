@@ -249,6 +249,14 @@
                                     <i class="fa fa-fw fa-external-link-alt clickable" tooltip="Manage grouping"
                                     ng-click="displayGroupingInNewTab(l.name, l.path)"></i>
                                     {{l.name}}
+                                    <span ng-if="l.ownerGrouping" class="ml-1">
+                                        <i class="fa fa-exclamation-triangle"
+                                           tooltip data-placement="right"
+                                           role="img"
+                                           tabindex="0"
+                                           th:title="#{screen.message.admin.tooltip.owner.grouping}"
+                                           th:attr="aria-label=#{screen.message.admin.tooltip.owner.grouping}"></i>
+                                    </span>
                                     <i class="fa fa-crown fa-fw fa-pull-right clickable pt-1 text-primary" role="button"
                                        tooltip data-placement="right"
                                        tabindex="0"
