@@ -1,0 +1,16 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<div class="modal-header">
+    <h1 class="h5 modal-title" id="retire-grouping-result-modal">{{ retirementResult.title }}</h1>
+</div>
+<div class="modal-body" id="modal-body" tabindex="0">
+    <p class="modal-black-text">{{ retirementResult.message }}</p>
+    <h2 class="h6">Sent to</h2>
+    <ul>
+        <li>IAM Team</li>
+        <li ng-repeat="recipient in retirementResult.ownerRecipients">{{ recipient }}</li>
+    </ul>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary btn-sized" ng-click="closeRetirementResultModal()">OK</button>
+</div>
+</html>

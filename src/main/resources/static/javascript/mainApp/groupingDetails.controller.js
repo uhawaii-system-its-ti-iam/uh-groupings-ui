@@ -9,14 +9,13 @@
      * @param $window - the browser window object
      * @param $uibModal - the UI Bootstrap service for creating modals
      * @param groupingsService - service for creating requests to the groupings API
-     * @param userService - service for getting current user information
      * @param PAGE_SIZE - page size constant from app.constants.js
      * @param Message - message object constant from app.constants.js
      * @param Threshold - threshold object constant from app.constants.js
      * @param Utility - utility function constant from app.constants.js
      */
-    function GroupingDetailsJsController($scope, $controller, $window, $uibModal, groupingsService, userService,
-        PAGE_SIZE, Message, Threshold, Utility, ORPHAN_HELP_URL) {
+    function GroupingDetailsJsController($scope, $controller, $window, $uibModal, groupingsService, PAGE_SIZE,
+        Message, Threshold, Utility, ORPHAN_HELP_URL) {
 
         $scope.orphanHelpUrl = ORPHAN_HELP_URL;
         $scope.isOrphanMember = (member) => member && member.orphan === true;
@@ -226,8 +225,6 @@
                 $scope.loading = false;
             }
             loadMembersList = false;
-            // Check if current user is an owner after all data is loaded
-            $scope.isCurrentUserOwner();
             $scope.$applyAsync();
         };
 
@@ -2365,67 +2362,6 @@
         };
 
         /**
-         * Check if the current user is an owner of the current grouping.
-         * Checks the groupingOwners list which contains direct and indirect owners.
-         */
-        $scope.isCurrentUserOwner = () => {
-            console.log("isCurrentUserOwner() called");
-            console.log("$scope.groupingOwners:", $scope.groupingOwners);
-
-            if (!$scope.groupingOwners || $scope.groupingOwners.length === 0) {
-                console.log("No groupingOwners found, setting userIsOwner to false");
-                $scope.userIsOwner = false;
-                return;
-            }
-
-            console.log("GroupingOwners count:", $scope.groupingOwners.length);
-            console.log("Full groupingOwners list:", JSON.stringify($scope.groupingOwners, null, 2));
-
-            userService.getCurrentUser().then((currentUser) => {
-                console.log("getCurrentUser resolved with:", currentUser);
-                console.log("Full currentUser object:", JSON.stringify(currentUser, null, 2));
-
-                if (!currentUser) {
-                    console.log("No currentUser found, setting userIsOwner to false");
-                    $scope.userIsOwner = false;
-                    return;
-                }
-
-                // Extract the actual user data from the response
-                const userData = currentUser.data || currentUser;
-                const currentUserUid = userData.uid;
-                const currentUserUhUuid = userData.uhUuid;
-                const currentUserName = userData.name;
-
-                console.log("Current user uid:", currentUserUid);
-                console.log("Current user uhUuid:", currentUserUhUuid);
-                console.log("Current user name:", currentUserName);
-                console.log("Current user all properties:", Object.keys(userData));
-
-                // Check if current user exists in the groupingOwners list
-                let foundMatch = false;
-                for (let i = 0; i < $scope.groupingOwners.length; i++) {
-                    const owner = $scope.groupingOwners[i];
-                    const uidMatch = owner.uid === currentUserUid;
-                    const uuidMatch = owner.uhUuid === currentUserUhUuid;
-                    const nameMatch = owner.name === currentUserName;
-                    console.log(`[${i}] Comparing owner (uid: ${owner.uid}, uuid: ${owner.uhUuid}, name: ${owner.name}) with current user (uid: ${currentUserUid}, uuid: ${currentUserUhUuid}, name: ${currentUserName}) - uidMatch: ${uidMatch}, uuidMatch: ${uuidMatch}, nameMatch: ${nameMatch}`);
-                    if (uidMatch || uuidMatch || nameMatch) {
-                        foundMatch = true;
-                        console.log(`[${i}] MATCH FOUND!`);
-                        break;
-                    }
-                }
-
-                $scope.userIsOwner = foundMatch;
-                console.log("Final userIsOwner value:", $scope.userIsOwner);
-            }).catch((error) => {
-                console.error("Error in getCurrentUser:", error);
-                $scope.userIsOwner = false;
-            });
-        };
-
-        /**
          * Retire a grouping with confirmation dialog.
          * Displays a confirmation modal before retiring the grouping.
          */
@@ -2455,26 +2391,50 @@
 
             groupingsService.retireGrouping($scope.selectedGrouping.path,
                 (res) => {
-                    // Success handler
                     $scope.loading = false;
-                    $scope.displayDynamicModal(
-                        "Success",
-                        "Retire grouping request sent successfully."
-                    );
-                    $scope.dynamicModal.result.finally(() => {
-                        // Navigate back to groupings list
-                        $window.location.href = "groupings";
-                    });
+                    if (res.resultCode === "SUCCESS") {
+                        $scope.displayRetirementResultModal(res);
+                    } else {
+                        $scope.displayDynamicModal(
+                            "Error",
+                            res.resultMessage || "Failed to send retirement request emails."
+                        );
+                    }
                 },
                 (err) => {
                     // Error handler
                     $scope.loading = false;
                     $scope.displayDynamicModal(
                         "Error",
-                        `Failed to send retire grouping request: ${err.statusCode || 'Unknown error'}`
+                        `Failed to send retire grouping request: ${err.statusCode || err.status || 'Unknown error'}`
                     );
                 }
             );
+        };
+
+        /**
+         * Display who the retirement emails were sent to.
+         */
+        $scope.displayRetirementResultModal = (result) => {
+            $scope.retirementResult = {
+                title: "Retirement Emails Sent",
+                message: result.resultMessage,
+                ownerRecipients: result.ownerRecipients || []
+            };
+
+            $scope.retirementResultModalInstance = $uibModal.open({
+                templateUrl: "modal/retireGroupingResultModal",
+                scope: $scope,
+                backdrop: "static"
+            });
+
+            $scope.retirementResultModalInstance.result.finally(() => {
+                $window.location.href = "groupings";
+            });
+        };
+
+        $scope.closeRetirementResultModal = () => {
+            $scope.retirementResultModalInstance.close();
         };
 
         /**

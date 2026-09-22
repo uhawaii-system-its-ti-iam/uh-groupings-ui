@@ -14,7 +14,7 @@
         <h6 class="alert-heading">
             <i class="fas fa-exclamation-triangle mr-2"></i>Owner Notification
         </h6>
-        <p class="mb-2">The following owner(s) will be notified of this retirement request:</p>
+        <p class="mb-2">Direct owners and owner-groupings listed below. Members of owner-groupings will also be included in the owners notification.</p>
         <div ng-if="groupingOwners && groupingOwners.length > 0">
             <ul class="mb-0 pl-4">
                 <li ng-repeat="owner in groupingOwners">
@@ -24,7 +24,7 @@
             </ul>
         </div>
         <div ng-if="!groupingOwners || groupingOwners.length === 0">
-            <p class="mb-0">No other owners to notify.</p>
+            <p class="mb-0">No direct owners or owner-groupings are listed.</p>
         </div>
     </div>
 
