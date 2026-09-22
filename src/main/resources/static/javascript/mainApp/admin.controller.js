@@ -1,6 +1,34 @@
-/* global _, angular, UHGroupingsApp */
+/* global angular, UHGroupingsApp */
 
 (() => {
+
+    const isPositiveSafeInteger = (value) => Number.isSafeInteger(value) && value > 0;
+    const isNonNegativeSafeInteger = (value) => Number.isSafeInteger(value) && value >= 0;
+    const isGroupingPathsResponse = (response) => Boolean(response) && Array.isArray(response.groupingPaths);
+    const totalPagesFor = (pageSize, totalCount) => {
+        if (!isPositiveSafeInteger(pageSize) || !isNonNegativeSafeInteger(totalCount)) {
+            return null;
+        }
+        return Math.max(1, Math.ceil(totalCount / pageSize));
+    };
+    const hasValidGroupingPageMetadata = (page, totalPages) =>
+        isPositiveSafeInteger(page) && page <= totalPages;
+
+    const groupingPageMetadata = (response) => {
+        if (!isGroupingPathsResponse(response)) {
+            return null;
+        }
+
+        const page = Number(response.page);
+        const pageSize = Number(response.pageSize);
+        const totalCount = Number(response.totalCount);
+        const totalPages = totalPagesFor(pageSize, totalCount);
+        if (totalPages === null || !hasValidGroupingPageMetadata(page, totalPages)) {
+            return null;
+        }
+
+        return { page, totalPages };
+    };
 
     /**
      * This controller contains functions specific to the admin page.
@@ -32,6 +60,8 @@
         $scope.owners = [];
 
         let PAGE_SIZE = 20;
+        let requestedGroupingsPage = 0;
+        let groupingRequestId = 0;
 
         angular.extend(this, $controller("GroupingDetailsJsController", { $scope }));
 
@@ -49,10 +79,47 @@
          * is then paginated.
          */
         $scope.getAllGroupingsCallbackOnSuccess = (res) => {
+            const pageMetadata = groupingPageMetadata(res);
+            if (!pageMetadata) {
+                $scope.allGroupingsLoading = false;
+                $scope.displayApiErrorModal(res);
+                return;
+            }
+
             $scope.groupingsList = _.sortBy(res.groupingPaths, "name");
-            $scope.pagedItemsGroupings = $scope.objToPageArray($scope.groupingsList, PAGE_SIZE);
+            $scope.pagedItemsGroupings = Array.from({ length: pageMetadata.totalPages }, () => []);
+            $scope.pagedItemsGroupings[pageMetadata.page - 1] = $scope.groupingsList;
+            $scope.currentPageGroupings = pageMetadata.page - 1;
             $scope.allGroupingsLoading = false;
         };
+
+        $scope.loadGroupingsPage = (page) => {
+            const requestId = ++groupingRequestId;
+            requestedGroupingsPage = page - 1;
+            $scope.allGroupingsLoading = true;
+            groupingsService.getAllGroupings(
+                page,
+                PAGE_SIZE,
+                $scope.groupingsQuery,
+                (res) => {
+                    if (requestId === groupingRequestId) {
+                        $scope.getAllGroupingsCallbackOnSuccess(res);
+                    }
+                },
+                (res) => {
+                    if (requestId === groupingRequestId) {
+                        $scope.allGroupingsLoading = false;
+                        $scope.displayApiErrorModal(res);
+                    }
+                }
+            );
+        };
+
+        $scope.$watch("currentPageGroupings", (page, previousPage) => {
+            if (page !== previousPage && page !== requestedGroupingsPage) {
+                $scope.loadGroupingsPage(page + 1);
+            }
+        });
 
         /**
          * Complete initialization by fetching a list of admins and list of all groupings.
@@ -71,10 +138,7 @@
                     $scope.displayApiErrorModal
                 );
 
-                groupingsService.getAllGroupings(
-                    $scope.getAllGroupingsCallbackOnSuccess,
-                    $scope.displayApiErrorModal
-                );
+                $scope.loadGroupingsPage(1);
             }
         };
 
@@ -112,7 +176,8 @@
                         $scope.currentManageSubject = "";
                         $scope.invalidInput = true;
                     }
-                }, () => { /* on promise rejection*/ });
+                }, () => { /* on promise rejection*/
+                });
             } else {
                 // sets proper error message
                 if (!$scope.subjectToLookup) {
@@ -251,6 +316,63 @@
                 _.some($scope.adminsList, { uhUuid: user });
         };
 
+        const resetAddAdminValidation = () => {
+            $scope.containsDeptAcc = false;
+            $scope.containsServiceAccAdmin = false;
+            $scope.addInputError = false;
+            $scope.invalidMembers = [];
+        };
+
+        const isServiceAccountAdmin = (admin, members) =>
+            (_.isString(admin) && admin.startsWith("_")) ||
+            $scope.checkForServiceAccountMembers(members);
+
+        const displayInvalidAdminInput = (admin, invalidMembers) => {
+            $scope.invalidMembers = _.isEmpty(invalidMembers) ? [admin] : invalidMembers;
+            $scope.addInputError = true;
+        };
+
+        const lookupMembers = (response) => response.results ?? [];
+        const lookupInvalidMembers = (response) => response.invalid ?? [];
+
+        const handleAddAdminLookup = (admin, response) => {
+            const members = lookupMembers(response);
+            const invalidMembers = lookupInvalidMembers(response);
+            resetAddAdminValidation();
+
+            if (isServiceAccountAdmin(admin, members)) {
+                $scope.containsServiceAccAdmin = true;
+                return;
+            }
+            if (!_.isEmpty(invalidMembers) || _.isEmpty(members)) {
+                displayInvalidAdminInput(admin, invalidMembers);
+                return;
+            }
+            if ($scope.checkForDeptAccount(members)) {
+                $scope.containsDeptAcc = true;
+                return;
+            }
+            $scope.displayAddModal({
+                membersAttributes: response,
+                uhIdentifiers: admin,
+                listName: "admins"
+            });
+        };
+
+        const isValidArrayIndex = (array, index) =>
+            Array.isArray(array) && Number.isSafeInteger(index) && index >= 0 && index < array.length;
+
+        const adminAtPageIndex = (currentPage, index) => {
+            if (!isValidArrayIndex($scope.pagedItemsAdmins, currentPage)) {
+                return null;
+            }
+            const adminPage = _.nth($scope.pagedItemsAdmins, currentPage);
+            if (!isValidArrayIndex(adminPage, index)) {
+                return null;
+            }
+            return _.nth(adminPage, index);
+        };
+
         /**
          * Adds a user to the admin list.
          */
@@ -268,35 +390,7 @@
             }
 
             groupingsService.getMemberAttributeResults([sanitizedAdmin], (res) => {
-                const members = res.results ?? [];
-                const invalidMembers = res.invalid ?? [];
-                $scope.containsDeptAcc = false;
-                $scope.containsServiceAccAdmin = false;
-                $scope.addInputError = false;
-                $scope.invalidMembers = [];
-
-                // Service accounts and department accounts are never eligible for admin assignment.
-                // Also treat leading "_" on the entered id as a service account: lookup may return empty or
-                // incomplete results, which would otherwise open the add modal with N/A fields.
-                const isServiceByEnteredId = _.isString(sanitizedAdmin) && sanitizedAdmin.startsWith("_");
-                if (isServiceByEnteredId || $scope.checkForServiceAccountMembers(members)) {
-                    $scope.containsServiceAccAdmin = true;
-                    return;
-                }
-                if (!_.isEmpty(invalidMembers) || _.isEmpty(members)) {
-                    $scope.invalidMembers = _.isEmpty(invalidMembers) ? [sanitizedAdmin] : invalidMembers;
-                    $scope.addInputError = true;
-                    return;
-                }
-                if ($scope.checkForDeptAccount(members)) {
-                    $scope.containsDeptAcc = true;
-                    return;
-                }
-                $scope.displayAddModal({
-                    membersAttributes: res,
-                    uhIdentifiers: sanitizedAdmin,
-                    listName: "admins"
-                });
+                handleAddAdminLookup(sanitizedAdmin, res);
             });
         };
 
@@ -307,7 +401,11 @@
          * account
          */
         $scope.removeAdmin = (currentPage, index) => {
-            const adminToRemove = $scope.pagedItemsAdmins[currentPage][index];
+            const adminToRemove = adminAtPageIndex(currentPage, index);
+
+            if (!adminToRemove) {
+                return;
+            }
 
             if ($scope.adminsList.length > 1) {
                 $scope.displayRemoveModal({
@@ -422,7 +520,7 @@
             $scope.subjectToLookup = sessionStorage.getItem("subjectToLookup");
             $scope.searchForUserGroupingInformation();
             groupingsService.getGroupingAdmins($scope.getGroupingAdminsCallbackOnSuccess, $scope.displayApiErrorModal);
-            groupingsService.getAllGroupings($scope.getAllGroupingsCallbackOnSuccess, $scope.displayApiErrorModal);
+            $scope.loadGroupingsPage(1);
         };
 
         /**
