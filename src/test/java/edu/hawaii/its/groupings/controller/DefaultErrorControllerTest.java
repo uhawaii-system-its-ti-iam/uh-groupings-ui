@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
+import jakarta.servlet.RequestDispatcher;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -86,6 +87,34 @@ class DefaultErrorControllerTest {
         // confirm we looked up the user and emailed the exception
         verify(userContextService).getCurrentUser();
         verify(emailService).sendWithStack(ex, "RuntimeException", "/some/path");
+    }
+
+    @Test
+    void onErrorUsesOriginalRequestUri() {
+        // Arrange
+        MockHttpServletRequest servletRequest = new MockHttpServletRequest();
+        servletRequest.setRequestURI("/error");
+        servletRequest.setAttribute(RequestDispatcher.ERROR_REQUEST_URI, "/some/original/path");
+
+        Model model = new ExtendedModelMap();
+        RuntimeException ex = new RuntimeException("Runtime Exception");
+
+        when(errorAttributes.getError(any(ServletWebRequest.class)))
+                .thenReturn(ex);
+
+        when(errorAttributes.getErrorAttributes(
+                any(ServletWebRequest.class),
+                any(ErrorAttributeOptions.class)))
+                .thenReturn(new HashMap<>());
+
+        // Act
+        controller.onError(servletRequest, model);
+
+        // Assert
+        verify(emailService).sendWithStack(
+                ex,
+                "RuntimeException",
+                "/some/original/path");
     }
 
     @Test

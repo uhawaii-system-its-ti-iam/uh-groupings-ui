@@ -4,6 +4,7 @@ import java.util.Map;
 import java.time.LocalDateTime;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.RequestDispatcher;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -56,7 +57,13 @@ public class DefaultErrorController implements ErrorController {
 
         if (ex != null) {
             logger.error("uid: " + uid + "; Exception: ", ex);
-            emailService.sendWithStack(ex, ex.getClass().getSimpleName(), request.getRequestURI());
+
+            String requestUri = (String) request.getAttribute(RequestDispatcher.ERROR_REQUEST_URI);
+            if (requestUri == null) {
+                requestUri = request.getRequestURI();
+            }
+
+            emailService.sendWithStack(ex, ex.getClass().getSimpleName(), requestUri);
         }
 
         // Pick desired error attributes and attach them to the model.
