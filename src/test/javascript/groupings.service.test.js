@@ -686,6 +686,28 @@ describe("GroupingsService", () => {
         });
     });
 
+    describe("retireGrouping", () => {
+        it("should call dataProvider.updateData", () => {
+            spyOn(dp, "updateData");
+
+            gs.retireGrouping(groupingPath, onSuccess, onError);
+
+            expect(dp.updateData).toHaveBeenCalledWith(
+                BASE_URL + "groupings/" + groupingPath + "/retirement-requests",
+                onSuccess,
+                onError
+            );
+        });
+
+        it("should use the correct path", () => {
+            gs.retireGrouping(groupingPath, onSuccess, onError);
+            httpBackend.expectPOST(
+                BASE_URL + "groupings/" + groupingPath + "/retirement-requests"
+            ).respond(200);
+            expect(httpBackend.flush).not.toThrow();
+        });
+    });
+
     describe("encodeParameterizedQueryString", () => {
         it("should encode a parameterized query string", () => {
             let params = {
