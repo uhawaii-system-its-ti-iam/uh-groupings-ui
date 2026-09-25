@@ -29,7 +29,6 @@
             }
             return member.name || member.uhUuid || "";
         };
-
         $scope.loading = false;
         $scope.waitingForImportResponse = false;
         $scope.paginatingProgress = true;
@@ -2403,6 +2402,89 @@
                 $scope.excludeCheck = false;
                 $scope.excludeDisable = true;
             }
+        };
+
+        /**
+         * Retire a grouping with confirmation dialog.
+         * Displays a confirmation modal before retiring the grouping.
+         */
+        $scope.retireGrouping = () => {
+            if (!$scope.selectedGrouping || !$scope.selectedGrouping.path) {
+                $scope.displayDynamicModal(
+                    "Error",
+                    "No grouping selected to retire."
+                );
+                return;
+            }
+
+            // Open the retirement confirmation modal
+            $scope.retireGroupingModalInstance = $uibModal.open({
+                templateUrl: "modal/retireGroupingModal",
+                scope: $scope,
+                backdrop: "static"
+            });
+        };
+
+        /**
+         * Proceed with retiring the grouping after confirmation.
+         */
+        $scope.proceedRetireGroupingModal = () => {
+            $scope.retireGroupingModalInstance.close();
+            $scope.loading = true;
+
+            groupingsService.retireGrouping($scope.selectedGrouping.path,
+                (res) => {
+                    $scope.loading = false;
+                    if (res.resultCode === "SUCCESS") {
+                        $scope.displayRetirementResultModal(res);
+                    } else {
+                        $scope.displayDynamicModal(
+                            "Error",
+                            res.resultMessage || "Failed to send retirement request emails."
+                        );
+                    }
+                },
+                (err) => {
+                    // Error handler
+                    $scope.loading = false;
+                    $scope.displayDynamicModal(
+                        "Error",
+                        `Failed to send retire grouping request: ${err.statusCode || err.status || 'Unknown error'}`
+                    );
+                }
+            );
+        };
+
+        /**
+         * Display who the retirement emails were sent to.
+         */
+        $scope.displayRetirementResultModal = (result) => {
+            $scope.retirementResult = {
+                title: "Retirement Emails Sent",
+                message: result.resultMessage,
+                ownerRecipients: result.ownerRecipients || []
+            };
+
+            $scope.retirementResultModalInstance = $uibModal.open({
+                templateUrl: "modal/retireGroupingResultModal",
+                scope: $scope,
+                backdrop: "static"
+            });
+
+            $scope.retirementResultModalInstance.result.finally(() => {
+                $window.location.href = "groupings";
+            });
+        };
+
+        $scope.closeRetirementResultModal = () => {
+            $scope.retirementResultModalInstance.close();
+        };
+
+        /**
+         * Cancel the retire grouping modal.
+         */
+        $scope.cancelRetireGroupingModal = () => {
+            $scope.retireGroupingModalInstance.dismiss();
         };
     }
 
