@@ -187,4 +187,14 @@ public class EmailServiceTest {
         emailService.sendWithStack(new NullPointerException(), "Null Pointer Exception", testPath);
         assertTrue(messageSent.getSubject().contains("(dev)"));
     }
+
+    @Test
+    public void sendWithStack() {
+        emailService.sendWithStack(new NullPointerException(), "Null Pointer Exception", testPath);
+        assertTrue(wasSent);
+        assertTrue(messageSent.getText().contains("The UI encountered an exception."));
+        assertTrue(messageSent.getText().contains("Exception Type: Null Pointer Exception"));
+        assertTrue(messageSent.getText().contains("UI Stack Trace:"));
+        assertFalse(messageSent.getText().contains("ErrorControllerAdvice"));
+    }
 }

@@ -132,13 +132,16 @@ describe("AdminController", function () {
                         "description": "description"
                     }
                 ],
+                "page": 1,
+                "pageSize": 20,
+                "totalCount": 2
             };
         });
 
-        it("should call objToPageArray", () => {
-            spyOn(scope, "objToPageArray").and.callThrough();
+        it("should retain the server's page metadata for the pagination control", () => {
             scope.getAllGroupingsCallbackOnSuccess(res);
-            expect(scope.objToPageArray).toHaveBeenCalled();
+            expect(scope.pagedItemsGroupings.length).toEqual(1);
+            expect(scope.pagedItemsGroupings[0].length).toEqual(2);
         });
 
         it("should instantiate scope.groupingsList", () => {
@@ -149,6 +152,67 @@ describe("AdminController", function () {
         it("should set scope.loading to false", () => {
             scope.getAllGroupingsCallbackOnSuccess(res);
             expect(scope.loading).toBeFalse();
+        });
+
+        it("should store a multi-page response at its one-based page index", () => {
+            res.page = 2;
+            res.pageSize = 20;
+            res.totalCount = 21;
+
+            scope.getAllGroupingsCallbackOnSuccess(res);
+
+            expect(scope.pagedItemsGroupings.length).toEqual(2);
+            expect(scope.pagedItemsGroupings[0]).toEqual([]);
+            expect(scope.pagedItemsGroupings[1].length).toEqual(2);
+            expect(scope.currentPageGroupings).toEqual(1);
+        });
+
+        it("should request and render page two while retaining both pagination entries", () => {
+            const callbacks = [];
+            spyOn(gs, "getAllGroupings").and.callFake((page, size, search, onSuccess) => {
+                callbacks.push(onSuccess);
+            });
+            const firstPage = angular.extend({}, res, { page: 1, totalCount: 21 });
+            const secondPage = angular.extend({}, res, { page: 2, totalCount: 21 });
+
+            scope.loadGroupingsPage(1);
+            callbacks[0](firstPage);
+            scope.setPage("Next", "currentPageGroupings", "pagedItemsGroupings");
+            scope.$digest();
+            callbacks[1](secondPage);
+
+            expect(scope.currentPageGroupings).toEqual(1);
+            expect(scope.pagedItemsGroupings.length).toEqual(2);
+            expect(scope.pagedItemsGroupings[1].length).toEqual(2);
+            expect(scope.pageRange(scope.currentPageGroupings, scope.pagedItemsGroupings.length, 1))
+                .toEqual([0, 1]);
+        });
+
+        it("should display an API error for invalid pagination metadata", () => {
+            spyOn(scope, "displayApiErrorModal");
+            res.pageSize = 0;
+
+            scope.getAllGroupingsCallbackOnSuccess(res);
+
+            expect(scope.displayApiErrorModal).toHaveBeenCalledWith(res);
+            expect(scope.allGroupingsLoading).toBeFalse();
+        });
+
+        it("should ignore an older grouping-page response", () => {
+            const callbacks = [];
+            spyOn(gs, "getAllGroupings").and.callFake((page, size, search, onSuccess) => {
+                callbacks.push(onSuccess);
+            });
+            const firstPage = angular.extend({}, res, { page: 1, totalCount: 40 });
+            const secondPage = angular.extend({}, res, { page: 2, totalCount: 40 });
+
+            scope.loadGroupingsPage(1);
+            scope.loadGroupingsPage(2);
+            callbacks[1](secondPage);
+            callbacks[0](firstPage);
+
+            expect(scope.currentPageGroupings).toEqual(1);
+            expect(scope.pagedItemsGroupings[1].length).toEqual(2);
         });
     });
 
@@ -575,7 +639,7 @@ describe("AdminController", function () {
 
     describe("removeAdmin", () => {
         beforeEach(() => {
-            scope.pagedItemsAdmins[0] = {name: "zzz", uid: "zzz", uhUuid: "zzz"};
+            scope.pagedItemsAdmins[0] = [{name: "zzz", uid: "zzz", uhUuid: "zzz"}];
         });
         it("should call scope.displayRemoveModal", () => {
             scope.adminsList = [
@@ -603,6 +667,16 @@ describe("AdminController", function () {
             spyOn(scope, "displayRemoveErrorModal").and.callThrough();
             scope.removeAdmin(0, 0);
             expect(scope.displayRemoveErrorModal).toHaveBeenCalled();
+        });
+        it("should ignore an invalid page or row index", () => {
+            spyOn(scope, "displayRemoveModal");
+            scope.adminsList = [{uid: "one"}, {uid: "two"}];
+
+            scope.removeAdmin("0", 0);
+            scope.removeAdmin(0, -1);
+            scope.removeAdmin(1, 0);
+
+            expect(scope.displayRemoveModal).not.toHaveBeenCalled();
         });
     });
 
