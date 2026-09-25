@@ -114,8 +114,11 @@
             /**
              * Get a list of all groupings.
              */
-            getAllGroupings(onSuccess, onError) {
-                let endpoint = BASE_URL + "groupings";
+            getAllGroupings(page, size, search, onSuccess, onError) {
+                let endpoint = BASE_URL + "groupings?page=" + page + "&size=" + size;
+                if (search) {
+                    endpoint += "&search=" + encodeURIComponent(search);
+                }
                 dataProvider.loadData(endpoint, onSuccess, onError);
             },
 

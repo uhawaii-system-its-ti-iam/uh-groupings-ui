@@ -12,20 +12,24 @@
             <p class="lead text-center text-md-left" th:utext="#{screen.message.admin.page.description}"></p>
             <ul class="nav nav-tabs flex-sm-row flex-column" role="tablist" id="adminTab" ng-show="showAdminTab">
                 <li role="presentation" class="nav-item">
-                    <a href="#manage-groupings" id="manage-groupings-tab" data-toggle="tab" class="nav-link active tab-color" role="tab">
+                    <a href="#manage-groupings" id="manage-groupings-tab" data-toggle="tab"
+                       class="nav-link active tab-color" role="tab">
                         Manage Groupings
                     </a>
                 <li class="nav-item" role="presentation">
-                    <a href="#manage-admins" id="manage-admins-tab" data-toggle="tab" class="nav-link tab-color" role="tab">
+                    <a href="#manage-admins" id="manage-admins-tab" data-toggle="tab" class="nav-link tab-color"
+                       role="tab">
                         Manage Admins
                     </a>
                 <li class="nav-item" role="presentation">
-                    <a href="#manage-person" id="manage-subject-tab" data-toggle="tab" class="nav-link tab-color" role="tab">
+                    <a href="#manage-person" id="manage-subject-tab" data-toggle="tab" class="nav-link tab-color"
+                       role="tab">
                         Manage Person
                     </a>
                 </li>
                 <li th:if="${!@realm.isProduction()}" class="nav-item" role="presentation">
-                    <a href="#throw-exception" id="throw-exception-tab2" data-toggle="tab" class="nav-link tab-color" role="tab">For Testing Purposes</a>
+                    <a href="#throw-exception" id="throw-exception-tab2" data-toggle="tab" class="nav-link tab-color"
+                       role="tab">For Testing Purposes</a>
                 </li>
             </ul>
         </div>
@@ -50,7 +54,8 @@
                             <input class="form-control" placeholder="Filter Groupings..." type="search"
                                    title="Filter Groupings" aria-label="Filter Groupings..."
                                    ng-model="groupingsQuery"
-                                   ng-change="filter(groupingsList, 'pagedItemsGroupings', 'currentPageGroupings', groupingsQuery, true)"/>
+                                   ng-model-options="{ debounce: 250 }"
+                                   ng-change="loadGroupingsPage(1)"/>
                             <div th:replace="~{fragments/table-settings}"></div>
                         </div>
                     </div>
@@ -73,12 +78,14 @@
                         <table class="table manage-admins table-striped table-hover table-md" aria-atomic="true">
                             <thead>
                             <tr>
-                                <th ng-click="sortBy('adminsList', 'pagedItemsAdmins', 'name')" class="clickable" scope="col">
+                                <th ng-click="sortBy('adminsList', 'pagedItemsAdmins', 'name')" class="clickable"
+                                    scope="col">
                                     Admin Name
                                     <i class="fa sort-icon"
                                        ng-show="columnSort.adminsList.property === 'name' || !columnSort.adminsList"
                                        ng-class="{ reverse: columnSort.adminsList.reverse }"></i>
-                                <th ng-click="sortBy('adminsList', 'pagedItemsAdmins', 'uhUuid')" class="clickable" scope="col">
+                                <th ng-click="sortBy('adminsList', 'pagedItemsAdmins', 'uhUuid')" class="clickable"
+                                    scope="col">
                                     UH Number
                                     <i class="fa sort-icon" ng-show="columnSort.adminsList.property === 'uhUuid'"
                                        ng-class="{ reverse: columnSort.adminsList.reverse }"></i>
@@ -161,8 +168,12 @@
                     <div class="row m-auto pt-3 pb-3 d-flex">
                         <div class="col-lg-9 col-md-8 col-12 p-0 text-center text-md-left">
                             <h2 class="mt-md-1 mt-0 d-inline-block">Manage Person</h2>
-                            <div class="spinner-border ml-1 d-inline-block" ng-show="userGroupingInformationLoading"></div>
-                            <br class="d-md-none"><h3 ng-if="currentManageSubject" class="d-inline-block ml-0 ml-lg-1 mt-n1 mt-lg-0 align-middle">{{currentManageSubject}}</h3>
+                            <div class="spinner-border ml-1 d-inline-block"
+                                 ng-show="userGroupingInformationLoading"></div>
+                            <br class="d-md-none">
+                            <h3 ng-if="currentManageSubject"
+                                class="d-inline-block ml-0 ml-lg-1 mt-n1 mt-lg-0 align-middle">
+                                {{currentManageSubject}}</h3>
                         </div>
                         <div class="col-lg-3 col-md-4 col-12 p-0">
                             <input class="form-control" placeholder="Filter Groupings..." type="search"
@@ -224,8 +235,8 @@
                                 <th ng-click="sortBy('subjectList', 'pagedItemsSubject', 'name')" class="clickable">
                                     Grouping
                                     <i class="fa sort-icon"
-                                        ng-show="columnSort.subjectList.property === 'name' || !columnSort.groupingsList"
-                                        ng-class="{ reverse: columnSort.groupingsList.reverse }"></i>
+                                       ng-show="columnSort.subjectList.property === 'name' || !columnSort.groupingsList"
+                                       ng-class="{ reverse: columnSort.groupingsList.reverse }"></i>
                                 <th>
                                     Owner?
                                 </th>
@@ -247,7 +258,7 @@
                             <tr ng-repeat="l in pagedItemsSubject[currentPageSubject]" class="row-height">
                                 <td class="p-10">
                                     <i class="fa fa-fw fa-external-link-alt clickable" tooltip="Manage grouping"
-                                    ng-click="displayGroupingInNewTab(l.name, l.path)"></i>
+                                       ng-click="displayGroupingInNewTab(l.name, l.path)"></i>
                                     {{l.name}}
                                     <span ng-if="l.ownerGrouping" class="ml-1">
                                         <i class="fa fa-exclamation-triangle"
@@ -301,13 +312,15 @@
                                 <td class="p-12" tabindex="0">
                                     <div ng-if="l.inOwner || l.inInclude || l.inExclude">
                                         <label class="form-check-label" aria-label="Remove"><input type="checkbox"
-                                               class="form-check-input" ng-model="l.isSelected" ng-change="update(l)"
-                                               ng-keydown="clickWithEnter($event)"></label>
+                                                                                                   class="form-check-input"
+                                                                                                   ng-model="l.isSelected"
+                                                                                                   ng-change="update(l)"
+                                                                                                   ng-keydown="clickWithEnter($event)"></label>
                                     </div>
                                     <div ng-if="!l.inOwner && !l.inInclude && !l.inExclude">
                                         <label aria-label="Remove"><input type="checkbox" class="form-check-input"
-                                               ng-model="l.isSelected" ng-change="update(l)"
-                                               disabled ng-keydown="clickWithEnter($event)"></label>
+                                                                          ng-model="l.isSelected" ng-change="update(l)"
+                                                                          disabled ng-keydown="clickWithEnter($event)"></label>
                                     </div>
                                 </td>
                             </tr>
@@ -327,7 +340,9 @@
                             <h2 class="mt-md-1 mt-0 d-inline-block">For Testing Purposes</h2>
                         </div>
                     </div>
-                    <div class="alert alert-warning" th:text="#{screen.message.admin.page.exception.tab.description}"></div><br>
+                    <div class="alert alert-warning"
+                         th:text="#{screen.message.admin.page.exception.tab.description}"></div>
+                    <br>
                     <button class="btn btn-primary" role="button" ng-click="throwException()">Throw Exception</button>
                 </div>
             </div>

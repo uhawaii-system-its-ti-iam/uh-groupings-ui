@@ -158,16 +158,47 @@ public class GroupingsRestControllerTest {
     @WithMockUhUser(uid = "admin")
     public void allGroupingsTest() throws Exception {
         String uri = REST_CONTROLLER_BASE + "groupings";
+        String apiUri = API_2_1_BASE + "/groupings?page=2&size=20&search=test";
 
         given(httpRequestService.makeApiRequest(anyString(), eq(HttpMethod.GET)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
 
-        assertNotNull(mockMvc.perform(get(uri).with(csrf()))
+        assertNotNull(mockMvc.perform(get(uri)
+                        .param("page", "2")
+                        .param("size", "20")
+                        .param("search", "test")
+                        .with(csrf()))
                 .andExpect(status().isOk())
                 .andReturn());
 
         verify(httpRequestService, times(1))
-                .makeApiRequest(anyString(), eq(HttpMethod.GET));
+                .makeApiRequest(eq(apiUri), eq(HttpMethod.GET));
+    }
+
+    @Test
+    @WithMockUhUser(uid = "admin")
+    public void allGroupingsUsesDefaultsAndOmitsBlankSearch() throws Exception {
+        String uri = REST_CONTROLLER_BASE + "groupings";
+        String apiUri = API_2_1_BASE + "/groupings?page=1&size=20";
+        given(httpRequestService.makeApiRequest(anyString(), eq(HttpMethod.GET)))
+                .willReturn(new ResponseEntity(HttpStatus.OK));
+
+        mockMvc.perform(get(uri).param("search", "   ").with(csrf()))
+                .andExpect(status().isOk());
+
+        verify(httpRequestService).makeApiRequest(eq(apiUri), eq(HttpMethod.GET));
+    }
+
+    @Test
+    @WithMockUhUser(uid = "admin")
+    public void allGroupingsRejectsInvalidPagination() throws Exception {
+        mockMvc.perform(get(REST_CONTROLLER_BASE + "groupings")
+                        .param("page", "0")
+                        .param("size", "101")
+                        .with(csrf()))
+                .andExpect(status().isBadRequest());
+
+        verify(httpRequestService, times(0)).makeApiRequest(anyString(), eq(HttpMethod.GET));
     }
 
     @Test
@@ -671,7 +702,6 @@ public class GroupingsRestControllerTest {
                 .makeApiRequest(anyString(), eq(HttpMethod.POST));
     }
 
-
     @Test
     @WithMockUhUser
     public void hasOwnerPrivsTest() throws Exception {
@@ -910,10 +940,11 @@ public class GroupingsRestControllerTest {
         verify(httpRequestService, times(2))
                 .makeApiRequest(anyString(), eq(HttpMethod.PUT));
     }
+
     @Test
     @WithMockUhUser
     public void updateOptInTrueTest() throws Exception {
-        String uri = REST_CONTROLLER_BASE +"groupings/"+ GROUPING + "/opt-attribute/IN/true";
+        String uri = REST_CONTROLLER_BASE + "groupings/" + GROUPING + "/opt-attribute/IN/true";
 
         given(httpRequestService.makeApiRequest(anyString(), eq(HttpMethod.PUT)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
@@ -929,7 +960,7 @@ public class GroupingsRestControllerTest {
     @Test
     @WithMockUhUser
     public void updateOptInFalseTest() throws Exception {
-        String uri = REST_CONTROLLER_BASE +"groupings/"+ GROUPING + "/opt-attribute/IN/false";
+        String uri = REST_CONTROLLER_BASE + "groupings/" + GROUPING + "/opt-attribute/IN/false";
 
         given(httpRequestService.makeApiRequest(anyString(), eq(HttpMethod.PUT)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
@@ -945,7 +976,7 @@ public class GroupingsRestControllerTest {
     @Test
     @WithMockUhUser
     public void updateOptOutTrueTest() throws Exception {
-        String uri = REST_CONTROLLER_BASE +"groupings/"+ GROUPING + "/opt-attribute/OUT/true";
+        String uri = REST_CONTROLLER_BASE + "groupings/" + GROUPING + "/opt-attribute/OUT/true";
 
         given(httpRequestService.makeApiRequest(anyString(), eq(HttpMethod.PUT)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
@@ -961,7 +992,7 @@ public class GroupingsRestControllerTest {
     @Test
     @WithMockUhUser
     public void updateOptOutFalseTest() throws Exception {
-        String uri = REST_CONTROLLER_BASE +"groupings/"+ GROUPING + "/opt-attribute/OUT/false";
+        String uri = REST_CONTROLLER_BASE + "groupings/" + GROUPING + "/opt-attribute/OUT/false";
 
         given(httpRequestService.makeApiRequest(anyString(), eq(HttpMethod.PUT)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
