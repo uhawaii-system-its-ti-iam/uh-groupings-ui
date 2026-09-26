@@ -13,6 +13,7 @@ import org.springframework.boot.webmvc.error.DefaultErrorAttributes;
 import org.springframework.boot.webmvc.error.ErrorController;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.context.request.ServletWebRequest;
 
@@ -59,10 +60,10 @@ public class DefaultErrorController implements ErrorController {
             logger.error("uid: " + uid + "; Exception: ", ex);
 
             String requestUri = (String) request.getAttribute(RequestDispatcher.ERROR_REQUEST_URI);
-            if (requestUri == null) {
+            if (!StringUtils.hasText(requestUri)) {
                 requestUri = request.getRequestURI();
             }
-
+            
             emailService.sendWithStack(ex, ex.getClass().getSimpleName(), requestUri);
         }
 
