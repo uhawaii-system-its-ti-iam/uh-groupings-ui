@@ -109,6 +109,7 @@
         $scope.importSourceRows = {};
         $scope.importInvalidMembers = [];
         $scope.importSuccessCount = 0;
+        $scope.importTotalCount = 0;
 
         // Always initially set to default modal
         $scope.addModalId = "add-modal";
@@ -964,13 +965,33 @@
                 return;
             }
 
-            // CSV/text file imports are resolved and added to Grouper in a single pass: skip the pre-add
-            // validity/already-in-list checks below and let the add call itself (which is idempotent for
-            // members already in the list) report back what could not be found.
+            // CSV/text file imports: validate every identifier up front so a handful of bad entries
+            // don't block the rest of the file, then add only the identifiers Grouper can resolve and
+            // report the difference (see handleSuccessfulAdd).
             if ($scope.isFileImport) {
-                $scope.waitingForImportResponse = false;
-                $scope.displayImportConfirmationModal(listName, uhIdentifiers);
-                $scope.isAddingMembers = false;
+                $scope.importTotalCount = uhIdentifiers.length;
+                $scope.waitingForImportResponse = true; // Small spinner on
+                groupingsService.getMemberAttributeResultsAsync(uhIdentifiers, (res) => {
+                    $scope.waitingForImportResponse = false;
+                    $scope.importInvalidMembers = res.invalid ?? [];
+                    const validIdentifiers = uhIdentifiers.filter((id) => !$scope.importInvalidMembers.includes(id));
+                    $scope.importSuccessCount = validIdentifiers.length;
+                    $scope.isAddingMembers = false;
+
+                    // Nothing resolved to a real member: skip the add call and just report the failures.
+                    if (_.isEmpty(validIdentifiers)) {
+                        $scope.displayImportFileResultsModal();
+                        return;
+                    }
+
+                    $scope.displayImportConfirmationModal(listName, validIdentifiers);
+                }, (res) => {
+                    // Display API error modal
+                    $scope.waitingForImportResponse = false;
+                    $scope.resStatus = res.status;
+                    $scope.displayApiErrorModal();
+                    $scope.isAddingMembers = false;
+                });
                 return;
             }
 
@@ -1086,10 +1107,9 @@
             $scope.loading = false; // Full-screen spinner off
 
             // CSV/text file imports report a success count plus any identifiers Grouper could not
-            // resolve, rather than sharing the dynamic/batch-import modals used by manual add flows.
+            // resolve (already computed in addMembers), rather than sharing the dynamic/batch-import
+            // modals used by manual add flows.
             if ($scope.isFileImport) {
-                $scope.importInvalidMembers = res.invalidUhIdentifiers ?? [];
-                $scope.importSuccessCount = $scope.importSize - $scope.importInvalidMembers.length;
                 $scope.displayImportFileResultsModal();
                 return;
             }

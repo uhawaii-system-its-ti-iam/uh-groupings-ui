@@ -7,7 +7,7 @@
 </div>
 <div class="modal-body" id="modal-body">
     <p class="modal-black-text">
-        Imported {{importSuccessCount}} of {{importSize}} members to the {{listName}} list.
+        Imported {{importSuccessCount}} of {{importTotalCount}} members to the {{listName}} list.
     </p>
     <div ng-if="importInvalidMembers.length > 0 && importInvalidMembers.length <= Threshold.MAX_LIST_SIZE">
         <p th:text="#{screen.message.import.modal.results.notFound}"></p>
