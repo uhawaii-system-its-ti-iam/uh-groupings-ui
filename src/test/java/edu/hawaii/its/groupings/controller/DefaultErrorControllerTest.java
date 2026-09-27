@@ -118,6 +118,34 @@ class DefaultErrorControllerTest {
     }
 
     @Test
+    void onErrorFallsBackWhenOriginalRequestUriIsBlank() {
+        // Arrange
+        MockHttpServletRequest servletRequest = new MockHttpServletRequest();
+        servletRequest.setRequestURI("/some/path");
+        servletRequest.setAttribute(RequestDispatcher.ERROR_REQUEST_URI, "   ");
+
+        Model model = new ExtendedModelMap();
+        RuntimeException ex = new RuntimeException("Runtime Exception");
+
+        when(errorAttributes.getError(any(ServletWebRequest.class)))
+                .thenReturn(ex);
+
+        when(errorAttributes.getErrorAttributes(
+                any(ServletWebRequest.class),
+                any(ErrorAttributeOptions.class)))
+                .thenReturn(new HashMap<>());
+
+        // Act
+        controller.onError(servletRequest, model);
+
+        // Assert
+        verify(emailService).sendWithStack(
+                ex,
+                "RuntimeException",
+                "/some/path");
+    }
+
+    @Test
     void onErrorWithNullException() {
         // Arrange
         MockHttpServletRequest servletRequest = new MockHttpServletRequest();
