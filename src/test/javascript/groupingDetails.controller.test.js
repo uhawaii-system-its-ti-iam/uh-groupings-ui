@@ -2034,6 +2034,74 @@ describe("GroupingController", () => {
                 const file = new File(["iamtst01"], "kfs.admins.v2.txt", { type: "text/plain" });
                 scope.readTextFile(file);
             });
+
+            describe("CSV row handling", () => {
+                const header = "Last,First,Username,UH Number,Email";
+                const rowOne = "One,User,user1,00000001,user1@hawaii.edu";
+                const rowTwo = "Two,User,user2,00000002,user2@hawaii.edu";
+
+                const readCsv = (csvContent, verify, done) => {
+                    scope.listName = "Include";
+                    spyOn(scope, "addMembers").and.callFake((listName, uhIdentifiers) => {
+                        verify(uhIdentifiers);
+                        done();
+                    });
+                    scope.readTextFile(new File([csvContent], "members.csv", { type: "text/csv" }));
+                };
+
+                it("should include the last row when the file has no trailing newline", (done) => {
+                    readCsv([header, rowOne, rowTwo].join("\r\n"), (uhIdentifiers) => {
+                        expect(uhIdentifiers).toEqual(["00000001", "00000002"]);
+                        expect(Object.keys(scope.importSourceRows)).toEqual(["00000001", "00000002"]);
+                    }, done);
+                });
+
+                it("should include a single data row when the file has no trailing newline", (done) => {
+                    readCsv([header, rowOne].join("\r\n"), (uhIdentifiers) => {
+                        expect(uhIdentifiers).toEqual(["00000001"]);
+                    }, done);
+                });
+
+                it("should ignore multiple trailing blank lines", (done) => {
+                    readCsv([header, rowOne, rowTwo].join("\r\n") + "\r\n\r\n\r\n", (uhIdentifiers) => {
+                        expect(uhIdentifiers).toEqual(["00000001", "00000002"]);
+                        expect(Object.keys(scope.importSourceRows)).toEqual(["00000001", "00000002"]);
+                    }, done);
+                });
+
+                it("should skip blank and whitespace-only lines within the file", (done) => {
+                    readCsv([header, "", rowOne, "   ", "", rowTwo].join("\r\n") + "\r\n", (uhIdentifiers) => {
+                        expect(uhIdentifiers).toEqual(["00000001", "00000002"]);
+                    }, done);
+                });
+
+                it("should parse LF line endings the same as CRLF", (done) => {
+                    readCsv([header, rowOne, rowTwo].join("\n"), (uhIdentifiers) => {
+                        expect(uhIdentifiers).toEqual(["00000001", "00000002"]);
+                    }, done);
+                });
+
+                it("should skip rows without a UH Number", (done) => {
+                    const csvContent = [header, rowOne, "Three,User,user3,,user3@hawaii.edu", "Four,User", rowTwo].join("\r\n");
+                    readCsv(csvContent, (uhIdentifiers) => {
+                        expect(uhIdentifiers).toEqual(["00000001", "00000002"]);
+                        expect(Object.keys(scope.importSourceRows)).toEqual(["00000001", "00000002"]);
+                    }, done);
+                });
+
+                it("should key source rows by the trimmed, lowercased UH Number to match the sanitizer", (done) => {
+                    readCsv([header, "Two,User,user2, USER2 ,user2@hawaii.edu"].join("\r\n"), () => {
+                        expect(Object.keys(scope.importSourceRows)).toEqual(["user2"]);
+                        expect(scope.importSourceRows["user2"]).toEqual({
+                            last: "Two",
+                            first: "User",
+                            username: "user2",
+                            uhNumber: "USER2",
+                            email: "user2@hawaii.edu"
+                        });
+                    }, done);
+                });
+            });
         });
 
         describe("addMembers - file import validation", () => {
@@ -2071,6 +2139,73 @@ describe("GroupingController", () => {
                 expect(scope.importSuccessCount).toBe(0);
                 expect(scope.importInvalidMembers).toEqual(["baduser1", "baduser2"]);
                 expect(scope.displayImportFileResultsModal).toHaveBeenCalled();
+            });
+
+            it("should count and list entries the sanitizer drops in file order, without sending them to the API", () => {
+                spyOn(gs, "getMemberAttributeResultsAsync").and.callFake(gs.getMemberAttributeResults);
+                spyOn(scope, "displayImportConfirmationModal");
+                scope.isFileImport = true;
+
+                scope.addMembers("Include", ["iamtst01", "!!!!!!!!", "baduser", "x"]);
+
+                httpBackend.expectPOST(BASE_URL + "members", ["iamtst01", "baduser"])
+                    .respond(200, { resultCode: "FAILURE", invalid: ["baduser"], results: [] });
+                httpBackend.flush();
+
+                expect(scope.importTotalCount).toBe(4);
+                expect(scope.importSuccessCount).toBe(1);
+                expect(scope.importInvalidMembers).toEqual(["!!!!!!!!", "baduser", "x"]);
+                expect(scope.displayImportConfirmationModal).toHaveBeenCalledWith("Include", ["iamtst01"]);
+            });
+
+            it("should skip the API call and show the results modal when the sanitizer drops every entry", () => {
+                spyOn(gs, "getMemberAttributeResultsAsync").and.callFake(gs.getMemberAttributeResults);
+                spyOn(scope, "displayImportConfirmationModal");
+                spyOn(scope, "displayImportFileResultsModal");
+                scope.isFileImport = true;
+
+                scope.addMembers("Include", ["!!!!", "$$$$"]);
+
+                httpBackend.verifyNoOutstandingRequest();
+                expect(gs.getMemberAttributeResultsAsync).not.toHaveBeenCalled();
+                expect(scope.emptyInput).toBeFalsy();
+                expect(scope.isAddingMembers).toBeFalse();
+                expect(scope.importTotalCount).toBe(2);
+                expect(scope.importSuccessCount).toBe(0);
+                expect(scope.importInvalidMembers).toEqual(["!!!!", "$$$$"]);
+                expect(scope.displayImportConfirmationModal).not.toHaveBeenCalled();
+                expect(scope.displayImportFileResultsModal).toHaveBeenCalled();
+            });
+
+            it("should collapse entries that repeat once trimmed and lower-cased, and ignore blank entries", () => {
+                spyOn(gs, "getMemberAttributeResultsAsync").and.callFake(gs.getMemberAttributeResults);
+                spyOn(scope, "displayImportConfirmationModal");
+                scope.isFileImport = true;
+
+                scope.addMembers("Include", ["IAMTST01", " iamtst01 ", "", "   ", "iamtst02"]);
+
+                httpBackend.expectPOST(BASE_URL + "members", ["iamtst01", "iamtst02"])
+                    .respond(200, { resultCode: "SUCCESS", invalid: [], results: [] });
+                httpBackend.flush();
+
+                expect(scope.importTotalCount).toBe(2);
+                expect(scope.importDuplicateCount).toBe(1);
+                expect(scope.importSuccessCount).toBe(2);
+                expect(scope.importInvalidMembers).toEqual([]);
+                expect(scope.displayImportConfirmationModal).toHaveBeenCalledWith("Include", ["iamtst01", "iamtst02"]);
+            });
+
+            it("should treat a file of only blank entries as empty input", () => {
+                spyOn(gs, "getMemberAttributeResultsAsync").and.callFake(gs.getMemberAttributeResults);
+                spyOn(scope, "displayImportFileResultsModal");
+                scope.isFileImport = true;
+
+                scope.addMembers("Include", ["", "   "]);
+
+                httpBackend.verifyNoOutstandingRequest();
+                expect(scope.emptyInput).toBeTrue();
+                expect(scope.isAddingMembers).toBeFalse();
+                expect(scope.displayImportFileResultsModal).not.toHaveBeenCalled();
             });
         });
 
@@ -2128,8 +2263,10 @@ describe("GroupingController", () => {
                 Array.from({ length: count }, (_, i) => `badtst${String(i + 1).padStart(2, "0")}`);
 
             // Runs one CSV/text import through addMembers -> getMemberAttributeResultsAsync -> (optionally)
-            // proceedImportConfirmationModal -> handleSuccessfulAdd, exactly as a real import would.
+            // proceedImportConfirmationModal -> handleSuccessfulAdd, exactly as a real import would. Repeated
+            // identifiers are collapsed before the API is called, so it only ever sees each one once.
             const runImport = (identifiers, invalid) => {
+                const distinctIdentifiers = [...new Set(identifiers)];
                 spyOn(gs, "getMemberAttributeResultsAsync").and.callFake(gs.getMemberAttributeResults);
                 spyOn(gs, "addIncludeMembersAsync").and.callFake((members, path, onSuccess) => {
                     onSuccess({ addResults: { results: [] }, removeResults: { results: [] } });
@@ -2140,11 +2277,11 @@ describe("GroupingController", () => {
                 scope.isFileImport = true;
                 scope.addMembers("Include", identifiers);
 
-                httpBackend.expectPOST(BASE_URL + "members", identifiers)
+                httpBackend.expectPOST(BASE_URL + "members", distinctIdentifiers)
                     .respond(200, { resultCode: invalid.length ? "FAILURE" : "SUCCESS", invalid, results: [] });
                 httpBackend.flush();
 
-                const validIdentifiers = identifiers.filter((id) => !invalid.includes(id));
+                const validIdentifiers = distinctIdentifiers.filter((id) => !invalid.includes(id));
                 if (!_.isEmpty(validIdentifiers)) {
                     scope.proceedImportConfirmationModal();
                 }
@@ -2152,10 +2289,12 @@ describe("GroupingController", () => {
             };
 
             // Asserts the counts/lists every scenario below shares, given the raw identifiers fed into
-            // addMembers and the subset the mocked backend reports as invalid.
+            // addMembers and the subset the mocked backend reports as invalid. Repeats count once.
             const expectCounts = (identifiers, invalid) => {
-                const validIdentifiers = identifiers.filter((id) => !invalid.includes(id));
-                expect(scope.importTotalCount).toBe(identifiers.length);
+                const distinctIdentifiers = [...new Set(identifiers)];
+                const validIdentifiers = distinctIdentifiers.filter((id) => !invalid.includes(id));
+                expect(scope.importTotalCount).toBe(distinctIdentifiers.length);
+                expect(scope.importDuplicateCount).toBe(identifiers.length - distinctIdentifiers.length);
                 expect(scope.importInvalidMembers).toEqual(invalid);
                 expect(scope.importSuccessCount).toBe(validIdentifiers.length);
                 expect(scope.displayImportFileResultsModal).toHaveBeenCalled();
@@ -2191,8 +2330,9 @@ describe("GroupingController", () => {
                         const identifiers = [...unique, unique[0], unique[1]];
                         runImport(identifiers, []);
                         expectCounts(identifiers, []);
-                        // No dedup today: every duplicate row is still counted and sent through as its own success.
-                        expect(scope.importSuccessCount).toBe(total);
+                        // A repeated identifier is added, and counted, once.
+                        expect(scope.importSuccessCount).toBe(total - 2);
+                        expect(scope.importDuplicateCount).toBe(2);
                     });
 
                     it("all good entries, no repeats", () => {
@@ -2212,7 +2352,9 @@ describe("GroupingController", () => {
 
                         runImport(identifiers, bad);
                         expectCounts(identifiers, bad);
-                        expect(scope.importSuccessCount).toBe(half);
+                        // The repeated good identifier is added, and counted, once.
+                        expect(scope.importSuccessCount).toBe(half - 1);
+                        expect(scope.importDuplicateCount).toBe(1);
                     });
 
                     it("mix of bad and good entries, no good repeats", () => {
@@ -2288,19 +2430,67 @@ describe("GroupingController", () => {
                 };
             });
 
-            it("should download a CSV enriched with original row data, falling back to the bare identifier", () => {
+            const dataUriPrefix = "data:text/csv;charset=utf-8,";
+
+            // Runs the download with a stubbed anchor and returns it along with the decoded CSV payload
+            const downloadAndDecode = () => {
                 const mockElement = document.createElement("a");
                 spyOn(document, "createElement").and.returnValue(mockElement);
                 spyOn(mockElement, "click");
 
                 scope.downloadNotFoundMembers();
 
-                expect(mockElement.href).toBe(
-                    "data:text/csv;charset=utf-8,Last,First,Username,UH%20Number,Email%0D%0A" +
-                    "Nine,User,user9,00000009,%0D%0A" +
-                    ",,,unknownuser,%0D%0A"
+                expect(mockElement.href.startsWith(dataUriPrefix)).toBeTrue();
+                return {
+                    mockElement,
+                    csv: decodeURIComponent(mockElement.href.substring(dataUriPrefix.length))
+                };
+            };
+
+            it("should download a CSV enriched with original row data, falling back to the bare identifier", () => {
+                const { mockElement, csv } = downloadAndDecode();
+
+                expect(csv).toBe(
+                    "Last,First,Username,UH Number,Email\r\n" +
+                    "Nine,User,user9,00000009,\r\n" +
+                    ",,,unknownuser,\r\n"
                 );
                 expect(mockElement.download).toBe("kfs_admins-not-found.csv");
+            });
+
+            it("should quote cells containing commas, quotes, or newlines and double embedded quotes", () => {
+                scope.importInvalidMembers = ["00000007"];
+                scope.importSourceRows = {
+                    "00000007": {
+                        last: "Smith, Jr.",
+                        first: "A \"Al\"",
+                        username: "line\nbreak",
+                        uhNumber: "00000007",
+                        email: ""
+                    }
+                };
+
+                const { csv } = downloadAndDecode();
+
+                expect(csv).toBe(
+                    "Last,First,Username,UH Number,Email\r\n" +
+                    "\"Smith, Jr.\",\"A \"\"Al\"\"\",\"line\nbreak\",00000007,\r\n"
+                );
+            });
+
+            it("should not truncate or corrupt the download when a cell contains #, &, or %", () => {
+                scope.importInvalidMembers = ["00000008"];
+                scope.importSourceRows = {
+                    "00000008": { last: "Smith #2 & Co", first: "100%", username: "", uhNumber: "00000008", email: "" }
+                };
+
+                const { mockElement, csv } = downloadAndDecode();
+
+                expect(mockElement.href).not.toContain("#");
+                expect(csv).toBe(
+                    "Last,First,Username,UH Number,Email\r\n" +
+                    "Smith #2 & Co,100%,,00000008,\r\n"
+                );
             });
         });
     });

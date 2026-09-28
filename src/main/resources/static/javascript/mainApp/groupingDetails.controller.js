@@ -110,6 +110,7 @@
         $scope.importInvalidMembers = [];
         $scope.importSuccessCount = 0;
         $scope.importTotalCount = 0;
+        $scope.importDuplicateCount = 0;
 
         // Always initially set to default modal
         $scope.addModalId = "add-modal";
@@ -659,6 +660,10 @@
          * a list of UH uids or ids separated by newline characters. This
          * function is called implicitly from include.html and exclude.html.
          * The file is retrieved from the html input with id 'upload'.
+         *
+         * A CSV file must have a header row containing "UH Number" and one member per line. Fields are split on
+         * commas, so quoted or comma-containing fields are not supported. The Last, First, Username, and Email
+         * columns are optional; when present they are used to fill in the not-found members download.
          */
         $scope.readTextFile = (inputFile) => {
             if (!$scope.verifyImportFileType(inputFile)) {
@@ -714,11 +719,17 @@
                     const indexOfUsername = firstRow.findIndex((header) => header.includes(Message.Csv.USERNAME_COLUMN_HEADER));
                     const indexOfEmail = firstRow.findIndex((header) => header.includes(Message.Csv.EMAIL_COLUMN_HEADER));
 
-                    const dataRows = namesInFile.slice(1, -1).map((row) => row.split(","));
+                    // Skip blank rows (e.g. a trailing newline) and rows without a UH Number
+                    const dataRows = namesInFile
+                        .slice(1)
+                        .filter((row) => row.trim() !== "")
+                        .map((row) => row.split(","))
+                        .filter((columns) => (columns[indexOfUhNumber] ?? "").trim() !== "");
                     $scope.importSourceRows = {};
                     dataRows.forEach((columns) => {
-                        const uhNumber = columns[indexOfUhNumber];
-                        $scope.importSourceRows[uhNumber] = {
+                        const uhNumber = columns[indexOfUhNumber].trim();
+                        // Keyed like the sanitizer normalizes identifiers so invalid members can be looked up
+                        $scope.importSourceRows[uhNumber.toLowerCase()] = {
                             last: indexOfLast >= 0 ? columns[indexOfLast] : "",
                             first: indexOfFirst >= 0 ? columns[indexOfFirst] : "",
                             username: indexOfUsername >= 0 ? columns[indexOfUsername] : "",
@@ -927,97 +938,144 @@
         };
 
         /**
-         * Add uhIdentifiers to a group. Leave the uhIdentifiers parameter null to take the member input from
-         * $scope.manageMembers. Checks that all uhIdentifiers are valid before displaying the
-         * add/multiAdd/importConfirmation modal.
-         * @param {string} listName
-         * @param {Object[]|null} uhIdentifiers
+         * Helper - addMembers
+         * Normalizes a file entry the way $scope.sanitizer does (trimmed, lower-cased), so entries can be matched
+         * against the sanitized identifiers and the keys of $scope.importSourceRows.
+         * @param {*} entry - an entry read from an import file
+         * @returns {string} the normalized entry, which is empty for a blank entry
          */
-        $scope.addMembers = (listName, uhIdentifiers) => {
-            // Prevent multiple asynchronous calls of addMembers
-            if ($scope.isAddingMembers) {
-                return;
-            }
-            $scope.isAddingMembers = true;
+        const normalizeImportEntry = (entry) => String(entry ?? "").trim().toLowerCase();
 
+        /**
+         * Helper - addMembers
+         * Gets the identifiers to add: uhIdentifiers, or the member input from $scope.manageMembers when it is null.
+         * Also determines the entries a file import reports on and sets $scope.importDuplicateCount.
+         * @param {Object[]|null} uhIdentifiers - the identifiers given to addMembers
+         * @returns {{identifiers: Object[], importEntries: Object[]}} the identifiers to add, and the entries that a
+         * file import reports on
+         */
+        const collectAddIdentifiers = (uhIdentifiers) => {
             // If uhIdentifiers parameter is null, get member input from $scope.manageMembers
-            uhIdentifiers = uhIdentifiers ?? $scope.parseAddRemoveInputStr($scope.manageMembers);
+            const submittedIdentifiers = uhIdentifiers ?? $scope.parseAddRemoveInputStr($scope.manageMembers);
 
-            if (!$scope.isOwnerGrouping) {
-                // Only sanitize if it's a uh identifier, group path sanitization is done on the backend
-                uhIdentifiers = $scope.sanitizer(uhIdentifiers);
+            // Only sanitize if it's a uh identifier, group path sanitization is done on the backend
+            const identifiers = $scope.isOwnerGrouping
+                ? submittedIdentifiers
+                : $scope.sanitizer(submittedIdentifiers);
+
+            // A file import reports on every distinct entry in the file: repeated entries count once, and entries
+            // the sanitizer rejects (e.g. "!!!!!!!!") are kept so they are counted and listed as not found instead
+            // of silently vanishing.
+            $scope.importDuplicateCount = 0;
+            if (!$scope.isFileImport || $scope.isOwnerGrouping) {
+                return { identifiers, importEntries: identifiers };
             }
-            $scope.listName = listName;
+            const nonBlankEntries = [].concat(submittedIdentifiers)
+                .map(normalizeImportEntry)
+                .filter((entry) => entry !== "");
+            const importEntries = [...new Set(nonBlankEntries)];
+            $scope.importDuplicateCount = nonBlankEntries.length - importEntries.length;
+            return { identifiers: [...new Set(identifiers)], importEntries };
+        };
 
-            // Check if uhIdentifiers/member input is empty
-            if (_.isEmpty(uhIdentifiers)) {
-                $scope.emptyInput = true;
+        /**
+         * Helper - addMembers
+         * Handles an add that has no identifiers to add. A file import in which no entry is a valid identifier
+         * reports the entries rather than ignoring the import.
+         * @param {Object[]} importEntries - the entries that a file import reports on
+         */
+        const handleNoIdentifiersToAdd = (importEntries) => {
+            $scope.isAddingMembers = false;
+            if ($scope.isFileImport && !_.isEmpty(importEntries)) {
+                $scope.importTotalCount = importEntries.length;
+                $scope.importInvalidMembers = importEntries;
+                $scope.importSuccessCount = 0;
+                $scope.displayImportFileResultsModal();
+                return;
+            }
+            $scope.emptyInput = true;
+        };
+
+        /**
+         * Helper - addMembers
+         * Display the API error modal when a request to check the members to add fails.
+         * @param {Object} res - the failed response
+         */
+        const handleAddApiError = (res) => {
+            $scope.waitingForImportResponse = false;
+            $scope.resStatus = res.status;
+            $scope.displayApiErrorModal();
+            $scope.isAddingMembers = false;
+        };
+
+        /**
+         * Helper - addMembers
+         * CSV/text file imports: validate every identifier up front so a handful of bad entries
+         * don't block the rest of the file, then add only the identifiers Grouper can resolve and
+         * report the difference (see handleSuccessfulAdd).
+         * @param {string} listName
+         * @param {Object[]} identifiers - the sanitized identifiers to validate
+         * @param {Object[]} importEntries - the entries that the import reports on
+         */
+        const validateFileImport = (listName, identifiers, importEntries) => {
+            const acceptedIdentifiers = new Set(identifiers);
+            $scope.importTotalCount = importEntries.length;
+            $scope.waitingForImportResponse = true; // Small spinner on
+            groupingsService.getMemberAttributeResultsAsync(identifiers, (res) => {
+                $scope.waitingForImportResponse = false;
+                const invalidIdentifiers = new Set(res.invalid ?? []);
+                // Entries the sanitizer rejected never reached the API, but are as unusable as those it reports.
+                $scope.importInvalidMembers = importEntries.filter(
+                    (id) => invalidIdentifiers.has(id) || !acceptedIdentifiers.has(id));
+                const validIdentifiers = identifiers.filter((id) => !invalidIdentifiers.has(id));
+                $scope.importSuccessCount = validIdentifiers.length;
                 $scope.isAddingMembers = false;
-                return;
-            }
 
-            // Prevent adding more than Threshold.MAX_IMPORT
-            if (uhIdentifiers.length > Threshold.MAX_IMPORT) {
-                $scope.displayDynamicModal(
-                    Message.Title.IMPORT_OUT_OF_BOUNDS,
-                    Message.Body.IMPORT_OUT_OF_BOUNDS);
-                $scope.isAddingMembers = false;
-                return;
-            }
-
-            // CSV/text file imports: validate every identifier up front so a handful of bad entries
-            // don't block the rest of the file, then add only the identifiers Grouper can resolve and
-            // report the difference (see handleSuccessfulAdd).
-            if ($scope.isFileImport) {
-                $scope.importTotalCount = uhIdentifiers.length;
-                $scope.waitingForImportResponse = true; // Small spinner on
-                groupingsService.getMemberAttributeResultsAsync(uhIdentifiers, (res) => {
-                    $scope.waitingForImportResponse = false;
-                    $scope.importInvalidMembers = res.invalid ?? [];
-                    const validIdentifiers = uhIdentifiers.filter((id) => !$scope.importInvalidMembers.includes(id));
-                    $scope.importSuccessCount = validIdentifiers.length;
-                    $scope.isAddingMembers = false;
-
-                    // Nothing resolved to a real member: skip the add call and just report the failures.
-                    if (_.isEmpty(validIdentifiers)) {
-                        $scope.displayImportFileResultsModal();
-                        return;
-                    }
-
-                    $scope.displayImportConfirmationModal(listName, validIdentifiers);
-                }, (res) => {
-                    // Display API error modal
-                    $scope.waitingForImportResponse = false;
-                    $scope.resStatus = res.status;
-                    $scope.displayApiErrorModal();
-                    $scope.isAddingMembers = false;
-                });
-                return;
-            }
-
-            // Check for members already in list, display error when all members to add already exist in the list
-            if ($scope.existsInList(listName, uhIdentifiers)) {
-                // Determine whether to display members already in the list in a modal or add-error-messages.html
-                if (uhIdentifiers.length > Threshold.MAX_LIST_SIZE) {
-                    $scope.displayDynamicModal(
-                        Message.Title.NO_MEMBERS_ADDED,
-                        Message.Body.NO_MEMBERS_ADDED.with(listName));
-                } else {
-                    $scope.errorDismissed = false;
+                // Nothing resolved to a real member: skip the add call and just report the failures.
+                if (_.isEmpty(validIdentifiers)) {
+                    $scope.displayImportFileResultsModal();
+                    return;
                 }
-                $scope.isAddingMembers = false;
-                return;
-            }
 
+                $scope.displayImportConfirmationModal(listName, validIdentifiers);
+            }, handleAddApiError);
+        };
+
+        /**
+         * Helper - addMembers
+         * Display the error for when all members to add already exist in the list.
+         * @param {string} listName
+         * @param {Object[]} identifiers - the identifiers that were to be added
+         */
+        const displayMembersAlreadyInList = (listName, identifiers) => {
+            // Determine whether to display members already in the list in a modal or add-error-messages.html
+            if (identifiers.length > Threshold.MAX_LIST_SIZE) {
+                $scope.displayDynamicModal(
+                    Message.Title.NO_MEMBERS_ADDED,
+                    Message.Body.NO_MEMBERS_ADDED.with(listName));
+            } else {
+                $scope.errorDismissed = false;
+            }
+            $scope.isAddingMembers = false;
+        };
+
+        /**
+         * Helper - addMembers
+         * Check the members that are not yet in the list, then display the add modal (or the import confirmation
+         * modal for a batch import).
+         * @param {string} listName
+         * @param {Object[]} identifiers - the identifiers to add
+         */
+        const displayAddModalForNewMembers = (listName, identifiers) => {
             // Call async memberAttributeResults check if batch import
             const getMemberAttributeResults = $scope.isBatchImport
                 ? groupingsService.getMemberAttributeResultsAsync
                 : groupingsService.getMemberAttributeResults;
 
-            $scope.isBatchImport = uhIdentifiers.length > Threshold.MULTI_ADD;
+            $scope.isBatchImport = identifiers.length > Threshold.MULTI_ADD;
 
             // Filter out members already in the group
-            uhIdentifiers = uhIdentifiers.filter((member) => !$scope.membersInListArray.includes(member));
+            const uhIdentifiers = identifiers.filter((member) => !$scope.membersInListArray.includes(member));
 
             if (_.isEmpty(uhIdentifiers)) {
                 $scope.containsInput = true;
@@ -1076,13 +1134,7 @@
                         });
                     }
                     $scope.isAddingMembers = false;
-                }, (res) => {
-                    // Display API error modal
-                    $scope.waitingForImportResponse = false;
-                    $scope.resStatus = res.status;
-                    $scope.displayApiErrorModal();
-                    $scope.isAddingMembers = false;
-                });
+                }, handleAddApiError);
             } else {
                 $scope.waitingForImportResponse = false; // Small spinner off
                 // Display the owner-grouping modal
@@ -1097,6 +1149,52 @@
                 }
                 $scope.isAddingMembers = false;
             }
+        };
+
+        /**
+         * Add uhIdentifiers to a group. Leave the uhIdentifiers parameter null to take the member input from
+         * $scope.manageMembers. Checks that all uhIdentifiers are valid before displaying the
+         * add/multiAdd/importConfirmation modal.
+         * @param {string} listName
+         * @param {Object[]|null} uhIdentifiers
+         */
+        $scope.addMembers = (listName, uhIdentifiers) => {
+            // Prevent multiple asynchronous calls of addMembers
+            if ($scope.isAddingMembers) {
+                return;
+            }
+            $scope.isAddingMembers = true;
+
+            const { identifiers, importEntries } = collectAddIdentifiers(uhIdentifiers);
+            $scope.listName = listName;
+
+            // Check if uhIdentifiers/member input is empty
+            if (_.isEmpty(identifiers)) {
+                handleNoIdentifiersToAdd(importEntries);
+                return;
+            }
+
+            // Prevent adding more than Threshold.MAX_IMPORT
+            if (identifiers.length > Threshold.MAX_IMPORT) {
+                $scope.displayDynamicModal(
+                    Message.Title.IMPORT_OUT_OF_BOUNDS,
+                    Message.Body.IMPORT_OUT_OF_BOUNDS);
+                $scope.isAddingMembers = false;
+                return;
+            }
+
+            if ($scope.isFileImport) {
+                validateFileImport(listName, identifiers, importEntries);
+                return;
+            }
+
+            // Check for members already in list, display error when all members to add already exist in the list
+            if ($scope.existsInList(listName, identifiers)) {
+                displayMembersAlreadyInList(listName, identifiers);
+                return;
+            }
+
+            displayAddModalForNewMembers(listName, identifiers);
         };
 
         /**
@@ -1343,8 +1441,22 @@
         };
 
         /**
+         * Helper - downloadNotFoundMembers
+         * Wraps a CSV cell in quotes, doubling any embedded quotes, when it contains a comma, quote, or newline.
+         * @param {*} value - the cell value
+         * @returns {string} the cell as it should appear in a CSV row
+         */
+        const escapeCsvCell = (value) => {
+            const cell = String(value ?? "");
+            return /[,\r\n]/.test(cell) || cell.includes("\"")
+                ? `"${cell.replaceAll("\"", "\"\"")}"`
+                : cell;
+        };
+
+        /**
          * Download the members from the most recent CSV/text file import that could not be found in
-         * Grouper, enriched with their original CSV row data when available.
+         * Grouper, enriched with their original CSV row data when available. Imported CSV fields are not
+         * unquoted (see readTextFile), so a field that arrived quoted is quoted again in the download.
          */
         $scope.downloadNotFoundMembers = () => {
             let csv = `${Message.Csv.LAST_COLUMN_HEADER},${Message.Csv.FIRST_COLUMN_HEADER},` +
@@ -1352,12 +1464,13 @@
 
             for (const identifier of $scope.importInvalidMembers) {
                 const row = $scope.importSourceRows[identifier] ?? {};
-                csv += [row.last ?? "", row.first ?? "", row.username ?? "", row.uhNumber ?? identifier, row.email ?? ""]
+                csv += [row.last, row.first, row.username, row.uhNumber ?? identifier, row.email]
+                    .map(escapeCsvCell)
                     .join(",") + "\r\n";
             }
 
             const filename = `${$scope.importFileBaseName}${Message.Csv.NOT_FOUND_FILE_SUFFIX}.csv`;
-            const data = encodeURI("data:text/csv;charset=utf-8," + csv);
+            const data = "data:text/csv;charset=utf-8," + encodeURIComponent(csv);
 
             const link = document.createElement("a");
             link.setAttribute("href", data);

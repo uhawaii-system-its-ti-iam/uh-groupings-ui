@@ -9,6 +9,9 @@
     <p class="modal-black-text">
         Imported {{importSuccessCount}} of {{importTotalCount}} members to the {{listName}} list.
     </p>
+    <p class="modal-black-text" ng-if="importDuplicateCount > 0">
+        {{importDuplicateCount}} repeated {{importDuplicateCount === 1 ? "entry was" : "entries were"}} counted once.
+    </p>
     <div ng-if="importInvalidMembers.length > 0 && importInvalidMembers.length <= Threshold.MAX_LIST_SIZE">
         <p th:text="#{screen.message.import.modal.results.notFound}"></p>
         <ul>
