@@ -106,7 +106,7 @@
         // CSV/text file import
         $scope.isFileImport = false;
         $scope.importFileBaseName = "";
-        $scope.importSourceRows = {};
+        $scope.importSourceRows = new Map();
         $scope.importInvalidMembers = [];
         $scope.importSuccessCount = 0;
         $scope.importTotalCount = 0;
@@ -596,7 +596,7 @@
             $scope.multiRemoveResults = [];
             $scope.waitingForImportResponse = false;
             $scope.isFileImport = false;
-            $scope.importSourceRows = {};
+            $scope.importSourceRows = new Map();
         };
 
         $scope.resetFields = () => {
@@ -654,6 +654,15 @@
         $scope.closeImportErrorModal = () => {
             $scope.importErrorModalInstance.close();
         };
+
+        /**
+         * Helper - readTextFile
+         * Gets a field of a CSV row.
+         * @param {string[]} columns - the fields of the row
+         * @param {number} index - the index of the column in the header row, or -1 if the file has no such column
+         * @returns {string} the field, or an empty string if the file has no such column or the row is too short
+         */
+        const getCsvColumn = (columns, index) => (index < 0 ? "" : (columns.at(index) ?? ""));
 
         /**
          * Read a text file(.txt) or csv file(.csv) from client side. The file should consist of
@@ -724,26 +733,26 @@
                         .slice(1)
                         .filter((row) => row.trim() !== "")
                         .map((row) => row.split(","))
-                        .filter((columns) => (columns[indexOfUhNumber] ?? "").trim() !== "");
-                    $scope.importSourceRows = {};
+                        .filter((columns) => getCsvColumn(columns, indexOfUhNumber).trim() !== "");
+                    $scope.importSourceRows = new Map();
                     dataRows.forEach((columns) => {
-                        const uhNumber = columns[indexOfUhNumber].trim();
+                        const uhNumber = getCsvColumn(columns, indexOfUhNumber).trim();
                         // Keyed like the sanitizer normalizes identifiers so invalid members can be looked up
-                        $scope.importSourceRows[uhNumber.toLowerCase()] = {
-                            last: indexOfLast >= 0 ? columns[indexOfLast] : "",
-                            first: indexOfFirst >= 0 ? columns[indexOfFirst] : "",
-                            username: indexOfUsername >= 0 ? columns[indexOfUsername] : "",
+                        $scope.importSourceRows.set(uhNumber.toLowerCase(), {
+                            last: getCsvColumn(columns, indexOfLast),
+                            first: getCsvColumn(columns, indexOfFirst),
+                            username: getCsvColumn(columns, indexOfUsername),
                             uhNumber,
-                            email: indexOfEmail >= 0 ? columns[indexOfEmail] : ""
-                        };
+                            email: getCsvColumn(columns, indexOfEmail)
+                        });
                     });
 
-                    const UHNumbersInFile = dataRows.map((columns) => columns[indexOfUhNumber]);
+                    const UHNumbersInFile = dataRows.map((columns) => getCsvColumn(columns, indexOfUhNumber));
                     $scope.isFileImport = true;
                     $scope.addMembers($scope.listName, UHNumbersInFile);
                 } else {
                     const namesInFile = str.split(/[\r\n,]+/);
-                    $scope.importSourceRows = {};
+                    $scope.importSourceRows = new Map();
                     $scope.isFileImport = true;
                     $scope.addMembers($scope.listName, namesInFile);
                 }
@@ -1463,7 +1472,7 @@
                 `${Message.Csv.USERNAME_COLUMN_HEADER},${Message.Csv.UUID_COLUMN_HEADER},${Message.Csv.EMAIL_COLUMN_HEADER}\r\n`;
 
             for (const identifier of $scope.importInvalidMembers) {
-                const row = $scope.importSourceRows[identifier] ?? {};
+                const row = $scope.importSourceRows.get(identifier) ?? {};
                 csv += [row.last, row.first, row.username, row.uhNumber ?? identifier, row.email]
                     .map(escapeCsvCell)
                     .join(",") + "\r\n";

@@ -1992,7 +1992,7 @@ describe("GroupingController", () => {
                     expect(uhIdentifiers).toEqual(["00000001", "00000002"]);
                     expect(scope.isFileImport).toBeTrue();
                     expect(scope.importFileBaseName).toBe("kfs_admins");
-                    expect(scope.importSourceRows["00000001"]).toEqual({
+                    expect(scope.importSourceRows.get("00000001")).toEqual({
                         last: "One",
                         first: "User",
                         username: "user1",
@@ -2016,7 +2016,7 @@ describe("GroupingController", () => {
                     expect(uhIdentifiers).toEqual(["iamtst01", "iamtst02"]);
                     expect(scope.isFileImport).toBeTrue();
                     expect(scope.importFileBaseName).toBe("members");
-                    expect(scope.importSourceRows).toEqual({});
+                    expect(scope.importSourceRows.size).toBe(0);
                     done();
                 });
 
@@ -2052,7 +2052,7 @@ describe("GroupingController", () => {
                 it("should include the last row when the file has no trailing newline", (done) => {
                     readCsv([header, rowOne, rowTwo].join("\r\n"), (uhIdentifiers) => {
                         expect(uhIdentifiers).toEqual(["00000001", "00000002"]);
-                        expect(Object.keys(scope.importSourceRows)).toEqual(["00000001", "00000002"]);
+                        expect([...scope.importSourceRows.keys()]).toEqual(["00000001", "00000002"]);
                     }, done);
                 });
 
@@ -2065,7 +2065,7 @@ describe("GroupingController", () => {
                 it("should ignore multiple trailing blank lines", (done) => {
                     readCsv([header, rowOne, rowTwo].join("\r\n") + "\r\n\r\n\r\n", (uhIdentifiers) => {
                         expect(uhIdentifiers).toEqual(["00000001", "00000002"]);
-                        expect(Object.keys(scope.importSourceRows)).toEqual(["00000001", "00000002"]);
+                        expect([...scope.importSourceRows.keys()]).toEqual(["00000001", "00000002"]);
                     }, done);
                 });
 
@@ -2085,20 +2085,41 @@ describe("GroupingController", () => {
                     const csvContent = [header, rowOne, "Three,User,user3,,user3@hawaii.edu", "Four,User", rowTwo].join("\r\n");
                     readCsv(csvContent, (uhIdentifiers) => {
                         expect(uhIdentifiers).toEqual(["00000001", "00000002"]);
-                        expect(Object.keys(scope.importSourceRows)).toEqual(["00000001", "00000002"]);
+                        expect([...scope.importSourceRows.keys()]).toEqual(["00000001", "00000002"]);
                     }, done);
                 });
 
                 it("should key source rows by the trimmed, lowercased UH Number to match the sanitizer", (done) => {
                     readCsv([header, "Two,User,user2, USER2 ,user2@hawaii.edu"].join("\r\n"), () => {
-                        expect(Object.keys(scope.importSourceRows)).toEqual(["user2"]);
-                        expect(scope.importSourceRows["user2"]).toEqual({
+                        expect([...scope.importSourceRows.keys()]).toEqual(["user2"]);
+                        expect(scope.importSourceRows.get("user2")).toEqual({
                             last: "Two",
                             first: "User",
                             username: "user2",
                             uhNumber: "USER2",
                             email: "user2@hawaii.edu"
                         });
+                    }, done);
+                });
+
+                it("should leave columns empty when a row is shorter than the header or the file lacks the column", (done) => {
+                    const csvContent = ["UH Number,Email", "00000001", "00000002,user2@hawaii.edu"].join("\r\n");
+                    readCsv(csvContent, () => {
+                        expect(scope.importSourceRows.get("00000001")).toEqual({
+                            last: "",
+                            first: "",
+                            username: "",
+                            uhNumber: "00000001",
+                            email: ""
+                        });
+                        expect(scope.importSourceRows.get("00000002").email).toBe("user2@hawaii.edu");
+                    }, done);
+                });
+
+                it("should key rows by a UH Number that matches an Object property name", (done) => {
+                    readCsv([header, "One,User,user1,constructor,user1@hawaii.edu"].join("\r\n"), () => {
+                        expect([...scope.importSourceRows.keys()]).toEqual(["constructor"]);
+                        expect(scope.importSourceRows.get("constructor").uhNumber).toBe("constructor");
                     }, done);
                 });
             });
@@ -2425,9 +2446,9 @@ describe("GroupingController", () => {
             beforeEach(() => {
                 scope.importFileBaseName = "kfs_admins";
                 scope.importInvalidMembers = ["00000009", "unknownuser"];
-                scope.importSourceRows = {
-                    "00000009": { last: "Nine", first: "User", username: "user9", uhNumber: "00000009", email: "" }
-                };
+                scope.importSourceRows = new Map([
+                    ["00000009", { last: "Nine", first: "User", username: "user9", uhNumber: "00000009", email: "" }]
+                ]);
             });
 
             const dataUriPrefix = "data:text/csv;charset=utf-8,";
@@ -2460,15 +2481,15 @@ describe("GroupingController", () => {
 
             it("should quote cells containing commas, quotes, or newlines and double embedded quotes", () => {
                 scope.importInvalidMembers = ["00000007"];
-                scope.importSourceRows = {
-                    "00000007": {
+                scope.importSourceRows = new Map([
+                    ["00000007", {
                         last: "Smith, Jr.",
                         first: "A \"Al\"",
                         username: "line\nbreak",
                         uhNumber: "00000007",
                         email: ""
-                    }
-                };
+                    }]
+                ]);
 
                 const { csv } = downloadAndDecode();
 
@@ -2480,9 +2501,9 @@ describe("GroupingController", () => {
 
             it("should not truncate or corrupt the download when a cell contains #, &, or %", () => {
                 scope.importInvalidMembers = ["00000008"];
-                scope.importSourceRows = {
-                    "00000008": { last: "Smith #2 & Co", first: "100%", username: "", uhNumber: "00000008", email: "" }
-                };
+                scope.importSourceRows = new Map([
+                    ["00000008", { last: "Smith #2 & Co", first: "100%", username: "", uhNumber: "00000008", email: "" }]
+                ]);
 
                 const { mockElement, csv } = downloadAndDecode();
 
