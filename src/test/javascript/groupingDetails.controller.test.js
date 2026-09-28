@@ -1004,6 +1004,47 @@ describe("GroupingController", () => {
             scope.manageMembers = "";
         });
 
+        it("should set the owner-grouping fields and call addMembers for a single group path", () => {
+            spyOn(scope, "addMembers");
+            scope.selectedGrouping = { path: "test:other:path" };
+            scope.manageMembers = "test:group:path";
+
+            scope.addOnClick("owners");
+
+            expect(scope.isOwnerGrouping).toBeTrue();
+            expect(scope.ownerGroupPath).toBe("test:group:path");
+            expect(scope.groupingName).toBe("path");
+            expect(scope.addMembers).toHaveBeenCalledWith("owners", ["test:group:path"]);
+        });
+
+        it("should not add a grouping to its own owners list", () => {
+            spyOn(scope, "addMembers");
+            spyOn(scope, "displayDynamicModal");
+            scope.selectedGrouping = { path: "test:group:path" };
+            scope.manageMembers = "test:group:path";
+
+            scope.addOnClick("owners");
+
+            expect(scope.displayDynamicModal)
+                .toHaveBeenCalledWith(message.Title.OWNER_NOT_ADDED, message.Body.ADD_CURRENT_PATH_ERROR);
+            expect(scope.addMembers).not.toHaveBeenCalled();
+            expect(scope.manageMembers).toBe("");
+        });
+
+        it("should not add more than one owner-grouping at a time", () => {
+            spyOn(scope, "addMembers");
+            spyOn(scope, "displayDynamicModal");
+            scope.selectedGrouping = { path: "test:other:path" };
+            scope.manageMembers = "test:group:one test:group:two";
+
+            scope.addOnClick("owners");
+
+            expect(scope.displayDynamicModal)
+                .toHaveBeenCalledWith(message.Title.INVALID_MULTI_ADD, message.Body.INVALID_MULTI_ADD);
+            expect(scope.addMembers).not.toHaveBeenCalled();
+            expect(scope.manageMembers).toBe("");
+        });
+
         it("should set errorDismissed to false", () => {
             scope.errorDismissed = true;
             scope.addOnClick("owners");

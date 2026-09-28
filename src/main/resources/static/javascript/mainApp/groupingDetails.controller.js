@@ -865,6 +865,40 @@
         };
 
         /**
+         * Helper - addOnClick
+         * Sets up the add modal for the owners list, or displays an error modal if the input is not allowed.
+         * @param {String[]} userInput - the parsed member input
+         * @returns {boolean} false if the input is not allowed, otherwise true
+         */
+        const prepareOwnersAdd = (userInput) => {
+            // If the user input has a colon, we can assume that it's a group path
+            if (!$scope.manageMembers.includes(":")) {
+                $scope.addModalId = "add-modal";
+                $scope.addModalURL = "modal/addModal";
+                return true;
+            }
+            if ($scope.selectedGrouping.path === $scope.manageMembers) {
+                // Prevent a grouping from being able to add itself to its own owners list
+                $scope.displayDynamicModal(Message.Title.OWNER_NOT_ADDED, Message.Body.ADD_CURRENT_PATH_ERROR);
+                clearMemberInput();
+                return false;
+            }
+            if (userInput.length > 1) {
+                // Prevent multi-adding owner-groupings
+                $scope.displayDynamicModal(Message.Title.INVALID_MULTI_ADD, Message.Body.INVALID_MULTI_ADD);
+                clearMemberInput();
+                return false;
+            }
+            $scope.isOwnerGrouping = true;
+            $scope.addModalId = "add-owner-grouping-modal";
+            $scope.addModalURL = "modal/addOwnerGroupingModal";
+            // ownerGroupPath is specifically used for the path displayed in the addOwnerGroupingModal
+            $scope.ownerGroupPath = $scope.manageMembers;
+            $scope.groupingName = $scope.manageMembers.split(":").pop();
+            return true;
+        };
+
+        /**
          * Adds people to listName (to be used in on-click)
          * @param {String} listName grouping list (i.e. include, exclude, owners, or owner-grouping)
          */
@@ -882,29 +916,8 @@
                 }
             }
             if (listName === "owners") {
-                // If the user input has a colon, we can assume that it's a group path
-                if ($scope.manageMembers.includes(":")) {
-                    if ($scope.selectedGrouping.path === $scope.manageMembers) {
-                        // Prevent a grouping from being able to add itself to its own owners list
-                        $scope.displayDynamicModal(Message.Title.OWNER_NOT_ADDED, Message.Body.ADD_CURRENT_PATH_ERROR);
-                        clearMemberInput();
-                        return;
-                    } else if (userInput.length > 1) {
-                        // Prevent multi-adding owner-groupings
-                        $scope.displayDynamicModal(Message.Title.INVALID_MULTI_ADD, Message.Body.INVALID_MULTI_ADD);
-                        clearMemberInput();
-                        return;
-                    } else {
-                        $scope.isOwnerGrouping = true;
-                        $scope.addModalId = "add-owner-grouping-modal";
-                        $scope.addModalURL = "modal/addOwnerGroupingModal";
-                        // ownerGroupPath is specifically used for the path displayed in the addOwnerGroupingModal
-                        $scope.ownerGroupPath = $scope.manageMembers;
-                        $scope.groupingName = $scope.manageMembers.split(":").pop();
-                    }
-                } else {
-                    $scope.addModalId = "add-modal";
-                    $scope.addModalURL = "modal/addModal";
+                if (!prepareOwnersAdd(userInput)) {
+                    return;
                 }
                 $scope.addMembers(listName, userInput);
             }
@@ -1070,6 +1083,26 @@
 
         /**
          * Helper - addMembers
+         * Get the reason that members cannot be added to the owners list, if there is one.
+         * @param {Object[]} results - the attributes of the members to add
+         * @returns {string|null} the body of the message to display, or null if the members can be added
+         */
+        const getOwnerNotAddedBody = (results) => {
+            // Department accounts are not eligible for owner assignments.
+            $scope.hasDeptAccount = $scope.checkForDeptAccount(results);
+            if ($scope.hasDeptAccount) {
+                return Message.Body.OWNER_NOT_ADDED;
+            }
+
+            // Service accounts are allowed only if they have an assigned uhUuid.
+            if ($scope.checkForServiceAccountWithoutUhUuid(results)) {
+                return Message.Body.SERVICE_ACCOUNT_UHUUID_REQUIRED;
+            }
+            return null;
+        };
+
+        /**
+         * Helper - addMembers
          * Check the members that are not yet in the list, then display the add modal (or the import confirmation
          * modal for a batch import).
          * @param {string} listName
@@ -1110,23 +1143,9 @@
                     }
 
                     if (listName === "owners") {
-                        // Department accounts are not eligible for owner assignments.
-                        $scope.hasDeptAccount = $scope.checkForDeptAccount(res.results);
-                        if ($scope.hasDeptAccount) {
-                            $scope.displayDynamicModal(
-                                Message.Title.OWNER_NOT_ADDED,
-                                Message.Body.OWNER_NOT_ADDED
-                            );
-                            $scope.isAddingMembers = false;
-                            return;
-                        }
-
-                        // Service accounts are allowed only if they have an assigned uhUuid.
-                        if ($scope.checkForServiceAccountWithoutUhUuid(res.results)) {
-                            $scope.displayDynamicModal(
-                                Message.Title.OWNER_NOT_ADDED,
-                                Message.Body.SERVICE_ACCOUNT_UHUUID_REQUIRED
-                            );
+                        const ownerNotAddedBody = getOwnerNotAddedBody(res.results);
+                        if (ownerNotAddedBody) {
+                            $scope.displayDynamicModal(Message.Title.OWNER_NOT_ADDED, ownerNotAddedBody);
                             $scope.isAddingMembers = false;
                             return;
                         }
