@@ -715,7 +715,8 @@
                 if (inputFile.type === "text/csv") {
                     const namesInFile = str.split(/[\r\n]+/);
                     const firstRow = namesInFile[0].split(",");
-                    const indexOfUhNumber = firstRow.findIndex((header) => header.includes(Message.Csv.UUID_COLUMN_HEADER));
+                    const indexOfColumn = (header) => firstRow.findIndex((cell) => cell.includes(header));
+                    const indexOfUhNumber = indexOfColumn(Message.Csv.UUID_COLUMN_HEADER);
                     if (indexOfUhNumber < 0) {
                         $scope.displayDynamicModal(
                             Message.Title.INVALID_FILE,
@@ -723,15 +724,14 @@
                         );
                         return;
                     }
-                    const indexOfLast = firstRow.findIndex((header) => header.includes(Message.Csv.LAST_COLUMN_HEADER));
-                    const indexOfFirst = firstRow.findIndex((header) => header.includes(Message.Csv.FIRST_COLUMN_HEADER));
-                    const indexOfUsername = firstRow.findIndex((header) => header.includes(Message.Csv.USERNAME_COLUMN_HEADER));
-                    const indexOfEmail = firstRow.findIndex((header) => header.includes(Message.Csv.EMAIL_COLUMN_HEADER));
+                    const indexOfLast = indexOfColumn(Message.Csv.LAST_COLUMN_HEADER);
+                    const indexOfFirst = indexOfColumn(Message.Csv.FIRST_COLUMN_HEADER);
+                    const indexOfUsername = indexOfColumn(Message.Csv.USERNAME_COLUMN_HEADER);
+                    const indexOfEmail = indexOfColumn(Message.Csv.EMAIL_COLUMN_HEADER);
 
-                    // Skip blank rows (e.g. a trailing newline) and rows without a UH Number
+                    // Skip rows without a UH Number, which includes blank rows (e.g. from a trailing newline)
                     const dataRows = namesInFile
                         .slice(1)
-                        .filter((row) => row.trim() !== "")
                         .map((row) => row.split(","))
                         .filter((columns) => getCsvColumn(columns, indexOfUhNumber).trim() !== "");
                     $scope.importSourceRows = new Map();
@@ -963,10 +963,10 @@
          * Helper - addMembers
          * Normalizes a file entry the way $scope.sanitizer does (trimmed, lower-cased), so entries can be matched
          * against the sanitized identifiers and the keys of $scope.importSourceRows.
-         * @param {*} entry - an entry read from an import file
+         * @param {string} entry - an entry read from an import file
          * @returns {string} the normalized entry, which is empty for a blank entry
          */
-        const normalizeImportEntry = (entry) => String(entry ?? "").trim().toLowerCase();
+        const normalizeImportEntry = (entry) => entry.trim().toLowerCase();
 
         /**
          * Helper - addMembers
@@ -1045,7 +1045,7 @@
             $scope.waitingForImportResponse = true; // Small spinner on
             groupingsService.getMemberAttributeResultsAsync(identifiers, (res) => {
                 $scope.waitingForImportResponse = false;
-                const invalidIdentifiers = new Set(res.invalid ?? []);
+                const invalidIdentifiers = new Set(res.invalid);
                 // Entries the sanitizer rejected never reached the API, but are as unusable as those it reports.
                 $scope.importInvalidMembers = importEntries.filter(
                     (id) => invalidIdentifiers.has(id) || !acceptedIdentifiers.has(id));
@@ -1707,10 +1707,13 @@
                 $scope.membersToRemove = [$scope.membersToRemove.uhUuid];
             }
 
-            // Set information for the remove/multiRemove modal
+            // Set information for the remove/multiRemove modal. memberObject can be undefined if the list
+            // $scope.returnMemberObject searches is stale relative to $scope.membersToRemove.
             if (!$scope.isOwnerGrouping) {
                 const memberObject = $scope.returnMemberObject($scope.membersToRemove[0], $scope.listName);
-                $scope.initMemberDisplayName(memberObject);
+                if (memberObject) {
+                    $scope.initMemberDisplayName(memberObject);
+                }
             }
             $scope.isMultiRemove = _.isEmpty($scope.multiRemoveResults)
                 ? $scope.membersToRemove.length > 1

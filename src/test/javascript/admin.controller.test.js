@@ -639,7 +639,8 @@ describe("AdminController", function () {
 
     describe("removeAdmin", () => {
         beforeEach(() => {
-            scope.pagedItemsAdmins[0] = [{name: "zzz", uid: "zzz", uhUuid: "zzz"}];
+            // Matches the first entry of adminsList below, so $scope.returnMemberObject can find it by uid.
+            scope.pagedItemsAdmins[0] = [{name: "iamtst01", uid: "iamtst01", uhUuid: "iamtst01"}];
         });
         it("should call scope.displayRemoveModal", () => {
             scope.adminsList = [
@@ -661,6 +662,27 @@ describe("AdminController", function () {
             ];
             spyOn(scope, "displayRemoveModal").and.callThrough();
             scope.removeAdmin(0, 0);
+            expect(scope.displayRemoveModal).toHaveBeenCalled();
+            expect(scope.member).toBe("iamtst01");
+        });
+
+        it("should not crash when the admin at the page index is not found in adminsList", () => {
+            // adminsList (searched by $scope.returnMemberObject) does not contain "iamtst01" (from
+            // pagedItemsAdmins above), simulating adminsList being stale relative to the paginated view.
+            scope.adminsList = [
+                {
+                    name: "iamtst02",
+                    uid: "iamtst02",
+                    uhUuid: "iamtst02"
+                },
+                {
+                    name: "iamtst03",
+                    uid: "iamtst03",
+                    uhUuid: "iamtst03"
+                }
+            ];
+            spyOn(scope, "displayRemoveModal").and.callThrough();
+            expect(() => scope.removeAdmin(0, 0)).not.toThrow();
             expect(scope.displayRemoveModal).toHaveBeenCalled();
         });
         it("should call scope.displayRemoveErrorModal", () => {
