@@ -1,57 +1,95 @@
 <th:block th:fragment="actions">
 
     <div id="actions-display" class="tab-pane fade show active">
-      <div class="row">
+      <div class="row seafoam-bg">
           <div class="col-md-8">
               <h1 class="font-weight-bold text-dark pt-2 mb-0 d-inline-block">Grouping Actions</h1>
           </div>
       </div>
-      <br/>
-      <div th:text="#{screen.message.common.preferences.info}"></div>
 
-      <div class="row pt-4">
-            <div class="col-md-6 col-12">
-                <h2 class="h5"> Reset Grouping</h2>
-                <div>
-                    <form ng-submit="resetGroup()">
-                        <div class="form-check">
-                            <input type="checkbox" class="position-relative ml-0" id="resetIncludeCheck"
-                                   tabindex="-1" aria-label="Reset Include"
-                                   ng-click="updateIncludeCheck();"
-                                   ng-model="includeCheck" ng-disabled="includeDisable"
-                                   ng-keydown="clickWithEnter($event)"/>
-                            <label class="form-check-label" for="resetIncludeCheck">Reset Include</label>
-                        </div>
-                        <div class="form-check">
-                            <input type="checkbox" class="position-relative ml-0" id="resetExcludeCheck"
-                                   tabindex="-1" aria-label="Reset Exclude"
-                                   ng-click="updateExcludeCheck()"
-                                   ng-model="excludeCheck" ng-disabled="excludeDisable"
-                                   ng-keydown="clickWithEnter($event)"/>
-                            <label class="form-check-label" for="resetExcludeCheck">Reset Exclude</label>
-                        </div>
-                        <div>
-                            <button class="btn btn-primary btn-sm" type="submit" tabindex="-1" aria-label="Reset Selected"
-                                    ng-disabled="excludeCheck == false && includeCheck == false">Reset Selected
-                            </button>
-                            <span class="fa fa-question-circle" role="button" tabindex="-1"
-                                  tooltip data-placement="right"
-                                  th:aria-label="#{screen.message.common.tooltip.actions.resetGroup}"
-                                  th:title="#{screen.message.common.tooltip.actions.resetGroup}"
-                                  th:attr="ng-click='displayDynamicModal(\'Actions Information\', \'' +
-                                                    #{screen.message.common.tooltip.actions.resetGroup} + '\')',
-                                  ng-keypress='$event.keyCode === 13 ? displayDynamicModal(\'Actions Information\', ' +
-                                              '\'' + #{screen.message.common.tooltip.actions.resetGroup} +
-                                              '\') : null'">
-                            </span>
-                        </div>
-                    </form>
-                </div>
-            </div>
-      </div>
-      <div class="row pt-4 pb-5">
+      <!-- Action Section Selector -->
+      <div class="row pt-2 seafoam-bg">
           <div class="col-md-12 col-12">
-              <h2 class="h5">Diagnostics</h2>
+              <ul class="nav nav-tabs flex-sm-row flex-column" role="tablist">
+                  <li class="nav-item" role="presentation">
+                      <a class="nav-link active tab-color" id="reset-grouping-tab" href="#reset-grouping-content"
+                         data-toggle="tab" role="tab"
+                         aria-controls="reset-grouping-content" aria-selected="true">
+                          Reset Grouping
+                      </a>
+                  </li>
+                  <li class="nav-item" role="presentation">
+                      <a class="nav-link tab-color" id="diagnostics-tab" href="#diagnostics-content"
+                         data-toggle="tab" role="tab"
+                         aria-controls="diagnostics-content" aria-selected="false">
+                          Diagnostics
+                      </a>
+                  </li>
+                  <li class="nav-item" role="presentation">
+                      <a class="nav-link tab-color" id="retire-grouping-tab" href="#retire-grouping-content"
+                         data-toggle="tab" role="tab"
+                         aria-controls="retire-grouping-content" aria-selected="false">
+                          Retire Grouping
+                      </a>
+                  </li>
+              </ul>
+          </div>
+      </div>
+
+      <!-- Tab Content -->
+      <div class="tab-content">
+          <!-- Reset Grouping Section -->
+          <div class="tab-pane fade show active" id="reset-grouping-content" role="tabpanel"
+               aria-labelledby="reset-grouping-tab">
+              <div th:text="#{screen.message.common.preferences.info}"></div>
+              <div class="row pt-4">
+                  <div class="col-md-6 col-12">
+                      <h2 class="h5"> Reset Grouping</h2>
+                      <div>
+                          <form ng-submit="resetGroup()">
+                              <div class="form-check">
+                                  <input type="checkbox" class="position-relative ml-0" id="resetIncludeCheck"
+                                         tabindex="-1" aria-label="Reset Include"
+                                         ng-click="updateIncludeCheck();"
+                                         ng-model="includeCheck" ng-disabled="includeDisable"
+                                         ng-keydown="clickWithEnter($event)"/>
+                                  <label class="form-check-label" for="resetIncludeCheck">Reset Include</label>
+                              </div>
+                              <div class="form-check">
+                                  <input type="checkbox" class="position-relative ml-0" id="resetExcludeCheck"
+                                         tabindex="-1" aria-label="Reset Exclude"
+                                         ng-click="updateExcludeCheck()"
+                                         ng-model="excludeCheck" ng-disabled="excludeDisable"
+                                         ng-keydown="clickWithEnter($event)"/>
+                                  <label class="form-check-label" for="resetExcludeCheck">Reset Exclude</label>
+                              </div>
+                              <div>
+                                  <button class="btn btn-primary btn-sm" type="submit" tabindex="-1" aria-label="Reset Selected"
+                                          ng-disabled="excludeCheck == false && includeCheck == false">Reset Selected
+                                  </button>
+                                  <span class="fa fa-question-circle" role="button" tabindex="-1"
+                                        tooltip data-placement="right"
+                                        th:aria-label="#{screen.message.common.tooltip.actions.resetGroup}"
+                                        th:title="#{screen.message.common.tooltip.actions.resetGroup}"
+                                        th:attr="ng-click='displayDynamicModal(\'Actions Information\', \'' +
+                                                              #{screen.message.common.tooltip.actions.resetGroup} + '\')',
+                                        ng-keypress='$event.keyCode === 13 ? displayDynamicModal(\'Actions Information\', ' +
+                                                    '\'' + #{screen.message.common.tooltip.actions.resetGroup} +
+                                                    '\') : null'">
+                                  </span>
+                              </div>
+                          </form>
+                      </div>
+                  </div>
+              </div>
+          </div>
+
+          <!-- Diagnostics Section -->
+          <div class="tab-pane fade" id="diagnostics-content" role="tabpanel"
+               aria-labelledby="diagnostics-tab">
+              <div class="row pt-4 pb-5">
+                  <div class="col-md-12 col-12">
+                      <h2 class="h5">Diagnostics</h2>
 
               <div class="col-md-8">
                   <div class="pt-2 mb-0">
@@ -60,12 +98,12 @@
                       </h3>
                   </div>
 
-                  <div class="spinner-border ml-1 d-inline-block"
-                       ng-show="compareLoading"
-                       role="status">
-                      <span class="sr-only">Loading...</span>
-                  </div>
-              </div>
+                          <div class="spinner-border ml-1 d-inline-block"
+                               ng-show="compareLoading"
+                               role="status">
+                              <span class="sr-only">Loading...</span>
+                          </div>
+                      </div>
 
               <div class="table-responsive"
                    ng-if="duplicateOwnersCount">
@@ -88,31 +126,52 @@
                       <tr ng-repeat="(uhUuid, data) in duplicateOwnerResults"
                           class="table table-sm">
 
-                          <td class="overflow-auto py-1 px-3">
-                              {{ data.name }}
-                          </td>
+                                  <td class="overflow-auto py-1 px-3">
+                                      {{ data.name }}
+                                  </td>
 
-                          <td class="overflow-auto py-1 px-3">
-                              {{ data.uid }}
-                          </td>
+                                  <td class="overflow-auto py-1 px-3">
+                                      {{ data.uid }}
+                                  </td>
 
-                          <td class="overflow-auto py-1 px-3">
-                              <div ng-if="data.paths && data.paths.length">
-                                  <ul class="mb-0 pl-3">
-                                      <li ng-repeat="path in data.paths">
-                                          {{ path }}
-                                      </li>
-                                  </ul>
-                              </div>
+                                  <td class="overflow-auto py-1 px-3">
+                                      <div ng-if="data.paths && data.paths.length">
+                                          <ul class="mb-0 pl-3">
+                                              <li ng-repeat="path in data.paths">
+                                                  {{ path }}
+                                              </li>
+                                          </ul>
+                                      </div>
 
-                              <div ng-if="!data.paths || !data.paths.length">
-                                  <span class="text-muted">—</span>
-                              </div>
-                          </td>
+                                      <div ng-if="!data.paths || !data.paths.length">
+                                          <span class="text-muted">—</span>
+                                      </div>
+                                  </td>
 
-                      </tr>
-                      </tbody>
-                  </table>
+                              </tr>
+                              </tbody>
+                          </table>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+          <!-- Retire Grouping Section -->
+          <div class="tab-pane fade" id="retire-grouping-content" role="tabpanel"
+               aria-labelledby="retire-grouping-tab">
+              <div class="row pt-4 pb-5">
+                  <div class="col-md-6 col-12">
+                      <h2 class="h5">Retire Grouping</h2>
+                      <div class="alert alert-warning" role="alert">
+                          <strong>Warning:</strong> This action cannot be undone. All members, settings, and configurations for this grouping will be permanently removed.
+                      </div>
+                      <p>
+                          Your request will result in a request being sent to the IAM team and notification to the other owners. IAM will follow up with you before fulfilling this request.
+                          <button class="btn btn-danger btn-sm ml-3 mt-2 align-baseline" ng-click="retireGrouping()">
+                              <i class="fas fa-door-open mr-1"></i>Retire Grouping
+                          </button>
+                      </p>
+                  </div>
               </div>
           </div>
       </div>
