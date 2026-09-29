@@ -57,6 +57,11 @@ UHGroupingsApp.constant("Message", {
         GROUP_EMPTY: "No members to export.",
         EMAIL_SUFFIX: "@hawaii.edu",
         UUID_COLUMN_HEADER: "UH Number",
+        LAST_COLUMN_HEADER: "Last",
+        FIRST_COLUMN_HEADER: "First",
+        USERNAME_COLUMN_HEADER: "Username",
+        EMAIL_COLUMN_HEADER: "Email",
+        NOT_FOUND_FILE_SUFFIX: "-not-found",
     },
     ResetGroupSuccess: {
         INCLUDE_AND_EXCLUDE: "Include and Exclude lists have",

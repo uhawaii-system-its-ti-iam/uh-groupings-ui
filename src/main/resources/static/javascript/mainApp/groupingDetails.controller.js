@@ -103,6 +103,15 @@
         $scope.hasDeptAccount = false;
         $scope.isAddingMembers = false;
 
+        // CSV/text file import
+        $scope.isFileImport = false;
+        $scope.importFileBaseName = "";
+        $scope.importSourceRows = new Map();
+        $scope.importInvalidMembers = [];
+        $scope.importSuccessCount = 0;
+        $scope.importTotalCount = 0;
+        $scope.importDuplicateCount = 0;
+
         // Always initially set to default modal
         $scope.addModalId = "add-modal";
         $scope.addModalURL = "modal/addModal";
@@ -586,6 +595,8 @@
             $scope.membersInListArray = [];
             $scope.multiRemoveResults = [];
             $scope.waitingForImportResponse = false;
+            $scope.isFileImport = false;
+            $scope.importSourceRows = new Map();
         };
 
         $scope.resetFields = () => {
@@ -645,10 +656,23 @@
         };
 
         /**
+         * Helper - readTextFile
+         * Gets a field of a CSV row.
+         * @param {string[]} columns - the fields of the row
+         * @param {number} index - the index of the column in the header row, or -1 if the file has no such column
+         * @returns {string} the field, or an empty string if the file has no such column or the row is too short
+         */
+        const getCsvColumn = (columns, index) => (index < 0 ? "" : (columns.at(index) ?? ""));
+
+        /**
          * Read a text file(.txt) or csv file(.csv) from client side. The file should consist of
          * a list of UH uids or ids separated by newline characters. This
          * function is called implicitly from include.html and exclude.html.
          * The file is retrieved from the html input with id 'upload'.
+         *
+         * A CSV file must have a header row containing "UH Number" and one member per line. Fields are split on
+         * commas, so quoted or comma-containing fields are not supported. The Last, First, Username, and Email
+         * columns are optional; when present they are used to fill in the not-found members download.
          */
         $scope.readTextFile = (inputFile) => {
             if (!$scope.verifyImportFileType(inputFile)) {
@@ -686,10 +710,13 @@
                 const str = e.target.result;
                 $scope.resetErrors();
                 $scope.errorDismissed = false;
+                $scope.importFileBaseName = inputFile.name.replace(/\.[^.]+$/, "");
+
                 if (inputFile.type === "text/csv") {
                     const namesInFile = str.split(/[\r\n]+/);
                     const firstRow = namesInFile[0].split(",");
-                    const indexOfUhNumber = firstRow.findIndex((header) => header.includes(Message.Csv.UUID_COLUMN_HEADER));
+                    const indexOfColumn = (header) => firstRow.findIndex((cell) => cell.includes(header));
+                    const indexOfUhNumber = indexOfColumn(Message.Csv.UUID_COLUMN_HEADER);
                     if (indexOfUhNumber < 0) {
                         $scope.displayDynamicModal(
                             Message.Title.INVALID_FILE,
@@ -697,10 +724,36 @@
                         );
                         return;
                     }
-                    const UHNumbersInFile = namesInFile.map((row) => row.split(",")[Number(indexOfUhNumber)]).slice(1, -1);
+                    const indexOfLast = indexOfColumn(Message.Csv.LAST_COLUMN_HEADER);
+                    const indexOfFirst = indexOfColumn(Message.Csv.FIRST_COLUMN_HEADER);
+                    const indexOfUsername = indexOfColumn(Message.Csv.USERNAME_COLUMN_HEADER);
+                    const indexOfEmail = indexOfColumn(Message.Csv.EMAIL_COLUMN_HEADER);
+
+                    // Skip rows without a UH Number, which includes blank rows (e.g. from a trailing newline)
+                    const dataRows = namesInFile
+                        .slice(1)
+                        .map((row) => row.split(","))
+                        .filter((columns) => getCsvColumn(columns, indexOfUhNumber).trim() !== "");
+                    $scope.importSourceRows = new Map();
+                    dataRows.forEach((columns) => {
+                        const uhNumber = getCsvColumn(columns, indexOfUhNumber).trim();
+                        // Keyed like the sanitizer normalizes identifiers so invalid members can be looked up
+                        $scope.importSourceRows.set(uhNumber.toLowerCase(), {
+                            last: getCsvColumn(columns, indexOfLast),
+                            first: getCsvColumn(columns, indexOfFirst),
+                            username: getCsvColumn(columns, indexOfUsername),
+                            uhNumber,
+                            email: getCsvColumn(columns, indexOfEmail)
+                        });
+                    });
+
+                    const UHNumbersInFile = dataRows.map((columns) => getCsvColumn(columns, indexOfUhNumber));
+                    $scope.isFileImport = true;
                     $scope.addMembers($scope.listName, UHNumbersInFile);
                 } else {
                     const namesInFile = str.split(/[\r\n,]+/);
+                    $scope.importSourceRows = new Map();
+                    $scope.isFileImport = true;
                     $scope.addMembers($scope.listName, namesInFile);
                 }
             };
@@ -812,12 +865,47 @@
         };
 
         /**
+         * Helper - addOnClick
+         * Sets up the add modal for the owners list, or displays an error modal if the input is not allowed.
+         * @param {String[]} userInput - the parsed member input
+         * @returns {boolean} false if the input is not allowed, otherwise true
+         */
+        const prepareOwnersAdd = (userInput) => {
+            // If the user input has a colon, we can assume that it's a group path
+            if (!$scope.manageMembers.includes(":")) {
+                $scope.addModalId = "add-modal";
+                $scope.addModalURL = "modal/addModal";
+                return true;
+            }
+            if ($scope.selectedGrouping.path === $scope.manageMembers) {
+                // Prevent a grouping from being able to add itself to its own owners list
+                $scope.displayDynamicModal(Message.Title.OWNER_NOT_ADDED, Message.Body.ADD_CURRENT_PATH_ERROR);
+                clearMemberInput();
+                return false;
+            }
+            if (userInput.length > 1) {
+                // Prevent multi-adding owner-groupings
+                $scope.displayDynamicModal(Message.Title.INVALID_MULTI_ADD, Message.Body.INVALID_MULTI_ADD);
+                clearMemberInput();
+                return false;
+            }
+            $scope.isOwnerGrouping = true;
+            $scope.addModalId = "add-owner-grouping-modal";
+            $scope.addModalURL = "modal/addOwnerGroupingModal";
+            // ownerGroupPath is specifically used for the path displayed in the addOwnerGroupingModal
+            $scope.ownerGroupPath = $scope.manageMembers;
+            $scope.groupingName = $scope.manageMembers.split(":").pop();
+            return true;
+        };
+
+        /**
          * Adds people to listName (to be used in on-click)
          * @param {String} listName grouping list (i.e. include, exclude, owners, or owner-grouping)
          */
         $scope.addOnClick = (listName) => {
             const userInput = $scope.parseAddRemoveInputStr($scope.manageMembers);
             $scope.resetErrors();
+            $scope.isFileImport = false;
             if (listName === "Include" || listName === "Exclude") {
                 // Prevents adding owner-groupings to include/exclude list
                 if ($scope.manageMembers.includes(":")) {
@@ -828,29 +916,8 @@
                 }
             }
             if (listName === "owners") {
-                // If the user input has a colon, we can assume that it's a group path
-                if ($scope.manageMembers.includes(":")) {
-                    if ($scope.selectedGrouping.path === $scope.manageMembers) {
-                        // Prevent a grouping from being able to add itself to its own owners list
-                        $scope.displayDynamicModal(Message.Title.OWNER_NOT_ADDED, Message.Body.ADD_CURRENT_PATH_ERROR);
-                        clearMemberInput();
-                        return;
-                    } else if (userInput.length > 1) {
-                        // Prevent multi-adding owner-groupings
-                        $scope.displayDynamicModal(Message.Title.INVALID_MULTI_ADD, Message.Body.INVALID_MULTI_ADD);
-                        clearMemberInput();
-                        return;
-                    } else {
-                        $scope.isOwnerGrouping = true;
-                        $scope.addModalId = "add-owner-grouping-modal";
-                        $scope.addModalURL = "modal/addOwnerGroupingModal";
-                        // ownerGroupPath is specifically used for the path displayed in the addOwnerGroupingModal
-                        $scope.ownerGroupPath = $scope.manageMembers;
-                        $scope.groupingName = $scope.manageMembers.split(":").pop();
-                    }
-                } else {
-                    $scope.addModalId = "add-modal";
-                    $scope.addModalURL = "modal/addModal";
+                if (!prepareOwnersAdd(userInput)) {
+                    return;
                 }
                 $scope.addMembers(listName, userInput);
             }
@@ -893,67 +960,164 @@
         };
 
         /**
-         * Add uhIdentifiers to a group. Leave the uhIdentifiers parameter null to take the member input from
-         * $scope.manageMembers. Checks that all uhIdentifiers are valid before displaying the
-         * add/multiAdd/importConfirmation modal.
-         * @param {string} listName
-         * @param {Object[]|null} uhIdentifiers
+         * Helper - addMembers
+         * Normalizes a file entry the way $scope.sanitizer does (trimmed, lower-cased), so entries can be matched
+         * against the sanitized identifiers and the keys of $scope.importSourceRows.
+         * @param {string} entry - an entry read from an import file
+         * @returns {string} the normalized entry, which is empty for a blank entry
          */
-        $scope.addMembers = (listName, uhIdentifiers) => {
-            // Prevent multiple asynchronous calls of addMembers
-            if ($scope.isAddingMembers) {
-                return;
-            }
-            $scope.isAddingMembers = true;
+        const normalizeImportEntry = (entry) => entry.trim().toLowerCase();
 
+        /**
+         * Helper - addMembers
+         * Gets the identifiers to add: uhIdentifiers, or the member input from $scope.manageMembers when it is null.
+         * Also determines the entries a file import reports on and sets $scope.importDuplicateCount.
+         * @param {Object[]|null} uhIdentifiers - the identifiers given to addMembers
+         * @returns {{identifiers: Object[], importEntries: Object[]}} the identifiers to add, and the entries that a
+         * file import reports on
+         */
+        const collectAddIdentifiers = (uhIdentifiers) => {
             // If uhIdentifiers parameter is null, get member input from $scope.manageMembers
-            uhIdentifiers = uhIdentifiers ?? $scope.parseAddRemoveInputStr($scope.manageMembers);
+            const submittedIdentifiers = uhIdentifiers ?? $scope.parseAddRemoveInputStr($scope.manageMembers);
 
-            if (!$scope.isOwnerGrouping) {
-                // Only sanitize if it's a uh identifier, group path sanitization is done on the backend
-                uhIdentifiers = $scope.sanitizer(uhIdentifiers);
+            // Only sanitize if it's a uh identifier, group path sanitization is done on the backend
+            const identifiers = $scope.isOwnerGrouping
+                ? submittedIdentifiers
+                : $scope.sanitizer(submittedIdentifiers);
+
+            // A file import reports on every distinct entry in the file: repeated entries count once, and entries
+            // the sanitizer rejects (e.g. "!!!!!!!!") are kept so they are counted and listed as not found instead
+            // of silently vanishing.
+            $scope.importDuplicateCount = 0;
+            if (!$scope.isFileImport || $scope.isOwnerGrouping) {
+                return { identifiers, importEntries: identifiers };
             }
-            $scope.listName = listName;
+            const nonBlankEntries = [].concat(submittedIdentifiers)
+                .map(normalizeImportEntry)
+                .filter((entry) => entry !== "");
+            const importEntries = [...new Set(nonBlankEntries)];
+            $scope.importDuplicateCount = nonBlankEntries.length - importEntries.length;
+            return { identifiers: [...new Set(identifiers)], importEntries };
+        };
 
-            // Check if uhIdentifiers/member input is empty
-            if (_.isEmpty(uhIdentifiers)) {
-                $scope.emptyInput = true;
-                $scope.isAddingMembers = false;
+        /**
+         * Helper - addMembers
+         * Handles an add that has no identifiers to add. A file import in which no entry is a valid identifier
+         * reports the entries rather than ignoring the import.
+         * @param {Object[]} importEntries - the entries that a file import reports on
+         */
+        const handleNoIdentifiersToAdd = (importEntries) => {
+            $scope.isAddingMembers = false;
+            if ($scope.isFileImport && !_.isEmpty(importEntries)) {
+                $scope.importTotalCount = importEntries.length;
+                $scope.importInvalidMembers = importEntries;
+                $scope.importSuccessCount = 0;
+                $scope.displayImportFileResultsModal();
                 return;
             }
+            $scope.emptyInput = true;
+        };
 
-            // Prevent adding more than Threshold.MAX_IMPORT
-            if (uhIdentifiers.length > Threshold.MAX_IMPORT) {
-                $scope.displayDynamicModal(
-                    Message.Title.IMPORT_OUT_OF_BOUNDS,
-                    Message.Body.IMPORT_OUT_OF_BOUNDS);
+        /**
+         * Helper - addMembers
+         * Display the API error modal when a request to check the members to add fails.
+         * @param {Object} res - the failed response
+         */
+        const handleAddApiError = (res) => {
+            $scope.waitingForImportResponse = false;
+            $scope.resStatus = res.status;
+            $scope.displayApiErrorModal();
+            $scope.isAddingMembers = false;
+        };
+
+        /**
+         * Helper - addMembers
+         * CSV/text file imports: validate every identifier up front so a handful of bad entries
+         * don't block the rest of the file, then add only the identifiers Grouper can resolve and
+         * report the difference (see handleSuccessfulAdd).
+         * @param {string} listName
+         * @param {Object[]} identifiers - the sanitized identifiers to validate
+         * @param {Object[]} importEntries - the entries that the import reports on
+         */
+        const validateFileImport = (listName, identifiers, importEntries) => {
+            const acceptedIdentifiers = new Set(identifiers);
+            $scope.importTotalCount = importEntries.length;
+            $scope.waitingForImportResponse = true; // Small spinner on
+            groupingsService.getMemberAttributeResultsAsync(identifiers, (res) => {
+                $scope.waitingForImportResponse = false;
+                const invalidIdentifiers = new Set(res.invalid);
+                // Entries the sanitizer rejected never reached the API, but are as unusable as those it reports.
+                $scope.importInvalidMembers = importEntries.filter(
+                    (id) => invalidIdentifiers.has(id) || !acceptedIdentifiers.has(id));
+                const validIdentifiers = identifiers.filter((id) => !invalidIdentifiers.has(id));
+                $scope.importSuccessCount = validIdentifiers.length;
                 $scope.isAddingMembers = false;
-                return;
-            }
 
-            // Check for members already in list, display error when all members to add already exist in the list
-            if ($scope.existsInList(listName, uhIdentifiers)) {
-                // Determine whether to display members already in the list in a modal or add-error-messages.html
-                if (uhIdentifiers.length > Threshold.MAX_LIST_SIZE) {
-                    $scope.displayDynamicModal(
-                        Message.Title.NO_MEMBERS_ADDED,
-                        Message.Body.NO_MEMBERS_ADDED.with(listName));
-                } else {
-                    $scope.errorDismissed = false;
+                // Nothing resolved to a real member: skip the add call and just report the failures.
+                if (_.isEmpty(validIdentifiers)) {
+                    $scope.displayImportFileResultsModal();
+                    return;
                 }
-                $scope.isAddingMembers = false;
-                return;
+
+                $scope.displayImportConfirmationModal(listName, validIdentifiers);
+            }, handleAddApiError);
+        };
+
+        /**
+         * Helper - addMembers
+         * Display the error for when all members to add already exist in the list.
+         * @param {string} listName
+         * @param {Object[]} identifiers - the identifiers that were to be added
+         */
+        const displayMembersAlreadyInList = (listName, identifiers) => {
+            // Determine whether to display members already in the list in a modal or add-error-messages.html
+            if (identifiers.length > Threshold.MAX_LIST_SIZE) {
+                $scope.displayDynamicModal(
+                    Message.Title.NO_MEMBERS_ADDED,
+                    Message.Body.NO_MEMBERS_ADDED.with(listName));
+            } else {
+                $scope.errorDismissed = false;
+            }
+            $scope.isAddingMembers = false;
+        };
+
+        /**
+         * Helper - addMembers
+         * Get the reason that members cannot be added to the owners list, if there is one.
+         * @param {Object[]} results - the attributes of the members to add
+         * @returns {string|null} the body of the message to display, or null if the members can be added
+         */
+        const getOwnerNotAddedBody = (results) => {
+            // Department accounts are not eligible for owner assignments.
+            $scope.hasDeptAccount = $scope.checkForDeptAccount(results);
+            if ($scope.hasDeptAccount) {
+                return Message.Body.OWNER_NOT_ADDED;
             }
 
+            // Service accounts are allowed only if they have an assigned uhUuid.
+            if ($scope.checkForServiceAccountWithoutUhUuid(results)) {
+                return Message.Body.SERVICE_ACCOUNT_UHUUID_REQUIRED;
+            }
+            return null;
+        };
+
+        /**
+         * Helper - addMembers
+         * Check the members that are not yet in the list, then display the add modal (or the import confirmation
+         * modal for a batch import).
+         * @param {string} listName
+         * @param {Object[]} identifiers - the identifiers to add
+         */
+        const displayAddModalForNewMembers = (listName, identifiers) => {
             // Call async memberAttributeResults check if batch import
             const getMemberAttributeResults = $scope.isBatchImport
                 ? groupingsService.getMemberAttributeResultsAsync
                 : groupingsService.getMemberAttributeResults;
 
-            $scope.isBatchImport = uhIdentifiers.length > Threshold.MULTI_ADD;
+            $scope.isBatchImport = identifiers.length > Threshold.MULTI_ADD;
 
             // Filter out members already in the group
-            uhIdentifiers = uhIdentifiers.filter((member) => !$scope.membersInListArray.includes(member));
+            const uhIdentifiers = identifiers.filter((member) => !$scope.membersInListArray.includes(member));
 
             if (_.isEmpty(uhIdentifiers)) {
                 $scope.containsInput = true;
@@ -979,23 +1143,9 @@
                     }
 
                     if (listName === "owners") {
-                        // Department accounts are not eligible for owner assignments.
-                        $scope.hasDeptAccount = $scope.checkForDeptAccount(res.results);
-                        if ($scope.hasDeptAccount) {
-                            $scope.displayDynamicModal(
-                                Message.Title.OWNER_NOT_ADDED,
-                                Message.Body.OWNER_NOT_ADDED
-                            );
-                            $scope.isAddingMembers = false;
-                            return;
-                        }
-
-                        // Service accounts are allowed only if they have an assigned uhUuid.
-                        if ($scope.checkForServiceAccountWithoutUhUuid(res.results)) {
-                            $scope.displayDynamicModal(
-                                Message.Title.OWNER_NOT_ADDED,
-                                Message.Body.SERVICE_ACCOUNT_UHUUID_REQUIRED
-                            );
+                        const ownerNotAddedBody = getOwnerNotAddedBody(res.results);
+                        if (ownerNotAddedBody) {
+                            $scope.displayDynamicModal(Message.Title.OWNER_NOT_ADDED, ownerNotAddedBody);
                             $scope.isAddingMembers = false;
                             return;
                         }
@@ -1012,13 +1162,7 @@
                         });
                     }
                     $scope.isAddingMembers = false;
-                }, (res) => {
-                    // Display API error modal
-                    $scope.waitingForImportResponse = false;
-                    $scope.resStatus = res.status;
-                    $scope.displayApiErrorModal();
-                    $scope.isAddingMembers = false;
-                });
+                }, handleAddApiError);
             } else {
                 $scope.waitingForImportResponse = false; // Small spinner off
                 // Display the owner-grouping modal
@@ -1036,11 +1180,66 @@
         };
 
         /**
+         * Add uhIdentifiers to a group. Leave the uhIdentifiers parameter null to take the member input from
+         * $scope.manageMembers. Checks that all uhIdentifiers are valid before displaying the
+         * add/multiAdd/importConfirmation modal.
+         * @param {string} listName
+         * @param {Object[]|null} uhIdentifiers
+         */
+        $scope.addMembers = (listName, uhIdentifiers) => {
+            // Prevent multiple asynchronous calls of addMembers
+            if ($scope.isAddingMembers) {
+                return;
+            }
+            $scope.isAddingMembers = true;
+
+            const { identifiers, importEntries } = collectAddIdentifiers(uhIdentifiers);
+            $scope.listName = listName;
+
+            // Check if uhIdentifiers/member input is empty
+            if (_.isEmpty(identifiers)) {
+                handleNoIdentifiersToAdd(importEntries);
+                return;
+            }
+
+            // Prevent adding more than Threshold.MAX_IMPORT
+            if (identifiers.length > Threshold.MAX_IMPORT) {
+                $scope.displayDynamicModal(
+                    Message.Title.IMPORT_OUT_OF_BOUNDS,
+                    Message.Body.IMPORT_OUT_OF_BOUNDS);
+                $scope.isAddingMembers = false;
+                return;
+            }
+
+            if ($scope.isFileImport) {
+                validateFileImport(listName, identifiers, importEntries);
+                return;
+            }
+
+            // Check for members already in list, display error when all members to add already exist in the list
+            if ($scope.existsInList(listName, identifiers)) {
+                displayMembersAlreadyInList(listName, identifiers);
+                return;
+            }
+
+            displayAddModalForNewMembers(listName, identifiers);
+        };
+
+        /**
          * Handler for successful member add.
          * Displays the appropriate modal if it was batch-import, multi-add, or single add.
          */
         const handleSuccessfulAdd = (res) => {
             $scope.loading = false; // Full-screen spinner off
+
+            // CSV/text file imports report a success count plus any identifiers Grouper could not
+            // resolve (already computed in addMembers), rather than sharing the dynamic/batch-import
+            // modals used by manual add flows.
+            if ($scope.isFileImport) {
+                $scope.displayImportFileResultsModal();
+                return;
+            }
+
             // Display the appropriate result modal
             if ($scope.isBatchImport) {
                 $scope.batchImportResults = res.addResults.results;
@@ -1243,6 +1442,73 @@
         };
 
         /**
+         * Display the results of a CSV/text file import: the number of members successfully imported,
+         * and either a short list or a downloadable file of the identifiers Grouper could not find.
+         */
+        $scope.displayImportFileResultsModal = () => {
+            $scope.importFileResultsModalInstance = $uibModal.open({
+                templateUrl: "modal/importFileResultsModal",
+                scope: $scope,
+                backdrop: "static",
+                ariaLabelledBy: "import-file-results-modal"
+            });
+
+            $scope.importFileResultsModalInstance.result.finally(() => {
+                clearMemberInput();
+                $scope.loading = true;
+                $scope.getGroupingInformation();
+                $scope.syncDestArray = [];
+            });
+        };
+
+        /**
+         * Close the import file results modal
+         */
+        $scope.closeImportFileResultsModal = () => {
+            $scope.importFileResultsModalInstance.close();
+        };
+
+        /**
+         * Helper - downloadNotFoundMembers
+         * Wraps a CSV cell in quotes, doubling any embedded quotes, when it contains a comma, quote, or newline.
+         * @param {*} value - the cell value
+         * @returns {string} the cell as it should appear in a CSV row
+         */
+        const escapeCsvCell = (value) => {
+            const cell = String(value ?? "");
+            return /[,\r\n]/.test(cell) || cell.includes("\"")
+                ? `"${cell.replaceAll("\"", "\"\"")}"`
+                : cell;
+        };
+
+        /**
+         * Download the members from the most recent CSV/text file import that could not be found in
+         * Grouper, enriched with their original CSV row data when available. Imported CSV fields are not
+         * unquoted (see readTextFile), so a field that arrived quoted is quoted again in the download.
+         */
+        $scope.downloadNotFoundMembers = () => {
+            let csv = `${Message.Csv.LAST_COLUMN_HEADER},${Message.Csv.FIRST_COLUMN_HEADER},` +
+                `${Message.Csv.USERNAME_COLUMN_HEADER},${Message.Csv.UUID_COLUMN_HEADER},${Message.Csv.EMAIL_COLUMN_HEADER}\r\n`;
+
+            for (const identifier of $scope.importInvalidMembers) {
+                const row = $scope.importSourceRows.get(identifier) ?? {};
+                csv += [row.last, row.first, row.username, row.uhNumber ?? identifier, row.email]
+                    .map(escapeCsvCell)
+                    .join(",") + "\r\n";
+            }
+
+            const filename = `${$scope.importFileBaseName}${Message.Csv.NOT_FOUND_FILE_SUFFIX}.csv`;
+            const data = "data:text/csv;charset=utf-8," + encodeURIComponent(csv);
+
+            const link = document.createElement("a");
+            link.setAttribute("href", data);
+            link.setAttribute("download", filename);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        };
+
+        /**
          * Helper - displayRemoveModal, fetchMemberProperties
          * @param memberIdentifier - The uid or UH Number of the member object to return.
          * @param listName - The name of the list to search.
@@ -1441,10 +1707,13 @@
                 $scope.membersToRemove = [$scope.membersToRemove.uhUuid];
             }
 
-            // Set information for the remove/multiRemove modal
+            // Set information for the remove/multiRemove modal. memberObject can be undefined if the list
+            // $scope.returnMemberObject searches is stale relative to $scope.membersToRemove.
             if (!$scope.isOwnerGrouping) {
                 const memberObject = $scope.returnMemberObject($scope.membersToRemove[0], $scope.listName);
-                $scope.initMemberDisplayName(memberObject);
+                if (memberObject) {
+                    $scope.initMemberDisplayName(memberObject);
+                }
             }
             $scope.isMultiRemove = _.isEmpty($scope.multiRemoveResults)
                 ? $scope.membersToRemove.length > 1
