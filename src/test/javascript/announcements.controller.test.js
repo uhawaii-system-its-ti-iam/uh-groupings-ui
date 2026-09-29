@@ -148,7 +148,6 @@ describe("AnnouncementsJsController", function () {
             scope.currentUser = {};
 
             spyOn(scope, "displayApiErrorModal");
-            spyOn(console, "error");
 
             scope.init();
 
@@ -159,12 +158,9 @@ describe("AnnouncementsJsController", function () {
 
             expect(scope.displayApiErrorModal).not.toHaveBeenCalled();
             expect(scope.activeAnnouncements).toEqual([]);
-            expect(console.error).toHaveBeenCalled();
         });
 
-        it("should log an error and set activeAnnouncements to empty when the response has an unexpected shape", () => {
-            spyOn(console, "error");
-
+        it("should set activeAnnouncements to empty when the response has an unexpected shape", () => {
             scope.init();
 
             httpBackend.expectGET("announcements").respond(200, {
@@ -172,10 +168,6 @@ describe("AnnouncementsJsController", function () {
             });
             httpBackend.flush();
 
-            expect(console.error).toHaveBeenCalledWith(
-                "Unexpected announcements response; expected {announcements: []} but received:",
-                jasmine.anything()
-            );
             expect(scope.activeAnnouncements).toEqual([]);
         });
     });

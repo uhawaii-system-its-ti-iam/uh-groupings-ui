@@ -17,15 +17,13 @@
             groupingsService.getAnnouncements((res) => {
                 // A proxy or error page can answer with HTTP 200 and a non-JSON body. Guard against
                 // that rather than throwing inside the success handler, where the exception would be
-                // swallowed by $q and leave no visible trace of the failure.
+                // swallowed by $q.
                 if (!res || !Array.isArray(res.announcements)) {
-                    console.error("Unexpected announcements response; expected {announcements: []} but received:", res);
                     $scope.activeAnnouncements = [];
                     return;
                 }
                 $scope.activeAnnouncements = res.announcements.map((announcement) => announcement.message);
-            }, (res) => {
-                console.error(`Failed to load announcements. status: ${res && res.status}`, res);
+            }, () => {
                 $scope.activeAnnouncements = [];
                 // Do not display the API error modal before the user has authenticated.
                 // The modal can lead to the feedback route, which requires authentication.
