@@ -1,6 +1,7 @@
 package edu.hawaii.its.api.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -29,15 +30,28 @@ public class HttpRequestServiceTest {
     public void setUp() throws IOException {
         JwtService jwtService = mock(JwtService.class);
         when(jwtService.generateToken()).thenReturn("test-token");
-        httpRequestService = new HttpRequestService(jwtService);
-
         server = HttpServer.create(new InetSocketAddress(0), 0);
         server.start();
+        httpRequestService = new HttpRequestService(jwtService,
+                "http://localhost:" + server.getAddress().getPort());
     }
 
     @AfterEach
     public void tearDown() {
         server.stop(0);
+    }
+
+    @Test
+    public void makeApiRequestRejectsUntrustedOrigin() {
+        assertThrows(IllegalArgumentException.class, () -> httpRequestService.makeApiRequest(
+                "https://localhost:" + server.getAddress().getPort() + "/api/groupings/groupings",
+                HttpMethod.GET));
+        assertThrows(IllegalArgumentException.class, () -> httpRequestService.makeApiRequest(
+                "http://untrusted.example:" + server.getAddress().getPort() + "/api/groupings/groupings",
+                HttpMethod.GET));
+        assertThrows(IllegalArgumentException.class, () -> httpRequestService.makeApiRequest(
+                "http://localhost:" + (server.getAddress().getPort() + 1) + "/api/groupings/groupings",
+                HttpMethod.GET));
     }
 
     @Test
