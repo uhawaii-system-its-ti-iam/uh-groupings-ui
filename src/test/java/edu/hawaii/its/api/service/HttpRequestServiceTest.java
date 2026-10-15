@@ -15,6 +15,8 @@ import com.sun.net.httpserver.HttpServer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -106,12 +108,80 @@ public class HttpRequestServiceTest {
     }
 
     @Test
+    public void rejectsTraversalInAbsoluteAndRelativePaths() {
+        JwtService jwtService = mock(JwtService.class);
+        String base = apiBase + "/api/groupings/v2.1";
+        HttpRequestService service = new HttpRequestService(jwtService, base);
+        String[] paths = { "/../admin", "/members/../../admin", "/./members",
+                "/%2e%2e/admin", "/.%2E/admin", "/members%2f..%2f..%2fadmin",
+                "/%2e%2e%5cadmin" };
+
+        for (String path : paths) {
+            assertThrows(IllegalArgumentException.class,
+                    () -> service.toRelativePath(path), path);
+            assertThrows(IllegalArgumentException.class,
+                    () -> service.toRelativePath(base + path), path);
+            assertThrows(IllegalArgumentException.class,
+                    () -> service.resolveApiUri(path), path);
+            assertThrows(IllegalArgumentException.class,
+                    () -> service.resolveApiUri(base + path), path);
+        }
+    }
+
+    @Test
+    public void preservesSafePathsAndQueryValues() {
+        JwtService jwtService = mock(JwtService.class);
+        String base = apiBase + "/api/groupings/v2.1";
+        HttpRequestService service = new HttpRequestService(jwtService, base + "/");
+
+        assertEquals(base + "/", service.resolveApiUri(base).toString());
+        assertEquals(base + "/members", service.resolveApiUri("/members").toString());
+        assertEquals(base + "/members..json?next=/../admin",
+                service.resolveApiUri("/members..json?next=/../admin").toString());
+    }
+
+    @Test
     public void constructorRequiresApiBase() {
         JwtService jwtService = mock(JwtService.class);
         assertThrows(IllegalArgumentException.class,
                 () -> new HttpRequestService(jwtService, null));
         assertThrows(IllegalArgumentException.class,
                 () -> new HttpRequestService(jwtService, " "));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = { "", "/", "/api", "/api/" })
+    public void resolveApiUriHandlesBasePathBoundaries(String basePath) {
+        String base = apiBase + basePath;
+        String normalizedBase = base.endsWith("/") ? base.substring(0, base.length() - 1) : base;
+        HttpRequestService service = new HttpRequestService(mock(JwtService.class), base);
+
+        assertEquals(normalizedBase + "/", service.resolveApiUri(normalizedBase).toString());
+        assertEquals(normalizedBase + "/", service.resolveApiUri(normalizedBase + "/").toString());
+        assertEquals(normalizedBase + "/", service.resolveApiUri("/").toString());
+        assertEquals(normalizedBase + "/members", service.resolveApiUri("/members").toString());
+        assertEquals(normalizedBase + "/members",
+                service.resolveApiUri(normalizedBase + "/members").toString());
+        assertEquals(normalizedBase + "/?page=1",
+                service.resolveApiUri(normalizedBase + "?page=1").toString());
+        assertThrows(IllegalArgumentException.class,
+                () -> service.resolveApiUri(normalizedBase + "x/members"));
+        assertThrows(IllegalArgumentException.class,
+                () -> service.resolveApiUri("/../admin"));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = { "/members/%", "/members/%2", "/members/%GG" })
+    public void rejectsMalformedEncodedPathsWithClearMessage(String path) {
+        for (String uri : new String[] { path, apiBase + path }) {
+            IllegalArgumentException relativeError = assertThrows(IllegalArgumentException.class,
+                    () -> httpRequestService.toRelativePath(uri));
+            assertEquals("API request has an invalid encoded path.", relativeError.getMessage());
+            IllegalArgumentException resolvedError = assertThrows(IllegalArgumentException.class,
+                    () -> httpRequestService.resolveApiUri(uri));
+            assertEquals("API request has an invalid encoded path.", resolvedError.getMessage());
+            assertTrue(resolvedError.getCause() instanceof IllegalArgumentException);
+        }
     }
 
     @Test
