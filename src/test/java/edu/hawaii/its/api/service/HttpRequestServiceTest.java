@@ -1,6 +1,7 @@
 package edu.hawaii.its.api.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -17,6 +18,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 import edu.hawaii.its.groupings.service.JwtService;
@@ -74,6 +76,54 @@ public class HttpRequestServiceTest {
 
         assertEquals(HttpStatus.SERVICE_UNAVAILABLE, response.getStatusCode());
         assertEquals(body, response.getBody());
+    }
+
+    /*
+     * API response headers must not be forwarded. Hop-by-hop headers such as
+     * Transfer-Encoding leaking into the UI's response caused the F5 to reset the connection.
+     */
+    @Test
+    public void makeApiRequestDoesNotForwardApiResponseHeaders() {
+        String body = "{\"resultCode\":\"SUCCESS\"}";
+        server.createContext("/members/memberships", exchange -> {
+            exchange.getResponseHeaders().set("Content-Type", "application/json");
+            exchange.getResponseHeaders().set("Connection", "close");
+            exchange.getResponseHeaders().set("Keep-Alive", "timeout=5");
+            exchange.getResponseHeaders().set("X-Cnection", "close");
+            exchange.getResponseHeaders().set("X-Api-Header", "api-value");
+            // A response length of 0 makes the server send the body with chunked transfer encoding.
+            exchange.sendResponseHeaders(HttpStatus.OK.value(), 0);
+            exchange.getResponseBody().write(body.getBytes(StandardCharsets.UTF_8));
+            exchange.close();
+        });
+
+        ResponseEntity<String> response = httpRequestService.makeApiRequest(
+                "/members/memberships",
+                HttpMethod.GET);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(body, response.getBody());
+        assertEquals(MediaType.APPLICATION_JSON, response.getHeaders().getContentType());
+        for (String header : new String[] { "Transfer-Encoding", "Content-Length", "Connection",
+                "Keep-Alive", "X-Cnection", "X-Api-Header", "Date" }) {
+            assertNull(response.getHeaders().getFirst(header), header + " should not be forwarded");
+        }
+    }
+
+    @Test
+    public void makeApiRequestHandlesEmptyResponseWithoutContentType() {
+        server.createContext("/members/memberships", exchange -> {
+            exchange.sendResponseHeaders(HttpStatus.NO_CONTENT.value(), -1);
+            exchange.close();
+        });
+
+        ResponseEntity<String> response = httpRequestService.makeApiRequest(
+                "/members/memberships",
+                HttpMethod.GET);
+
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+        assertNull(response.getBody());
+        assertNull(response.getHeaders().getContentType());
     }
 
     @Test

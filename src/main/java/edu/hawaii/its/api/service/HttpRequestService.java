@@ -144,8 +144,16 @@ public class HttpRequestService {
         return base;
     }
 
+    /**
+     * Copy only the status, content type, and body of the API response. Copying the API's headers
+     * leaks hop-by-hop headers (Transfer-Encoding, Connection, etc.) into the UI's own response,
+     * which a strict reverse proxy (e.g. the F5) rejects by resetting the connection.
+     */
     private ResponseEntity<String> toEntity(RequestHeadersSpec<?> request) {
         return request.exchangeToMono(response -> response.toEntity(String.class))
+                .map(entity -> ResponseEntity.status(entity.getStatusCode())
+                        .contentType(entity.getHeaders().getContentType())
+                        .body(entity.getBody()))
                 .block();
     }
 }
