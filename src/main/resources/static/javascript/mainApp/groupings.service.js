@@ -9,6 +9,16 @@
      * controller handlers(callback functions) for manipulating data on a successful or unsuccessful request.
      */
     UHGroupingsApp.service("groupingsService", function (dataProvider, BASE_URL) {
+
+        /**
+         * The milliseconds to wait before first polling an async add for its result: about the time a small add
+         * takes (members.length ^ 1.6), but at most the 5 seconds dataProvider waits between later polls. Waiting the
+         * full estimate for a large add (42 minutes for 10,000 members) could outlast the user's session.
+         * @param {string[]} members - the members being added
+         * @returns {number} the milliseconds to wait
+         */
+        const initialAddPoll = (members) => Math.min(Math.pow(members.length, 1.6), 5000);
+
         return {
 
             /**
@@ -134,15 +144,16 @@
             },
 
             /**
-             * Add a members to the include group of a grouping asynchronously. The initial poll gets as close to the
-             * average time of the non-asyns version of this endpoint based on the number of members being added.
-             * A modal is passed in and displayed after a certain amount of time has elapsed.
+             * Add a members to the include group of a grouping asynchronously. The result is first polled for after
+             * initialAddPoll(members) milliseconds. A modal is passed in and displayed after a certain amount of time
+             * has elapsed. onProgress, if given, is called with the add's progress each time it is polled.
              */
-            addIncludeMembersAsync(members, path, onSuccess, onError, modal) {
+            addIncludeMembersAsync(members, path, onSuccess, onError, modal, onProgress) {
                 let endpoint = BASE_URL + path + "/addIncludeMembersAsync";
-                let initialPoll = Math.pow(members.length, 1.6);
+                let initialPoll = initialAddPoll(members);
                 return new Promise(() => {
-                    dataProvider.updateDataWithBodyAndTimeoutModalAsync(endpoint, members, initialPoll, onSuccess, onError, modal);
+                    dataProvider.updateDataWithBodyAndTimeoutModalAsync(endpoint, members, initialPoll, onSuccess, onError,
+                        modal, onProgress);
                 });
             },
 
@@ -158,15 +169,16 @@
             },
 
             /**
-             * Add a members to the exclude group of a grouping asynchronously. The initial poll gets as close to the
-             * average time of the non-asyns version of this endpoint based on the number of members being added.
-             * A modal is passed in and displayed after a certain amount of time has elapsed.
+             * Add a members to the exclude group of a grouping asynchronously. The result is first polled for after
+             * initialAddPoll(members) milliseconds. A modal is passed in and displayed after a certain amount of time
+             * has elapsed. onProgress, if given, is called with the add's progress each time it is polled.
              */
-            addExcludeMembersAsync(members, path, onSuccess, onError, modal) {
+            addExcludeMembersAsync(members, path, onSuccess, onError, modal, onProgress) {
                 let endpoint = BASE_URL + path + "/addExcludeMembersAsync";
-                let initialPoll = Math.pow(members.length, 1.6);
+                let initialPoll = initialAddPoll(members);
                 return new Promise(() => {
-                    dataProvider.updateDataWithBodyAndTimeoutModalAsync(endpoint, members, initialPoll, onSuccess, onError, modal);
+                    dataProvider.updateDataWithBodyAndTimeoutModalAsync(endpoint, members, initialPoll, onSuccess, onError,
+                        modal, onProgress);
                 });
             },
 

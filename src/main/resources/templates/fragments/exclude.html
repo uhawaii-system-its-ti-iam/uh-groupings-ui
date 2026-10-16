@@ -149,6 +149,8 @@
                             <div class="spinner-border spinner-border-sm d-inline-block"
                                  ng-if="waitingForImportResponse">
                             </div>
+                            <span class="small ml-1" role="status" aria-live="polite"
+                                  ng-if="waitingForImportResponse && importProgress">{{importProgressText(importProgress)}}</span>
                         </div>
                     </div>
                 </form>

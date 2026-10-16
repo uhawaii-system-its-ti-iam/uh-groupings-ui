@@ -417,6 +417,269 @@ describe("GroupingController", () => {
         });
     });
 
+    describe("getGroupingInformation - loading the members", () => {
+        const path = "test:path:grouping1";
+        let pageRequests;
+        let pagesInFlight;
+        let pageSize;
+
+        beforeEach(inject((MEMBER_PAGES_IN_FLIGHT, PAGE_SIZE) => {
+            pagesInFlight = MEMBER_PAGES_IN_FLIGHT;
+            pageSize = PAGE_SIZE;
+        }));
+
+        const member = (n) => ({
+            name: `Member ${n}`,
+            uid: `member${n}`,
+            uhUuid: `1000000${n}`,
+            firstName: "Member",
+            lastName: `${n}`,
+            orphan: false
+        });
+
+        const pageOf = (basis, include, exclude) => ({
+            paginationComplete: false,
+            groupingBasis: { groupPath: `${path}:basis`, members: basis },
+            groupingInclude: { groupPath: `${path}:include`, members: include },
+            groupingExclude: { groupPath: `${path}:exclude`, members: exclude },
+            // The members of the page alone, which the members of the grouping are no longer taken from.
+            allMembers: { members: [] }
+        });
+
+        const pastTheEnd = {
+            paginationComplete: true,
+            groupingBasis: { groupPath: "", members: [] },
+            groupingInclude: { groupPath: "", members: [] },
+            groupingExclude: { groupPath: "", members: [] },
+            allMembers: { members: [] }
+        };
+
+        // Lets the promises of a load run until it waits for the next page requests to be answered.
+        const settle = () => new Promise((resolve) => setTimeout(resolve));
+
+        const answer = async (pageNumber, res) => {
+            pageRequests.find((request) => request.pageNumber === pageNumber).onSuccess(res);
+            await settle();
+        };
+
+        beforeEach(() => {
+            scope.selectedGrouping = { name: "grouping1", path };
+            spyOn(gs, "getGroupingDescription").and.callFake((groupPath, onSuccess) => onSuccess({ description: "" }));
+            spyOn(gs, "getGroupingSyncDest").and.callFake((groupPath, onSuccess) => onSuccess({ syncDestinations: [] }));
+            spyOn(gs, "getGroupingOptAttributes").and.callFake((groupPath, onSuccess) =>
+                onSuccess({ optInOn: false, optOutOn: false }));
+            spyOn(gs, "groupingOwners").and.callFake((groupPath, onSuccess) =>
+                onSuccess({ owners: { members: [] }, ownerLimit: 100 }));
+            spyOn(gs, "getNumberOfDirectOwners").and.callFake((groupPath, onSuccess) => onSuccess(1));
+            spyOn(gs, "getNumberOfAllOwners").and.callFake((groupPath, onSuccess) => onSuccess(1));
+            spyOn(gs, "getDuplicateOwners").and.callFake((groupPath, onSuccess) => onSuccess({}));
+            pageRequests = [];
+            spyOn(gs, "getGrouping").and.callFake((groupPaths, pageNumber, pageSize, sortBy, isAscending, onSuccess,
+                onError) => pageRequests.push({ pageNumber, pageSize, onSuccess, onError }));
+        });
+
+        it("should fetch the owners once, however many pages of members there are", async () => {
+            // Pages 1 to 5 have members; the pages after them are past the end.
+            gs.getGrouping.and.callFake((groupPaths, pageNumber, pageSize, sortBy, isAscending, onSuccess) =>
+                onSuccess(pageNumber <= 5 ? pageOf([], [member(pageNumber)], []) : pastTheEnd));
+
+            await scope.getGroupingInformation();
+
+            expect(gs.groupingOwners).toHaveBeenCalledTimes(1);
+            expect(gs.getDuplicateOwners).toHaveBeenCalledTimes(1);
+            expect(scope.groupingInclude.map((m) => m.uid)).toEqual(["member1", "member2", "member3", "member4",
+                "member5"]);
+            expect(scope.paginatingComplete).toBeTrue();
+            expect(scope.paginatingProgress).toBeFalse();
+            expect(scope.loading).toBeFalse();
+        });
+
+        it("should request MEMBER_PAGES_IN_FLIGHT pages of PAGE_SIZE at once, and the next as each is answered",
+            async () => {
+                scope.getGroupingInformation();
+                await settle();
+
+                expect(pagesInFlight).toBe(4);
+                expect(pageSize).toBe(2000);
+                expect(pageRequests.map((request) => request.pageNumber)).toEqual([1, 2, 3, 4]);
+                expect(pageRequests.every((request) => request.pageSize === pageSize)).toBeTrue();
+
+                await answer(1, pageOf([member(1)], [], []));
+                expect(pageRequests.map((request) => request.pageNumber)).toEqual([1, 2, 3, 4, 5]);
+            });
+
+        it("should add a page of members that is answered before the pages before it", async () => {
+            const load = scope.getGroupingInformation();
+            await settle();
+
+            await answer(2, pageOf([], [member(2)], []));
+            await answer(1, pageOf([], [member(1)], []));
+            for (const pageNumber of [3, 4, 5, 6]) {
+                await answer(pageNumber, pastTheEnd);
+            }
+            await load;
+
+            expect(scope.groupingInclude.map((m) => m.uid)).toEqual(["member1", "member2"]);
+        });
+
+        it("should finish loading only once every page in flight has been answered", async () => {
+            const load = scope.getGroupingInformation();
+            await settle();
+
+            await answer(3, pastTheEnd);
+            expect(scope.paginatingComplete).toBeFalse();
+            expect(pageRequests.length).toBe(4);
+
+            await answer(1, pageOf([member(1)], [], []));
+            await answer(4, pastTheEnd);
+            expect(scope.paginatingComplete).toBeFalse();
+
+            await answer(2, pageOf([member(2)], [], []));
+            await load;
+            expect(scope.paginatingComplete).toBeTrue();
+            expect(scope.groupingBasis.map((m) => m.uid)).toEqual(["member1", "member2"]);
+            expect(pageRequests.length).toBe(4);
+        });
+
+        it("should stop fetching pages when a page fails", async () => {
+            spyOn(scope, "displayApiErrorModal");
+            const load = scope.getGroupingInformation();
+            await settle();
+
+            pageRequests[0].onError({ status: 500 });
+            await settle();
+            for (const pageNumber of [2, 3, 4]) {
+                await answer(pageNumber, pageOf([member(pageNumber)], [], []));
+            }
+            await load;
+
+            expect(scope.displayApiErrorModal).toHaveBeenCalled();
+            expect(pageRequests.length).toBe(4);
+            expect(scope.loading).toBeFalse();
+        });
+
+        it("should stop fetching the pages of a load once another load has started", async () => {
+            const firstLoad = scope.getGroupingInformation();
+            await settle();
+            const secondLoad = scope.getGroupingInformation();
+            await settle();
+            expect(pageRequests.map((request) => request.pageNumber)).toEqual([1, 2, 3, 4, 1, 2, 3, 4]);
+
+            // The first load's pages have members, but it requests no more.
+            for (const request of pageRequests.slice(0, 4)) {
+                request.onSuccess(pageOf([member(request.pageNumber)], [], []));
+            }
+            await settle();
+            await firstLoad;
+            expect(pageRequests.length).toBe(8);
+            expect(scope.paginatingComplete).toBeFalse();
+
+            for (const request of pageRequests.slice(4)) {
+                request.onSuccess(pastTheEnd);
+            }
+            await secondLoad;
+            expect(scope.paginatingComplete).toBeTrue();
+            // The first load's pages arrived after the second load had started, so they were not added to its lists.
+            expect(scope.groupingBasis).toEqual([]);
+            expect(scope.groupingMembers).toEqual([]);
+        });
+
+        it("should neither report nor act on a failed page of a load once another load has started", async () => {
+            spyOn(scope, "displayApiErrorModal");
+            const firstLoad = scope.getGroupingInformation();
+            await settle();
+            const secondLoad = scope.getGroupingInformation();
+            await settle();
+
+            pageRequests[0].onError({ status: 500 });
+            await settle();
+            expect(scope.displayApiErrorModal).not.toHaveBeenCalled();
+
+            // Requests 0 to 3 are the first load's pages 1 to 4, and requests 4 to 7 the second load's.
+            pageRequests[4].onSuccess(pageOf([member(1)], [], []));
+            await settle();
+            for (const request of pageRequests.slice(1, 4)) {
+                request.onSuccess(pastTheEnd);
+            }
+            await firstLoad;
+            for (const request of pageRequests.slice(5)) {
+                request.onSuccess(pastTheEnd);
+            }
+            await secondLoad;
+
+            expect(scope.paginatingComplete).toBeTrue();
+            expect(scope.groupingBasis.map((m) => m.uid)).toEqual(["member1"]);
+            expect(scope.displayApiErrorModal).not.toHaveBeenCalled();
+        });
+
+        it("should report only the first of the failed pages of a load", async () => {
+            spyOn(scope, "displayApiErrorModal");
+            const load = scope.getGroupingInformation();
+            await settle();
+
+            for (const request of pageRequests) {
+                request.onError({ status: 503 });
+            }
+            await load;
+
+            expect(scope.displayApiErrorModal).toHaveBeenCalledTimes(1);
+            expect(scope.loading).toBeFalse();
+        });
+
+        it("should list the grouping's members from the whole lists, whichever pages their entries are on", async () => {
+            // Member 1 is in Basis on page 1, but in Exclude on page 2. Member 2 is in Include on page 1, and in
+            // Basis on page 2. Member 3 is only in Include.
+            const load = scope.getGroupingInformation();
+            await settle();
+            await answer(1, pageOf([member(1)], [member(2)], []));
+            await answer(2, pageOf([member(2)], [member(3)], [member(1)]));
+            for (const pageNumber of [3, 4, 5, 6]) {
+                await answer(pageNumber, pastTheEnd);
+            }
+            await load;
+
+            expect(scope.groupingMembers.map((m) => [m.uid, m.whereListed])).toEqual([
+                ["member2", "Basis & Include"],
+                ["member3", "Include"]
+            ]);
+            expect(scope.groupingInclude.map((m) => [m.uid, m.inBasis])).toEqual([["member2", "Yes"],
+                ["member3", "No"]]);
+            expect(scope.groupingExclude.map((m) => [m.uid, m.inBasis])).toEqual([["member1", "Yes"]]);
+        });
+
+        it("should enable resetting a list once its members are loaded, and only a list that has members", async () => {
+            const load = scope.getGroupingInformation();
+            await settle();
+            expect(scope.includeDisable).toBeTrue();
+            expect(scope.excludeDisable).toBeTrue();
+
+            await answer(1, pageOf([member(1)], [member(2)], []));
+            expect(scope.includeDisable).toBeFalse();
+            expect(scope.excludeDisable).toBeTrue();
+
+            for (const pageNumber of [2, 3, 4, 5]) {
+                await answer(pageNumber, pastTheEnd);
+            }
+            await load;
+            expect(scope.includeDisable).toBeFalse();
+            expect(scope.excludeDisable).toBeTrue();
+        });
+
+        it("should replace the members of a grouping loaded before", async () => {
+            scope.groupingBasis = [member(9)];
+            const load = scope.getGroupingInformation();
+            await settle();
+
+            expect(scope.groupingBasis).toEqual([]);
+            await answer(1, pageOf([member(1)], [], []));
+            for (const pageNumber of [2, 3, 4, 5]) {
+                await answer(pageNumber, pastTheEnd);
+            }
+            await load;
+            expect(scope.groupingBasis.map((m) => m.uid)).toEqual(["member1"]);
+        });
+    });
+
     // For reference (in index order):
     // Members: User One, User Two, User Three, User Seven, User Eight
     // Basis: User One, User Four, User Seven
@@ -503,6 +766,30 @@ describe("GroupingController", () => {
             expect(scope.addInBasis).toHaveBeenCalled();
             expect(scope.addInInclude).toHaveBeenCalled();
             expect(scope.addInExclude).toHaveBeenCalled();
+        });
+    });
+
+    describe("importProgressText", () => {
+        it("should say how many of the entries have been checked", () => {
+            expect(scope.importProgressText({ phase: "VALIDATING", done: 3000, total: 12412, listName: "Include" }))
+                .toBe("Checking 3,000 of 12,412 entries...");
+        });
+
+        it("should say how many of the members have been added to the import's list", () => {
+            expect(scope.importProgressText({ phase: "ADDING", done: 4000, total: 12284, listName: "Exclude" }))
+                .toBe("Adding 4,000 of 12,284 members to the Exclude list...");
+        });
+
+        it("should name the opposite list for the members removed from it", () => {
+            expect(scope.importProgressText({ phase: "REMOVING", done: 1, total: 2, listName: "Include" }))
+                .toBe("Removing 1 of 2 members from the Exclude list...");
+            expect(scope.importProgressText({ phase: "REMOVING", done: 0, total: 1, listName: "Exclude" }))
+                .toBe("Removing 0 of 1 members from the Include list...");
+        });
+
+        it("should be empty without progress, or for a phase it does not know", () => {
+            expect(scope.importProgressText(null)).toBe("");
+            expect(scope.importProgressText({ phase: "UNKNOWN", done: 1, total: 1, listName: "Include" })).toBe("");
         });
     });
 
@@ -1988,8 +2275,11 @@ describe("GroupingController", () => {
         const createMockModal = () => {
             const mock = {
                 result: {
-                    then(cb) {
+                    then(cb, rejectedCb) {
                         mock.thenCallback = cb;
+                        if (rejectedCb) {
+                            mock.catchCallback = rejectedCb;
+                        }
                         return mock.result;
                     },
                     finally(cb) {
@@ -2024,6 +2314,9 @@ describe("GroupingController", () => {
             scope.groupingExclude = [];
             spyOn(uibModal, "open").and.callFake(() => createMockModal());
         });
+
+        const importConfirmationModalCount = () => uibModal.open.calls.allArgs()
+            .filter(([options]) => options.templateUrl === "modal/importConfirmationModal").length;
 
         describe("readTextFile", () => {
             it("should parse a CSV file, mark it as a file import, and add only the UH Number column", (done) => {
@@ -2167,11 +2460,15 @@ describe("GroupingController", () => {
         });
 
         describe("addMembers - file import validation", () => {
-            it("should skip existsInList, validate identifiers via getMemberAttributeResultsAsync, and open the import confirmation modal with only the resolvable identifiers", () => {
-                spyOn(scope, "existsInList");
+            beforeEach(() => {
                 spyOn(gs, "getMemberAttributeResultsAsync").and.callFake(gs.getMemberAttributeResults);
-                spyOn(scope, "displayImportConfirmationModal").and.callThrough();
+                spyOn(gs, "addIncludeMembersAsync").and.callFake((members, path, onSuccess) => onSuccess({}));
+                spyOn(scope, "displayImportFileResultsModal");
                 scope.isFileImport = true;
+            });
+
+            it("should skip existsInList, validate identifiers via getMemberAttributeResultsAsync, and confirm the import of only the resolvable identifiers", () => {
+                spyOn(scope, "existsInList");
 
                 scope.addMembers("Include", ["iamtst01", "iamtst02"]);
 
@@ -2180,52 +2477,65 @@ describe("GroupingController", () => {
                 httpBackend.flush();
 
                 expect(scope.existsInList).not.toHaveBeenCalled();
+                expect(importConfirmationModalCount()).toBe(1);
+                expect(scope.importSize).toBe(1);
+                expect(gs.addIncludeMembersAsync).not.toHaveBeenCalled();
+
+                scope.proceedImportConfirmationModal();
+
+                expect(gs.addIncludeMembersAsync).toHaveBeenCalledWith(["iamtst01"], "test:path:grouping1",
+                    jasmine.any(Function), jasmine.any(Function), jasmine.any(Function),
+                    jasmine.any(Function));
                 expect(scope.importTotalCount).toBe(2);
+                expect(scope.importSuccessCount).toBe(1);
                 expect(scope.importInvalidMembers).toEqual(["iamtst02"]);
-                expect(scope.displayImportConfirmationModal).toHaveBeenCalledWith("Include", ["iamtst01"]);
+                expect(scope.displayImportFileResultsModal).toHaveBeenCalled();
+            });
+
+            it("should not add anything when the import is cancelled", () => {
+                scope.addMembers("Include", ["iamtst01", "iamtst02"]);
+
+                httpBackend.expectPOST(BASE_URL + "members", ["iamtst01", "iamtst02"])
+                    .respond(200, { resultCode: "SUCCESS", invalid: [], results: [] });
+                httpBackend.flush();
+                scope.cancelImportConfirmationModal();
+
+                expect(gs.addIncludeMembersAsync).not.toHaveBeenCalled();
+                expect(scope.displayImportFileResultsModal).not.toHaveBeenCalled();
+                expect(scope.isAddingMembers).toBeFalse();
             });
 
             it("should skip the add call and show the results modal directly when every identifier is invalid", () => {
-                spyOn(gs, "getMemberAttributeResultsAsync").and.callFake(gs.getMemberAttributeResults);
-                spyOn(scope, "displayImportConfirmationModal");
-                spyOn(scope, "displayImportFileResultsModal").and.callThrough();
-                scope.isFileImport = true;
-
                 scope.addMembers("Include", ["baduser1", "baduser2"]);
 
                 httpBackend.expectPOST(BASE_URL + "members", ["baduser1", "baduser2"])
                     .respond(200, { resultCode: "FAILURE", invalid: ["baduser1", "baduser2"], results: [] });
                 httpBackend.flush();
 
-                expect(scope.displayImportConfirmationModal).not.toHaveBeenCalled();
+                expect(importConfirmationModalCount()).toBe(0);
+                expect(gs.addIncludeMembersAsync).not.toHaveBeenCalled();
                 expect(scope.importSuccessCount).toBe(0);
                 expect(scope.importInvalidMembers).toEqual(["baduser1", "baduser2"]);
                 expect(scope.displayImportFileResultsModal).toHaveBeenCalled();
             });
 
             it("should count and list entries the sanitizer drops in file order, without sending them to the API", () => {
-                spyOn(gs, "getMemberAttributeResultsAsync").and.callFake(gs.getMemberAttributeResults);
-                spyOn(scope, "displayImportConfirmationModal");
-                scope.isFileImport = true;
-
                 scope.addMembers("Include", ["iamtst01", "!!!!!!!!", "baduser", "x"]);
 
                 httpBackend.expectPOST(BASE_URL + "members", ["iamtst01", "baduser"])
                     .respond(200, { resultCode: "FAILURE", invalid: ["baduser"], results: [] });
                 httpBackend.flush();
+                scope.proceedImportConfirmationModal();
 
+                expect(gs.addIncludeMembersAsync).toHaveBeenCalledWith(["iamtst01"], "test:path:grouping1",
+                    jasmine.any(Function), jasmine.any(Function), jasmine.any(Function),
+                    jasmine.any(Function));
                 expect(scope.importTotalCount).toBe(4);
                 expect(scope.importSuccessCount).toBe(1);
                 expect(scope.importInvalidMembers).toEqual(["!!!!!!!!", "baduser", "x"]);
-                expect(scope.displayImportConfirmationModal).toHaveBeenCalledWith("Include", ["iamtst01"]);
             });
 
             it("should skip the API call and show the results modal when the sanitizer drops every entry", () => {
-                spyOn(gs, "getMemberAttributeResultsAsync").and.callFake(gs.getMemberAttributeResults);
-                spyOn(scope, "displayImportConfirmationModal");
-                spyOn(scope, "displayImportFileResultsModal");
-                scope.isFileImport = true;
-
                 scope.addMembers("Include", ["!!!!", "$$$$"]);
 
                 httpBackend.verifyNoOutstandingRequest();
@@ -2235,39 +2545,258 @@ describe("GroupingController", () => {
                 expect(scope.importTotalCount).toBe(2);
                 expect(scope.importSuccessCount).toBe(0);
                 expect(scope.importInvalidMembers).toEqual(["!!!!", "$$$$"]);
-                expect(scope.displayImportConfirmationModal).not.toHaveBeenCalled();
+                expect(importConfirmationModalCount()).toBe(0);
                 expect(scope.displayImportFileResultsModal).toHaveBeenCalled();
             });
 
             it("should collapse entries that repeat once trimmed and lower-cased, and ignore blank entries", () => {
-                spyOn(gs, "getMemberAttributeResultsAsync").and.callFake(gs.getMemberAttributeResults);
-                spyOn(scope, "displayImportConfirmationModal");
-                scope.isFileImport = true;
-
                 scope.addMembers("Include", ["IAMTST01", " iamtst01 ", "", "   ", "iamtst02"]);
 
                 httpBackend.expectPOST(BASE_URL + "members", ["iamtst01", "iamtst02"])
                     .respond(200, { resultCode: "SUCCESS", invalid: [], results: [] });
                 httpBackend.flush();
+                scope.proceedImportConfirmationModal();
 
+                expect(gs.addIncludeMembersAsync).toHaveBeenCalledWith(["iamtst01", "iamtst02"], "test:path:grouping1",
+                    jasmine.any(Function), jasmine.any(Function), jasmine.any(Function),
+                    jasmine.any(Function));
                 expect(scope.importTotalCount).toBe(2);
                 expect(scope.importDuplicateCount).toBe(1);
                 expect(scope.importSuccessCount).toBe(2);
                 expect(scope.importInvalidMembers).toEqual([]);
-                expect(scope.displayImportConfirmationModal).toHaveBeenCalledWith("Include", ["iamtst01", "iamtst02"]);
+            });
+
+            it("should display its own results even if other members were added while it ran", () => {
+                let finishImport;
+                gs.addIncludeMembersAsync.and.callFake((members, path, onSuccess) => {
+                    finishImport = onSuccess;
+                });
+                scope.addMembers("Include", ["iamtst01", "iamtst02"]);
+                httpBackend.expectPOST(BASE_URL + "members", ["iamtst01", "iamtst02"])
+                    .respond(200, { resultCode: "FAILURE", invalid: ["iamtst02"], results: [] });
+                httpBackend.flush();
+                scope.proceedImportConfirmationModal();
+
+                // An add of other members while the import runs changes the values its results are displayed from.
+                scope.isFileImport = false;
+                scope.listName = "Exclude";
+                scope.importTotalCount = 5;
+                scope.importInvalidMembers = [];
+                finishImport({});
+
+                expect(scope.displayImportFileResultsModal).toHaveBeenCalled();
+                expect(scope.listName).toBe("Include");
+                expect(scope.importTotalCount).toBe(2);
+                expect(scope.importSuccessCount).toBe(1);
+                expect(scope.importInvalidMembers).toEqual(["iamtst02"]);
             });
 
             it("should treat a file of only blank entries as empty input", () => {
-                spyOn(gs, "getMemberAttributeResultsAsync").and.callFake(gs.getMemberAttributeResults);
-                spyOn(scope, "displayImportFileResultsModal");
-                scope.isFileImport = true;
-
                 scope.addMembers("Include", ["", "   "]);
 
                 httpBackend.verifyNoOutstandingRequest();
                 expect(scope.emptyInput).toBeTrue();
                 expect(scope.isAddingMembers).toBeFalse();
                 expect(scope.displayImportFileResultsModal).not.toHaveBeenCalled();
+            });
+        });
+
+        describe("addMembers - large file import (more than threshold.MULTI_ADD entries)", () => {
+            let identifiers;
+            let invalidUhIdentifiers;
+
+            const addResult = () => ({ addResults: { results: [] }, removeResults: { results: [] }, invalidUhIdentifiers });
+
+            beforeEach(() => {
+                identifiers = buildIdentifiers(threshold.MULTI_ADD + 1);
+                invalidUhIdentifiers = [];
+                spyOn(gs, "getMemberAttributeResultsAsync").and.callFake(gs.getMemberAttributeResults);
+                spyOn(gs, "addIncludeMembersAsync").and.callFake((members, path, onSuccess) => onSuccess(addResult()));
+                spyOn(gs, "addExcludeMembersAsync").and.callFake((members, path, onSuccess) => onSuccess(addResult()));
+                spyOn(scope, "displayImportFileResultsModal");
+                scope.isFileImport = true;
+            });
+
+            it("should open the import confirmation modal with the number of entries before sending anything", () => {
+                scope.addMembers("Include", identifiers);
+
+                httpBackend.verifyNoOutstandingRequest();
+                expect(gs.getMemberAttributeResultsAsync).not.toHaveBeenCalled();
+                expect(gs.addIncludeMembersAsync).not.toHaveBeenCalled();
+                expect(importConfirmationModalCount()).toBe(1);
+                expect(scope.importSize).toBe(threshold.MULTI_ADD + 1);
+                expect(scope.listName).toBe("Include");
+            });
+
+            it("should add every entry once confirmed, without validating them first or asking again", () => {
+                invalidUhIdentifiers = identifiers.slice(0, 2);
+                scope.addMembers("Include", identifiers);
+                scope.proceedImportConfirmationModal();
+
+                httpBackend.verifyNoOutstandingRequest();
+                expect(gs.getMemberAttributeResultsAsync).not.toHaveBeenCalled();
+                expect(importConfirmationModalCount()).toBe(1);
+                expect(gs.addIncludeMembersAsync).toHaveBeenCalledWith(identifiers, "test:path:grouping1",
+                    jasmine.any(Function), jasmine.any(Function), jasmine.any(Function),
+                    jasmine.any(Function));
+                expect(scope.isAddingMembers).toBeFalse();
+            });
+
+            it("should report the entries the add could not resolve", () => {
+                invalidUhIdentifiers = identifiers.slice(0, 2);
+                scope.addMembers("Include", identifiers);
+                scope.proceedImportConfirmationModal();
+
+                expect(scope.importTotalCount).toBe(threshold.MULTI_ADD + 1);
+                expect(scope.importSuccessCount).toBe(threshold.MULTI_ADD - 1);
+                expect(scope.importInvalidMembers).toEqual(invalidUhIdentifiers);
+                expect(scope.displayImportFileResultsModal).toHaveBeenCalled();
+            });
+
+            it("should report entries the sanitizer drops, in file order, without sending them", () => {
+                invalidUhIdentifiers = [identifiers[2]];
+                const entries = [identifiers[0], "!!!!!!!!", ...identifiers.slice(1)];
+                scope.addMembers("Include", entries);
+                scope.proceedImportConfirmationModal();
+
+                expect(gs.addIncludeMembersAsync).toHaveBeenCalledWith(identifiers, "test:path:grouping1",
+                    jasmine.any(Function), jasmine.any(Function), jasmine.any(Function),
+                    jasmine.any(Function));
+                expect(scope.importTotalCount).toBe(threshold.MULTI_ADD + 2);
+                expect(scope.importSuccessCount).toBe(threshold.MULTI_ADD);
+                expect(scope.importInvalidMembers).toEqual(["!!!!!!!!", identifiers[2]]);
+            });
+
+            it("should add to the Exclude list when importing into it", () => {
+                scope.addMembers("Exclude", identifiers);
+                scope.proceedImportConfirmationModal();
+
+                expect(gs.addExcludeMembersAsync).toHaveBeenCalledWith(identifiers, "test:path:grouping1",
+                    jasmine.any(Function), jasmine.any(Function), jasmine.any(Function),
+                    jasmine.any(Function));
+                expect(gs.addIncludeMembersAsync).not.toHaveBeenCalled();
+                expect(scope.listName).toBe("Exclude");
+            });
+
+            it("should add to the grouping that was open when the import started", () => {
+                scope.addMembers("Include", identifiers);
+                scope.selectedGrouping = { path: "test:path:grouping2" };
+                scope.proceedImportConfirmationModal();
+
+                expect(gs.addIncludeMembersAsync).toHaveBeenCalledWith(identifiers, "test:path:grouping1",
+                    jasmine.any(Function), jasmine.any(Function), jasmine.any(Function),
+                    jasmine.any(Function));
+            });
+
+            it("should not add anything when the import is cancelled", () => {
+                scope.addMembers("Include", identifiers);
+                scope.cancelImportConfirmationModal();
+
+                httpBackend.verifyNoOutstandingRequest();
+                expect(gs.getMemberAttributeResultsAsync).not.toHaveBeenCalled();
+                expect(gs.addIncludeMembersAsync).not.toHaveBeenCalled();
+                expect(scope.isAddingMembers).toBeFalse();
+            });
+
+            it("should report that nothing was imported when no entry is valid", () => {
+                invalidUhIdentifiers = identifiers;
+                scope.addMembers("Include", identifiers);
+                scope.proceedImportConfirmationModal();
+
+                expect(scope.importSuccessCount).toBe(0);
+                expect(scope.importInvalidMembers).toEqual(identifiers);
+                expect(scope.displayImportFileResultsModal).toHaveBeenCalled();
+            });
+
+            it("should display its own results even if other members were added or imported while it ran", () => {
+                let finishImport;
+                gs.addIncludeMembersAsync.and.callFake((members, path, onSuccess) => {
+                    finishImport = onSuccess;
+                });
+                const sourceRows = new Map();
+                scope.importSourceRows = sourceRows;
+                scope.importFileBaseName = "large_import";
+                // The file repeats its first entry once.
+                scope.addMembers("Include", [...identifiers, identifiers[0]]);
+                scope.proceedImportConfirmationModal();
+
+                // Adding or importing other members while the import runs changes the values its results are
+                // displayed from.
+                scope.isFileImport = false;
+                scope.listName = "Exclude";
+                scope.importTotalCount = 1;
+                scope.importDuplicateCount = 0;
+                scope.importSourceRows = new Map();
+                scope.importFileBaseName = "other_import";
+                invalidUhIdentifiers = [identifiers[0]];
+                finishImport(addResult());
+
+                expect(scope.displayImportFileResultsModal).toHaveBeenCalled();
+                expect(scope.listName).toBe("Include");
+                expect(scope.importTotalCount).toBe(threshold.MULTI_ADD + 1);
+                expect(scope.importDuplicateCount).toBe(1);
+                expect(scope.importSourceRows).toBe(sourceRows);
+                expect(scope.importFileBaseName).toBe("large_import");
+                expect(scope.importSuccessCount).toBe(threshold.MULTI_ADD);
+                expect(scope.importInvalidMembers).toEqual([identifiers[0]]);
+            });
+
+            it("should show how far the import has gotten while it runs, and stop showing it when it ends", () => {
+                let reportProgress;
+                let finishImport;
+                gs.addIncludeMembersAsync.and.callFake((members, path, onSuccess, onError, modal, onProgress) => {
+                    reportProgress = onProgress;
+                    finishImport = onSuccess;
+                });
+                scope.addMembers("Include", identifiers);
+                scope.proceedImportConfirmationModal();
+
+                expect(scope.waitingForImportResponse).toBeTrue();
+                expect(scope.importProgress).toBeNull();
+
+                reportProgress({ phase: "ADDING", done: 250, total: threshold.MULTI_ADD + 1 });
+                expect(scope.importProgress)
+                    .toEqual({ phase: "ADDING", done: 250, total: threshold.MULTI_ADD + 1, listName: "Include" });
+                expect(scope.importProgressText(scope.importProgress))
+                    .toBe(`Adding 250 of ${threshold.MULTI_ADD + 1} members to the Include list...`);
+
+                finishImport(addResult());
+                expect(scope.importProgress).toBeNull();
+                expect(scope.displayImportFileResultsModal).toHaveBeenCalled();
+            });
+
+            it("should stop showing how far the import has gotten when it fails", () => {
+                spyOn(scope, "displayApiErrorModal");
+                let reportProgress;
+                let failImport;
+                gs.addExcludeMembersAsync.and.callFake((members, path, onSuccess, onError, modal, onProgress) => {
+                    reportProgress = onProgress;
+                    failImport = onError;
+                });
+                scope.addMembers("Exclude", identifiers);
+                scope.proceedImportConfirmationModal();
+
+                reportProgress({ phase: "VALIDATING", done: 1000, total: 12412 });
+                expect(scope.importProgress.listName).toBe("Exclude");
+
+                failImport({ status: 503 });
+                expect(scope.importProgress).toBeNull();
+                expect(scope.displayApiErrorModal).toHaveBeenCalled();
+                expect(scope.displayImportFileResultsModal).not.toHaveBeenCalled();
+            });
+
+            it("should validate an import of exactly threshold.MULTI_ADD entries before confirming it", () => {
+                const smallImport = buildIdentifiers(threshold.MULTI_ADD);
+                scope.addMembers("Include", smallImport);
+
+                expect(importConfirmationModalCount()).toBe(0);
+                httpBackend.expectPOST(BASE_URL + "members", smallImport)
+                    .respond(200, { resultCode: "SUCCESS", invalid: [], results: [] });
+                httpBackend.flush();
+
+                expect(importConfirmationModalCount()).toBe(1);
+                expect(scope.importSize).toBe(threshold.MULTI_ADD);
+                expect(gs.addIncludeMembersAsync).not.toHaveBeenCalled();
             });
         });
 
@@ -2325,15 +2854,14 @@ describe("GroupingController", () => {
                 Array.from({ length: count }, (_, i) => `badtst${String(i + 1).padStart(2, "0")}`);
 
             // Runs one CSV/text import through addMembers -> getMemberAttributeResultsAsync -> (optionally)
-            // proceedImportConfirmationModal -> handleSuccessfulAdd, exactly as a real import would. Repeated
-            // identifiers are collapsed before the API is called, so it only ever sees each one once.
+            // proceedImportConfirmationModal -> the add -> the import's results, exactly as a real import would.
+            // Repeated identifiers are collapsed before the API is called, so it only ever sees each one once.
             const runImport = (identifiers, invalid) => {
                 const distinctIdentifiers = [...new Set(identifiers)];
                 spyOn(gs, "getMemberAttributeResultsAsync").and.callFake(gs.getMemberAttributeResults);
                 spyOn(gs, "addIncludeMembersAsync").and.callFake((members, path, onSuccess) => {
                     onSuccess({ addResults: { results: [] }, removeResults: { results: [] } });
                 });
-                spyOn(scope, "displayImportConfirmationModal").and.callThrough();
                 spyOn(scope, "displayImportFileResultsModal").and.callThrough();
 
                 scope.isFileImport = true;
@@ -2361,9 +2889,11 @@ describe("GroupingController", () => {
                 expect(scope.importSuccessCount).toBe(validIdentifiers.length);
                 expect(scope.displayImportFileResultsModal).toHaveBeenCalled();
                 if (_.isEmpty(validIdentifiers)) {
-                    expect(scope.displayImportConfirmationModal).not.toHaveBeenCalled();
+                    expect(gs.addIncludeMembersAsync).not.toHaveBeenCalled();
                 } else {
-                    expect(scope.displayImportConfirmationModal).toHaveBeenCalledWith("Include", validIdentifiers);
+                    expect(gs.addIncludeMembersAsync).toHaveBeenCalledWith(validIdentifiers, "test:path:grouping1",
+                        jasmine.any(Function), jasmine.any(Function), jasmine.any(Function),
+                        jasmine.any(Function));
                 }
             };
 
