@@ -188,9 +188,13 @@ public class HttpRequestService {
 
     /**
      * Convert a RequestHeadersSpec to a ResponseEntity<String> by exchanging the request and blocking for the response.
+     * Only the status, content type, and body of the API response are passed through.
      */
     private ResponseEntity<String> toEntity(RequestHeadersSpec<?> request) {
         return request.exchangeToMono(response -> response.toEntity(String.class))
+                .map(entity -> ResponseEntity.status(entity.getStatusCode())
+                        .contentType(entity.getHeaders().getContentType())
+                        .body(entity.getBody()))
                 .block();
     }
 }
