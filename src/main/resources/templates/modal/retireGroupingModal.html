@@ -1,0 +1,37 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<div class="modal-header">
+    <h1 class="h5 modal-title" id="retire-grouping-modal">Confirm Retire Grouping</h1>
+    <button class="close" type="button" aria-label="Close" ng-click="cancelRetireGroupingModal()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body" id="modal-body" tabindex="0">
+    <p class="modal-black-text"><strong>Warning:</strong> You are about to retire the grouping: <strong>{{ selectedGrouping.name }}</strong></p>
+    <p class="modal-black-text">Your request will result in a request being sent to the IAM team and notification to the other owners. IAM will follow up with you before fulfilling this request. This action cannot be undone. All members, settings, and configurations for this grouping will be permanently removed.</p>
+
+    <!-- Notification Notice -->
+    <div class="alert alert-warning" role="alert">
+        <h6 class="alert-heading">
+            <i class="fas fa-exclamation-triangle mr-2"></i>Owner Notification
+        </h6>
+        <p class="mb-2">Direct owners and owner-groupings listed below. Members of owner-groupings will also be included in the owners notification.</p>
+        <div ng-if="groupingOwners && groupingOwners.length > 0">
+            <ul class="mb-0 pl-4">
+                <li ng-repeat="owner in groupingOwners">
+                    <span ng-if="owner.uid"><strong>{{ owner.name }}</strong> ({{ owner.uid }})</span>
+                    <span ng-if="!owner.uid"><strong>{{ owner.name }}</strong></span>
+                </li>
+            </ul>
+        </div>
+        <div ng-if="!groupingOwners || groupingOwners.length === 0">
+            <p class="mb-0">No direct owners or owner-groupings are listed.</p>
+        </div>
+    </div>
+
+    <p class="modal-black-text">Are you sure you want to proceed?</p>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-danger btn-sized" ng-click="proceedRetireGroupingModal()">Yes, Retire</button>
+    <button class="btn btn-light" ng-click="cancelRetireGroupingModal()" data-dismiss="modal">Cancel</button>
+</div>
+</html>
