@@ -12,7 +12,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>4.1.1</version>
+        <version>4.1.2</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -45,6 +45,7 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
             <exclusions>
                 <exclusion>
                     <groupId>org.springframework</groupId>
@@ -114,12 +115,9 @@
 
         <!-- Test -->
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-test</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-test</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -180,6 +178,7 @@
             <groupId>org.webjars.npm</groupId>
             <artifactId>angular-mocks</artifactId>
             <version>${angular-mocks-version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>edu.internet2.middleware.grouper</groupId>
@@ -236,8 +235,7 @@
                 <version>3.0-beta-02</version>
                 <configuration>
                     <preloadSources>
-                        <source>classpath/META-INF/resources/webjars/angularjs/${angularjs-version}/angular.min.js"
-                        </source>
+                        <source>classpath/META-INF/resources/webjars/angularjs/${angularjs-version}/angular.min.js</source>
                         <source>classpath/META-INF/resources/webjars/jquery/${jquery-version}/jquery.min.js</source>
                         <source>classpath/META-INF/resources/webjars/popper.js/${popper.js-version}/umd/popper.min.js</source>
                         <source>
