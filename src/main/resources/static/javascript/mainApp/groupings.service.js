@@ -409,7 +409,7 @@
             },
 
             /**
-             * Get a list of owners in the current path.
+             * Returns directly assigned owner entries, including individual users and owner-groupings.
              */
             groupingOwners(groupingPath, onSuccess, onError) {
                 let endpoint = BASE_URL + "grouping/" + groupingPath + "/owners";
@@ -433,7 +433,7 @@
             },
 
             /**
-             * Get the number of all owners (direct + indirect) in a grouping.
+             * Returns the number of all individual user owners, including direct and indirect owners.
              */
             getNumberOfAllOwners(groupingPath, onSuccess, onError) {
                 let endpoint = BASE_URL + "groupings/" + groupingPath + "/owners/count";
@@ -441,7 +441,7 @@
             },
 
             /**
-             * Get all duplicated owners in a grouping, and their sources of ownership.
+             * Returns owners with multiple sources of ownership in a grouping.
              */
             getDuplicateOwners(path, onSuccess, onError) {
                 let endpoint = BASE_URL + "groupings/" + path + "/owners/duplicates";
@@ -457,9 +457,9 @@
             },
 
             /**
-             * Checks if the owner of a grouping is the sole owner
+             * Returns the number of directly assigned individual user owners in a grouping.
              */
-            getNumberOfDirectOwners(path, onSuccess, onError) {
+            getNumberOfDirectUserOwners(path, onSuccess, onError) {
                 let endpoint = BASE_URL + "members/" + path + "/owners/count";
                 dataProvider.loadData(endpoint, onSuccess, onError);
             },

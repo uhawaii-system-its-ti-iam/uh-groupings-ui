@@ -3261,20 +3261,20 @@ describe("GroupingController", () => {
             expect(scope.displayDynamicModal).toHaveBeenCalled();
         });
 
-        it("should call displayRemoveErrorModal when the listName is owners and there's only one owner left", () => {
+        it("should call displayRemoveErrorModal when removing the last direct user owner", () => {
             scope.groupingOwners = [{
                 name: "iamtst03",
                 uid: "iamtst03",
                 uhUuid: "iamtst03"
             }];
             scope.manageMembers = "iamtst03";
-            scope.directOwnersCount = 1;
+            scope.directUserOwnersCount = 1;
             spyOn(scope, "displayRemoveErrorModal");
             scope.removeMembers("owners");
             expect(scope.displayRemoveErrorModal).toHaveBeenCalled();
         });
 
-        it("should call displayRemoveErrorModal when the listName is owners and there's only one direct owner left", () => {
+        it("should call displayRemoveErrorModal when removing the last direct user owner even with an owner-grouping", () => {
             scope.groupingOwners = [
                 {
                     name: "iamtst03",
@@ -3287,7 +3287,7 @@ describe("GroupingController", () => {
                 }
             ];
             scope.manageMembers = "iamtst03";
-            scope.directOwnersCount = 1;
+            scope.directUserOwnersCount = 1;
             spyOn(scope, "displayRemoveErrorModal");
             scope.removeMembers("owners");
             expect(scope.displayRemoveErrorModal).toHaveBeenCalled();
@@ -3532,13 +3532,13 @@ describe("GroupingController", () => {
             expect(scope.displayRemoveModal).toHaveBeenCalled();
         });
 
-        it("should display the remove error modal if directOwnersCount is 1", () => {
+        it("should display the remove error modal if directUserOwnersCount is 1", () => {
             scope.groupingOwners = [{
                 name: "iamtst01",
                 uid: "iamtst01",
                 uhUuid: "iamtst01"
             }];
-            scope.directOwnersCount = 1;
+            scope.directUserOwnersCount = 1;
             spyOn(scope, "displayRemoveErrorModal");
             scope.removeOwnerWithTrashcan(0, 0);
             expect(scope.displayRemoveErrorModal).toHaveBeenCalledWith("owner");
