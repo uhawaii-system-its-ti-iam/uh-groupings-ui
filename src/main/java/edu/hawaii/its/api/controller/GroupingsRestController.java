@@ -524,7 +524,8 @@ public class GroupingsRestController {
     }
 
     /**
-     * Request the number of all owners (direct + indirect) in a grouping.
+     * Returns the number of all individual user owners in a grouping.
+     * Includes direct and indirect user owners, but excludes owner-groupings.
      */
     @GetMapping(value = "/groupings/{path:[\\w-:.]+}/owners/count")
     public ResponseEntity<String> getNumberOfAllOwners(@PathVariable String path) {
@@ -536,8 +537,8 @@ public class GroupingsRestController {
     }
 
     /**
-     * Get all duplicated owners in a grouping, and their sources of ownership.
-     * (Either both a direct owner and indirect owner, or multiple indirect owners via different owner-groupings.)
+     * Returns owners with multiple sources of ownership in a grouping.
+     * Includes direct user owners with indirect ownership or users with indirect ownership through multiple owner-groupings.
      */
     @GetMapping(value = "/groupings/{path:[\\w-:.]+}/owners/duplicates")
     public ResponseEntity<String> getDuplicateOwners(@PathVariable String path) {
@@ -573,7 +574,8 @@ public class GroupingsRestController {
     }
 
     /**
-     * Get grouping owners in groupingPath.
+     * Returns directly assigned owner entries in a grouping.
+     * Includes individual user owners and owner-groupings.
      */
     @GetMapping(value = "/grouping/{groupingPath}/owners")
     public ResponseEntity<String> groupingOwners(@PathVariable String groupingPath) {
@@ -721,12 +723,12 @@ public class GroupingsRestController {
     }
 
     /**
-     * Get the number of owners of the group path that contains the owner with uhIdentifier
+     * Returns the number of directly assigned individual user owners in a grouping.
      */
     @GetMapping(value = "/members/{path:.+}/owners/count")
-    public ResponseEntity<String> getNumberOfDirectOwners(@PathVariable String path) {
+    public ResponseEntity<String> getNumberOfDirectUserOwners(@PathVariable String path) {
         String currentUid = policy.sanitize(userContextService.getCurrentUid());
-        logger.info(String.format("Entered REST getNumberOfDirectOwners - currentUid: %s, path: %s",
+        logger.info(String.format("Entered REST getNumberOfDirectUserOwners - currentUid: %s, path: %s",
                 currentUid, path));
         String safePath = policy.sanitize(path);
         String baseUri = String.format(API_2_1_BASE + "/members/%s/owners/count", safePath);

@@ -62,7 +62,7 @@
         $scope.pagedItemsOwners = [];
         $scope.currentPageOwners = 0;
         $scope.ownerLimit = 0;
-        $scope.directOwnersCount = 0;
+        $scope.directUserOwnersCount = 0;
 
         $scope.allowOptIn = false;
         $scope.allowOptOut = false;
@@ -270,9 +270,8 @@
         };
 
         /**
-         * Fetches just the owners of a specified group path
-         * Because only immediate members should be shown in the owners table, this has to be its own separate function
-         * Handles owner-groupings as well
+         * Fetches the direct owner entries of a grouping.
+         * Includes individual user owners and owner-groupings.
          * @param groupPath - path of the grouping to retrieve owners from
          */
         $scope.fetchOwners = (groupPath) => {
@@ -280,13 +279,14 @@
                 groupingsService.groupingOwners(groupPath, async (res) => {
                     $scope.groupingOwners = res.owners.members;
                     $scope.ownerLimit = res.ownerLimit;
-                    const immediateOwnersCount = $scope.groupingOwners.length;
+                    const directOwnerEntriesCount = $scope.groupingOwners.length;
                     let totalOwnerGroupingMembers = 0;
                     const jobs = [];
-                    let directOwnersCount = 0;
-                    const directOwnersCountJob = new Promise((r) => {
-                        groupingsService.getNumberOfDirectOwners(groupPath, (n) => {
-                            directOwnersCount = n;
+
+                    let directUserOwnersCount = 0;
+                    const directUserOwnersCountJob = new Promise((r) => {
+                        groupingsService.getNumberOfDirectUserOwners(groupPath, (n) => {
+                            directUserOwnersCount = n;
                             r();
                         });
                     });
@@ -315,10 +315,10 @@
                             );
                         }
                     });
-                    await Promise.all([...jobs, allOwnersCountJob, directOwnersCountJob]);
-                    $scope.directOwnersCount = directOwnersCount;
+                    await Promise.all([...jobs, allOwnersCountJob, directUserOwnersCountJob]);
+                    $scope.directUserOwnersCount = directUserOwnersCount;
                     $scope.allOwnersCount = allOwnersCount;
-                    $scope.hasDuplicateOwners = (immediateOwnersCount + totalOwnerGroupingMembers) !== $scope.allOwnersCount;
+                    $scope.hasDuplicateOwners = (directOwnerEntriesCount + totalOwnerGroupingMembers) !== $scope.allOwnersCount;
                     $scope.filter($scope.groupingOwners, "pagedItemsOwners", "currentPageOwners", $scope.ownersQuery, false);
                     $scope.loading = false;
                     resolve();
@@ -1058,7 +1058,7 @@
                 $scope.displayOwnerErrorModal();
             } else if (res.status === 409) { // CONFLICT max number of owners exceeded.
                 $scope.displayOwnerLimitWarningModal();
-            } else if (res.status === 422) { // Unprocessable Content: last direct owner was removed.
+            } else if (res.status === 422) { // Unprocessable Content: last direct user owner was removed.
                 $scope.displayDirectOwnerRemoveWarningModal();
             } else {
                 $scope.displayApiErrorModal();
@@ -1518,8 +1518,8 @@
                 return;
             }
 
-            // Prevent removing the last direct owner
-            if ((listName === "owners") && $scope.multiRemoveResults.length === $scope.directOwnersCount) {
+            // Prevent removing all remaining direct user owners.
+            if ((listName === "owners") && $scope.multiRemoveResults.length === $scope.directUserOwnersCount) {
                 $scope.displayRemoveErrorModal("owner");
                 clearMemberInput();
                 return;
@@ -1714,8 +1714,8 @@
         };
 
         /**
-         * Remove an owner member by using the "trashcan" UI implementation.
-         * There must be at least one owner remaining.
+         * Remove an individual user owner using the trashcan.
+         * At least one direct user owner must remain.
          * @param {number} currentPage - the current page in the owners table
          * @param {number} index - the index of the owner clicked by the user
          */
@@ -1723,8 +1723,8 @@
             const ownerToRemove = $scope.pagedItemsOwners[Number(currentPage)][Number(index)];
             $scope.listName = "owners";
 
-            // Ensure that the owner being removed is not the last remaining direct owner.
-            if ($scope.directOwnersCount === 1) {
+            // Prevent removing the last direct user owner.
+            if ($scope.directUserOwnersCount === 1) {
                 $scope.displayRemoveErrorModal("owner");
                 return;
             }
@@ -1738,8 +1738,8 @@
         };
 
         /**
-         * Remove a owner-grouping by using the "trashcan" UI implementation.
-         * There must be at least one owner remaining.
+         * Remove an owner-grouping using the trashcan.
+         * Prevents removing the last direct owner entry.
          * @param path - path of the owner-grouping to be removed
          * @param groupingName - name of the owner-grouping to be removed
          */
@@ -2500,7 +2500,7 @@
         };
 
         /**
-         *  Modal shown after a user tries to remove direct owner(s), leaving a grouping without a direct owner.
+         * Modal shown when removing owners would leave a grouping without a direct user owner.
          */
         $scope.displayDirectOwnerRemoveWarningModal = () => {
             $scope.loading = false;
