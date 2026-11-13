@@ -4,32 +4,10 @@
      * Service function that provides GET and POST requests for getting or updating data
      * @name dataProvider
      */
-    UHGroupingsApp.factory("dataProvider", function ($http, $timeout, $window, BASE_URL) {
+    UHGroupingsApp.factory("dataProvider", function ($http, $timeout, $window, asyncJobPoller, BASE_URL) {
 
-        const delay = 5000;
         const timeLimit = 20000;
         const maxRetries = 3;
-
-        /**
-         * Polls to getAsyncJobResult API endpoint until the async job has completed with a result
-         * @param {number} jobId - the jobId returned from the response of an async endpoint
-         * @param {function} callback - the function to perform on a successful request (200)
-         * @param {function} callError - execute if response returns as an error
-         * @param {number} timeoutID - the timeoutID created by a setTimeout() call to clear
-         */
-        const pollData = (jobId, callback, callError, timeoutID = 0) => {
-            $http.get(encodeURI(`${BASE_URL}jobs/${jobId}`))
-                .then((response) => {
-                    if (response.data.status === "COMPLETED") {
-                        clearTimeout(timeoutID);
-                        callback(response.data.result);
-                    } else {
-                        $timeout(() => pollData(jobId, callback, callError, timeoutID), delay);
-                    }
-                }, (response) => {
-                    callError(response);
-                });
-        };
 
         return {
 
@@ -99,7 +77,7 @@
             loadDataWithBodyAsync(url, data, initialPoll, callback, callError) {
                 $http.post(encodeURI(url), data)
                     .then((response) => {
-                        $timeout(() => pollData(response.data, callback, callError), initialPoll);
+                        $timeout(() => asyncJobPoller(response.data, callback, callError), initialPoll);
                     }, (response) => {
                         callError(response);
                     });
@@ -153,7 +131,7 @@
             updateDataAsync(url, initialPoll, callback, callError) {
                 $http.post(encodeURI(url))
                     .then((response) => {
-                        $timeout(() => pollData(response.data, callback, callError), initialPoll);
+                        $timeout(() => asyncJobPoller(response.data, callback, callError), initialPoll);
                     }, (response) => {
                         callError(response);
                     });
@@ -205,12 +183,15 @@
              * @param {function} modal - Display a modal using a call back function.
              * @param {function} callback - Execute if response returns OK
              * @param {function} callError - Execute if response returns as an error.
+             * @param {function} [onProgress] - Called with the job's progress each time it is polled (see
+             * asyncJobPoller).
              */
-            updateDataWithBodyAndTimeoutModalAsync(url, data, initialPoll, callback, callError, modal) {
+            updateDataWithBodyAndTimeoutModalAsync(url, data, initialPoll, callback, callError, modal, onProgress) {
                 let timeoutPromise = $timeout(modal, timeLimit);
                 $http.put(encodeURI(url), data)
                     .then((response) => {
-                        $timeout(() => pollData(response.data, callback, callError, timeoutPromise), initialPoll);
+                        $timeout(() => asyncJobPoller(response.data, callback, callError, timeoutPromise, onProgress),
+                            initialPoll);
                     }, (response) => {
                         callError(response);
                         $timeout.cancel(timeoutPromise)

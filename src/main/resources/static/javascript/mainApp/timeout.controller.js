@@ -6,7 +6,8 @@
      * Controller for the timeout functionality. When a user is idle for more than 30 min, user will be logged out.
      * Also displays timeout warning modal when 5 minutes are left in the timer.
      *
-     * If user clicks or presses any key within the 30 min of inactivity, timer is reset.
+     * If user clicks or presses any key within the 30 min of inactivity, timer is reset. So does each poll of an async
+     * job (see asyncJobPoller), so a user waiting on a long job such as a large import is not logged out.
      *
      * @param $scope - Binding between controller and HTML page
      * @param $window - A reference to the browser's window object
@@ -61,6 +62,15 @@
             }
         };
 
+        /**
+         * Reset the idle timeout, unless the timeout modal is already open.
+         */
+        const resetIdleTimer = () => {
+            if (!isModalOpen) {
+                $timeout.cancel(displayTimeoutModalPromise);
+            }
+        };
+
         angular.element(function () {
             // Start timeouts
             displayTimeoutModalPromise = $timeout(() => {
@@ -76,18 +86,13 @@
             });
 
             // If user clicks, reset timeout
-            $(this).click((e) => {
-                if (!isModalOpen) {
-                    $timeout.cancel(displayTimeoutModalPromise);
-                }
-            });
+            $(this).click(resetIdleTimer);
             // If user presses a key on the keyboard reset timeout
-            $(this).keypress((e) => {
-                if (!isModalOpen) {
-                    $timeout.cancel(displayTimeoutModalPromise);
-                }
-            });
+            $(this).keypress(resetIdleTimer);
         });
+
+        // If an async job the user is waiting on is polled, reset timeout
+        $scope.$on("asyncJobPolled", resetIdleTimer);
 
         /**
          * Clear timeouts and intervals when DOM is destroyed.
@@ -98,7 +103,7 @@
                 displayTimeoutModalPromise = {};
             }
             if (angular.isDefined(countdownTimerPromise)) {
-                $timeout.cancel(countdownTimerPromise);
+                $interval.cancel(countdownTimerPromise);
                 countdownTimerPromise = {};
             }
         });

@@ -4,6 +4,9 @@ describe("TimeoutController", function () {
 
     beforeEach(module("UHGroupingsApp"));
 
+    // userService caches the current user in sessionStorage, where another spec may have left a different one.
+    beforeEach(() => sessionStorage.removeItem("currentUserDataSession"));
+
     let scope;
     let controller;
     let window;
@@ -114,6 +117,69 @@ describe("TimeoutController", function () {
             scope.secondsRemaining = 0;
             scope.timer();
             expect(scope.logoutOnIdle).toHaveBeenCalled();
+        });
+    });
+
+    describe("asyncJobPolled", () => {
+        const MINUTE = 60 * 1000;
+        let rootScope;
+
+        beforeEach(inject(($rootScope) => {
+            rootScope = $rootScope;
+            httpBackend.whenGET("currentUser").respond(200, {});
+            httpBackend.whenGET("modal/timeoutModal").respond(200, "");
+        }));
+
+        // The idle timer is started once the document is ready.
+        beforeEach((done) => setTimeout(done));
+
+        const pollJob = () => {
+            rootScope.$broadcast("asyncJobPolled");
+            rootScope.$digest();
+        };
+
+        it("should not display the inactivity warning while an async job is being polled", () => {
+            spyOn(scope, "displayTimeoutModal");
+
+            for (let elapsed = 0; elapsed < 60 * MINUTE; elapsed += 5 * MINUTE) {
+                timeout.flush(5 * MINUTE);
+                pollJob();
+            }
+            expect(scope.displayTimeoutModal).not.toHaveBeenCalled();
+
+            timeout.flush(25 * MINUTE);
+            expect(scope.displayTimeoutModal).toHaveBeenCalled();
+        });
+
+        it("should reset the timer when an async job is polled, but not while the inactivity warning is open", () => {
+            spyOn(timeout, "cancel").and.callThrough();
+            pollJob();
+            expect(timeout.cancel).toHaveBeenCalledTimes(1);
+
+            scope.displayTimeoutModal();
+            httpBackend.flush();
+            rootScope.$digest();
+            timeout.cancel.calls.reset();
+
+            pollJob();
+
+            expect(timeout.cancel).not.toHaveBeenCalled();
+        });
+    });
+
+    describe("$destroy", () => {
+        beforeEach(() => {
+            httpBackend.whenGET("currentUser").respond(200, {});
+            httpBackend.whenGET("modal/timeoutModal").respond(200, "");
+        });
+
+        it("should stop the countdown of an open inactivity warning", () => {
+            scope.displayTimeoutModal();
+            httpBackend.flush();
+            spyOn(interval, "cancel").and.callThrough();
+
+            expect(() => scope.$destroy()).not.toThrow();
+            expect(interval.cancel).toHaveBeenCalled();
         });
     });
 });

@@ -3,6 +3,7 @@ package edu.hawaii.its.api.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -15,8 +16,11 @@ import com.sun.net.httpserver.HttpServer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 import edu.hawaii.its.groupings.service.JwtService;
@@ -76,6 +80,54 @@ public class HttpRequestServiceTest {
         assertEquals(body, response.getBody());
     }
 
+    /*
+     * API response headers must not be forwarded. Hop-by-hop headers such as
+     * Transfer-Encoding leaking into the UI's response caused the F5 to reset the connection.
+     */
+    @Test
+    public void makeApiRequestDoesNotForwardApiResponseHeaders() {
+        String body = "{\"resultCode\":\"SUCCESS\"}";
+        server.createContext("/members/memberships", exchange -> {
+            exchange.getResponseHeaders().set("Content-Type", "application/json");
+            exchange.getResponseHeaders().set("Connection", "close");
+            exchange.getResponseHeaders().set("Keep-Alive", "timeout=5");
+            exchange.getResponseHeaders().set("X-Cnection", "close");
+            exchange.getResponseHeaders().set("X-Api-Header", "api-value");
+            // A response length of 0 makes the server send the body with chunked transfer encoding.
+            exchange.sendResponseHeaders(HttpStatus.OK.value(), 0);
+            exchange.getResponseBody().write(body.getBytes(StandardCharsets.UTF_8));
+            exchange.close();
+        });
+
+        ResponseEntity<String> response = httpRequestService.makeApiRequest(
+                "/members/memberships",
+                HttpMethod.GET);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(body, response.getBody());
+        assertEquals(MediaType.APPLICATION_JSON, response.getHeaders().getContentType());
+        for (String header : new String[] { "Transfer-Encoding", "Content-Length", "Connection",
+                "Keep-Alive", "X-Cnection", "X-Api-Header", "Date" }) {
+            assertNull(response.getHeaders().getFirst(header), header + " should not be forwarded");
+        }
+    }
+
+    @Test
+    public void makeApiRequestHandlesEmptyResponseWithoutContentType() {
+        server.createContext("/members/memberships", exchange -> {
+            exchange.sendResponseHeaders(HttpStatus.NO_CONTENT.value(), -1);
+            exchange.close();
+        });
+
+        ResponseEntity<String> response = httpRequestService.makeApiRequest(
+                "/members/memberships",
+                HttpMethod.GET);
+
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+        assertNull(response.getBody());
+        assertNull(response.getHeaders().getContentType());
+    }
+
     @Test
     public void toRelativePathStripsConfiguredBase() {
         assertEquals("/members", httpRequestService.toRelativePath(apiBase + "/members"));
@@ -106,12 +158,80 @@ public class HttpRequestServiceTest {
     }
 
     @Test
+    public void rejectsTraversalInAbsoluteAndRelativePaths() {
+        JwtService jwtService = mock(JwtService.class);
+        String base = apiBase + "/api/groupings/v2.1";
+        HttpRequestService service = new HttpRequestService(jwtService, base);
+        String[] paths = { "/../admin", "/members/../../admin", "/./members",
+                "/%2e%2e/admin", "/.%2E/admin", "/members%2f..%2f..%2fadmin",
+                "/%2e%2e%5cadmin" };
+
+        for (String path : paths) {
+            assertThrows(IllegalArgumentException.class,
+                    () -> service.toRelativePath(path), path);
+            assertThrows(IllegalArgumentException.class,
+                    () -> service.toRelativePath(base + path), path);
+            assertThrows(IllegalArgumentException.class,
+                    () -> service.resolveApiUri(path), path);
+            assertThrows(IllegalArgumentException.class,
+                    () -> service.resolveApiUri(base + path), path);
+        }
+    }
+
+    @Test
+    public void preservesSafePathsAndQueryValues() {
+        JwtService jwtService = mock(JwtService.class);
+        String base = apiBase + "/api/groupings/v2.1";
+        HttpRequestService service = new HttpRequestService(jwtService, base + "/");
+
+        assertEquals(base + "/", service.resolveApiUri(base).toString());
+        assertEquals(base + "/members", service.resolveApiUri("/members").toString());
+        assertEquals(base + "/members..json?next=/../admin",
+                service.resolveApiUri("/members..json?next=/../admin").toString());
+    }
+
+    @Test
     public void constructorRequiresApiBase() {
         JwtService jwtService = mock(JwtService.class);
         assertThrows(IllegalArgumentException.class,
                 () -> new HttpRequestService(jwtService, null));
         assertThrows(IllegalArgumentException.class,
                 () -> new HttpRequestService(jwtService, " "));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = { "", "/", "/api", "/api/" })
+    public void resolveApiUriHandlesBasePathBoundaries(String basePath) {
+        String base = apiBase + basePath;
+        String normalizedBase = base.endsWith("/") ? base.substring(0, base.length() - 1) : base;
+        HttpRequestService service = new HttpRequestService(mock(JwtService.class), base);
+
+        assertEquals(normalizedBase + "/", service.resolveApiUri(normalizedBase).toString());
+        assertEquals(normalizedBase + "/", service.resolveApiUri(normalizedBase + "/").toString());
+        assertEquals(normalizedBase + "/", service.resolveApiUri("/").toString());
+        assertEquals(normalizedBase + "/members", service.resolveApiUri("/members").toString());
+        assertEquals(normalizedBase + "/members",
+                service.resolveApiUri(normalizedBase + "/members").toString());
+        assertEquals(normalizedBase + "/?page=1",
+                service.resolveApiUri(normalizedBase + "?page=1").toString());
+        assertThrows(IllegalArgumentException.class,
+                () -> service.resolveApiUri(normalizedBase + "x/members"));
+        assertThrows(IllegalArgumentException.class,
+                () -> service.resolveApiUri("/../admin"));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = { "/members/%", "/members/%2", "/members/%GG" })
+    public void rejectsMalformedEncodedPathsWithClearMessage(String path) {
+        for (String uri : new String[] { path, apiBase + path }) {
+            IllegalArgumentException relativeError = assertThrows(IllegalArgumentException.class,
+                    () -> httpRequestService.toRelativePath(uri));
+            assertEquals("API request has an invalid encoded path.", relativeError.getMessage());
+            IllegalArgumentException resolvedError = assertThrows(IllegalArgumentException.class,
+                    () -> httpRequestService.resolveApiUri(uri));
+            assertEquals("API request has an invalid encoded path.", resolvedError.getMessage());
+            assertTrue(resolvedError.getCause() instanceof IllegalArgumentException);
+        }
     }
 
     @Test

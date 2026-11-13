@@ -208,6 +208,25 @@ describe("GroupingsService", () => {
             httpBackend.expectPUT(BASE_URL + groupingPath + "/addIncludeMembersAsync").respond(200);
             expect(httpBackend.flush).not.toThrow();
         });
+
+        it("should first poll after about the time a small add takes", () => {
+            spyOn(dp, "updateDataWithBodyAndTimeoutModalAsync");
+            gs.addIncludeMembersAsync(new Array(100).fill("member"), groupingPath, onSuccess, onError, modal);
+            expect(dp.updateDataWithBodyAndTimeoutModalAsync.calls.argsFor(0)[2]).toEqual(Math.pow(100, 1.6));
+        });
+
+        it("should first poll after at most 5 seconds for a large add", () => {
+            spyOn(dp, "updateDataWithBodyAndTimeoutModalAsync");
+            gs.addIncludeMembersAsync(new Array(10000).fill("member"), groupingPath, onSuccess, onError, modal);
+            expect(dp.updateDataWithBodyAndTimeoutModalAsync.calls.argsFor(0)[2]).toEqual(5000);
+        });
+
+        it("should pass on the callback for the add's progress", () => {
+            const onProgress = jasmine.createSpy("onProgress");
+            spyOn(dp, "updateDataWithBodyAndTimeoutModalAsync");
+            gs.addIncludeMembersAsync(usersToAdd, groupingPath, onSuccess, onError, modal, onProgress);
+            expect(dp.updateDataWithBodyAndTimeoutModalAsync.calls.argsFor(0)[6]).toBe(onProgress);
+        });
     });
 
     describe("addExcludeMembers", () => {
@@ -238,6 +257,25 @@ describe("GroupingsService", () => {
             gs.addExcludeMembersAsync(usersToAdd, groupingPath, onSuccess, onError, modal);
             httpBackend.expectPUT(BASE_URL + groupingPath + "/addExcludeMembersAsync").respond(200);
             expect(httpBackend.flush).not.toThrow();
+        });
+
+        it("should first poll after about the time a small add takes", () => {
+            spyOn(dp, "updateDataWithBodyAndTimeoutModalAsync");
+            gs.addExcludeMembersAsync(new Array(100).fill("member"), groupingPath, onSuccess, onError, modal);
+            expect(dp.updateDataWithBodyAndTimeoutModalAsync.calls.argsFor(0)[2]).toEqual(Math.pow(100, 1.6));
+        });
+
+        it("should first poll after at most 5 seconds for a large add", () => {
+            spyOn(dp, "updateDataWithBodyAndTimeoutModalAsync");
+            gs.addExcludeMembersAsync(new Array(10000).fill("member"), groupingPath, onSuccess, onError, modal);
+            expect(dp.updateDataWithBodyAndTimeoutModalAsync.calls.argsFor(0)[2]).toEqual(5000);
+        });
+
+        it("should pass on the callback for the add's progress", () => {
+            const onProgress = jasmine.createSpy("onProgress");
+            spyOn(dp, "updateDataWithBodyAndTimeoutModalAsync");
+            gs.addExcludeMembersAsync(usersToAdd, groupingPath, onSuccess, onError, modal, onProgress);
+            expect(dp.updateDataWithBodyAndTimeoutModalAsync.calls.argsFor(0)[6]).toBe(onProgress);
         });
     });
 

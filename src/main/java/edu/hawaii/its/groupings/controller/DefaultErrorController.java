@@ -4,6 +4,7 @@ import java.util.Map;
 import java.time.LocalDateTime;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.RequestDispatcher;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -12,6 +13,7 @@ import org.springframework.boot.webmvc.error.DefaultErrorAttributes;
 import org.springframework.boot.webmvc.error.ErrorController;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.context.request.ServletWebRequest;
 
@@ -56,7 +58,13 @@ public class DefaultErrorController implements ErrorController {
 
         if (ex != null) {
             logger.error("uid: " + uid + "; Exception: ", ex);
-            emailService.sendWithStack(ex, ex.getClass().getSimpleName(), request.getRequestURI());
+
+            String requestUri = (String) request.getAttribute(RequestDispatcher.ERROR_REQUEST_URI);
+            if (!StringUtils.hasText(requestUri)) {
+                requestUri = request.getRequestURI();
+            }
+            
+            emailService.sendWithStack(ex, ex.getClass().getSimpleName(), requestUri);
         }
 
         // Pick desired error attributes and attach them to the model.
