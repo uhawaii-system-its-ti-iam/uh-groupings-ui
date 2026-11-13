@@ -639,7 +639,6 @@ describe("AdminController", function () {
 
     describe("removeAdmin", () => {
         beforeEach(() => {
-            // Matches the first entry of adminsList below, so $scope.returnMemberObject can find it by uid.
             scope.pagedItemsAdmins[0] = [{name: "iamtst01", uid: "iamtst01", uhUuid: "iamtst01"}];
         });
         it("should call scope.displayRemoveModal", () => {
