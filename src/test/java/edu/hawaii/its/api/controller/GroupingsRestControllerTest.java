@@ -61,7 +61,7 @@ public class GroupingsRestControllerTest {
 
     private static final String GROUPING = "grouping1";
     private static final String GROUPING2 = "grouping2";
-    private static final String UID = "\"user\"";
+    private static final String UID = "user";
     private static final String REST_CONTROLLER_BASE = "/api/groupings/";
     private static final String ADMIN_UID = "admin";
 
@@ -115,7 +115,7 @@ public class GroupingsRestControllerTest {
         String uri = "/currentUser";
         assertNotNull(mockMvc.perform(get(uri).with(csrf()))
                 .andExpect(status().isOk())
-                .andExpect(content().json("{'uid':" + UID + "}"))
+                .andExpect(content().json("{\"uid\":\"" + UID + "\"}"))
                 .andReturn());
     }
 

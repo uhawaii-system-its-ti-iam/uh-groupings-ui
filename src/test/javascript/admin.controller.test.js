@@ -639,7 +639,7 @@ describe("AdminController", function () {
 
     describe("removeAdmin", () => {
         beforeEach(() => {
-            scope.pagedItemsAdmins[0] = [{name: "zzz", uid: "zzz", uhUuid: "zzz"}];
+            scope.pagedItemsAdmins[0] = [{name: "iamtst01", uid: "iamtst01", uhUuid: "iamtst01"}];
         });
         it("should call scope.displayRemoveModal", () => {
             scope.adminsList = [
