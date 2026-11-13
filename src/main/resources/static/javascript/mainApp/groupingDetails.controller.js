@@ -2432,7 +2432,7 @@
             $scope.retireGroupingModalInstance.close();
             $scope.loading = true;
 
-            groupingsService.retireGrouping($scope.selectedGrouping.path,
+            groupingsService.requestGroupingRetirement($scope.selectedGrouping.path,
                 (res) => {
                     $scope.loading = false;
                     if (res.resultCode === "SUCCESS") {

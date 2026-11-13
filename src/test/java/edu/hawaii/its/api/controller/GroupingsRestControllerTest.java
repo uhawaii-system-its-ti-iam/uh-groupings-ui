@@ -61,7 +61,7 @@ public class GroupingsRestControllerTest {
 
     private static final String GROUPING = "grouping1";
     private static final String GROUPING2 = "grouping2";
-    private static final String UID = "user";
+    private static final String UID = "\"user\"";
     private static final String REST_CONTROLLER_BASE = "/api/groupings/";
     private static final String ADMIN_UID = "admin";
 
@@ -1138,10 +1138,10 @@ public class GroupingsRestControllerTest {
     public void mapGroupingParametersTest() {
         Map<String, String> params = groupingsRestController.mapGroupingParameters(1, 2, "name", true);
         assertEquals(4, params.size());
-        assertTrue(params.containsKey("pageNumber"));
-        assertEquals("1", params.get("pageNumber"));
-        assertTrue(params.containsKey("pageSize"));
-        assertEquals("2", params.get("pageSize"));
+        assertTrue(params.containsKey("page"));
+        assertEquals("1", params.get("page"));
+        assertTrue(params.containsKey("size"));
+        assertEquals("2", params.get("size"));
         assertTrue(params.containsKey("sortBy"));
         assertEquals("name", params.get("sortBy"));
         assertTrue(params.containsKey("isAscending"));
@@ -1153,7 +1153,7 @@ public class GroupingsRestControllerTest {
         Map<String, String> params = groupingsRestController.mapGroupingParameters(1, 2, "name", true);
         String uriTemplate = groupingsRestController.buildUriWithParams(API_2_1_BASE, params);
         assertNotNull(uriTemplate);
-        String expectedResult = API_2_1_BASE + "?pageNumber=1&pageSize=2&sortBy=name&isAscending=true";
+        String expectedResult = API_2_1_BASE + "?size=2&sortBy=name&page=1&isAscending=true";
         assertEquals(expectedResult, uriTemplate);
     }
 

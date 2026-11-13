@@ -3592,12 +3592,12 @@ describe("GroupingController", () => {
                 resultMessage: "Retirement request emails were sent.",
                 ownerRecipients: ["owner@hawaii.edu"]
             };
-            spyOn(gs, "retireGrouping").and.callFake((path, onSuccess) => onSuccess(result));
+            spyOn(gs, "requestGroupingRetirement").and.callFake((path, onSuccess) => onSuccess(result));
             spyOn(scope, "displayRetirementResultModal");
 
             scope.proceedRetireGroupingModal();
 
-            expect(gs.retireGrouping).toHaveBeenCalled();
+            expect(gs.requestGroupingRetirement).toHaveBeenCalled();
             expect(scope.displayRetirementResultModal).toHaveBeenCalledWith(result);
             expect(scope.loading).toBeFalse();
         });
@@ -3609,7 +3609,7 @@ describe("GroupingController", () => {
                 resultMessage: "Failed to send retirement request emails.",
                 ownerRecipients: ["owner@hawaii.edu"]
             };
-            spyOn(gs, "retireGrouping").and.callFake((path, onSuccess) => onSuccess(result));
+            spyOn(gs, "requestGroupingRetirement").and.callFake((path, onSuccess) => onSuccess(result));
             spyOn(scope, "displayDynamicModal");
 
             scope.proceedRetireGroupingModal();
@@ -3620,7 +3620,7 @@ describe("GroupingController", () => {
 
         it("shows an error when the retirement request itself fails", () => {
             scope.retireGroupingModalInstance = modal;
-            spyOn(gs, "retireGrouping").and.callFake((path, onSuccess, onError) => onError({ status: 500 }));
+            spyOn(gs, "requestGroupingRetirement").and.callFake((path, onSuccess, onError) => onError({ status: 500 }));
             spyOn(scope, "displayDynamicModal");
 
             scope.proceedRetireGroupingModal();

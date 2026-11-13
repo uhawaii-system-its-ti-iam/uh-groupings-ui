@@ -471,12 +471,12 @@
             },
 
             /**
-             * Retire a grouping
+             * Request grouping retirement
              * @param groupingPath - The path of the grouping to retire
              * @param onSuccess - Function to be called when HTTP request returns a success
              * @param onError - Function to be called if HTTP request returns an error
              */
-            retireGrouping(groupingPath, onSuccess, onError) {
+            requestGroupingRetirement(groupingPath, onSuccess, onError) {
                 let endpoint = BASE_URL + "groupings/" + groupingPath + "/retirement-requests";
                 dataProvider.updateData(endpoint, onSuccess, onError);
             },

@@ -792,8 +792,8 @@ public class GroupingsRestController {
     public Map<String, String> mapGroupingParameters(Integer pageNumber, Integer pageSize, String sortBy,
             Boolean isAscending) {
         Map<String, String> params = new HashMap<>();
-        params.put("pageNumber", Integer.toString(pageNumber));
-        params.put("pageSize", Integer.toString(pageSize));
+        params.put("page", Integer.toString(pageNumber));
+        params.put("size", Integer.toString(pageSize));
         params.put("sortBy", sortBy);
         params.put("isAscending", Boolean.toString(isAscending));
         return params;

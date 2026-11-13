@@ -686,11 +686,11 @@ describe("GroupingsService", () => {
         });
     });
 
-    describe("retireGrouping", () => {
+    describe("requestGroupingRetirement", () => {
         it("should call dataProvider.updateData", () => {
             spyOn(dp, "updateData");
 
-            gs.retireGrouping(groupingPath, onSuccess, onError);
+            gs.requestGroupingRetirement(groupingPath, onSuccess, onError);
 
             expect(dp.updateData).toHaveBeenCalledWith(
                 BASE_URL + "groupings/" + groupingPath + "/retirement-requests",
@@ -700,7 +700,7 @@ describe("GroupingsService", () => {
         });
 
         it("should use the correct path", () => {
-            gs.retireGrouping(groupingPath, onSuccess, onError);
+            gs.requestGroupingRetirement(groupingPath, onSuccess, onError);
             httpBackend.expectPOST(
                 BASE_URL + "groupings/" + groupingPath + "/retirement-requests"
             ).respond(200);
