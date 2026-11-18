@@ -4686,6 +4686,119 @@ describe("GroupingController", () => {
 
     });
 
+    describe("retire grouping", () => {
+        let modal;
+
+        beforeEach(() => {
+            modal = {
+                close: jasmine.createSpy("close"),
+                dismiss: jasmine.createSpy("dismiss"),
+                result: {
+                    finally: jasmine.createSpy("finally")
+                }
+            };
+            scope.selectedGrouping = { path: "hawaii.edu:custom:test:grouping", name: "grouping" };
+        });
+
+        it("opens the retirement confirmation modal", () => {
+            spyOn(uibModal, "open").and.returnValue(modal);
+
+            scope.retireGrouping();
+
+            expect(uibModal.open).toHaveBeenCalledWith({
+                templateUrl: "modal/retireGroupingModal",
+                scope,
+                backdrop: "static"
+            });
+        });
+
+        it("shows who the retirement emails were sent to", () => {
+            spyOn(uibModal, "open").and.returnValue(modal);
+            const result = {
+                resultCode: "SUCCESS",
+                resultMessage: "Retirement request emails were sent.",
+                ownerRecipients: ["owner-one@hawaii.edu", "owner-two@hawaii.edu"]
+            };
+
+            scope.displayRetirementResultModal(result);
+
+            expect(scope.retirementResult.title).toBe("Retirement Emails Sent");
+            expect(scope.retirementResult.message).toBe(result.resultMessage);
+            expect(scope.retirementResult.ownerRecipients).toEqual(result.ownerRecipients);
+            expect(uibModal.open).toHaveBeenCalledWith({
+                templateUrl: "modal/retireGroupingResultModal",
+                scope,
+                backdrop: "static"
+            });
+        });
+
+        it("passes the API result to the retirement result modal", () => {
+            scope.retireGroupingModalInstance = modal;
+            const result = {
+                resultCode: "SUCCESS",
+                resultMessage: "Retirement request emails were sent.",
+                ownerRecipients: ["owner@hawaii.edu"]
+            };
+            spyOn(gs, "requestGroupingRetirement").and.callFake((path, onSuccess) => onSuccess(result));
+            spyOn(scope, "displayRetirementResultModal");
+
+            scope.proceedRetireGroupingModal();
+
+            expect(gs.requestGroupingRetirement).toHaveBeenCalled();
+            expect(scope.displayRetirementResultModal).toHaveBeenCalledWith(result);
+            expect(scope.loading).toBeFalse();
+        });
+
+        it("shows a warning when IAM received the request but owner notification failed", () => {
+            scope.retireGroupingModalInstance = modal;
+            const result = {
+                resultCode: "PARTIAL_SUCCESS",
+                resultMessage: "Your retirement request was sent to IAM, but we couldn't notify " +
+                    "the grouping owners. Do not submit another retirement request.",
+                ownerRecipients: ["owner@hawaii.edu"]
+            };
+            spyOn(gs, "requestGroupingRetirement").and.callFake((path, onSuccess) => onSuccess(result));
+            spyOn(scope, "displayDynamicModal");
+            spyOn(scope, "displayRetirementResultModal");
+
+            scope.proceedRetireGroupingModal();
+
+            expect(gs.requestGroupingRetirement).toHaveBeenCalledTimes(1);
+            expect(scope.displayDynamicModal).toHaveBeenCalledWith(
+                "Request Sent - Owner Notification Failed", result.resultMessage);
+            expect(scope.displayRetirementResultModal).not.toHaveBeenCalled();
+            expect(scope.loading).toBeFalse();
+        });
+
+        it("shows an error when an email could not be sent", () => {
+            scope.retireGroupingModalInstance = modal;
+            const result = {
+                resultCode: "FAILURE",
+                resultMessage: "Failed to send retirement request emails.",
+                ownerRecipients: ["owner@hawaii.edu"]
+            };
+            spyOn(gs, "requestGroupingRetirement").and.callFake((path, onSuccess) => onSuccess(result));
+            spyOn(scope, "displayDynamicModal");
+
+            scope.proceedRetireGroupingModal();
+
+            expect(scope.displayDynamicModal).toHaveBeenCalledWith("Error", result.resultMessage);
+            expect(scope.loading).toBeFalse();
+        });
+
+        it("shows an error when the retirement request itself fails", () => {
+            scope.retireGroupingModalInstance = modal;
+            spyOn(gs, "requestGroupingRetirement").and.callFake((path, onSuccess, onError) => onError({ status: 500 }));
+            spyOn(scope, "displayDynamicModal");
+
+            scope.proceedRetireGroupingModal();
+
+            expect(scope.displayDynamicModal).toHaveBeenCalledWith(
+                "Error", "Failed to send retire grouping request: 500");
+            expect(scope.loading).toBeFalse();
+        });
+    });
+
 });
 
 describe("SyncDestModalController", () => {

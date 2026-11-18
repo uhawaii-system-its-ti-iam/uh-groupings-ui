@@ -562,6 +562,19 @@ public class GroupingsRestController {
     }
 
     /**
+     * Request that IAM retire a grouping and notify the grouping owners.
+     */
+    @PostMapping(value = "/groupings/{path:[\\w-:.]+}/retirement-requests")
+    public ResponseEntity<String> requestGroupingRetirement(@PathVariable String path) {
+        String currentUid = policy.sanitize(userContextService.getCurrentUid());
+        String safePath = policy.sanitize(path);
+        logger.info(String.format("Entered REST requestGroupingRetirement - currentUid: %s, path: %s",
+                currentUid, safePath));
+        String uri = String.format(API_2_1_BASE + "/groupings/%s/retirement-requests", safePath);
+        return httpRequestService.makeApiRequest(uri, HttpMethod.POST);
+    }
+
+    /**
      * Check if principle is an owner, of any grouping.
      */
     @GetMapping(value = "/members/{uhIdentifier}/is-owner")
@@ -779,8 +792,8 @@ public class GroupingsRestController {
     public Map<String, String> mapGroupingParameters(Integer pageNumber, Integer pageSize, String sortBy,
             Boolean isAscending) {
         Map<String, String> params = new HashMap<>();
-        params.put("pageNumber", Integer.toString(pageNumber));
-        params.put("pageSize", Integer.toString(pageSize));
+        params.put("page", Integer.toString(pageNumber));
+        params.put("size", Integer.toString(pageSize));
         params.put("sortBy", sortBy);
         params.put("isAscending", Boolean.toString(isAscending));
         return params;
