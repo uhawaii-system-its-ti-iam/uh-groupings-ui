@@ -342,31 +342,33 @@
             event.preventDefault();
 
             // Get the actions display container
-            const actionsContainer = document.getElementById('actions-display');
-            if (!actionsContainer) return;
+            const actionsContainer = document.getElementById("actions-display");
+            if (!actionsContainer) {
+                return;
+            }
 
             // Hide all tab panes within actions container only
-            const tabPanes = actionsContainer.querySelectorAll('.tab-pane');
+            const tabPanes = actionsContainer.querySelectorAll(".tab-pane");
             tabPanes.forEach(pane => {
-                pane.classList.remove('show', 'active');
+                pane.classList.remove("show", "active");
             });
 
             // Remove active class from all tab links within actions container
-            const tabLinks = actionsContainer.querySelectorAll('.nav-tabs .nav-link');
+            const tabLinks = actionsContainer.querySelectorAll(".nav-tabs .nav-link");
             tabLinks.forEach(link => {
-                link.classList.remove('active');
-                link.setAttribute('aria-selected', 'false');
+                link.classList.remove("active");
+                link.setAttribute("aria-selected", "false");
             });
 
             // Show the selected tab pane
-            const selectedPane = actionsContainer.querySelector('#' + tabId);
+            const selectedPane = actionsContainer.querySelector("#" + tabId);
             if (selectedPane) {
-                selectedPane.classList.add('show', 'active');
+                selectedPane.classList.add("show", "active");
             }
 
             // Add active class to the clicked tab link
-            event.target.classList.add('active');
-            event.target.setAttribute('aria-selected', 'true');
+            event.target.classList.add("active");
+            event.target.setAttribute("aria-selected", "true");
         };
     }
 

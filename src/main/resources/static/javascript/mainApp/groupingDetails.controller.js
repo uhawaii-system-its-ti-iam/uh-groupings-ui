@@ -1,4 +1,4 @@
-/* global _, angular, UHGroupingsApp */
+/* global angular, UHGroupingsApp */
 
 (() => {
 
@@ -1249,6 +1249,8 @@
             displayAddModalForNewMembers(listName, identifiers);
         };
 
+        const isDirectOwnerList = () => $scope.listName === "owners" && !$scope.isOwnerGrouping;
+
         /**
          * Display a modal that prompts the user whether they want to add the member(s) or not. If 'Yes' is pressed, then
          * a request is made to add the member(s).
@@ -1288,7 +1290,7 @@
                     await groupingsService.addIncludeMembers(uhIdentifiers, groupingPath, handleSuccessfulAdd, handleUnsuccessfulRequest, displaySlowImportModal);
                 } else if ($scope.listName === "Exclude") {
                     await groupingsService.addExcludeMembers(uhIdentifiers, groupingPath, handleSuccessfulAdd, handleUnsuccessfulRequest, displaySlowImportModal);
-                } else if ($scope.listName === "owners" && !$scope.isOwnerGrouping) {
+                } else if (isDirectOwnerList()) {
                     await groupingsService.addOwnerships(groupingPath, uhIdentifiers, handleSuccessfulAdd, handleUnsuccessfulRequest);
                 } else if ($scope.isOwnerGrouping) {
                     await groupingsService.addOwnerGroupings(groupingPath, uhIdentifiers, handleSuccessfulAdd, handleUnsuccessfulRequest);
@@ -1486,13 +1488,7 @@
             return !_.isEmpty($scope.multiRemoveResults);
         };
 
-        /**
-         * Extracts the list of members to remove then sends it to the corresponding listName endpoint to perform the removal.
-         * @param listName {string} - Name of list to remove the members from.
-         */
-        $scope.removeMembers = (listName) => {
-            // Extract members from checkboxes or input box
-            $scope.listName = listName;
+        const getIdentifiersToRemove = () => {
             // Use the manageMembers list if it's not empty; otherwise, use members selected from checkboxes
             $scope.membersToModify = _.isEmpty($scope.manageMembers)
                 ? $scope.extractSelectedUsersFromCheckboxes($scope.membersInCheckboxList)
@@ -1502,6 +1498,17 @@
             if (!$scope.isOwnerGrouping) {
                 uhIdentifiers = $scope.sanitizer(uhIdentifiers);
             }
+            return uhIdentifiers;
+        };
+
+        /**
+         * Extracts the list of members to remove then sends it to the corresponding listName endpoint to perform the removal.
+         * @param listName {string} - Name of list to remove the members from.
+         */
+        $scope.removeMembers = (listName) => {
+            // Extract members from checkboxes or input box
+            $scope.listName = listName;
+            let uhIdentifiers = getIdentifiersToRemove();
 
             // Check if members from manageMembers list or checkboxes are empty
             if (_.isEmpty($scope.membersToModify)) {
@@ -1609,6 +1616,16 @@
             }
         };
 
+        const initRemoveMemberDisplayName = () => {
+            // The member can be missing when the grouping list is stale.
+            if (!$scope.isOwnerGrouping) {
+                const memberObject = $scope.returnMemberObject($scope.membersToRemove[0], $scope.listName);
+                if (memberObject) {
+                    $scope.initMemberDisplayName(memberObject);
+                }
+            }
+        };
+
         /**
          * Display a modal that prompts the user whether they want to remove the member(s) or not. If 'Yes' is pressed,
          * then a request is made to remove the member(s).
@@ -1631,14 +1648,8 @@
                 $scope.membersToRemove = [$scope.membersToRemove.uhUuid];
             }
 
-            // Set information for the remove/multiRemove modal. memberObject can be undefined if the list
-            // $scope.returnMemberObject searches is stale relative to $scope.membersToRemove.
-            if (!$scope.isOwnerGrouping) {
-                const memberObject = $scope.returnMemberObject($scope.membersToRemove[0], $scope.listName);
-                if (memberObject) {
-                    $scope.initMemberDisplayName(memberObject);
-                }
-            }
+            // Set information for the remove/multiRemove modal.
+            initRemoveMemberDisplayName();
             $scope.isMultiRemove = _.isEmpty($scope.multiRemoveResults)
                 ? $scope.membersToRemove.length > 1
                 : $scope.multiRemoveResults.length > 1;
@@ -1663,7 +1674,7 @@
                     groupingsService.removeIncludeMembers(groupingPath, $scope.membersToRemove, handleSuccessfulRemove, handleUnsuccessfulRequest);
                 } else if ($scope.listName === "Exclude") {
                     groupingsService.removeExcludeMembers(groupingPath, $scope.membersToRemove, handleSuccessfulRemove, handleUnsuccessfulRequest);
-                } else if ($scope.listName === "owners" && !$scope.isOwnerGrouping) {
+                } else if (isDirectOwnerList()) {
                     groupingsService.removeOwnerships(groupingPath, $scope.membersToRemove, handleOwnerRemove, handleUnsuccessfulRequest);
                 } else if ($scope.isOwnerGrouping) {
                     groupingsService.removeOwnerGroupings(groupingPath, $scope.membersToRemove, handleOwnerRemove, handleUnsuccessfulRequest);
@@ -2256,37 +2267,42 @@
             }
         };
 
-        // Function to display the current opt status message
-        $scope.getOptStatus = () => {
-            if (typeof $scope.initialAllowOptIn  === "boolean" &&
-                typeof $scope.initialAllowOptOut === "boolean") {
+        const hasInitialOptStatuses = () => typeof $scope.initialAllowOptIn === "boolean" &&
+            typeof $scope.initialAllowOptOut === "boolean";
 
-                const inChanged  = $scope.allowOptIn  !== $scope.initialAllowOptIn;
-                const outChanged = $scope.allowOptOut !== $scope.initialAllowOptOut;
-
-                if (inChanged && !outChanged) {
-                    return $scope.allowOptIn
-                        ? "Opt-in has been enabled. Members may opt in."
-                        : "Opt-in has been disabled. Members may not opt in.";
-                }
-                if (!inChanged && outChanged) {
-                    return $scope.allowOptOut
-                        ? "Opt-out has been enabled. Members may opt out."
-                        : "Opt-out has been disabled. Members may not opt out.";
-                }
+        const getChangedOptStatus = () => {
+            if (!hasInitialOptStatuses()) {
+                return;
             }
 
-            if ($scope.allowOptIn && $scope.allowOptOut) {
-                return "Both options are enabled. Members may opt themselves in and out.";
-            } else if (!$scope.allowOptIn && !$scope.allowOptOut) {
-                return "Both options are disabled. Members may not opt themselves in and out.";
-            } else if ($scope.allowOptIn) {
-                return "Members may opt in.";
-            } else if ($scope.allowOptOut) {
-                return "Members may opt out.";
+            const inChanged = $scope.allowOptIn !== $scope.initialAllowOptIn;
+            const outChanged = $scope.allowOptOut !== $scope.initialAllowOptOut;
+            if (inChanged === outChanged) {
+                return;
             }
+            if (inChanged) {
+                return $scope.allowOptIn
+                    ? "Opt-in has been enabled. Members may opt in."
+                    : "Opt-in has been disabled. Members may not opt in.";
+            }
+            return $scope.allowOptOut
+                ? "Opt-out has been enabled. Members may opt out."
+                : "Opt-out has been disabled. Members may not opt out.";
         };
 
+        const getCurrentOptStatus = () => {
+            if ($scope.allowOptIn) {
+                return $scope.allowOptOut
+                    ? "Both options are enabled. Members may opt themselves in and out."
+                    : "Members may opt in.";
+            }
+            return $scope.allowOptOut
+                ? "Members may opt out."
+                : "Both options are disabled. Members may not opt themselves in and out.";
+        };
+
+        // Function to display the current opt status message
+        $scope.getOptStatus = () => getChangedOptStatus() ?? getCurrentOptStatus();
 
         /**
          * Function to check if any sync destinations checkboxes were toggled by a user
@@ -2648,7 +2664,7 @@
                     $scope.loading = false;
                     $scope.displayDynamicModal(
                         "Error",
-                        `Failed to send retire grouping request: ${err.statusCode || err.status || 'Unknown error'}`
+                        `Failed to send retire grouping request: ${err.statusCode || err.status || "Unknown error"}`
                     );
                 }
             );
