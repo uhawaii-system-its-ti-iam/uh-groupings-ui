@@ -4749,6 +4749,27 @@ describe("GroupingController", () => {
             expect(scope.loading).toBeFalse();
         });
 
+        it("shows a warning when IAM received the request but owner notification failed", () => {
+            scope.retireGroupingModalInstance = modal;
+            const result = {
+                resultCode: "PARTIAL_SUCCESS",
+                resultMessage: "Your retirement request was sent to IAM, but we couldn't notify " +
+                    "the grouping owners. Do not submit another retirement request.",
+                ownerRecipients: ["owner@hawaii.edu"]
+            };
+            spyOn(gs, "requestGroupingRetirement").and.callFake((path, onSuccess) => onSuccess(result));
+            spyOn(scope, "displayDynamicModal");
+            spyOn(scope, "displayRetirementResultModal");
+
+            scope.proceedRetireGroupingModal();
+
+            expect(gs.requestGroupingRetirement).toHaveBeenCalledTimes(1);
+            expect(scope.displayDynamicModal).toHaveBeenCalledWith(
+                "Request Sent - Owner Notification Failed", result.resultMessage);
+            expect(scope.displayRetirementResultModal).not.toHaveBeenCalled();
+            expect(scope.loading).toBeFalse();
+        });
+
         it("shows an error when an email could not be sent", () => {
             scope.retireGroupingModalInstance = modal;
             const result = {

@@ -2631,6 +2631,11 @@
                     $scope.loading = false;
                     if (res.resultCode === "SUCCESS") {
                         $scope.displayRetirementResultModal(res);
+                    } else if (res.resultCode === "PARTIAL_SUCCESS") {
+                        $scope.displayDynamicModal(
+                            "Request Sent - Owner Notification Failed",
+                            res.resultMessage
+                        );
                     } else {
                         $scope.displayDynamicModal(
                             "Error",
