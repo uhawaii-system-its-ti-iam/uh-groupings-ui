@@ -2272,13 +2272,13 @@
 
         const getChangedOptStatus = () => {
             if (!hasInitialOptStatuses()) {
-                return;
+                return null;
             }
 
             const inChanged = $scope.allowOptIn !== $scope.initialAllowOptIn;
             const outChanged = $scope.allowOptOut !== $scope.initialAllowOptOut;
             if (inChanged === outChanged) {
-                return;
+                return null;
             }
             if (inChanged) {
                 return $scope.allowOptIn
