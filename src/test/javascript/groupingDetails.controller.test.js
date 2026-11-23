@@ -470,7 +470,7 @@ describe("GroupingController", () => {
                 onSuccess({ optInOn: false, optOutOn: false }));
             spyOn(gs, "groupingOwners").and.callFake((groupPath, onSuccess) =>
                 onSuccess({ owners: { members: [] }, ownerLimit: 100 }));
-            spyOn(gs, "getNumberOfDirectOwners").and.callFake((groupPath, onSuccess) => onSuccess(1));
+            spyOn(gs, "getNumberOfDirectUserOwners").and.callFake((groupPath, onSuccess) => onSuccess(1));
             spyOn(gs, "getNumberOfAllOwners").and.callFake((groupPath, onSuccess) => onSuccess(1));
             spyOn(gs, "getDuplicateOwners").and.callFake((groupPath, onSuccess) => onSuccess({}));
             pageRequests = [];
